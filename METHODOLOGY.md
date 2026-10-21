@@ -143,6 +143,9 @@ run. The ratio is less sensitive to hardware changes and to drift between runs t
     `median_ns`, `min_ns`, `max_ns` and `stddev_ns` are over the 3 iteration means, not over single
     operations. `stddev_ns` is the sample standard deviation (n - 1). `iterations` is the number of
     measurement iterations. JMH's "Score Error" is a 99.9% confidence interval, so it is not used.
+  - Criterion (haskell): `stddev_ns` is Criterion's standard deviation. `min_ns` and `max_ns` are the
+    bounds of the bootstrap confidence interval of the mean. `iterations` is the number of samples
+    when the run has Criterion's `--json` report, else 0 (the CSV and the log do not have it).
 - **JIT warm-up**: the JVM, V8 and JSC compile hot code at run time. Their frameworks warm up first,
   but the execution model differs from ahead-of-time compiled VMs.
 - **Cost model rebuilt per iteration**: some public APIs do not let a harness keep the cost model
