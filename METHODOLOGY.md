@@ -45,6 +45,16 @@ Each framework handles warmup, iteration count, and outlier detection using its 
 - **Pinned versions**: exact git SHAs recorded in `versions.env`
 - **No custom harnesses**: each VM's own benchmark code is used unmodified
 
+## Correctness Gate
+
+Before a VM's timings are published, its results must equal Haskell plutus (spec D4). Each VM image
+writes `<vm>-check.csv` (`vm,script,status,cpu,mem`, one evaluation per script, costing on), and
+`check/gate.py` compares it with `check/reference/haskell-check.csv`. Status, CPU and memory must all
+be equal for all 89 scripts; a VM without costing fails.
+
+All VMs use the same parameters: PlutusV3, protocol version 11 (builtin semantics variant E) and the
+mainnet PlutusV3 cost model, which is the default of plutus 1.63.0.0. See `check/README.md`.
+
 ## Unified Output
 
 All results are normalized to a common CSV schema:
