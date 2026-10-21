@@ -25,8 +25,8 @@ Library and node authors can use it to choose an evaluator.
   uses PlutusV3 semantics at protocol version 11, the mainnet PlutusV3 cost model, and costing on.
 - **Correctness gate.** For every script, the result and the ExUnits of a VM must equal Haskell
   plutus-core. A VM that fails is not ranked.
-- **Released versions only.** Each VM is to be pinned to a release tag in `.env`. Today Haskell,
-  Scalus, Scalus.js, Aiken and Plutigo are; the other pins are commits.
+- **Released versions only.** Each VM is to be pinned to a release tag in `.env`. Today every VM
+  is, except julc: its pin is a commit.
 - **Monthly runs on fixed hardware.** One Hetzner dedicated-vCPU server type runs every VM, one at a time.
 - **History.** Each run stays in `results/`. The page shows each VM's time relative to Haskell over time.
 
