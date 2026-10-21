@@ -153,7 +153,7 @@ func BenchmarkPvbFlatFiles(b *testing.B) {
 // The machine is built once per script, as in BenchmarkPvbFlatFiles. Machine.Run at the pinned
 // SHA gives every call fresh evaluation state (cek/machine.go, Run): it restores the initial
 // budget when the caller did not change it (lines 939-942), empties Logs and the unbudgeted step
-// counters (950-952), resets the frame stack (943, 957), and its deferred block clears the value
+// counters (950-952), resets the frame stack (944, 957), and its deferred block clears the value
 // and env arenas (953-971); the environment of a run starts empty (stack_machine_debruijn.go 265).
 // What survives a run is allocator state: object pools, arena chunks and an interning cache of
 // immutable integer constants (cek/value.go 98-113).
