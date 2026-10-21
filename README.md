@@ -140,7 +140,7 @@ Change the pin of the VM in `.env` to a release. The image tag of that VM change
 
 ```
 data/plutus_use_cases/    # 89 canonical .flat benchmark scripts
-.env                      # Pinned VM releases and toolchain versions
+.env                      # Pinned VM versions and toolchain versions
 images/<vm>/              # One Dockerfile and harness per VM (images/scalus and images/blaze serve two VMs each)
 scripts/run-<vm>.sh       # Per-VM runner, the default command of its image
 scripts/image-entry.sh    # Entry point of every image: switches, data selection, exit code
