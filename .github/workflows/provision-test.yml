@@ -8,6 +8,10 @@ on:
       server_type:
         description: Hetzner server type
         default: cx33
+      test_selfdestruct:
+        description: Shorten the self-destruct timer to 90 s and check the server deletes itself
+        type: boolean
+        default: false
 
 concurrency: bench-hetzner
 
@@ -40,6 +44,31 @@ jobs:
             test "$(stat -c %a /var/lib/bench/hcloud-token)" = 400
             nproc; free -g | head -2
           '
+
+      # A runtime drop-in replaces OnBootSec with a 90 s timer, so the real timer and service run.
+      - name: Check the self-destruct timer
+        if: inputs.test_selfdestruct
+        run: |
+          IP=$(cat "$BENCH_STATE/$RUN_ID/ip")
+          ssh -i "$BENCH_STATE/$RUN_ID/id_ed25519" -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null "root@$IP" '
+            set -e
+            mkdir -p /run/systemd/system/bench-selfdestruct.timer.d
+            printf "[Timer]\nOnBootSec=\nOnActiveSec=90s\n" \
+              > /run/systemd/system/bench-selfdestruct.timer.d/test.conf
+            systemctl daemon-reload
+            systemctl restart bench-selfdestruct.timer
+            systemctl list-timers bench-selfdestruct.timer --no-pager
+          '
+          for _ in $(seq 1 30); do
+            if ! nix shell nixpkgs#hcloud --command hcloud server describe "bench-$RUN_ID" >/dev/null 2>&1; then
+              echo "server deleted itself"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "server still exists 5 min after the timer was set" >&2
+          exit 1
 
       - name: Delete server
         if: always()
