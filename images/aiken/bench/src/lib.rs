@@ -89,11 +89,6 @@ pub fn scripts(dir: &Path) -> Vec<(String, Vec<u8>)> {
         .collect()
 }
 
-/// Short timing (`BENCH_TIMING=quick`).
-pub fn quick() -> bool {
-    std::env::var("BENCH_TIMING").is_ok_and(|v| v == "quick")
-}
-
 pub fn data_dir() -> std::path::PathBuf {
     std::env::var("DATA_DIR")
         .unwrap_or_else(|_| "/bench/data/plutus_use_cases".to_string())

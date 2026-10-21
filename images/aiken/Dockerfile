@@ -22,9 +22,13 @@ COPY images/aiken/bench /build/bench
 WORKDIR /build/bench
 # Start from aiken's own lock file so uplc gets the dependency versions it was
 # released with; cargo only adds what the bench crate needs (criterion).
+# --profile dist: the profile of the aiken release binaries (images/aiken/bench/Cargo.toml).
+# The check: rustc linked both binaries with thin LTO.
 RUN cp /build/aiken/Cargo.lock Cargo.lock \
-    && cargo build --release --bins \
-    && cp target/release/aiken-bench target/release/aiken-check /usr/local/bin/
+    && { cargo build -v --profile dist --bins > /tmp/build.log 2>&1 || { tail -50 /tmp/build.log; exit 1; }; } \
+    && grep -E -- '--crate-name aiken_(bench|check) .*--crate-type bin' /tmp/build.log > /tmp/bins.log \
+    && test "$(grep -c -- '-C lto=thin' /tmp/bins.log)" = 2 \
+    && cp target/dist/aiken-bench target/dist/aiken-check /usr/local/bin/
 
 FROM debian:bookworm-slim
 

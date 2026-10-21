@@ -20,6 +20,8 @@
 //                        decoded once into its own arena before timing; each iteration evaluates
 //                        it into a second arena, which is reset after every iteration. The machine
 //                        and its budget are new on every call (Program::eval_version_budget).
+// Warm-up, measurement time and the script filter come from the command line
+// (scripts/run-uplc-turbo.sh, which runs one process per script).
 // PVB_COSTMODEL=<file>: the mainnet PlutusV3 array, one integer per line (run-uplc-turbo.sh).
 // PVB_DATA_DIR=<dir>: read the .flat files from <dir> instead of DATA_DIR (run-uplc-turbo.sh
 // passes the selected scripts, $BENCH_DATA_DIR).
@@ -32,7 +34,7 @@ use amaru_uplc::{
 };
 use bumpalo::Bump;
 use criterion::Criterion;
-use std::{fs, io::Write, path::PathBuf, time::Duration};
+use std::{fs, io::Write, path::PathBuf};
 
 const DATA_DIR: &str = "benches/use_cases/plutus_use_cases";
 const PROTOCOL_MAJOR: u32 = 11;
@@ -175,9 +177,7 @@ fn main() {
         check(&out);
         return;
     }
-    let mut c = Criterion::default()
-        .measurement_time(Duration::from_secs(10))
-        .configure_from_args();
+    let mut c = Criterion::default().configure_from_args();
     if std::env::var("PVB_EVAL_ONLY").is_ok_and(|v| v == "1") {
         bench_eval_only(&mut c);
     } else {

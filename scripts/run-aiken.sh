@@ -29,12 +29,35 @@ fi
 # D3 ranking), then eval of a program decoded once before timing (PVB_EVAL_ONLY=1, aiken-eval.csv).
 # A crash of the bench binary must not kill the run: missing scripts become -1 rows below.
 #
+# Criterion settings (spec D13), the same as scripts/run-uplc-turbo.sh: Criterion.rs 0.7.0 with
+# its default warm-up (3 s) and measurement time (5 s), 100 samples, no plots.
+TIMING=(--warm-up-time 3 --measurement-time 5)
+if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
+    TIMING=(--warm-up-time 1 --measurement-time 1)
+fi
+echo "Criterion options: ${TIMING[*]} --noplot" | tee -a "$RAW"
+
+# One process per script (spec D14), so no allocator state carries from one script to the next.
+# The process gets a data dir with only its script, because aiken-bench evaluates every file of
+# its data dir once before timing; the Criterion filter (--exact <name>) selects it too.
+#
 #   time_loop <csv> <raw log> [VAR=value ...]
 time_loop() {
     local csv="$1" raw="$2"
     shift 2
     rm -rf "$CRITERION_HOME"
-    env "$@" DATA_DIR="$DATA_DIR" aiken-bench --bench 2>&1 | tee -a "$raw" || true
+    local work flat name
+    work=$(mktemp -d /tmp/aiken-one.XXXXXX)
+    for flat in "$DATA_DIR"/*.flat; do
+        name=$(basename "$flat" .flat)
+        mkdir -p "$work/$name"
+        ln -sf "$flat" "$work/$name/"
+        # $BASHPID is the pid of the subshell, which exec turns into the benchmark process.
+        ( echo "--- $name: process $BASHPID"
+          exec env "$@" DATA_DIR="$work/$name" aiken-bench --bench --noplot "${TIMING[@]}" --exact "$name" ) \
+            2>&1 | tee -a "$raw" || true
+    done
+    rm -rf "$work"
 
     local failed
     failed=$(grep '^EVAL_FAIL:' "$raw" | sed 's/^EVAL_FAIL: //; s/ .*//' | sort -u || true)
