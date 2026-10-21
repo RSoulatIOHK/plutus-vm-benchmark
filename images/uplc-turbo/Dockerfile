@@ -23,7 +23,22 @@ WORKDIR /src
 # PVB_CHECK_OUT check mode). See the header of images/uplc-turbo/use_cases.rs.
 COPY images/uplc-turbo/use_cases.rs /src/crates/uplc/benches/use_cases/main.rs
 
-RUN cargo build --release --bench use_cases --manifest-path crates/uplc/Cargo.toml
+# The release profile of Amaru, the node that ships this crate (spec D16): fat LTO and one codegen
+# unit (pragma-org/amaru Cargo.toml:194-196 at a393a0b; its release binaries are built with
+# `cargo build --release`, .github/workflows/release-begin.yml:202). The workspace of the pinned
+# repo has no [profile] section, so the environment sets it. `cargo build --release` builds the
+# bench with the release profile; the BENCH pair covers `cargo bench`.
+ENV CARGO_PROFILE_RELEASE_LTO=true \
+    CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1 \
+    CARGO_PROFILE_BENCH_LTO=true \
+    CARGO_PROFILE_BENCH_CODEGEN_UNITS=1
+
+# The check: rustc built the crate and linked the bench binary with fat LTO and one codegen unit.
+RUN { cargo build -v --release --bench use_cases --manifest-path crates/uplc/Cargo.toml \
+        > /tmp/build.log 2>&1 || { tail -50 /tmp/build.log; exit 1; }; } \
+    && grep -E -- '--crate-name use_cases ' /tmp/build.log > /tmp/bench.log \
+    && grep -q -E -- '-C lto( |=fat )' /tmp/bench.log && grep -q -- '-C codegen-units=1' /tmp/bench.log \
+    && grep -E -- '--crate-name amaru_uplc ' /tmp/build.log | grep -q -- '-C codegen-units=1'
 
 # =============================================================================
 # Runtime stage

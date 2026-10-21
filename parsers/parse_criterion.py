@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-"""Parse Criterion.rs JSON benchmark output into unified CSV."""
+"""Parse Criterion.rs JSON benchmark output into unified CSV.
+
+Every number is Criterion's own or comes from its raw samples:
+  mean_ns, median_ns, stddev_ns  Criterion.rs point estimates (<bench>/new/estimates.json) of the
+                                 mean, median and standard deviation of the per-iteration time
+  min_ns, max_ns                 the fastest and slowest sample (<bench>/new/sample.json), each
+                                 sample being the mean time per iteration of one batch; empty
+                                 when sample.json is missing
+  iterations                     the number of samples (0 when sample.json is missing)
+"""
 
 import json
 import os
@@ -29,12 +38,12 @@ def parse(criterion_dir: str, vm_name: str = "uplc-turbo") -> None:
         median_ns = int(est["median"]["point_estimate"])
         stddev_ns = int(est["std_dev"]["point_estimate"])
 
-        # Extract min/max from sample data if available
+        # The fastest and slowest sample, from the raw samples
         sample_path = os.path.join(
             criterion_dir, bench_name, "new", "sample.json"
         )
-        min_ns = 0
-        max_ns = 0
+        min_ns = ""
+        max_ns = ""
         iterations = 0
 
         if os.path.isfile(sample_path):

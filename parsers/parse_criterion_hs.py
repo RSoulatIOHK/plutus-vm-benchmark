@@ -1,21 +1,24 @@
 #!/usr/bin/env python3
 """Parse Haskell Criterion CSV benchmark output into unified CSV.
 
-Usage: parse_criterion_hs.py <criterion-csv> [criterion-json]
+Usage: parse_criterion_hs.py <criterion-csv> [criterion-json ...]
 
 Criterion's --csv flag produces:
   Name,Mean,MeanLB,MeanUB,Stddev,StddevLB,StddevUB
 where Mean/Stddev are in seconds. mean_ns and stddev_ns are Criterion's Mean and Stddev.
-min_ns and max_ns are MeanLB and MeanUB: the bounds of the bootstrap confidence interval of the
-mean, not the fastest and slowest sample.
+Criterion reports no median, minimum or maximum, so median_ns, min_ns and max_ns are empty.
+(MeanLB and MeanUB are the bounds of the bootstrap confidence interval of the mean, not the
+fastest and slowest sample.)
 
 iterations is the number of Criterion samples (as for Criterion.rs in parse_criterion.py). The CSV
 and the text log do not have it: only Criterion's --json report has it (reportMeasured, one entry
-per sample). Without the JSON file, iterations is 0 (unknown).
+per sample). scripts/run-haskell.sh runs one process per script, so it passes one JSON report per
+script. A script without a JSON report gets iterations 0 (unknown).
 """
 
 import csv
 import json
+import os
 import sys
 from collections import OrderedDict
 
@@ -28,15 +31,20 @@ def script_name(name: str) -> str:
     return name.split("/")[-1]
 
 
-def sample_counts(json_path: str) -> dict[str, int]:
-    """Samples per script from Criterion's --json report: ["criterion", <version>, [report]]."""
-    with open(json_path) as f:
-        reports = json.load(f)[2]
-    return {script_name(r["reportName"]): len(r["reportMeasured"]) for r in reports}
+def sample_counts(json_paths: list[str]) -> dict[str, int]:
+    """Samples per script from Criterion's --json reports: ["criterion", <version>, [report]]."""
+    counts: dict[str, int] = {}
+    for path in json_paths:
+        if not os.path.isfile(path):  # an unmatched glob, or a process that wrote no report
+            continue
+        with open(path) as f:
+            reports = json.load(f)[2]
+        counts.update({script_name(r["reportName"]): len(r["reportMeasured"]) for r in reports})
+    return counts
 
 
-def parse(csv_path: str, json_path: str | None = None) -> None:
-    samples = sample_counts(json_path) if json_path else {}
+def parse(csv_path: str, json_paths: list[str]) -> None:
+    samples = sample_counts(json_paths)
     # Use OrderedDict to deduplicate — last occurrence wins (handles aborted reruns)
     results: OrderedDict[str, str] = OrderedDict()
 
@@ -44,28 +52,16 @@ def parse(csv_path: str, json_path: str | None = None) -> None:
         reader = csv.DictReader(f)
         for row in reader:
             name = row["Name"]
-            # Skip duplicate header rows
+            # Skip the header rows of later processes (Criterion appends to the CSV)
             if name == "Name":
                 continue
             script = script_name(name)
 
-            mean_s = float(row["Mean"])
-            stddev_s = float(row["Stddev"])
-            mean_lb_s = float(row["MeanLB"])
-            mean_ub_s = float(row["MeanUB"])
-
-            mean_ns = int(mean_s * 1e9)
-            stddev_ns = int(stddev_s * 1e9)
-            min_ns = int(mean_lb_s * 1e9)
-            max_ns = int(mean_ub_s * 1e9)
-            median_ns = mean_ns
+            mean_ns = int(float(row["Mean"]) * 1e9)
+            stddev_ns = int(float(row["Stddev"]) * 1e9)
             iterations = samples.get(script, 0)
 
-            results[script] = (
-                f"{VM_NAME},{script},"
-                f"{mean_ns},{median_ns},{min_ns},{max_ns},"
-                f"{stddev_ns},{iterations}"
-            )
+            results[script] = f"{VM_NAME},{script},{mean_ns},,,,{stddev_ns},{iterations}"
 
     print(HEADER)
     for line in results.values():
@@ -73,7 +69,7 @@ def parse(csv_path: str, json_path: str | None = None) -> None:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) not in (2, 3):
-        print(f"Usage: {sys.argv[0]} <criterion-csv-file> [criterion-json-file]", file=sys.stderr)
+    if len(sys.argv) < 2:
+        print(f"Usage: {sys.argv[0]} <criterion-csv-file> [criterion-json-file ...]", file=sys.stderr)
         sys.exit(1)
-    parse(sys.argv[1], sys.argv[2] if len(sys.argv) == 3 else None)
+    parse(sys.argv[1], sys.argv[2:])

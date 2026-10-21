@@ -25,11 +25,13 @@ values = json.load(open('/bench/mainnet-plutusv3-costmodel.json'))['PlutusV3']
 open(sys.argv[1], 'w').write('\\n'.join(map(str, values)) + '\\n')
 " "$PVB_COSTMODEL"
 
-# Criterion flags override the measurement_time set in the harness's main().
-TIMING=()
+# Criterion settings (spec D13), the same as scripts/run-aiken.sh: Criterion.rs 0.7.0 with its
+# default warm-up (3 s) and measurement time (5 s), 100 samples, no plots.
+TIMING=(--warm-up-time 3 --measurement-time 5)
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
     TIMING=(--warm-up-time 1 --measurement-time 1)
 fi
+echo "Criterion options: ${TIMING[*]} --noplot"
 
 # Symlink canonical flat files into expected location
 rm -rf "$BENCH_DIR/crates/uplc/benches/use_cases/plutus_use_cases"
@@ -53,14 +55,30 @@ run_check() {
 }
 
 # One Criterion loop: time_loop <csv> <raw log> <criterion copy dir> [VAR=value ...]
+#
+# One process per script (spec D14), so no allocator state carries from one script to the next.
+# The process gets a data dir with only its script, because the harness evaluates every file of
+# its data dir once before timing; the Criterion filter (--exact <name>) selects it too.
 time_loop() {
     local csv="$1" raw="$2" copy="$3"
     shift 3
 
     # Clear previous criterion output to avoid stale results
     rm -rf target/criterion
+    : > "$raw"
 
-    env "$@" UPLC_BENCH_MODE=ast "$BENCH_BIN" --bench ${TIMING[@]+"${TIMING[@]}"} 2>&1 | tee "$raw" || true
+    local work flat name
+    work=$(mktemp -d /tmp/uplc-turbo-one.XXXXXX)
+    for flat in "$DATA_DIR"/*.flat; do
+        name=$(basename "$flat" .flat)
+        mkdir -p "$work/$name"
+        ln -sf "$flat" "$work/$name/"
+        # $BASHPID is the pid of the subshell, which exec turns into the benchmark process.
+        ( echo "--- $name: process $BASHPID"
+          exec env "$@" PVB_DATA_DIR="$work/$name" UPLC_BENCH_MODE=ast "$BENCH_BIN" \
+              --bench --noplot "${TIMING[@]}" --exact "$name" ) 2>&1 | tee -a "$raw" || true
+    done
+    rm -rf "$work"
 
     # Collect failed scripts
     local failed
