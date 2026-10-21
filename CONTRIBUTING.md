@@ -1,10 +1,11 @@
-# Contributing to cardano-plutus-vm-benchmark
+# Contributing to the Plutus VM Benchmark
 
-Thank you for your interest in contributing! This document provides guidelines and processes for contributing to the project.
+Thank you for your interest. This document describes how to change the benchmark and how pull
+requests are handled. Lantr (lantr.io) maintains the project.
 
 ## Code of Conduct
 
-Please be respectful and constructive in all interactions. We're building tools for the Cardano community and value collaboration.
+Be respectful and constructive. The benchmark serves the whole Cardano community.
 
 ## Getting Started
 
@@ -12,19 +13,19 @@ Please be respectful and constructive in all interactions. We're building tools 
 
 - Docker (with BuildKit) and bash
 - Git
-- Python 3.10+ (for running parsers locally)
+- Python 3.10+ (for the parsers, the gate and the report outside Docker)
 
 ### Setup
 
-1. Fork the repository
+1. Fork the repository.
 2. Clone your fork:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/cardano-plutus-vm-benchmark.git
-   cd cardano-plutus-vm-benchmark
+   git clone https://github.com/YOUR_USERNAME/plutus-vm-benchmark.git
+   cd plutus-vm-benchmark
    ```
-3. Add upstream remote:
+3. Add the upstream remote:
    ```bash
-   git remote add upstream https://github.com/saib-inc/cardano-plutus-vm-benchmark.git
+   git remote add upstream https://github.com/lantr-io/plutus-vm-benchmark.git
    ```
 
 ### Running Locally
@@ -42,22 +43,22 @@ scripts/run-images.sh /tmp/run <vm>
    git pull upstream main
    git checkout -b feature/your-feature-name
    ```
-
-2. Make your changes
-
-3. Test the changed images (quick mode runs 5 scripts):
+2. Make your changes.
+3. Test the changed images. Quick mode runs 5 scripts with short timing:
    ```bash
    scripts/images.sh build <vm>
    BENCH_QUICK=1 scripts/run-images.sh /tmp/smoke <vm>
    ```
-
-4. Commit your changes following the [commit conventions](#commit-conventions)
-
-5. Push to your fork and create a Pull Request
+   Run the correctness check on all 89 scripts:
+   ```bash
+   BENCH_LOOPS=check scripts/run-images.sh /tmp/check <vm>
+   ```
+4. Commit your changes with the [commit conventions](#commit-conventions).
+5. Push to your fork and open a pull request.
 
 ## Commit Conventions
 
-We use [Conventional Commits](https://www.conventionalcommits.org/) for clear and consistent commit history.
+We use [Conventional Commits](https://www.conventionalcommits.org/).
 
 ### Format
 
@@ -73,89 +74,113 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) for clear an
 
 | Type | Description |
 |------|-------------|
-| `feat` | A new feature (new VM, new parser, new report format) |
+| `feat` | A new feature (new VM, new parser, new report feature) |
 | `fix` | A bug fix |
 | `docs` | Documentation changes |
 | `style` | Code style changes (formatting, etc.) |
 | `refactor` | Code refactoring without feature changes |
 | `perf` | Performance improvements to the benchmark infrastructure |
 | `test` | Adding or updating tests |
-| `chore` | Maintenance tasks (dependencies, CI, version bumps) |
-| `bench` | Benchmark version updates or result commits |
+| `chore` | Maintenance tasks (dependencies, version bumps) |
+| `results` | Result commits of a benchmark run |
 
 ### Scopes
 
 | Scope | Description |
 |-------|-------------|
-| `docker` | `images/` Dockerfile changes |
+| `images` | `images/` Dockerfile and harness changes |
 | `parsers` | Output parser changes |
 | `scripts` | Runner script changes |
+| `gate` | `check/` changes |
 | `report` | Report generator changes |
 | `data` | Benchmark data changes |
 | `ci` | GitHub Actions workflow changes |
-| `uplc-turbo` | uplc-turbo VM-specific changes |
-| `plutigo` | Plutigo VM-specific changes |
-| `blaze` | blaze-plutus VM-specific changes |
-| `opshin` | opshin VM-specific changes |
+| `nix` | Bench server config (`nix/`, `flake.nix`, `scripts/hetzner/`) |
+| `<vm>` | Changes for one VM, for example `aiken` or `scalus-js` |
 
 ### Examples
 
 ```
-feat(docker): add Haskell plutus-core as 7th VM
+feat(images): add the aiken image
 fix(parsers): handle missing stddev in Go bench output
-chore: update pinned SHAs in .env
-bench: results 2026-03-15
-docs: add methodology section on geometric mean
+chore(plutigo): update to v0.1.10
+docs(methodology): describe the eval-only column
 ```
 
-## Pull Request Process
+## Pull Requests
 
-1. **Create a descriptive PR title** following commit conventions
-2. **Fill out the PR description** with:
-   - Description of changes
-   - Related issues
-   - Testing performed
-3. **Ensure the Docker build succeeds**
-4. **Request review** from maintainers
-5. **Address feedback** promptly
-6. **Squash and merge** when approved
+There are two kinds of pull requests.
 
-### PR Requirements
+### Version bumps
 
-- Docker build must succeed
-- Parsers must handle edge cases (missing data, empty output)
-- Follow existing code style and patterns
-- Update METHODOLOGY.md if changing benchmark methodology
-- Update README.md if adding new VMs or changing usage
+A version bump changes only `.env`. CI (`.github/workflows/images.yml`) builds the changed image on
+the pull request; it pushes nothing.
+
+Planned: a bot will open version-bump pull requests when a VM publishes a new release. A smoke
+workflow will time 5 scripts and run the gate on all 89 scripts. If both pass, the pull request
+merges automatically. If not, it gets the label `needs-human` and the old pin stays. The bot and
+the smoke workflow (`bump.yml`, `smoke.yml`) are not built yet. Until then, a maintainer reviews
+version bumps by hand.
+
+### Code changes
+
+Every other pull request needs a review by a maintainer. CI on pull requests runs without secrets:
+it builds the changed images and pushes nothing. Only the monthly run on `main` uses the bench
+server.
+
+Requirements:
+
+- The changed images build.
+- A changed VM passes the correctness gate on all 89 scripts.
+- Parsers handle edge cases (missing data, empty output).
+- Follow the existing code style and patterns.
+- Update [METHODOLOGY.md](METHODOLOGY.md) if you change what is measured or how.
+- Update [README.md](README.md) if you add a VM or change usage.
 
 ## Adding a New VM
 
-To add a new Plutus VM implementation:
+Inclusion rule: a VM joins the line-up if it has a downstream user today, for example a node,
+a wallet, an SDK or a dev tool that runs it.
 
-1. Add `images/<vm>/Dockerfile` following [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md)
-2. Add a runner script in `scripts/run-<vm-name>.sh` (reads only `$BENCH_DATA_DIR`, the check too; runs the loops of `$BENCH_LOOPS`; short timing for `BENCH_TIMING=quick`; declares its loops in a `# pvb-loops:` header line)
-3. Add an output parser in `parsers/parse_<vm_name>.py` if the framework is new
-4. Add the VM to `VM_ORDER` and `VM_LABELS` in `report/generate_report.py`, and to `VM_META` and `VM_ORDER` in `report/template.html`
-5. Add pinned SHA to `.env`
-6. Update `README.md` and `METHODOLOGY.md`
+1. Add `images/<vm>/Dockerfile` and the harness that calls the VM. Follow the image contract in
+   [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md): the D3 loop (flat decode + evaluation), the
+   eval-only loop if the API allows it, and the check (`<vm>-check.csv`). Use the parameters in
+   [check/README.md](check/README.md#evaluation-parameters): PlutusV3, protocol version 11, the
+   mainnet cost model, costing on.
+2. Add `scripts/run-<vm>.sh`. It reads only `$BENCH_DATA_DIR` (the check too), runs the loops of
+   `$BENCH_LOOPS`, shortens the timing for `BENCH_TIMING=quick`, and declares its loops in a
+   `# pvb-loops:` header line.
+3. Add an output parser in `parsers/` if the framework is new.
+4. Add the VM to `VM_ORDER` and `VM_LABELS` in `report/generate_report.py`, and to `VM_META` and
+   `VM_ORDER` in `report/template.html`.
+5. Pin the VM to a release in `.env`.
+6. Pass the correctness gate on all 89 scripts:
+   ```bash
+   BENCH_LOOPS=check scripts/run-images.sh /tmp/check <vm>
+   ```
+   If the VM's API cannot take a cost model, see the badge mode in
+   [check/README.md](check/README.md#policy) and [`check/modes.conf`](check/modes.conf).
+7. Update [README.md](README.md) and [METHODOLOGY.md](METHODOLOGY.md).
 
 ## Updating VM Versions
 
-1. Update the relevant `*_SHA` in `.env`
-2. Test with `scripts/images.sh build <vm> && BENCH_QUICK=1 scripts/run-images.sh /tmp/smoke <vm>`
-3. Submit PR with commit message: `chore: update <vm-name> to <commit/tag>`
+Pin release tags only, not development branches.
 
-### What NOT to Do
+1. In `.env`, set the `*_SHA` of the VM to the commit of the release tag, with the tag in a trailing
+   comment, for example `AIKEN_SHA=bacbeb3... # v1.1.24`. Some VMs also have a version variable,
+   for example `SCALUS_VERSION` (the Maven release at `SCALUS_SHA`) and `SCALUS_JS_VERSION` (the
+   npm version).
+2. Test: `scripts/images.sh build <vm> && BENCH_QUICK=1 scripts/run-images.sh /tmp/smoke <vm>`,
+   then the check on all 89 scripts.
+3. Open a pull request with the commit message `chore(<vm>): update to <tag>`.
 
-- **Never push directly to `main`** - Always use Pull Requests
-- **Never force push to `main`** - This destroys history
-- **Never modify benchmark data** without consensus from maintainers
-- **Never add custom harnesses** - Use each VM's native benchmark
+### What Not to Do
+
+- **Never push directly to `main`.** Always use pull requests.
+- **Never force push to `main`.** It destroys history.
+- **Never change the benchmark data** without agreement from the maintainers.
+- **Never change a result directory** in `results/` after the run committed it.
 
 ## Questions?
 
-If you have questions about contributing, please open an issue or reach out to the maintainers.
-
----
-
-Thank you for contributing to cardano-plutus-vm-benchmark!
+Open an issue in [lantr-io/plutus-vm-benchmark](https://github.com/lantr-io/plutus-vm-benchmark/issues).
