@@ -131,6 +131,7 @@ while read -r vm mode _; do
     [[ -z "$vm" || "$vm" == \#* ]] && continue
     # gate.py rejects a mode for a VM without a check file.
     [[ -f "$RUN_DIR/$vm-check.csv" ]] || continue
+    [[ -n "$mode" ]] || mode=strict
     case "$mode" in
         badge:*) MODES+=(--mode "$vm=badge:$ROOT/${mode#badge:}") ;;
         *) MODES+=(--mode "$vm=$mode") ;;
