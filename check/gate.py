@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
 """Correctness gate: compare <vm>-check.csv files with the Haskell reference.
 
-A VM passes when, for every script in the reference, its row has the same status, cpu and mem.
+For every script in the reference, the VM's row must have the same status, cpu and mem.
 A VM with an empty cpu or mem fails as "no costing". See check/README.md.
+
+Each VM has a mode:
+- strict (default): compare with the strict reference (mainnet cost model). Verdict pass or fail.
+- badge:<reference csv>: for a VM that cannot load the mainnet cost model. If it matches the strict
+  reference the verdict is still pass. Otherwise it must match the given reference (Haskell with the
+  cost model the VM ships); then the verdict is badge ("outdated cost model"), else fail.
 
 Usage:
     python3 check/gate.py [--reference check/reference/haskell-check.csv]
+                          [--mode VM=strict|VM=badge:REFERENCE_CSV ...]
                           [--json verdict.json] VM_CHECK_CSV [VM_CHECK_CSV ...]
 
-Exit code: 0 if every VM passes, 1 if any VM fails, 2 on bad input.
+Exit code: 0 if no VM fails (pass or badge), 1 if any VM fails, 2 on bad input.
 Python 3.10+ (stdlib only).
 """
 
@@ -89,6 +96,38 @@ def compare(reference: dict[str, dict[str, str]], rows: dict[str, dict[str, str]
     }
 
 
+def parse_mode(spec: str) -> tuple[str, str, str | None]:
+    """'vm=strict' or 'vm=badge:path' -> (vm, mode, badge reference path)."""
+    vm, sep, mode = spec.partition("=")
+    if not sep or not vm:
+        raise InputError(f"--mode {spec}: expected VM=strict or VM=badge:REFERENCE_CSV")
+    if mode == "strict":
+        return vm, "strict", None
+    if mode.startswith("badge:") and len(mode) > len("badge:"):
+        return vm, "badge", mode[len("badge:"):]
+    raise InputError(f"--mode {spec}: expected VM=strict or VM=badge:REFERENCE_CSV")
+
+
+def judge(strict_ref: dict, rows: dict, mode: str, badge_path: str | None, badge_ref: dict | None) -> dict:
+    """Verdict for one VM: pass, badge or fail, with the reason and the mismatches that decided it."""
+    strict = compare(strict_ref, rows)
+    if strict["verdict"] == "pass":
+        return {**strict, "verdict": "pass", "mode": mode, "reference": "strict",
+                "reason": "status, cpu and mem equal the strict reference"}
+    if strict["no_costing"]:
+        return {**strict, "verdict": "fail", "mode": mode, "reference": "strict",
+                "reason": "no costing (empty cpu/mem)"}
+    if mode == "strict":
+        return {**strict, "verdict": "fail", "mode": mode, "reference": "strict",
+                "reason": f"{len(strict['mismatches'])} scripts differ from the strict reference"}
+    badge = compare(badge_ref, rows)
+    if badge["verdict"] == "pass":
+        return {**badge, "verdict": "badge", "mode": mode, "reference": badge_path,
+                "reason": "outdated cost model: status, cpu and mem equal the reference for the VM's own model"}
+    return {**badge, "verdict": "fail", "mode": mode, "reference": badge_path,
+            "reason": f"{len(badge['mismatches'])} scripts differ from the reference for the VM's own model"}
+
+
 def describe(m: dict) -> str:
     if m["reason"] == "missing":
         return f"{m['script']}: missing"
@@ -99,10 +138,8 @@ def describe(m: dict) -> str:
 def summary(verdicts: dict[str, dict], limit: int = 10) -> str:
     lines = []
     for vm, v in verdicts.items():
-        head = f"{vm}: {v['verdict'].upper()} ({v['matching']}/{v['scripts']} scripts match)"
-        if v["no_costing"]:
-            head += " - no costing (empty cpu/mem)"
-        lines.append(head)
+        lines.append(f"{vm}: {v['verdict'].upper()} [{v['mode']}] - {v['reason']} "
+                     f"({v['matching']}/{v['scripts']} scripts match {v['reference']})")
         for m in v["mismatches"][:limit]:
             lines.append("    " + describe(m))
         if len(v["mismatches"]) > limit:
@@ -116,23 +153,33 @@ def summary(verdicts: dict[str, dict], limit: int = 10) -> str:
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Compare <vm>-check.csv files with the Haskell reference.")
     p.add_argument("--reference", default=DEFAULT_REFERENCE, help="reference csv (default: %(default)s)")
+    p.add_argument("--mode", action="append", default=[], metavar="VM=MODE",
+                   help="VM=strict (default) or VM=badge:REFERENCE_CSV; repeat per VM")
     p.add_argument("--json", help="write the machine-readable verdict to this file ('-' for stdout)")
     p.add_argument("checks", nargs="+", help="<vm>-check.csv files")
     args = p.parse_args(argv)
 
     try:
         _, reference = read_check_csv(args.reference)
+        modes = {}
+        for spec in args.mode:
+            vm, mode, badge_path = parse_mode(spec)
+            modes[vm] = (mode, badge_path, read_check_csv(badge_path)[1] if badge_path else None)
         verdicts: dict[str, dict] = {}
         for path in args.checks:
             vm, rows = read_check_csv(path)
             if vm in verdicts:
                 raise InputError(f"{path}: vm {vm} given twice")
-            verdicts[vm] = compare(reference, rows)
+            mode, badge_path, badge_ref = modes.get(vm, ("strict", None, None))
+            verdicts[vm] = judge(reference, rows, mode, badge_path, badge_ref)
+        unknown = sorted(set(modes) - set(verdicts))
+        if unknown:
+            raise InputError(f"--mode given for VMs without a check file: {unknown}")
     except (OSError, InputError) as e:
         print(f"gate: {e}", file=sys.stderr)
         return 2
 
-    result = {"reference": args.reference, "pass": all(v["verdict"] == "pass" for v in verdicts.values()),
+    result = {"reference": args.reference, "ok": all(v["verdict"] != "fail" for v in verdicts.values()),
               "vms": verdicts}
     if args.json == "-":
         json.dump(result, sys.stdout, indent=2)
@@ -144,7 +191,7 @@ def main(argv: list[str] | None = None) -> int:
                 json.dump(result, f, indent=2)
                 f.write("\n")
         print(summary(verdicts))
-    return 0 if result["pass"] else 1
+    return 0 if result["ok"] else 1
 
 
 if __name__ == "__main__":
