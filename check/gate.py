@@ -10,9 +10,14 @@ Each VM has a mode:
   reference the verdict is still pass. Otherwise it must match the given reference (Haskell with the
   cost model the VM ships); then the verdict is badge ("outdated cost model"), else fail.
 
+A run of a subset of the scripts (BENCH_SCRIPTS, BENCH_QUICK) passes --scripts with the selected
+names: then only those scripts of the reference count. A selected script that a VM's check lacks
+still fails as "missing"; an unselected one is not compared.
+
 Usage:
     python3 check/gate.py [--reference check/reference/haskell-check.csv]
                           [--mode VM=strict|VM=badge:REFERENCE_CSV ...]
+                          [--scripts SCRIPTS_FILE]
                           [--json verdict.json] VM_CHECK_CSV [VM_CHECK_CSV ...]
 
 Exit code: 0 if no VM fails (pass or badge), 1 if any VM fails, 2 on bad input.
@@ -96,6 +101,25 @@ def compare(reference: dict[str, dict[str, str]], rows: dict[str, dict[str, str]
     }
 
 
+def read_scripts(path: str) -> list[str]:
+    """Script names, one per line; blank lines are ignored."""
+    with open(path) as f:
+        names = [line.strip() for line in f if line.strip()]
+    if not names:
+        raise InputError(f"--scripts {path}: no script names")
+    return names
+
+
+def select(reference: dict[str, dict[str, str]], scripts: list[str] | None, what: str) -> dict:
+    """The reference rows of the selected scripts (all rows without a selection)."""
+    if scripts is None:
+        return reference
+    unknown = sorted(set(scripts) - set(reference))
+    if unknown:
+        raise InputError(f"--scripts: not in {what}: {unknown}")
+    return {s: reference[s] for s in scripts}
+
+
 def parse_mode(spec: str) -> tuple[str, str, str | None]:
     """'vm=strict' or 'vm=badge:path' -> (vm, mode, badge reference path)."""
     vm, sep, mode = spec.partition("=")
@@ -155,16 +179,20 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--reference", default=DEFAULT_REFERENCE, help="reference csv (default: %(default)s)")
     p.add_argument("--mode", action="append", default=[], metavar="VM=MODE",
                    help="VM=strict (default) or VM=badge:REFERENCE_CSV; repeat per VM")
+    p.add_argument("--scripts", metavar="SCRIPTS_FILE",
+                   help="compare only these scripts (one name per line); default: every script of the reference")
     p.add_argument("--json", help="write the machine-readable verdict to this file ('-' for stdout)")
     p.add_argument("checks", nargs="+", help="<vm>-check.csv files")
     args = p.parse_args(argv)
 
     try:
-        _, reference = read_check_csv(args.reference)
+        scripts = read_scripts(args.scripts) if args.scripts else None
+        reference = select(read_check_csv(args.reference)[1], scripts, args.reference)
         modes = {}
         for spec in args.mode:
             vm, mode, badge_path = parse_mode(spec)
-            modes[vm] = (mode, badge_path, read_check_csv(badge_path)[1] if badge_path else None)
+            badge_ref = select(read_check_csv(badge_path)[1], scripts, badge_path) if badge_path else None
+            modes[vm] = (mode, badge_path, badge_ref)
         verdicts: dict[str, dict] = {}
         for path in args.checks:
             vm, rows = read_check_csv(path)

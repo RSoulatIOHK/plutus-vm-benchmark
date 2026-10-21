@@ -164,6 +164,11 @@ VM fails, 2 on bad input. A row with empty `cpu`/`mem` fails
 the VM as "no costing". A script that is in the reference but not in the VM's file fails as
 "missing".
 
+`--scripts SCRIPTS_FILE` (one name per line) compares only those scripts: a run of a subset
+(`BENCH_SCRIPTS`, `BENCH_QUICK`, docs/IMAGE_CONTRACT.md) checks only the selected scripts, and
+`scripts/run-images.sh` passes their names (`scripts.txt` in the run dir). A selected script that a
+VM's file lacks still fails as "missing"; a name that is not in the reference is bad input.
+
 ## Audit of the existing harnesses (2026-10-21, pins in `.env`)
 
 Does the timed loop run with costing on, and how does each VM get a `<vm>-check.csv`?

@@ -38,9 +38,17 @@ class GateTest(unittest.TestCase):
                 w.writerow((vm,) + tuple(r))
         return path
 
-    def run_gate(self, *checks, modes=()):
+    def write_scripts(self, names):
+        path = os.path.join(self.tmp.name, "scripts.txt")
+        with open(path, "w") as f:
+            f.write("".join(n + "\n" for n in names))
+        return path
+
+    def run_gate(self, *checks, modes=(), scripts=None):
         out_json = os.path.join(self.tmp.name, "verdict.json")
         mode_args = [a for m in modes for a in ("--mode", m)]
+        if scripts is not None:
+            mode_args += ["--scripts", self.write_scripts(scripts)]
         with redirect_stdout(io.StringIO()) as out:
             code = gate.main(["--reference", self.reference, "--json", out_json, *mode_args, *checks])
         with open(out_json) as f:
@@ -106,6 +114,42 @@ class GateTest(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertEqual(verdict["vms"]["g"]["verdict"], "pass")
         self.assertEqual(verdict["vms"]["bad"]["verdict"], "fail")
+
+    # --- selection (--scripts) ---
+
+    def test_selection_ignores_unselected_reference_rows(self):
+        # A check of the selected scripts only: the reference rows of the others are not "missing".
+        vm = self.write("x-check.csv", "x", [("a", "ok", "100", "10"), ("c", "error", "300", "30")])
+        code, verdict, text = self.run_gate(vm, scripts=["a", "c"])
+        self.assertEqual(code, 0)
+        v = verdict["vms"]["x"]
+        self.assertEqual((v["verdict"], v["scripts"], v["matching"]), ("pass", 2, 2))
+        self.assertIn("2/2 scripts match", text)
+
+    def test_selected_script_missing_from_check_fails(self):
+        vm = self.write("x-check.csv", "x", [("a", "ok", "100", "10")])
+        code, verdict, _ = self.run_gate(vm, scripts=["a", "b"])
+        self.assertEqual(code, 1)
+        self.assertEqual(verdict["vms"]["x"]["mismatches"], [{"script": "b", "reason": "missing"}])
+
+    def test_selection_still_compares_values(self):
+        vm = self.write("x-check.csv", "x", [("b", "ok", "200", "21")])
+        code, verdict, _ = self.run_gate(vm, scripts=["b"])
+        self.assertEqual(code, 1)
+        self.assertEqual([m["script"] for m in verdict["vms"]["x"]["mismatches"]], ["b"])
+
+    def test_selection_applies_to_badge_reference(self):
+        vm = self.write("x-check.csv", "x", [OLD_MODEL_ROWS[0]])
+        code, verdict, _ = self.run_gate(vm, modes=[f"x=badge:{self.old_reference}"], scripts=["a"])
+        self.assertEqual(code, 0)
+        self.assertEqual(verdict["vms"]["x"]["verdict"], "badge")
+
+    def test_selection_unknown_or_empty_is_input_error(self):
+        vm = self.write("x-check.csv", "x", ROWS)
+        for names in (["a", "nope"], []):
+            with self.subTest(names=names), redirect_stdout(io.StringIO()):
+                path = self.write_scripts(names)
+                self.assertEqual(gate.main(["--reference", self.reference, "--scripts", path, vm]), 2)
 
     # --- badge mode ---
 
