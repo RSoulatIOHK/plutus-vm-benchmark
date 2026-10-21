@@ -35,8 +35,9 @@ column shows the speed of the evaluator alone. The ranking uses the D3 time.
 
 ### Compiled VMs
 
-The Scalus JIT compiles a script to JVM bytecode before it runs it. Its timed loop evaluates the
-compiled script, so the compile step is not timed. The page shows it with a "compile excluded"
+The Scalus JIT compiles a script to JVM bytecode before it runs it. It decodes and compiles each
+script once, before timing. Its timed loop evaluates the compiled script, so neither the flat
+decode nor the compile step is timed. The page shows it with a "decode and compile excluded"
 badge and a compile-time column (`<vm>-compile.csv`, the median of 3 compiles per script). The
 page shows it in the "Compiler-based VMs" category and in the overall ranking with the interpreters.
 
@@ -94,16 +95,17 @@ and the runner is `scripts/run-<vm>.sh`.
 |---|---|---|
 | haskell | Criterion | Criterion's warm-up; at least 20 s per script (`timeLimit = 20`) |
 | scalus-cek, scalus-jit | JMH | One 20 s warm-up iteration, three 5 s measurement iterations, 1 fork (`-wi 1 -w 20s -i 3 -r 5s -f 1`) |
-| aiken | Criterion.rs | Criterion.rs defaults |
+| aiken | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 10 s measurement |
 | plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
-| blaze-v8, blaze-jsc | Vitest bench | Vitest bench defaults |
-| scalus-js | Vitest bench | Vitest bench defaults (the same Vitest version as blaze-v8) |
+| blaze-v8, blaze-jsc | Vitest bench | 20 s warm-up, three 5 s measurements |
+| scalus-js | Vitest bench | 20 s warm-up, three 5 s measurements (the same Vitest version as blaze-v8) |
 
-The JMH warm-up is 20 s because the staged Scalus JIT needs about 20 s to warm up.
-`BENCH_TIMING=quick` shortens every warm-up and measurement, for smoke tests only.
+The JIT runtimes (JVM, V8, JSC) all get 20 s of warm-up, because the staged Scalus JIT needs about
+20 s to warm up. See [Fairness rules](#fairness-rules). `BENCH_TIMING=quick` shortens every
+warm-up and measurement, for smoke tests only.
 
-## Fairness Constraints
+## Fairness Rules
 
 - **Same data**: all VMs decode the same 89 `.flat` files.
 - **Same parameters**: PlutusV3, protocol version 11, the mainnet cost model, costing on.
@@ -112,13 +114,46 @@ The JMH warm-up is 20 s because the staged Scalus JIT needs about 20 s to warm u
 - **Pinned versions**: `.env` pins each VM; `environment.txt` of each run records the image digests.
 - **Same results**: the correctness gate proves that each published VM did the same work.
 
+Decisions D13 to D16 of the
+[design](docs/superpowers/specs/2026-10-21-lantr-vm-benchmark-design.md#0-decisions):
+
+- **Warm-up (D13)**: the JIT runtimes (JVM, V8, JSC) get a 20 s warm-up and three 5 s
+  measurements. The ahead-of-time compiled VMs (Rust, Go, GHC) keep the defaults of their
+  framework, with at least 5 s of measurement.
+- **Process model (D14)**: every VM runs each script in a fresh process. No JIT profile, heap or
+  allocator state carries over from one script to the next.
+- **Compiled VMs (D15)**: the Scalus JIT row has a "decode and compile excluded" badge. Its timed
+  loop runs the compiled script; the decode and the compile happen once per script, before timing.
+- **Runtime settings (D16)**: each VM runs with the settings that its project documents for
+  production use. A VM without such documentation runs with the defaults of its runtime. Scalus
+  must document its JVM flags in public, so the flags of the Scalus rows are not settings only
+  this benchmark uses.
+
+Host and noise measures ([`scripts/run-images.sh`](scripts/run-images.sh),
+[`nix/runner.nix`](nix/runner.nix)):
+
+- **Image pulls first**: all images are pulled before the first VM runs. No pull overlaps a timing.
+- **CPU set**: on a Linux host every container runs on CPUs 1 to N-1 (`--cpuset-cpus`). CPU 0
+  stays free for the host (Docker, SSH, interrupts). On Docker Desktop (macOS) there is no CPU set:
+  the containers run in a Linux VM, and its CPU 0 is not the host's.
+- **No network**: every container runs with `--network none`.
+- **Quiet host**: the bench server disables the logrotate and fstrim timers. Nix GC, Nix store
+  optimisation and Docker auto-prune are off. Transparent huge pages are pinned to `madvise`.
+- **Drift probe**: Haskell runs first. At the end of the run it runs again on 5 fixed scripts
+  (`haskell-drift.csv`). The page shows the change, for example "Drift (Haskell, end vs start):
+  +1.8 %". `drift.json` has the time of each script.
+- **Noise record**: `environment.txt` records the CPU topology (`lscpu`), selected CPU flags, the
+  THP mode, the kernel command line, cpufreq, the active systemd timers, the load average before
+  each VM, and the steal time during each VM and during the whole run.
+
 ## Hardware
 
 The monthly run uses a Hetzner Cloud dedicated-vCPU server, type `ccx33` (the default of
 `run.yml`): AMD EPYC, 8 dedicated vCPUs, 32 GB RAM. A new server is created for each run. NixOS is
 installed on it from [`nix/runner.nix`](nix/runner.nix), with the CPU governor set to
-`performance`. The server runs one VM at a time and is deleted after the run. `environment.txt`
-records the CPU, cores and memory of each run.
+`performance` (a KVM guest has no cpufreq driver, so this has no effect there). The server runs
+one VM at a time and is deleted after the run. `environment.txt` records the CPU, cores, memory
+and the noise data of each run (see [Fairness rules](#fairness-rules)).
 
 ## Unified Output
 

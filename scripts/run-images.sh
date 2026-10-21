@@ -16,8 +16,26 @@
 #   BENCH_TIMING   normal | quick                         (default normal)
 #   BENCH_QUICK=1  shortcut: BENCH_TIMING=quick, and the first 5 scripts when BENCH_SCRIPTS is empty
 #   DATA_DIR       corpus dir with plutus_use_cases/ (default <repo>/data)
-# The four switches are passed to the images (docs/IMAGE_CONTRACT.md). A run of a subset of the
-# scripts writes their names to scripts.txt; the gate then compares only those.
+#   CPUSET         --cpuset-cpus of every container (default auto: on a Linux host with N >= 2
+#                  CPUs, 1..N-1, so CPU 0 stays free for the host; none on other hosts, for
+#                  example Docker Desktop, where CPU 0 belongs to the Docker VM, not to the host).
+#                  none = no CPU set
+#   DRIFT          1 = drift probe (default), 0 = off. See "Drift probe" below
+# The four BENCH_ switches are passed to the images (docs/IMAGE_CONTRACT.md). A run of a subset of
+# the scripts writes their names to scripts.txt; the gate then compares only those.
+#
+# Order: with PULL=1 every image is pulled before the first VM runs, so a pull never overlaps a
+# timing. Haskell runs first (the reference and the drift probe); the other VMs follow in the
+# given order. Containers run with --network none.
+#
+# Drift probe: when haskell is in the list and the d3 loop runs, haskell runs once more at the
+# end, d3 loop only, on 5 evenly spaced scripts of the selection. Its times go to
+# haskell-drift.csv (not into unified.csv); normalize.py compares them with the same scripts of
+# the first haskell run and writes drift.json and a line in environment.txt.
+#
+# environment.txt also records host noise data where the host has it (Linux): CPU topology, THP,
+# kernel command line, cpufreq, active timers, the load average before each VM and the steal time
+# during each VM and during the whole run.
 #
 # A VM that fails does not stop the run; the exit code is non-zero if any VM failed to run.
 # A VM that fails the gate is hidden in the report; it does not change the exit code.
@@ -43,6 +61,15 @@ DATA_DIR="$(cd "$DATA_DIR" && pwd)"
 
 VMS=$(echo "$*" | tr ',' ' ')
 [[ -n "${VMS// /}" ]] || VMS=$("$REPO_ROOT/scripts/images.sh" list)
+VMS=$(echo "$VMS" | tr '\n' ' ')
+# Haskell first: it is the reference, and the drift probe compares the end of the run with it.
+if [[ " $VMS " == *" haskell "* ]]; then
+    rest=""
+    for vm in $VMS; do [[ "$vm" == haskell ]] || rest="$rest $vm"; done
+    VMS="haskell$rest"
+fi
+DRIFT="${DRIFT:-1}"
+DRIFT_N=5
 
 # --- switches: the same checks as image-entry.sh, before any image runs ------------------
 die() { echo "ERROR: $*" >&2; exit 2; }
@@ -71,7 +98,48 @@ if [[ "$SELECTED" != "$ALL_SCRIPTS" ]]; then
     echo "$SELECTED" > "$RUN_DIR/scripts.txt"
 fi
 
-# --- environment.txt: hardware, software, images ---------------------------------------
+# --- host noise probes: Linux only, "n/a" where the host lacks the source -------------------
+# cpu_ticks: "<steal> <total>" of all CPUs since boot (/proc/stat, USER_HZ ticks), else empty.
+# In the "cpu" line field 9 is steal; fields 2..9 (user .. steal) add up to the total.
+cpu_ticks() {
+    if [[ -r /proc/stat ]]; then
+        awk '/^cpu / { t = 0; for (i = 2; i <= 9; i++) t += $i; print $9, t; exit }' /proc/stat
+    fi
+}
+# steal_between <ticks before> <ticks after>: steal time as a share of all CPU time in between.
+steal_between() {
+    if [[ -z "$1" || -z "$2" ]]; then echo "n/a"; return; fi
+    awk -v a="$1" -v b="$2" 'BEGIN { split(a, x, " "); split(b, y, " "); s = y[1] - x[1]; t = y[2] - x[2]
+        printf "%.2f %% (%d of %d ticks)", (t > 0 ? 100 * s / t : 0), s, t }'
+}
+load_avg() {
+    if [[ -r /proc/loadavg ]]; then cut -d' ' -f1-3 /proc/loadavg
+    else sysctl -n vm.loadavg 2>/dev/null | tr -d '{}' | xargs || echo "n/a"
+    fi
+}
+# The value in brackets of a sysfs choice file ("always [madvise] never" -> madvise).
+sysfs_choice() {
+    if [[ -r "$1" ]]; then sed 's/.*\[\(.*\)\].*/\1/' "$1"; else echo "n/a"; fi
+}
+
+# --- docker run flags -------------------------------------------------------------------
+# --network none: no VM needs the network at run time. --cpuset-cpus: every VM gets the same CPUs,
+# and CPU 0 stays for the host (dockerd, sshd, interrupts). On Docker Desktop the containers run in
+# a Linux VM whose CPU 0 is not the host's, so the CPU set would protect nothing.
+CPUSET="${CPUSET:-auto}"
+if [[ "$CPUSET" == auto ]]; then
+    CPUSET=none
+    if [[ "$(uname -s)" == Linux ]]; then
+        ncpu=$(getconf _NPROCESSORS_ONLN)
+        if [[ $ncpu -eq 2 ]]; then CPUSET=1; elif [[ $ncpu -gt 2 ]]; then CPUSET="1-$((ncpu - 1))"; fi
+    fi
+fi
+DOCKER_FLAGS=(--rm --cap-add SYS_NICE --network none)
+[[ "$CPUSET" == none ]] || DOCKER_FLAGS+=(--cpuset-cpus "$CPUSET")
+
+# --- environment.txt: hardware, software, noise, images ----------------------------------
+# Keys cpu, cores and memory feed the report's header badge; keep the other keys distinct.
+RUN_TICKS_START=$(cpu_ticks)
 {
     echo "date: $(date -Iseconds 2>/dev/null || date)"
     echo "kernel: $(uname -sr)"
@@ -79,15 +147,50 @@ fi
         echo "cpu: $(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | xargs)"
         echo "cores: $(nproc)"
         echo "memory: $(free -h | awk '/Mem:/ {print $2}')"
+        flags=" $(grep -m1 '^flags' /proc/cpuinfo | cut -d: -f2 || true) "
+        isa=""
+        for f in hypervisor sse4_2 avx avx2 bmi2 fma avx512f avx512_vnni sha_ni vaes; do
+            [[ "$flags" == *" $f "* ]] && isa="$isa $f"
+        done
+        echo "cpu flags (selected):${isa:- none}"
     else
         echo "cpu: $(sysctl -n machdep.cpu.brand_string 2>/dev/null || uname -m)"
         echo "cores: $(sysctl -n hw.ncpu 2>/dev/null || echo unknown)"
         echo "memory: $(( $(sysctl -n hw.memsize 2>/dev/null || echo 0) / 1073741824 ))G"
     fi
+    if command -v lscpu >/dev/null 2>&1; then
+        # Only the lscpu fields this host has (aarch64 has clusters, not sockets), "key value; ...".
+        echo "topology: $(LC_ALL=C lscpu | awk -F: '
+            /^(Model name|Thread\(s\) per core|Core\(s\) per (socket|cluster)|Socket\(s\)|Cluster\(s\)|NUMA node\(s\)|Hypervisor vendor|Virtualization type):/ {
+                v = $2; gsub(/^ +| +$/, "", v); if (v != "-") { printf "%s%s %s", sep, $1, v; sep = "; " } }')"
+        mhz=$(LC_ALL=C lscpu | awk -F: '/MHz/ { gsub(/^ +/, "", $2); printf "%s%s %s", sep, $1, $2; sep = ", " }')
+        echo "lscpu mhz: ${mhz:-n/a}"
+    else
+        echo "topology: n/a (no lscpu)"
+    fi
+    cpufreq=/sys/devices/system/cpu/cpu0/cpufreq
+    if [[ -d "$cpufreq" ]]; then
+        echo "cpufreq: governor $(cat "$cpufreq/scaling_governor" 2>/dev/null || echo n/a), cur $(cat "$cpufreq/scaling_cur_freq" 2>/dev/null || echo n/a) kHz, max $(cat "$cpufreq/cpuinfo_max_freq" 2>/dev/null || echo n/a) kHz"
+    elif [[ -d /sys/devices/system/cpu ]]; then
+        echo "cpufreq: none (no cpufreq driver, for example a KVM guest)"
+    else
+        echo "cpufreq: n/a"
+    fi
+    thp=/sys/kernel/mm/transparent_hugepage
+    echo "thp: enabled $(sysfs_choice "$thp/enabled"), defrag $(sysfs_choice "$thp/defrag")"
+    echo "kernel cmdline: $(cat /proc/cmdline 2>/dev/null || echo n/a)"
+    if command -v systemctl >/dev/null 2>&1; then
+        echo "timers: $(systemctl list-units --type=timer --state=active --no-legend --plain 2>/dev/null \
+            | awk '{print $1}' | paste -sd' ' - || echo n/a)"
+    fi
+    echo "load avg at start: $(load_avg)"
     echo "docker: $(docker version --format '{{.Server.Version}} ({{.Server.Os}}/{{.Server.Arch}})' 2>/dev/null || echo unknown)"
     echo "docker cpus: $(docker info --format '{{.NCPU}}' 2>/dev/null || echo unknown)"
     echo "docker memory: $(( $(docker info --format '{{.MemTotal}}' 2>/dev/null || echo 0) / 1048576 )) MiB"
+    echo "docker run flags: ${DOCKER_FLAGS[*]}"
+    [[ "$CPUSET" != none ]] || echo "docker cpuset: none ($(uname -s) host)"
     echo "harness: ${PVB_HARNESS:-$(git -C "$REPO_ROOT" rev-parse --short HEAD 2>/dev/null || echo unknown)}"
+    echo "vm order: $VMS"
     echo "bench_quick: $BENCH_QUICK"
     echo "bench_scripts: ${BENCH_SCRIPTS:-<all>} ($(echo "$SELECTED" | wc -l | tr -d ' ') of $(echo "$ALL_SCRIPTS" | wc -l | tr -d ' ') scripts)"
     echo "bench_loops: $BENCH_LOOPS"
@@ -95,19 +198,44 @@ fi
 } > "$RUN_DIR/environment.txt"
 cat "$RUN_DIR/environment.txt"
 
-# --- run each VM ------------------------------------------------------------------------
+image_of() {
+    local tag="$IMAGE_TAG"
+    [[ "$tag" == auto ]] && tag=$("$REPO_ROOT/scripts/images.sh" tag "$1")
+    echo "${IMAGE_PREFIX}$1:${tag}"
+}
+
+# --- pull every image first: no pull overlaps a timing -----------------------------------
 FAILED=""
+PULL_FAILED=" "
+if [[ "$PULL" == 1 ]]; then
+    for vm in $VMS; do
+        image=$(image_of "$vm")
+        echo "pull ${vm}: ${image}"
+        if ! docker pull -q "$image" && ! docker pull -q "$image"; then
+            echo "FAIL: ${vm}: cannot pull ${image}"
+            PULL_FAILED="$PULL_FAILED$vm "
+        fi
+    done
+fi
+
+# run_image <image> <results dir> <BENCH_SCRIPTS> <BENCH_LOOPS> <BENCH_QUICK>
+run_image() {
+    local cmd=(docker run "${DOCKER_FLAGS[@]}"
+        -e BENCH_QUICK="$5" -e BENCH_SCRIPTS="$3" -e BENCH_LOOPS="$4" -e BENCH_TIMING="$BENCH_TIMING"
+        -v "$DATA_DIR:/bench/data:ro" -v "$2:/results" "$1")
+    echo "${cmd[*]}"
+    "${cmd[@]}"
+}
+
+# --- run each VM ------------------------------------------------------------------------
 for vm in $VMS; do
-    tag="$IMAGE_TAG"
-    [[ "$tag" == auto ]] && tag=$("$REPO_ROOT/scripts/images.sh" tag "$vm")
-    image="${IMAGE_PREFIX}${vm}:${tag}"
+    image=$(image_of "$vm")
     echo ""
     echo "---------------------------------------------"
     echo " ${vm}: ${image}"
     echo "---------------------------------------------"
 
-    if [[ "$PULL" == 1 ]] && ! docker pull -q "$image" && ! docker pull -q "$image"; then
-        echo "FAIL: ${vm}: cannot pull ${image}"
+    if [[ "$PULL_FAILED" == *" $vm "* ]]; then
         FAILED="$FAILED $vm"
         echo "image ${vm}: ${image} (pull failed)" >> "$RUN_DIR/environment.txt"
         continue
@@ -115,21 +243,50 @@ for vm in $VMS; do
     digest=$(docker image inspect --format '{{if .RepoDigests}}{{index .RepoDigests 0}}{{else}}{{.Id}}{{end}}' "$image" 2>/dev/null || echo missing)
     echo "image ${vm}: ${image} ${digest}" >> "$RUN_DIR/environment.txt"
 
+    load_before=$(load_avg)
+    ticks_before=$(cpu_ticks)
     start=$(date +%s)
-    if docker run --rm --cap-add SYS_NICE \
-        -e BENCH_QUICK="$BENCH_QUICK" \
-        -e BENCH_SCRIPTS="$BENCH_SCRIPTS" \
-        -e BENCH_LOOPS="$BENCH_LOOPS" \
-        -e BENCH_TIMING="$BENCH_TIMING" \
-        -v "$DATA_DIR:/bench/data:ro" \
-        -v "$RUN_DIR:/results" \
-        "$image"; then
+    rc=0
+    run_image "$image" "$RUN_DIR" "$BENCH_SCRIPTS" "$BENCH_LOOPS" "$BENCH_QUICK" || rc=$?
+    if [[ $rc -eq 0 ]]; then
         echo "OK: ${vm} in $(( $(date +%s) - start )) s"
     else
-        echo "FAIL: ${vm} exited with $? after $(( $(date +%s) - start )) s"
+        echo "FAIL: ${vm} exited with $rc after $(( $(date +%s) - start )) s"
         FAILED="$FAILED $vm"
     fi
+    echo "noise ${vm}: load avg before $load_before, steal during run $(steal_between "$ticks_before" "$(cpu_ticks)")" \
+        >> "$RUN_DIR/environment.txt"
 done
+
+# --- drift probe: haskell again at the end, on a fixed subset -----------------------------
+# The subset is DRIFT_N evenly spaced scripts of the selection, so the full run always uses the
+# same ones. Same timing as the first pass; d3 loop only. The container writes to drift/; the
+# timing is copied to haskell-drift.csv, which normalize.py keeps out of unified.csv.
+if [[ "$DRIFT" == 1 ]] && has_loop d3 && [[ " $VMS " == *" haskell "* ]]; then
+    if [[ "$VMS" == haskell ]]; then
+        echo "drift (haskell, end vs start): skipped, haskell is the only VM" >> "$RUN_DIR/environment.txt"
+    elif [[ " $FAILED " == *" haskell "* || ! -s "$RUN_DIR/haskell.csv" ]]; then
+        echo "drift (haskell, end vs start): skipped, the first haskell run failed" >> "$RUN_DIR/environment.txt"
+    else
+        DRIFT_SCRIPTS=$(echo "$SELECTED" | awk -v k="$DRIFT_N" '{ a[NR] = $0 }
+            END { if (NR < k) k = NR; for (i = 0; i < k; i++) print a[1 + int(i * NR / k)] }')
+        echo ""
+        echo "---------------------------------------------"
+        echo " drift probe: haskell on $(echo "$DRIFT_SCRIPTS" | paste -sd' ' -)"
+        echo "---------------------------------------------"
+        mkdir -p "$RUN_DIR/drift"
+        rm -f "$RUN_DIR/haskell-drift.csv"
+        rc=0
+        run_image "$(image_of haskell)" "$RUN_DIR/drift" "$(echo "$DRIFT_SCRIPTS" | paste -sd'|' -)" d3 0 || rc=$?
+        if [[ $rc -eq 0 && -s "$RUN_DIR/drift/haskell.csv" ]]; then
+            cp "$RUN_DIR/drift/haskell.csv" "$RUN_DIR/haskell-drift.csv"
+        else
+            echo "drift (haskell, end vs start): skipped, the drift run failed (exit $rc)" >> "$RUN_DIR/environment.txt"
+        fi
+    fi
+fi
+echo "steal during the whole run: $(steal_between "$RUN_TICKS_START" "$(cpu_ticks)")" >> "$RUN_DIR/environment.txt"
+echo "load avg at end: $(load_avg)" >> "$RUN_DIR/environment.txt"
 
 # --- unified.csv, gate, report ----------------------------------------------------------
 echo ""
@@ -157,7 +314,12 @@ else
         -v "$REPO_ROOT:/repo" -v "$(dirname "$RUN_DIR"):/runs" "$PYTHON_IMAGE" python3)
 fi
 
-"${PY[@]}" "$ROOT/parsers/normalize.py" "$RUN"
+# normalize.py prints the drift line (drift probe) on stdout, if there is one.
+drift_line=$("${PY[@]}" "$ROOT/parsers/normalize.py" "$RUN")
+if [[ -n "$drift_line" ]]; then
+    echo "$drift_line"
+    echo "$drift_line" >> "$RUN_DIR/environment.txt"
+fi
 
 # --- correctness gate (check/README.md) -------------------------------------------------
 # Every <vm>-check.csv against the Haskell reference; the mode per VM comes from

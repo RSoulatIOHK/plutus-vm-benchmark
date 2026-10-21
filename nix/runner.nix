@@ -90,6 +90,18 @@ in
   # A constant clock speed makes runs comparable. On a VM without cpufreq this does nothing.
   powerManagement.cpuFreqGovernor = "performance";
 
+  # Transparent huge pages only for memory that asks for them. This is the nixpkgs kernel default
+  # today; the parameter pins it, so a kernel config change cannot change the memory behaviour of
+  # the VMs between runs. scripts/run-images.sh records the THP mode in environment.txt.
+  boot.kernelParams = [ "transparent_hugepage=madvise" ];
+
+  # No periodic work during a run. The server lives for one run, so these jobs have nothing to do:
+  # logrotate (hourly) and fstrim (weekly) are the timers NixOS enables by default. Nix GC, Nix
+  # store optimisation and Docker auto-prune are off by default. systemd-tmpfiles-clean runs once,
+  # 15 min after boot; it is short and stays. bench-selfdestruct (above) must stay.
+  services.logrotate.enable = false;
+  services.fstrim.enable = false;
+
   environment.systemPackages = with pkgs; [
     curl
     git
