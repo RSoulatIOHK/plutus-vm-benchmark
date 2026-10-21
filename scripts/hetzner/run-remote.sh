@@ -8,7 +8,8 @@
 # `start` copies the checked-out files (git archive HEAD) to the server and starts
 # scripts/run-images.sh there as a detached systemd unit, so the run outlives the SSH session
 # and the 6 h limit of a GitHub-hosted job. `collect` copies results/<name>, docs/index.html and
-# the run log back into this checkout. BENCH_QUICK=1 is passed through.
+# the run log back into this checkout. BENCH_SCRIPTS, BENCH_LOOPS, BENCH_TIMING and BENCH_QUICK are
+# passed through (scripts/run-images.sh).
 set -euo pipefail
 
 CMD="${1:?usage: run-remote.sh start|status|collect <run-id> ...}"
@@ -27,14 +28,20 @@ case "$CMD" in
     VMS="$*"
     git -C "$REPO_ROOT" archive --format=tar HEAD \
       | "${SSH[@]}" 'rm -rf /root/repo && mkdir -p /root/repo && tar x -C /root/repo'
-    # One string for the remote shell; VMS and NAME are plain words (no quotes needed).
+    # One string for the remote shell; VMS and NAME are plain words (no quotes needed). The
+    # switches can hold regex characters (BENCH_SCRIPTS='auction_.*|uniswap-1'): quote them with %q.
     # A transient unit gets a minimal PATH on NixOS (no bash, docker, git): give it the system one.
+    SCRIPTS_Q=$(printf %q "${BENCH_SCRIPTS:-}")
+    LOOPS_Q=$(printf %q "${BENCH_LOOPS:-d3,eval,check}")
+    TIMING_Q=$(printf %q "${BENCH_TIMING:-normal}")
     "${SSH[@]}" "rm -f $DONE && systemd-run --unit=pvb-bench --collect \
       --working-directory=/root/repo \
       --setenv=PATH=/run/current-system/sw/bin \
       --setenv=PULL=1 --setenv=IMAGE_TAG=auto \
       --setenv=BENCH_QUICK=${BENCH_QUICK:-0} \
-      --setenv=BENCH_SKIP_EVAL=${BENCH_SKIP_EVAL:-0} \
+      --setenv=BENCH_SCRIPTS=$SCRIPTS_Q \
+      --setenv=BENCH_LOOPS=$LOOPS_Q \
+      --setenv=BENCH_TIMING=$TIMING_Q \
       --setenv=PVB_HARNESS=$(git -C "$REPO_ROOT" rev-parse --short HEAD) \
       /run/current-system/sw/bin/bash -c 'scripts/run-images.sh results/$NAME $VMS > /root/run.log 2>&1; echo \$? > $DONE'"
     echo "started run $NAME on $IP"

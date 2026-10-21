@@ -1,5 +1,7 @@
 # The benchmark run: creates a bench server on Hetzner, runs every VM image on it, gates the
 # results, commits results/<date> and publishes the report on GitHub Pages, and deletes the server.
+# A manual run can take a subset (VMs, scripts, loops, quick timing): that is a partial run,
+# results/partial-<date>T<time>, never committed or published.
 #
 # A GitHub-hosted job lasts at most 6 h and a full run takes about as long, so the run is detached
 # on the server (scripts/hetzner/run-remote.sh) and two wait jobs poll it. The server deletes
@@ -15,10 +17,17 @@ on:
       vms:
         description: VMs to run, space-separated (empty = all)
         default: ""
-      quick:
-        description: BENCH_QUICK=1 (5 scripts, short timing); results are not committed
-        type: boolean
-        default: false
+      scripts:
+        description: "Scripts to run: extended regex, full match on the name, e.g. auction_.*|uniswap-1 (empty = all 89)"
+        default: ""
+      loops:
+        description: "Loops, comma-separated: d3 (decode+eval timing), eval (eval-only timing), check"
+        default: d3,eval,check
+      timing:
+        description: Timing length (quick = short warm-up and measurement)
+        type: choice
+        options: [normal, quick]
+        default: normal
       server_type:
         description: Hetzner server type (keep it fixed for comparable history)
         default: ccx33
@@ -26,12 +35,10 @@ on:
         description: Run even if nothing changed since the last run
         type: boolean
         default: false
-      skip_eval:
-        description: Skip the eval-only loops (BENCH_SKIP_EVAL=1)
-        type: boolean
-        default: false
       publish:
-        description: Commit results/<date> and deploy the page (otherwise the results are only an artifact)
+        description: >-
+          Commit results/<date> and deploy the page (otherwise the results are only an artifact).
+          Only a full run publishes (all VMs, scripts and loops, normal timing); a partial run never does
         type: boolean
         default: false
 
@@ -53,12 +60,15 @@ jobs:
       run_id: ${{ steps.plan.outputs.run_id }}
       name: ${{ steps.plan.outputs.name }}
       skip: ${{ steps.plan.outputs.skip }}
+      partial: ${{ steps.plan.outputs.partial }}
       ip: ${{ steps.up.outputs.ip }}
     env:
       HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
       BENCH_SERVER_TYPE: ${{ inputs.server_type || 'ccx33' }}
-      BENCH_QUICK: ${{ inputs.quick && '1' || '0' }}
-      BENCH_SKIP_EVAL: ${{ inputs.skip_eval && '1' || '0' }}
+      # A scheduled run has no inputs: every switch takes its full-run default.
+      BENCH_SCRIPTS: ${{ inputs.scripts || '' }}
+      BENCH_LOOPS: ${{ inputs.loops || 'd3,eval,check' }}
+      BENCH_TIMING: ${{ inputs.timing || 'normal' }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -68,6 +78,7 @@ jobs:
         env:
           FORCE: ${{ inputs.force || false }}
           EVENT: ${{ github.event_name }}
+          VMS: ${{ inputs.vms }}
         run: |
           # Skip a scheduled run when only results/ and the published page changed since the
           # last results commit.
@@ -78,8 +89,34 @@ jobs:
             echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if [[ "$BENCH_QUICK" == 1 ]]; then
-            name="quick-$(date -u +%Y-%m-%dT%H%M)"
+          # Check the switches here, before a server costs money (run-images.sh checks them again).
+          case "$BENCH_TIMING" in normal | quick) ;; *) echo "::error::timing $BENCH_TIMING"; exit 1 ;; esac
+          loops=$(echo "${BENCH_LOOPS//,/ }" | xargs -n1 | sort -u | paste -sd, -)
+          for loop in ${loops//,/ }; do
+            case "$loop" in d3 | eval | check) ;; *) echo "::error::unknown loop '$loop' in '$BENCH_LOOPS'"; exit 1 ;; esac
+          done
+          [[ -n "$loops" ]] || { echo "::error::loops is empty"; exit 1; }
+          all_vms=$(scripts/images.sh list | sort -u | paste -sd' ' -)
+          for vm in $VMS; do
+            echo "$all_vms" | tr ' ' '\n' | grep -qx -- "$vm" || { echo "::error::unknown VM '$vm'"; exit 1; }
+          done
+          vms=$(echo "${VMS:-$all_vms}" | xargs -n1 | sort -u | paste -sd' ' -)
+          if [[ -n "$BENCH_SCRIPTS" ]]; then
+            # grep exits 1 for no match, 2 for a bad regex.
+            rc=0
+            matched=$(printf '%s\n' data/plutus_use_cases/*.flat | sed 's|.*/||; s/\.flat$//' \
+              | grep -Ec -- "^(${BENCH_SCRIPTS})\$") || rc=$?
+            [[ $rc -le 1 ]] || { echo "::error::scripts '$BENCH_SCRIPTS' is not a valid extended regex"; exit 1; }
+            [[ $matched -gt 0 ]] || { echo "::error::scripts '$BENCH_SCRIPTS' matches no script"; exit 1; }
+            echo "scripts: $matched match '$BENCH_SCRIPTS'"
+          fi
+          # Full run: every VM, every script, every loop, normal timing. Anything else is partial.
+          partial=true
+          if [[ "$vms" == "$all_vms" && -z "$BENCH_SCRIPTS" && "$loops" == check,d3,eval && "$BENCH_TIMING" == normal ]]; then
+            partial=false
+          fi
+          if [[ "$partial" == true ]]; then
+            name="partial-$(date -u +%Y-%m-%dT%H%M)"
           else
             name="$(date -u +%Y-%m-%d)"
             n=2
@@ -87,6 +124,7 @@ jobs:
           fi
           {
             echo "skip=false"
+            echo "partial=$partial"
             echo "name=$name"
             echo "run_id=run-${{ github.run_id }}"
           } >> "$GITHUB_OUTPUT"
@@ -193,8 +231,8 @@ jobs:
       HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
       RUN_ID: ${{ needs.start.outputs.run_id }}
       NAME: ${{ needs.start.outputs.name }}
-      QUICK: ${{ inputs.quick && 'true' || 'false' }}
-      # A scheduled run always publishes; a manual run only when asked.
+      PARTIAL: ${{ needs.start.outputs.partial }}
+      # A scheduled run always publishes; a manual run only when asked, and never a partial run.
       PUBLISH: ${{ (github.event_name == 'schedule' || inputs.publish) && 'true' || 'false' }}
     steps:
       - uses: actions/checkout@v5
@@ -231,7 +269,7 @@ jobs:
 
       - name: Commit results
         id: commit
-        if: steps.collect.outcome == 'success' && env.QUICK != 'true' && env.PUBLISH == 'true'
+        if: steps.collect.outcome == 'success' && env.PARTIAL == 'false' && env.PUBLISH == 'true'
         run: |
           git config user.name "plutus-vm-bench"
           git config user.email "github-actions[bot]@users.noreply.github.com"
