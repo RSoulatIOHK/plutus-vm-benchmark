@@ -26,8 +26,10 @@ RUN bash install_secp256k1.sh && ldconfig
 # uplc's own pin (cbor2>=5.4.6) lets pip pick 6.x. Keep cbor2 below 6 until upstream catches up.
 RUN pip install --no-cache-dir . "cbor2<6"
 
-# Our benchmark script (not part of the upstream repo)
+# Our benchmark and check script (not part of the upstream repo) and the cost model it loads
 COPY scripts/opshin_bench.py /bench/opshin/bench_plutus_use_cases.py
+COPY check/reference/mainnet-plutusv3-costmodel.json /bench/mainnet-plutusv3-costmodel.json
+COPY images/opshin/plutusv3-param-names.txt /bench/plutusv3-param-names.txt
 
 COPY parsers/ /bench/parsers/
 COPY scripts/image-entry.sh scripts/run-opshin.sh /bench/scripts/

@@ -9,19 +9,22 @@ echo "opshin-uplc (Python)"
 
 cd "$BENCH_DIR"
 
-# Patch the hardcoded multi-line BENCH_DIR assignment to use canonical data
-python3 -c "
-import re
-with open('bench_plutus_use_cases.py') as f:
-    code = f.read()
-code = re.sub(
-    r'BENCH_DIR\s*=\s*os\.path\.expanduser\([^)]+\)',
-    'BENCH_DIR = \"${DATA_DIR}\"',
-    code,
-)
-with open('bench_plutus_use_cases.py', 'w') as f:
-    f.write(code)
-"
+# Our harness (scripts/opshin_bench.py): mainnet PlutusV3 cost model, counting mode, flat decode +
+# eval per iteration, evaluation result checked.
+export BENCH_DATA_DIR="$DATA_DIR"
+export PVB_COSTMODEL_JSON=/bench/mainnet-plutusv3-costmodel.json
+export PVB_PARAM_NAMES=/bench/plutusv3-param-names.txt
+
+run_check() {
+    # Spec D4: one evaluation per script with the timed loop's parameters.
+    python3 bench_plutus_use_cases.py --check "$RUN_DIR/opshin-check.csv" 2>&1 | tee "$RUN_DIR/opshin-check.log"
+    echo "Wrote $RUN_DIR/opshin-check.csv"
+}
+
+if [[ "${PVB_CHECK_ONLY:-0}" == 1 ]]; then
+    run_check
+    exit 0
+fi
 
 # Run benchmark with the image's Python (python:${PYTHON_VERSION} base image)
 if [[ "${BENCH_QUICK:-0}" == 1 ]]; then
@@ -41,8 +44,4 @@ done
 # Fill in -1 for any scripts that were given but produced no result
 python3 /bench/parsers/fill_failures.py "$RUN_DIR/opshin.csv" "$DATA_DIR" opshin "$RUN_DIR/opshin-raw.log"
 
-# ---------------------------------------------------------------------------
-# CHECK HOOK (spec D4): the correctness check runs here, one evaluation per script with
-# the same parameters as the timed loop, and writes "$RUN_DIR/opshin-check.csv"
-# (vm,script,status,cpu,mem). Implemented by check/, not yet wired in.
-# ---------------------------------------------------------------------------
+run_check || echo "WARNING: opshin check failed" >&2
