@@ -1,4 +1,4 @@
-# lantr Plutus VM benchmark – design (DRAFT)
+# lantr Plutus VM benchmark – design
 
 Status: approved 2026-10-21.
 
@@ -7,14 +7,14 @@ Status: approved 2026-10-21.
 | # | Decision | Choice |
 |---|---|---|
 | D1 | Purpose | Public, neutral comparison for library authors who choose an evaluator |
-| D2 | Home | Fork SAIB repo into the `lantr-io` GitHub org (keep history and MIT credit). Page at `bench.lantr.io` (GitHub Pages). scalus.org links to it |
+| D2 | Home | Standalone repo `lantr-io/plutus-vm-benchmark` (not a GitHub fork) with the full SAIB history and MIT credit. Page at `plutus-vm-bench.lantr.io` (GitHub Pages, CNAME at Namecheap). scalus.org links to it |
 | D3 | What is timed | Node-equivalent: flat decode + evaluate with the mainnet cost model and costing on |
 | D4 | Correctness gate | Result and ExUnits of every script must equal Haskell. A VM that fails is not published; the page lists it as "failed check" |
 | D5 | Compiled VMs (Scalus JIT) | Same ranking as interpreters, with a "compile excluded" badge and a compile-time column |
 | D6 | PR automation | Bot opens version-bump PRs (`.env` only); they auto-merge on smoke + gate pass. Code PRs need human review; their CI has no secrets |
 | D7 | Schedule | Monthly cron (skip if nothing merged since the last run) + manual button |
 | D8 | Corpus | The existing 89 `plutus_use_cases` scripts. A mainnet PlutusV3 corpus is v2, as a separate ranking |
-| D9 | Orchestration | GitHub Actions + `hcloud` CLI + NixOS snapshot image (approach A) |
+| D9 | Orchestration | GitHub Actions + `hcloud` CLI; NixOS installed on a fresh Ubuntu server by nixos-anywhere on each run |
 
 ### Line-up (rule: the VM has a downstream user today)
 
@@ -48,11 +48,18 @@ Repo `lantr-io/plutus-vm-benchmark`:
 | `results/<date>/` | Git-tracked history with `environment.txt` and pins | Kept |
 | `.github/workflows/` | `smoke.yml` (PRs, no secrets), `bump.yml` (bot), `run.yml` (monthly + manual) | New |
 
-Repo `infra`: new flake output `bench-runner`.
+NixOS config of the bench server, in this repo (not in `infra`: `infra` is local-only and holds secrets,
+so a workflow cannot fetch it; a public config also lets anyone rebuild the exact machine):
 
-- NixOS image, rootful Docker (compose needs `SYS_NICE`), CPU governor `performance`.
-- `bench-selfdestruct.timer`: after N hours, deletes its own server through the Hetzner API.
-- A script builds the image and uploads it as a Hetzner snapshot (candidates: nixos-generators, hcloud-upload-image).
+- `flake.nix` output `bench-runner` = `nix/runner.nix` + `nix/disko.nix`.
+- Rootful Docker (compose needs `SYS_NICE`), CPU governor `performance`.
+- Root SSH keys come from the Hetzner metadata service at boot (per-run key, nothing baked in).
+- `bench-selfdestruct.timer`: 10 h after boot, deletes its own server through the Hetzner API.
+- `scripts/hetzner/up.sh` creates an Ubuntu server and installs the config with
+  `nixos-anywhere --build-on remote` (no x86_64-linux builder needed). `down.sh` deletes it,
+  `sweep.sh` deletes servers older than 12 h.
+- Hetzner has no official NixOS image. Install on each run costs ~5–10 min of a multi-hour run. If it
+  becomes flaky, snapshot an installed server with `hcloud server create-image` and boot from that.
 
 Hetzner: a separate project for the benchmark. One fixed CCX (dedicated vCPU) server type. The API token is
 stored only in the `run.yml` GitHub environment, which only `main` can use.
@@ -80,7 +87,7 @@ Token blast radius:
 
 1. Skip if no merge happened since the last `results/` directory.
 2. Build and push changed images to GHCR on GitHub runners (not on the paid server).
-3. `hcloud server create` from the snapshot, with the run ID as a label.
+3. `scripts/hetzner/up.sh`: create an Ubuntu server (run ID as a label) and install NixOS with nixos-anywhere.
 4. Over SSH: pull images, write `environment.txt`, run the VMs one at a time, run the gate.
 5. Copy `results/<date>/` back to the workflow.
 6. `hcloud server delete` in an `always()` step. The self-destruct timer is the backstop.
@@ -101,8 +108,8 @@ Expected run time: 3–5 h for the full line-up (the 4-VM run took 1.5 h on an M
 - Gate fails for a VM in the monthly run: row hidden, listed as "failed check", issue opened automatically.
 - Server cleanup has three layers:
   1. `always()` delete step in `run.yml`.
-  2. `bench-selfdestruct.timer` on the server (N = expected run time × 2).
-  3. A daily `sweep.yml` deletes any server in the bench project with a run label older than N hours.
+  2. `bench-selfdestruct.timer` on the server (10 h).
+  3. A daily `sweep.yml` deletes any server in the bench project with a run label older than 12 h.
 - SSH or image pull fails: retry once, then delete the server and fail the workflow.
 - Hetzner has no hard spending cap. Set a billing alert on the project.
 
@@ -115,9 +122,5 @@ Expected run time: 3–5 h for the full line-up (the 4-VM run took 1.5 h on an M
 
 ## 5. Open questions
 
-1. Which Hetzner account/project, and who holds the API token?
-2. Who controls DNS for `lantr.io` (needed for the `bench.lantr.io` CNAME)?
-3. Exact CCX type (for example CCX33 vs CCX43).
-4. Cost model and language version for the 89 scripts under D3: every VM in the line-up must support it.
-5. Uncommitted fixes in the local bench repo (`parse_jmh.py`, `run-scalus-jit.sh`, `Dockerfile.subset`)
-   must land before the fork is usable.
+1. Exact CCX type (for example CCX33 vs CCX43). `up.sh` defaults to `ccx33`.
+2. Cost model and language version for the 89 scripts under D3: every VM in the line-up must support it.

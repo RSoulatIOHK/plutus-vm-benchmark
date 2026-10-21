@@ -1,0 +1,46 @@
+# Creates a bench server, installs nix/runner.nix, checks it, deletes it. No benchmarks run.
+# Use it after changing nix/ or scripts/hetzner/.
+name: provision-test
+
+on:
+  workflow_dispatch:
+    inputs:
+      server_type:
+        description: Hetzner server type
+        default: cx33
+
+concurrency: bench-hetzner
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+    environment: bench-run
+    timeout-minutes: 45
+    env:
+      HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+      BENCH_SERVER_TYPE: ${{ inputs.server_type }}
+      RUN_ID: test-${{ github.run_id }}
+      BENCH_STATE: /tmp/bench-hetzner
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+
+      - name: Create server and install NixOS
+        run: nix shell nixpkgs#hcloud --command scripts/hetzner/up.sh "$RUN_ID"
+
+      - name: Check the installed system
+        run: |
+          IP=$(cat "$BENCH_STATE/$RUN_ID/ip")
+          ssh -i "$BENCH_STATE/$RUN_ID/id_ed25519" -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null "root@$IP" '
+            set -e
+            grep -q "^NAME=NixOS" /etc/os-release
+            docker run --rm hello-world >/dev/null
+            systemctl is-active bench-selfdestruct.timer
+            test "$(stat -c %a /var/lib/bench/hcloud-token)" = 400
+            nproc; free -g | head -2
+          '
+
+      - name: Delete server
+        if: always()
+        run: nix shell nixpkgs#hcloud --command scripts/hetzner/down.sh "$RUN_ID"
