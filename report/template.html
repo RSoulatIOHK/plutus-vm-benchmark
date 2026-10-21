@@ -875,7 +875,7 @@ const ENGINE_GROUPS = [
   { matches: ['int'],      cls: '',    code: 'Interpreters',         title: 'Interpreters',
     desc: 'CEK machines or AST tree-walkers. The host runtime (GHC, JVM, V8 or CPython) is an implementation detail; the UPLC program itself is never compiled.' },
   { matches: ['bc','jit'], cls: 'jit', code: 'Compiler-based VMs',  title: 'Compiler-based VMs',
-    desc: 'Have a UPLC compilation pass: to a custom bytecode (Bytecode VMs) or to host machine code (JIT compilers). The timed loop runs the compiled script; the compile time is shown separately.' },
+    desc: 'Have a UPLC compilation pass: to a custom bytecode (Bytecode VMs) or to host machine code (JIT compilers). The timed loop runs the compiled script; the decode and the compile run once per script, before timing. The compile time is shown separately.' },
 ];
 document.getElementById('engine-groups').innerHTML = ENGINE_GROUPS.map(g => {
   const vms = presentVMs.filter(vm => g.matches.includes(vmCategory(vm)));
