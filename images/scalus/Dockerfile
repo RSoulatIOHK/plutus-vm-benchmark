@@ -5,9 +5,10 @@
 #   scalus-jit  UPLC -> JVM bytecode JIT (JMH JITBenchmark)
 # pvb-vms: scalus-cek scalus-jit
 #
-# One stage: the image keeps the sbt project with its compiled target/ dirs at the path where it
-# was built, and the JDK that built it. JMH runs on JDK 21; the forked benchmark JVM is GraalVM 25
-# at /opt/jdk-25.
+# Our own JMH harness (images/scalus/harness) on the released Scalus SCALUS_VERSION: the core from
+# Maven Central, the JIT (scalus-uplc-jit-compiler, not published) compiled from its sources at
+# SCALUS_SHA, the commit of the release tag. JMH runs on JDK 21; the forked benchmark JVM is
+# GraalVM 25 at /opt/jdk-25.
 
 ARG JDK_VERSION
 
@@ -17,6 +18,7 @@ ARG SBT_VERSION
 ARG JDK_SDK_VERSION
 ARG SCALUS_REPO
 ARG SCALUS_SHA
+ARG SCALUS_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -24,7 +26,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends git curl zip unzip python3 procps \
     && rm -rf /var/lib/apt/lists/*
 
-# sbt launcher (the project's build.properties picks the sbt version it runs)
+# sbt launcher (the harness's project/build.properties picks the sbt version it runs)
 RUN curl -fsSL "https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.tgz" \
     | tar -xz -C /opt \
     && ln -s /opt/sbt/bin/sbt /usr/local/bin/sbt
@@ -35,21 +37,27 @@ RUN curl -s "https://get.sdkman.io" | bash \
     && ln -s "$(readlink -f /root/.sdkman/candidates/java/current)" /opt/jdk-25 \
     && /opt/jdk-25/bin/java -version
 
-RUN git clone "$SCALUS_REPO" /bench/scalus \
-    && cd /bench/scalus && git checkout "$SCALUS_SHA"
+# Scalus sources at the release tag, for the JIT module only
+RUN git init -q /bench/scalus-src \
+    && cd /bench/scalus-src \
+    && git fetch -q --depth 1 "$SCALUS_REPO" "$SCALUS_SHA" \
+    && git checkout -q FETCH_HEAD \
+    && test "$(git rev-parse HEAD)" = "$SCALUS_SHA"
+
+COPY images/scalus/harness/ /bench/scalus/
+COPY check/reference/mainnet-plutusv3-costmodel.json /bench/scalus/mainnet-plutusv3-costmodel.json
 
 WORKDIR /bench/scalus
 
-# No depth patch: since 60083c162 Scalus defaults to maxDepth 25000 (NativeStackContext.DefaultMaxDepth)
-
-# Pre-compile JMH benchmarks (this downloads deps + compiles everything), then save the JMH
-# classpath. The run scripts call org.openjdk.jmh.Main on it directly instead of sbt
-# bench/Jmh/run: image layers keep file times in whole seconds, so sbt would recompile every
-# module at run time.
-RUN sbt -Dsbt.supershell=false bench/Jmh/compile \
-    && sbt -Dsbt.supershell=false -Dsbt.log.noformat=true -error "export bench/Jmh/fullClasspath" \
+# Compile the harness and the JMH code, then save the JMH classpath. The run scripts call
+# org.openjdk.jmh.Main on it directly instead of sbt Jmh/run: image layers keep file times in whole
+# seconds, so sbt would recompile at run time (and sbt at run time ran out of memory before).
+ENV SCALUS_SRC=/bench/scalus-src SCALUS_VERSION=${SCALUS_VERSION}
+RUN sbt -Dsbt.supershell=false Jmh/compile \
+    && sbt -Dsbt.supershell=false -Dsbt.log.noformat=true -error "export Jmh/fullClasspath" \
        | tail -1 > /bench/scalus/jmh-classpath.txt \
-    && grep -q jmh-core /bench/scalus/jmh-classpath.txt
+    && grep -q jmh-core /bench/scalus/jmh-classpath.txt \
+    && grep -q "scalus_3-${SCALUS_VERSION}.jar" /bench/scalus/jmh-classpath.txt
 
 COPY parsers/ /bench/parsers/
 COPY scripts/image-entry.sh scripts/run-scalus-cek.sh scripts/run-scalus-jit.sh /bench/scripts/
