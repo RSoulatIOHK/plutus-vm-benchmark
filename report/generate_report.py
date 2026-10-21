@@ -352,9 +352,9 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
 
     lines.append("")
     lines.append("---")
-    lines.append("*Plutus VM Benchmark – maintained by [lantr](https://lantr.io), continued from "
-                 "[SAIB-Inc/cardano-plutus-vm-benchmark](https://github.com/SAIB-Inc/cardano-plutus-vm-benchmark) "
-                 "(MIT License, © 2025 SAIB Inc.). "
+    lines.append("*Plutus VM Benchmark – maintained by [Lantr](https://lantr.io) – Alexander Nemish. "
+                 "Forked from [SAIB-Inc/cardano-plutus-vm-benchmark](https://github.com/SAIB-Inc/cardano-plutus-vm-benchmark) "
+                 "by SAIB Inc. and contributors. MIT License, original work © 2025 SAIB Inc., © 2026 Lantr. "
                  "Source: [lantr-io/plutus-vm-benchmark](https://github.com/lantr-io/plutus-vm-benchmark)*")
 
     report = "\n".join(lines)
