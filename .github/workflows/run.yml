@@ -26,6 +26,10 @@ on:
         description: Run even if nothing changed since the last run
         type: boolean
         default: false
+      skip_eval:
+        description: Skip the eval-only loops (BENCH_SKIP_EVAL=1)
+        type: boolean
+        default: false
       publish:
         description: Commit results/<date> and deploy the page (otherwise the results are only an artifact)
         type: boolean
@@ -54,6 +58,7 @@ jobs:
       HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
       BENCH_SERVER_TYPE: ${{ inputs.server_type || 'ccx33' }}
       BENCH_QUICK: ${{ inputs.quick && '1' || '0' }}
+      BENCH_SKIP_EVAL: ${{ inputs.skip_eval && '1' || '0' }}
     steps:
       - uses: actions/checkout@v5
         with:

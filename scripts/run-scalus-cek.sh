@@ -38,21 +38,26 @@ JVM_FLAGS="-Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-a
 
 # JMH on the classpath the image build exported from sbt (images/scalus/Dockerfile), not through sbt.
 # The launcher JVM flags (-Xss64m -Xmx4g) are passed on to the forked JVM, as by `sbt Jmh/run`.
+# BENCH_SKIP_EVAL=1 runs only the D3 method (bench), not benchEval.
+PATTERN='pvb.scalus.CekJVMBenchmark'
+[[ "${BENCH_SKIP_EVAL:-0}" == 1 ]] && PATTERN='pvb.scalus.CekJVMBenchmark.bench$'
 cd "$BENCH_DIR"
 java -Xss64m -Xmx4g -cp "$CP" org.openjdk.jmh.Main \
     -i 1 -wi 1 -w "$WARMUP" -r "$MEASURE" -f 1 -t 1 \
     -jvm /opt/jdk-25/bin/java \
     -jvmArgsAppend "$JVM_FLAGS -XX:+AlwaysPreTouch -Xms$HEAP" \
-    -rff "$RUN_DIR/$VM-jmh.csv" -p "file=$FILE_LIST" 'pvb.scalus.CekJVMBenchmark' \
+    -rff "$RUN_DIR/$VM-jmh.csv" -p "file=$FILE_LIST" "$PATTERN" \
     2>&1 | tee "$RUN_DIR/$VM-raw.log" || true
 
 # Parse JMH CSV into the D3 and the eval-only CSV
 python3 /bench/parsers/parse_jmh.py "$RUN_DIR/$VM-jmh.csv" "$VM" > "$RUN_DIR/$VM.csv" || true
-python3 /bench/parsers/parse_jmh.py "$RUN_DIR/$VM-jmh.csv" "$VM" --eval > "$RUN_DIR/$VM-eval.csv" || true
 
 # Fill in -1 for any scripts that were given but produced no result
 python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM.csv" "$DATA_DIR" "$VM" "$RUN_DIR/$VM-raw.log"
-python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM-eval.csv" "$DATA_DIR" "$VM" "$RUN_DIR/$VM-raw.log"
+if [[ "${BENCH_SKIP_EVAL:-0}" != 1 ]]; then
+    python3 /bench/parsers/parse_jmh.py "$RUN_DIR/$VM-jmh.csv" "$VM" --eval > "$RUN_DIR/$VM-eval.csv" || true
+    python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM-eval.csv" "$DATA_DIR" "$VM" "$RUN_DIR/$VM-raw.log"
+fi
 
 # Check (spec D4): one evaluation per script, same code and parameters -> $VM-check.csv
 echo "=== check" | tee -a "$RUN_DIR/$VM-raw.log"

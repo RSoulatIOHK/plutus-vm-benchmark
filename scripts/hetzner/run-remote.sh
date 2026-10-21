@@ -34,6 +34,7 @@ case "$CMD" in
       --setenv=PATH=/run/current-system/sw/bin \
       --setenv=PULL=1 --setenv=IMAGE_TAG=auto \
       --setenv=BENCH_QUICK=${BENCH_QUICK:-0} \
+      --setenv=BENCH_SKIP_EVAL=${BENCH_SKIP_EVAL:-0} \
       --setenv=PVB_HARNESS=$(git -C "$REPO_ROOT" rev-parse --short HEAD) \
       /run/current-system/sw/bin/bash -c 'scripts/run-images.sh results/$NAME $VMS > /root/run.log 2>&1; echo \$? > $DONE'"
     echo "started run $NAME on $IP"

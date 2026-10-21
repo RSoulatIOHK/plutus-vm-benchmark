@@ -56,5 +56,8 @@ PY
 }
 
 time_loop "$RUN_DIR/$VM.csv" "$RAW"
-: > "$RUN_DIR/$VM-eval-raw.log"
-time_loop "$RUN_DIR/$VM-eval.csv" "$RUN_DIR/$VM-eval-raw.log" PVB_EVAL_ONLY=1
+# BENCH_SKIP_EVAL=1 skips the eval-only loop.
+if [[ "${BENCH_SKIP_EVAL:-0}" != 1 ]]; then
+    : > "$RUN_DIR/$VM-eval-raw.log"
+    time_loop "$RUN_DIR/$VM-eval.csv" "$RUN_DIR/$VM-eval-raw.log" PVB_EVAL_ONLY=1
+fi

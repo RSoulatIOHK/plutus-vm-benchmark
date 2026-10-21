@@ -36,10 +36,12 @@ python3 /bench/parsers/parse_criterion_hs.py "$RUN_DIR/haskell-criterion.csv" > 
 # Fill in -1 for any scripts that were given but produced no result
 python3 /bench/parsers/fill_failures.py "$RUN_DIR/haskell.csv" "$DATA_DIR" haskell "$RUN_DIR/haskell-raw.log"
 
-# Eval-only loop, same Criterion settings.
-rm -f "$RUN_DIR/haskell-eval-criterion.csv"
-"$BENCH_DIR/bin/pvb-bench" bench-eval "$COST_MODEL" "$DATA_DIR" \
-    --csv "$RUN_DIR/haskell-eval-criterion.csv" ${TIMING[@]+"${TIMING[@]}"} \
-    2>&1 | tee "$RUN_DIR/haskell-eval-raw.log" || true
-python3 /bench/parsers/parse_criterion_hs.py "$RUN_DIR/haskell-eval-criterion.csv" > "$RUN_DIR/haskell-eval.csv" || true
-python3 /bench/parsers/fill_failures.py "$RUN_DIR/haskell-eval.csv" "$DATA_DIR" haskell "$RUN_DIR/haskell-eval-raw.log"
+# Eval-only loop, same Criterion settings. BENCH_SKIP_EVAL=1 skips it.
+if [[ "${BENCH_SKIP_EVAL:-0}" != 1 ]]; then
+    rm -f "$RUN_DIR/haskell-eval-criterion.csv"
+    "$BENCH_DIR/bin/pvb-bench" bench-eval "$COST_MODEL" "$DATA_DIR" \
+        --csv "$RUN_DIR/haskell-eval-criterion.csv" ${TIMING[@]+"${TIMING[@]}"} \
+        2>&1 | tee "$RUN_DIR/haskell-eval-raw.log" || true
+    python3 /bench/parsers/parse_criterion_hs.py "$RUN_DIR/haskell-eval-criterion.csv" > "$RUN_DIR/haskell-eval.csv" || true
+    python3 /bench/parsers/fill_failures.py "$RUN_DIR/haskell-eval.csv" "$DATA_DIR" haskell "$RUN_DIR/haskell-eval-raw.log"
+fi

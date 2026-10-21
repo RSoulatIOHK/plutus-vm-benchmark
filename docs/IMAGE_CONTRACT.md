@@ -31,6 +31,7 @@ docker run --rm --cap-add SYS_NICE \
 - Input: every `/bench/data/plutus_use_cases/*.flat`. The script name is the file name without `.flat`.
 - Default command runs the benchmark AND the check, then exits 0. It exits non-zero only when the VM
   could not run at all. A single script that fails is a row with an error, not a failed container.
+- `BENCH_SKIP_EVAL=1` skips the eval-only loop (`<vm>-eval.csv`); today honoured by haskell, scalus-cek and aiken.
 - `BENCH_QUICK=1` runs only the first 5 scripts (C sort order) with short timing (for PR smoke tests).
   The run script reads the scripts from `$BENCH_DATA_DIR` and reads `$BENCH_QUICK` for its timing flags.
 - The check covers every script of `/bench/data/plutus_use_cases`, also with `BENCH_QUICK=1`: the

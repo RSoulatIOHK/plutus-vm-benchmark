@@ -12,6 +12,7 @@
 #                  the exact image of the checked-out files)
 #   PULL=1         docker pull each image first      (default 0: use local images)
 #   BENCH_QUICK=1  passed to the images: first 5 scripts, short timing
+#   BENCH_SKIP_EVAL=1  passed to the images: skip the eval-only loops (haskell, scalus-cek, aiken)
 #   DATA_DIR       corpus dir with plutus_use_cases/ (default <repo>/data)
 #
 # A VM that fails does not stop the run; the exit code is non-zero if any VM failed to run.
@@ -23,6 +24,7 @@ IMAGE_PREFIX="${IMAGE_PREFIX:-ghcr.io/lantr-io/pvb-}"
 IMAGE_TAG="${IMAGE_TAG:-latest}"
 PULL="${PULL:-0}"
 BENCH_QUICK="${BENCH_QUICK:-0}"
+BENCH_SKIP_EVAL="${BENCH_SKIP_EVAL:-0}"
 DATA_DIR="${DATA_DIR:-$REPO_ROOT/data}"
 PYTHON_IMAGE="python:3.12-slim"
 
@@ -53,6 +55,7 @@ VMS=$(echo "$*" | tr ',' ' ')
     echo "docker memory: $(( $(docker info --format '{{.MemTotal}}' 2>/dev/null || echo 0) / 1048576 )) MiB"
     echo "harness: ${PVB_HARNESS:-$(git -C "$REPO_ROOT" rev-parse --short HEAD 2>/dev/null || echo unknown)}"
     echo "bench_quick: $BENCH_QUICK"
+    echo "bench_skip_eval: $BENCH_SKIP_EVAL"
 } > "$RUN_DIR/environment.txt"
 cat "$RUN_DIR/environment.txt"
 
@@ -79,6 +82,7 @@ for vm in $VMS; do
     start=$(date +%s)
     if docker run --rm --cap-add SYS_NICE \
         -e BENCH_QUICK="$BENCH_QUICK" \
+        -e BENCH_SKIP_EVAL="$BENCH_SKIP_EVAL" \
         -v "$DATA_DIR:/bench/data:ro" \
         -v "$RUN_DIR:/results" \
         "$image"; then
