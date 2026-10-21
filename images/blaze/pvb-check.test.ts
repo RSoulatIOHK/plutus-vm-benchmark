@@ -1,5 +1,5 @@
 // plutus-vm-benchmark correctness check (spec D4) for blaze: one evaluation per script with the
-// parameters of pvb.bench.ts. Writes $PVB_CHECK_OUT (vm,script,status,cpu,mem) with vm $PVB_VM.
+// parameters of pvb-time.test.ts. Writes $PVB_CHECK_OUT (vm,script,status,cpu,mem) with vm $PVB_VM.
 // A vitest test file, so the check runs on the same engine as the timing (node or bun).
 
 import { readdirSync, readFileSync, writeFileSync } from "fs";

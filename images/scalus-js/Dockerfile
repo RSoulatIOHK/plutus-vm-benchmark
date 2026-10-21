@@ -21,7 +21,7 @@ RUN npm ci --no-audit --no-fund \
     && node -e 'const v=require("./node_modules/scalus/package.json").version; if (v !== process.argv[1]) { console.error("scalus " + v + " != " + process.argv[1]); process.exit(1) }' "${SCALUS_JS_VERSION}"
 
 COPY parsers/ /bench/parsers/
-COPY images/scalus-js/common.mjs images/scalus-js/check.mjs images/scalus-js/scalus-js.bench.mjs ./
+COPY images/scalus-js/common.mjs images/scalus-js/check.mjs images/scalus-js/time.test.mjs ./
 COPY scripts/image-entry.sh scripts/run-scalus-js.sh /bench/scripts/
 
 ENV PVB_VM=scalus-js

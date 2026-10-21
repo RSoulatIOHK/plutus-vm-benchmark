@@ -1,5 +1,5 @@
 # check=skip=InvalidDefaultArgInFrom
-# blaze-plutus, CEK interpreter (TypeScript / Vitest bench). docs/IMAGE_CONTRACT.md.
+# blaze-plutus, CEK interpreter (TypeScript, timed under vitest). docs/IMAGE_CONTRACT.md.
 # One build, two VMs: the build arg VM picks the engine of the default command.
 # pvb-vms: blaze-v8 blaze-jsc
 
@@ -40,10 +40,9 @@ RUN apt-get update \
 COPY --from=build /usr/local/bin/bun /usr/local/bin/bun
 COPY --from=build /src /bench/blaze-plutus
 
-# Our harness (pvb.bench.ts, pvb-eval.bench.ts, pvb-check.test.ts) and the mainnet PlutusV3 cost
-# model mapped into blaze's cost table (pvb-costs.ts). See the headers of images/blaze/*.ts.
-COPY images/blaze/pvb-costs.ts images/blaze/pvb.bench.ts images/blaze/pvb-eval.bench.ts \
-     images/blaze/pvb-check.test.ts \
+# Our harness (pvb-time.test.ts: timing, one script per process; pvb-check.test.ts) and the mainnet
+# PlutusV3 cost model mapped into blaze's cost table (pvb-costs.ts). See the headers of images/blaze/*.ts.
+COPY images/blaze/pvb-costs.ts images/blaze/pvb-time.test.ts images/blaze/pvb-check.test.ts \
      /bench/blaze-plutus/packages/blaze-plutus/bench/
 COPY check/reference/mainnet-plutusv3-costmodel.json /bench/mainnet-plutusv3-costmodel.json
 COPY images/blaze/plutusv3-param-names.txt /bench/plutusv3-param-names.txt
