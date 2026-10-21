@@ -1,0 +1,24 @@
+[package]
+name = "aiken-bench"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+# The Dockerfile clones aiken-lang/aiken next to this crate, at ../aiken.
+[dependencies]
+uplc = { path = "../aiken/crates/uplc" }
+criterion = { version = "0.5", default-features = false }
+
+[[bin]]
+name = "aiken-bench"
+path = "src/bench.rs"
+
+[[bin]]
+name = "aiken-check"
+path = "src/check.rs"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+debug = false
