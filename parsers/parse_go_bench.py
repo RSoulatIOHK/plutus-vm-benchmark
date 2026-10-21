@@ -7,9 +7,10 @@ import sys
 VM_NAME = "plutigo"
 HEADER = "vm,script,mean_ns,median_ns,min_ns,max_ns,stddev_ns,iterations"
 
-# BenchmarkFlatFiles/auction_1-1-8    12345    98765 ns/op    4096 B/op    42 allocs/op
+# BenchmarkPvbFlatFiles/auction_1-1-8    12345    98765 ns/op    4096 B/op    42 allocs/op
+# (images/plutigo/pvb_bench_test.go; the upstream name BenchmarkFlatFiles also parses)
 BENCH_RE = re.compile(
-    r"BenchmarkFlatFiles/(\S+)-\d+\s+"  # name-GOMAXPROCS
+    r"Benchmark(?:Pvb)?FlatFiles/(\S+)-\d+\s+"  # name-GOMAXPROCS
     r"(\d+)\s+"                          # iterations
     r"([\d.]+)\s+ns/op"                  # ns/op
 )

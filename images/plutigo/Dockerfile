@@ -16,8 +16,9 @@ RUN git clone "$PLUTIGO_REPO" /src \
 
 WORKDIR /src
 RUN go mod download
-# The test binary finds its data through runtime.Caller, which hardcodes /src/tests/bench;
-# scripts/run-plutigo.sh links the corpus there.
+# Our harness (BenchmarkPvbFlatFiles, TestPvbCheck): PlutusV3, protocol version 11, mainnet
+# cost model, counting mode. See the header of images/plutigo/pvb_bench_test.go.
+COPY images/plutigo/pvb_bench_test.go /src/tests/pvb_bench_test.go
 RUN CGO_ENABLED=0 go test -c -o /plutigo-bench ./tests/
 
 # =============================================================================
@@ -33,6 +34,7 @@ RUN apt-get update \
 
 COPY --from=build /plutigo-bench /bench/plutigo/plutigo-bench
 
+COPY check/reference/mainnet-plutusv3-costmodel.json /bench/mainnet-plutusv3-costmodel.json
 COPY parsers/ /bench/parsers/
 COPY scripts/image-entry.sh scripts/run-plutigo.sh /bench/scripts/
 
