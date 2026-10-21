@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Parse Go testing.B benchmark output into unified CSV."""
+"""Parse Go testing.B benchmark output into unified CSV.
+
+testing.B reports one number per benchmark: ns/op, the total time of the final round divided by
+its b.N iterations. That is mean_ns; iterations is b.N. testing.B gives no median, minimum,
+maximum or standard deviation, so those columns are empty.
+"""
 
 import re
 import sys
@@ -30,12 +35,7 @@ def parse(log_path: str) -> None:
             iterations = int(m.group(2))
             mean_ns = int(float(m.group(3)))
 
-            # Go bench only reports mean ns/op; no median/min/max/stddev
-            print(
-                f"{VM_NAME},{name},"
-                f"{mean_ns},{mean_ns},0,0,"
-                f"0,{iterations}"
-            )
+            print(f"{VM_NAME},{name},{mean_ns},,,,,{iterations}")
 
 
 if __name__ == "__main__":
