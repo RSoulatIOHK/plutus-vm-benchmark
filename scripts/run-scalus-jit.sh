@@ -56,3 +56,7 @@ python3 /bench/parsers/fill_failures.py "$RUN_DIR/scalus-jit.csv" "$DATA_DIR" sc
 # the same parameters as the timed loop, and writes "$RUN_DIR/scalus-jit-check.csv"
 # (vm,script,status,cpu,mem). Implemented by check/, not yet wired in.
 # ---------------------------------------------------------------------------
+
+# TODO(compile column, spec D5): write "$RUN_DIR/scalus-jit-compile.csv" (vm,script,compile_ns).
+# JMH output has no compile time: JITBenchmark compiles in @Setup (JIT.jitUplc), so this needs a
+# change in the Scalus bench, for example a separate compile benchmark or a timing print in setup.

@@ -23,11 +23,11 @@ with open('bench_plutus_use_cases.py', 'w') as f:
     f.write(code)
 "
 
-# Run benchmark (use Python 3.14 from build stage, not Ubuntu's 3.12)
+# Run benchmark with the image's Python (python:${PYTHON_VERSION} base image)
 if [[ "${BENCH_QUICK:-0}" == 1 ]]; then
     export OPSHIN_TIME_BUDGET_S=0.2 OPSHIN_MIN_ITERS=3
 fi
-python3.14 bench_plutus_use_cases.py 2>&1 | tee "$RUN_DIR/opshin-raw.log" || true
+python3 bench_plutus_use_cases.py 2>&1 | tee "$RUN_DIR/opshin-raw.log" || true
 
 # Parse into unified CSV
 python3 /bench/parsers/parse_opshin.py "$RUN_DIR/opshin-raw.log" > "$RUN_DIR/opshin.csv" || true
