@@ -9,7 +9,7 @@ set -euo pipefail
 
 RUN_ID="${1:?usage: up.sh <run-id>}"
 SERVER_TYPE="${BENCH_SERVER_TYPE:-ccx33}"
-LOCATION="${BENCH_LOCATION:-nbg1}"
+LOCATIONS="${BENCH_LOCATIONS:-nbg1 fsn1 hel1}"
 STATE="${BENCH_STATE:-${TMPDIR:-/tmp}/bench-hetzner}/$RUN_ID"
 NAME="bench-$RUN_ID"
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -24,15 +24,25 @@ SSH_OPTS=(-i "$KEY" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null 
 
 hcloud ssh-key create --name "$NAME" --public-key-from-file "$KEY.pub" --label bench-run="$RUN_ID" >/dev/null
 
-# The labels let sweep.yml find and delete servers that outlived their run.
-hcloud server create \
-  --name "$NAME" \
-  --type "$SERVER_TYPE" \
-  --location "$LOCATION" \
-  --image ubuntu-24.04 \
-  --ssh-key "$NAME" \
-  --label bench-run="$RUN_ID" \
-  --label created="$(date +%s)" >/dev/null
+# A location can be out of capacity for a server type (resource_unavailable), so try each in turn.
+# The labels let sweep.sh find stale servers.
+created=""
+for loc in $LOCATIONS; do
+  if hcloud server create \
+    --name "$NAME" \
+    --type "$SERVER_TYPE" \
+    --location "$loc" \
+    --image ubuntu-24.04 \
+    --ssh-key "$NAME" \
+    --label bench-run="$RUN_ID" \
+    --label created="$(date +%s)" >/dev/null; then
+    created="$loc"
+    break
+  fi
+  echo "no $SERVER_TYPE in $loc, trying the next location" >&2
+done
+[ -n "$created" ] || { echo "no location has $SERVER_TYPE: $LOCATIONS" >&2; exit 1; }
+echo "created $NAME ($SERVER_TYPE) in $created" >&2
 
 IP="$(hcloud server ip "$NAME")"
 echo "$IP" > "$STATE/ip"
