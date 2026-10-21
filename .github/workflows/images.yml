@@ -1,0 +1,143 @@
+# Builds one image per VM (docs/IMAGE_CONTRACT.md) and pushes it to ghcr.io/lantr-io/pvb-<vm>.
+#
+# Tag = scripts/images.sh tag <vm>: a hash of the VM's Dockerfile dir, the repo files it COPYs
+# and its .env pins. A VM whose tag is already in the registry is not rebuilt; on main, its
+# :latest is moved to that tag.
+#
+# Pull requests build the changed images for linux/amd64 and push nothing; they use no secrets.
+name: images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "images/**"
+      - "scripts/**"
+      - "parsers/**"
+      - ".env"
+      - ".github/workflows/images.yml"
+  pull_request:
+    paths:
+      - "images/**"
+      - "scripts/**"
+      - "parsers/**"
+      - ".env"
+      - ".github/workflows/images.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: images-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  REGISTRY_PREFIX: ghcr.io/lantr-io/pvb-
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      count: ${{ steps.plan.outputs.count }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: plan
+        env:
+          PUSH: ${{ github.event_name != 'pull_request' }}
+        run: |
+          entries=()
+          for vm in $(scripts/images.sh list); do
+            dir=$(scripts/images.sh dir "$vm")
+            tag=$(scripts/images.sh tag "$vm")
+            image="${REGISTRY_PREFIX}${vm}"
+            if docker buildx imagetools inspect "${image}:${tag}" >/dev/null 2>&1; then
+              echo "${vm}: ${image}:${tag} exists, not rebuilt"
+              if [[ "$PUSH" == true ]]; then
+                docker buildx imagetools create -t "${image}:latest" "${image}:${tag}"
+              fi
+              continue
+            fi
+            echo "${vm}: build ${image}:${tag} from ${dir}"
+            entries+=("$(jq -cn --arg vm "$vm" --arg dir "$dir" --arg tag "$tag" \
+              '{vm: $vm, dir: $dir, tag: $tag, cache: ($dir | split("/") | last)}')")
+          done
+          if [[ ${#entries[@]} -eq 0 ]]; then
+            matrix='[]'
+          else
+            matrix=$(printf '%s\n' "${entries[@]}" | jq -cs .)
+          fi
+          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
+          echo "count=${#entries[@]}" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: plan
+    if: needs.plan.outputs.count != '0'
+    runs-on: ubuntu-latest
+    # The Haskell build alone takes 25+ minutes on a laptop; GitHub runners have 4 vCPUs.
+    timeout-minutes: 240
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    name: build ${{ matrix.vm }}
+    steps:
+      - uses: actions/checkout@v5
+
+      # The Haskell and Scalus builds need more than the ~14 GB a runner has free.
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+
+      - uses: docker/setup-buildx-action@v3
+
+      - if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: args
+        env:
+          VM: ${{ matrix.vm }}
+        run: |
+          {
+            echo "build_args<<BUILD_ARGS_EOF"
+            scripts/images.sh build-args "$VM"
+            echo "BUILD_ARGS_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dir }}/Dockerfile
+          platforms: linux/amd64
+          build-args: ${{ steps.args.outputs.build_args }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:${{ matrix.tag }}
+            ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:latest
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          # VMs that share a Dockerfile (scalus-cek/scalus-jit, blaze-v8/blaze-jsc) share a cache scope.
+          cache-from: type=gha,scope=${{ matrix.cache }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.cache }}
