@@ -24,6 +24,8 @@ MEASURE=5s
 if [[ "${BENCH_QUICK:-0}" == 1 ]]; then
     WARMUP=1s
     MEASURE=1s
+    # The check compiles all 89 scripts: one compile each instead of the median of 3.
+    export SCALUS_JIT_COMPILE_RUNS="${SCALUS_JIT_COMPILE_RUNS:-1}"
 fi
 # Heap of the forked benchmark JVM (pre-touched). Lower it only on small machines.
 HEAP="${SCALUS_BENCH_HEAP:-4g}"
