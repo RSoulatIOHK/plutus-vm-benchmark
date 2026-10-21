@@ -37,6 +37,8 @@ ENV AIKEN_SHA=${AIKEN_SHA}
 
 COPY --from=build /usr/local/bin/aiken-bench /usr/local/bin/aiken-check /usr/local/bin/
 COPY parsers/parse_criterion.py parsers/fill_failures.py /bench/parsers/
-COPY images/aiken/run.sh /bench/run.sh
+COPY scripts/image-entry.sh scripts/run-aiken.sh /bench/scripts/
 
-ENTRYPOINT ["/bench/run.sh"]
+ENV PVB_VM=aiken
+WORKDIR /bench
+ENTRYPOINT ["bash", "/bench/scripts/image-entry.sh"]

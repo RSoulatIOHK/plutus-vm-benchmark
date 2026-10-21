@@ -3,7 +3,8 @@
 #
 #   scripts/images.sh list               every VM that has an image, one per line
 #   scripts/images.sh dir <vm>           images/<dir> that holds the VM's Dockerfile
-#   scripts/images.sh build-args <vm>    KEY=VALUE lines to pass as --build-arg
+#   scripts/images.sh build-args <vm>    KEY=VALUE lines to pass as --build-arg (an ARG with a
+#                                        default in the Dockerfile may be absent from .env)
 #   scripts/images.sh tag <vm>           content hash: changes only when the VM's inputs change
 #   scripts/images.sh build <vm> [docker build options...]
 #                                        build ${IMAGE_PREFIX}<vm>:<tag> and :latest locally
@@ -58,7 +59,12 @@ cmd_build_args() {
             continue
         fi
         value=$(env_value "$arg")
-        [[ -n "$value" ]] || die "$dir/Dockerfile declares ARG $arg, but .env has no value for it"
+        if [[ -z "$value" ]]; then
+            # An ARG with a default in the Dockerfile ("ARG NAME=value") needs no .env value. The
+            # Dockerfile is an input of the tag, so a changed default still changes the tag.
+            grep -Eq "^ARG[[:space:]]+${arg}=" "$REPO_ROOT/$dir/Dockerfile" && continue
+            die "$dir/Dockerfile declares ARG $arg without a default, and .env has no value for it"
+        fi
         echo "$arg=$value"
     done
 }

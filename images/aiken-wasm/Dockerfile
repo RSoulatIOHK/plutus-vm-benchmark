@@ -84,6 +84,7 @@ RUN node --input-type=module -e ' \
       if (ours !== theirs || !ours.includes(process.env.AIKEN_WASM_SHA)) process.exit(1);'
 
 COPY parsers/parse_vitest.py parsers/fill_failures.py /bench/parsers/
-COPY images/aiken-wasm/run.sh /bench/run.sh
+COPY scripts/image-entry.sh scripts/run-aiken-wasm.sh /bench/scripts/
 
-ENTRYPOINT ["/bench/run.sh"]
+ENV PVB_VM=aiken-wasm
+ENTRYPOINT ["bash", "/bench/scripts/image-entry.sh"]

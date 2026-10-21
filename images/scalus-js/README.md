@@ -8,9 +8,8 @@ The image follows `docs/IMAGE_CONTRACT.md`.
 Pins in `.env`: `SCALUS_JS_VERSION` (the npm version) and `VITEST_VERSION`.
 
 ```bash
-docker build -f images/scalus-js/Dockerfile \
-  --build-arg SCALUS_JS_VERSION=1.4.0 --build-arg VITEST_VERSION=4.0.18 -t pvb-scalus-js .
-docker run --rm -v "$PWD/data:/bench/data:ro" -v "$PWD/results/<date>:/results" pvb-scalus-js
+scripts/images.sh build scalus-js
+scripts/run-images.sh results/<date> scalus-js
 ```
 
 ## What is timed

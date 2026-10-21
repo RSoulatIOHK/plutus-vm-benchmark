@@ -7,7 +7,8 @@ them one at a time. This file is the interface between an image and the rest of 
 
 - `images/<vm>/Dockerfile`. Build context is the repo root, so the Dockerfile can `COPY` from
   `parsers/`, `scripts/` and `images/<vm>/`.
-- Pins (repo URL, SHA or tag, toolchain versions) come from `.env` as build args with the same names.
+- Pins (repo URL, SHA or tag, toolchain versions) come from `.env` as build args with the same names. An `ARG` with a
+  default in the Dockerfile (for example `ARG CARGO_BUILD_JOBS=2`) needs no `.env` value.
 - `<vm>` is lowercase with dashes, for example `scalus-cek`, `aiken-wasm`.
 - Published as `ghcr.io/lantr-io/pvb-<vm>:<tag>` and `:latest`. The tag is `scripts/images.sh tag <vm>`:
   a hash of `images/<dir>/`, the repo files the Dockerfile `COPY`s and the `.env` values of its `ARG`s.
@@ -32,6 +33,9 @@ docker run --rm --cap-add SYS_NICE \
   could not run at all. A single script that fails is a row with an error, not a failed container.
 - `BENCH_QUICK=1` runs only the first 5 scripts (C sort order) with short timing (for PR smoke tests).
   The run script reads the scripts from `$BENCH_DATA_DIR` and reads `$BENCH_QUICK` for its timing flags.
+- The check covers every script of `/bench/data/plutus_use_cases`, also with `BENCH_QUICK=1`: the
+  smoke test times 5 scripts but gates all of them (spec, section 2). The check is one evaluation
+  per script, so it is cheap. A check with fewer scripts fails the gate as "missing".
 
 ## Outputs (all in `/results`)
 
@@ -47,3 +51,11 @@ docker run --rm --cap-add SYS_NICE \
 Flat decode + evaluation of the decoded program, with costing on and the latest PlutusV3 cost model
 that the VM ships. The check is one evaluation per script with the same parameters. The gate
 (`check/`) compares `<vm>-check.csv` with the Haskell reference.
+
+## After the run
+
+`scripts/run-images.sh` merges the timings into `unified.csv`, runs `check/gate.py` over every
+`<vm>-check.csv` (mode per VM from `check/modes.conf`, default strict) and writes `gate.json`. Then
+it builds the report: a VM that fails the gate, or has no `<vm>-check.csv`, is hidden and listed
+as "failed check". A VM with `<vm>-compile.csv` gets a "compile excluded" badge and a compile-time
+column.
