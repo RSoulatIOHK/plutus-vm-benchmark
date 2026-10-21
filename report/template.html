@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cardano Plutus VM Benchmark &mdash; SAIB</title>
+<title>Plutus VM Benchmark &ndash; maintained by lantr</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
   :root {
-    /* SAIB brand palette */
+    /* Palette */
     --soft-white: #F3F3FF;
     --lavender: #AFAFE8;
     --blurple: #646FFF;
@@ -533,6 +533,8 @@
   .vm-badge.compile { color: var(--purple-bright); border-color: rgba(139,120,239,0.45); }
   .card .compile-time { font-family: var(--font-mono); color: var(--text-muted); font-size: 0.6rem; margin-bottom: 0.35rem; }
   th.compile-col, td.compile-col { color: var(--purple-bright); }
+  .card .eval-time { font-family: var(--font-mono); color: var(--text-secondary); font-size: 0.6rem; margin-bottom: 0.35rem; }
+  th.eval-col, td.eval-col { color: var(--text-muted); }
 
   .failed-list { border: 1px solid rgba(224,85,85,0.35); border-radius: 6px; padding: 0.55rem 0.85rem; font-size: 0.68rem; }
   .failed-list .fl-row { display: flex; gap: 0.7rem; padding: 0.15rem 0; }
@@ -577,10 +579,11 @@
 
   <div class="header">
     <div>
-      <h1>Cardano <span class="it">Plutus</span> VM Benchmark</h1>
+      <h1><span class="it">Plutus</span> VM Benchmark</h1>
       <p>Cross-language UPLC virtual-machine comparison &mdash; {{ENV_BADGE}}</p>
+      <p>Maintained by <a href="https://lantr.io" target="_blank">lantr</a> (lantr.io), continued from <a href="https://github.com/SAIB-Inc/cardano-plutus-vm-benchmark" target="_blank">SAIB-Inc/cardano-plutus-vm-benchmark</a></p>
     </div>
-    <a href="https://github.com/saib-inc/cardano-plutus-vm-benchmark" class="gh-link" target="_blank">
+    <a href="https://github.com/lantr-io/plutus-vm-benchmark" class="gh-link" target="_blank">
       <svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
       Contribute
     </a>
@@ -642,17 +645,18 @@
   <div class="section">
     <div class="section-title">Method</div>
     <div class="note" style="margin:0 0 0.6rem" id="method-disclosure"></div>
+    <div class="note" style="margin:0 0 0.6rem">Two timings per script. The ranking uses <em>decode + eval</em>: each iteration flat-decodes the script and evaluates it, as a node does with a script it has not seen. <em>Eval only</em> evaluates a program decoded once before timing; decoding is a large share of the time for some VMs (about 66&nbsp;% for Haskell plutus-core), so the second column shows how fast the evaluator alone is.</div>
     <div class="note" style="margin:0 0 0.6rem">Correctness gate: each VM evaluates every script once more and reports the result and the ExUnits. They must equal Haskell plutus-core; a VM that differs is not ranked (&ldquo;failed check&rdquo;). A VM whose API cannot take the mainnet cost model is ranked with an &ldquo;outdated cost model&rdquo; badge if it equals Haskell with the model the VM ships. A VM that compiles a script before it runs it (&ldquo;compile excluded&rdquo;) is timed without the compile step; its compile time is shown separately.</div>
     <div class="note" style="margin:0">flat-decode + CEK evaluate on 89 Plutus scripts. Each VM uses its native benchmark framework. Sequential execution, single Docker container. Geometric means within each category are computed only from scripts where every VM in that category produced a successful result &mdash; that is the only fair like-for-like comparison.</div>
   </div>
 
   <footer>
-    <img src="saib-logo.png" alt="SAIB" class="footer-logo"><br>
-    <div class="footer-line">Built by <a href="https://saib.dev">SAIB Inc.</a></div>
+    <div class="footer-line">Plutus VM Benchmark &ndash; maintained by <a href="https://lantr.io">lantr</a> (lantr.io), continued from <a href="https://github.com/SAIB-Inc/cardano-plutus-vm-benchmark">SAIB-Inc/cardano-plutus-vm-benchmark</a></div>
+    <div class="footer-line">Original work &copy; 2025 SAIB Inc., <a href="https://github.com/lantr-io/plutus-vm-benchmark/blob/HEAD/LICENSE">MIT License</a></div>
     <div class="footer-line">
-      <a href="https://github.com/saib-inc/cardano-plutus-vm-benchmark">Source</a>
+      <a href="https://github.com/lantr-io/plutus-vm-benchmark">Source</a>
       &nbsp;&middot;&nbsp;
-      <a href="https://github.com/saib-inc/cardano-plutus-vm-benchmark/blob/main/METHODOLOGY.md">Methodology</a>
+      <a href="https://github.com/lantr-io/plutus-vm-benchmark/blob/HEAD/METHODOLOGY.md">Methodology</a>
     </div>
   </footer>
 
@@ -661,7 +665,8 @@
 <script>
 const CSV_DATA = `{{CSV_DATA}}`;
 // gate: {vm: {verdict, mode, reason}} or null (run without gate.json); hidden: {vm: reason};
-// compile: {vm: {script: compile_ns}}; history: {runs: [dir], series: {vm: [ratio or null]}}.
+// compile: {vm: {script: compile_ns}}; eval: {vm: {script: mean_ns}} (eval-only timing, absent
+// for a VM with compile data: its D3 time already is the eval time); history: {runs: [dir], series: {vm: [ratio or null]}}.
 const REPORT = {{REPORT_JSON}};
 
 const VM_META = {
@@ -714,6 +719,12 @@ function badges(vm) {
   if (v && v.verdict === 'badge') out.push('<span class="vm-badge outdated" title="The VM cannot load the mainnet cost model; its ExUnits equal Haskell with the model the VM ships">outdated cost model</span>');
   if (REPORT.compile[vm]) out.push('<span class="vm-badge compile" title="Each script is compiled before the timed loop; the compile time is not in the geometric mean">compile excluded</span>');
   return out.length ? '<div class="vm-badges">' + out.join('') + '</div>' : '';
+}
+const EVAL = REPORT.eval || {};
+function evalLine(vm, common) {
+  const e = EVAL[vm]; if (!e) return '';
+  const g = geoMean(common.map(s => e[s] || 0));
+  return g > 0 ? '<div class="eval-time">eval only ' + fmtNs(Math.round(g)) + ' (geo mean, decode excluded)</div>' : '';
 }
 function compileLine(vm) {
   const g = compileGeo(vm);
@@ -780,11 +791,11 @@ CATS.forEach(c => { vmsByCat[c.key] = presentVMs.filter(vm => c.matches.includes
 // Per-category raw geo-mean: scripts where every VM in the category succeeded
 function categoryGeoMeans(catKey) {
   const cvms = vmsByCat[catKey];
-  if (!cvms.length) return { means: {}, sampleSize: 0 };
+  if (!cvms.length) return { means: {}, sampleSize: 0, common: [] };
   const common = scripts.filter(s => cvms.every(vm => (data[s]?.[vm] || 0) > 0));
   const out = {};
   cvms.forEach(vm => { out[vm] = geoMean(common.map(s => data[s][vm])); });
-  return { means: out, sampleSize: common.length };
+  return { means: out, sampleSize: common.length, common };
 }
 
 // Build category-grouped rankings
@@ -807,7 +818,7 @@ rankingsHost.innerHTML = CATS.map(cat => {
     const compatHtml=fail>0
       ? '<div class="compat"><span class="pass">'+pass+'</span>/<span>'+scripts.length+'</span> passed · <span class="fail">'+fail+' failed</span></div>'
       : '<div class="compat"><span class="pass">'+pass+'/'+scripts.length+'</span> passed</div>';
-    return '<div class="card '+cls+'"><div class="rank">#'+(i+1)+'</div><div class="vm-name">'+m.label+'</div><div class="lang">'+langLine(m)+'</div><div class="engine '+engineClass(m)+'">'+engineCode(m)+'</div>'+badges(vm)+compatHtml+compileLine(vm)+'<div class="geo-mean">'+fmtNs(Math.round(geo))+'<span class="ratio">'+ratio+'×</span></div></div>';
+    return '<div class="card '+cls+'"><div class="rank">#'+(i+1)+'</div><div class="vm-name">'+m.label+'</div><div class="lang">'+langLine(m)+'</div><div class="engine '+engineClass(m)+'">'+engineCode(m)+'</div>'+badges(vm)+compatHtml+compileLine(vm)+evalLine(vm, cm.common)+'<div class="geo-mean">'+fmtNs(Math.round(geo))+'<span class="ratio">'+ratio+'×</span></div></div>';
   }).join('');
   const code = cat.key === 'int' ? 'INT' : 'COMP';
   return '<section class="cat-section '+cat.key+'" data-cat="'+cat.key+'"><div class="cat-header"><span class="cat-mark">'+code+' · '+cvms.length+'</span><span class="cat-name">'+cat.label+'<em>'+sampleNote+'</em></span></div><p class="cat-blurb">'+cat.blurb+'</p><div class="summary">'+cards+'</div></section>';
@@ -891,12 +902,14 @@ presentVMs.forEach(vm => {
 function renderTable() {
   const vms=presentVMs.filter(vm=>activeVMs.has(vm));
   const compVMs=vms.filter(vm=>REPORT.compile[vm]);
-  document.getElementById('table-head').innerHTML='<tr><th>Script</th>'+vms.map(vm=>{const m=VM_META[vm];return`<th>${m.label}<span class="th-lang">${langLine(m)}</span></th>`;}).join('')
+  // Each VM's decode + eval column, followed by its eval-only column if it has one.
+  document.getElementById('table-head').innerHTML='<tr><th>Script</th>'+vms.map(vm=>{const m=VM_META[vm];return`<th>${m.label}<span class="th-lang">${langLine(m)}</span></th>`+(EVAL[vm]?`<th class="eval-col">${m.label} eval only<span class="th-lang">decode excluded</span></th>`:'');}).join('')
     +compVMs.map(vm=>`<th class="compile-col">${VM_META[vm].label} compile<span class="th-lang">not in the timing</span></th>`).join('')+'</tr>';
   document.getElementById('table-body').innerHTML=scripts.map(script=>{
     const times={}; let min=Infinity;
     vms.forEach(vm=>{const t=data[script]?.[vm]||0;times[vm]=t;if(t>0&&t<min)min=t;});
-    return'<tr><td>'+script+'</td>'+vms.map(vm=>{const t=times[vm];if(t===undefined||t===0)return'<td class="missing">\u2014</td>';if(t<0)return'<td class="failed">FAIL</td>';return`<td${t===min&&vms.filter(v=>times[v]>0).length>1?' class="fastest"':''}>${fmtNs(t)}</td>`;}).join('')
+    const evalCell=vm=>{if(!EVAL[vm])return'';const e=EVAL[vm][script];return e>0?`<td class="eval-col">${fmtNs(e)}</td>`:'<td class="missing">\u2014</td>';};
+    return'<tr><td>'+script+'</td>'+vms.map(vm=>{const t=times[vm];if(t===undefined||t===0)return'<td class="missing">\u2014</td>'+evalCell(vm);if(t<0)return'<td class="failed">FAIL</td>'+evalCell(vm);return`<td${t===min&&vms.filter(v=>times[v]>0).length>1?' class="fastest"':''}>${fmtNs(t)}</td>`+evalCell(vm);}).join('')
       +compVMs.map(vm=>{const c=REPORT.compile[vm][script];return c?`<td class="compile-col">${fmtNs(c)}</td>`:'<td class="missing">\u2014</td>';}).join('')+'</tr>';
   }).join('');
 }

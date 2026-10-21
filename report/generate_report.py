@@ -9,6 +9,10 @@ Reads from the run dir:
                          without gate.json are shown as they are
 - <vm>-compile.csv       compile time per script (vm,script,compile_ns), for VMs that compile
                          before they run: "compile excluded" badge and a compile-time column
+- <vm>-eval.csv          eval-only timing (program decoded once before the timed loop): an "eval
+                         only" column next to the D3 time and its geometric mean. Not for a VM
+                         with <vm>-compile.csv: its D3 time already is the eval time. The ranking
+                         stays on the D3 time
 - ../<date>/             earlier runs next to this one, for the history chart: each VM's geometric
                          mean divided by Haskell's from the same run. Only runs with gate.json count
 """
@@ -140,6 +144,21 @@ def load_compile(run_dir: str) -> dict[str, dict[str, int]]:
     return out
 
 
+def load_eval(run_dir: str) -> dict[str, dict[str, int]]:
+    """{vm: {script: mean_ns}} from every <vm>-eval.csv of the run (successful rows only)."""
+    out: dict[str, dict[str, int]] = {}
+    for path in sorted(glob.glob(os.path.join(run_dir, "*-eval.csv"))):
+        with open(path) as f:
+            for row in csv.DictReader(f):
+                try:
+                    ns = int(float(row["mean_ns"]))
+                except (KeyError, TypeError, ValueError):
+                    continue
+                if ns > 0:
+                    out.setdefault(row["vm"], {})[row["script"]] = ns
+    return out
+
+
 def ratio_to_haskell(data: dict[str, dict[str, int]], vm: str) -> float | None:
     """Geometric mean of vm/haskell over the scripts where both have a timing."""
     logs = [math.log(t[vm] / t["haskell"]) for t in data.values()
@@ -215,14 +234,14 @@ def compute_geo_means(data, scripts, present_vms):
 
 
 def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, hidden, compile_ns,
-                      history) -> None:
+                      eval_ns, history) -> None:
     """Generate report.md."""
     geo_means = compute_geo_means(data, scripts, present_vms)
 
     fastest_geo = min(geo_means.values()) if geo_means else 1
 
     lines = []
-    lines.append("# Cardano Plutus VM Benchmark Results")
+    lines.append("# Plutus VM Benchmark Results")
     lines.append("")
     date = os.path.basename(run_dir)
     lines.append(f"**Date:** {date}")
@@ -244,9 +263,12 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
     if compile_ns:
         lines.append("*Compile time is not in the geometric mean (\"compile excluded\"); "
                      "the Compile column is its geometric mean over the scripts.*")
+    if eval_ns:
+        lines.append("*Geo Mean: flat decode + evaluation (the ranking). Eval only: evaluation of a "
+                     "program decoded before the timed loop, geometric mean over its scripts.*")
     lines.append("")
-    lines.append("| VM | Language | Geo Mean | vs Fastest | Compile | Check |")
-    lines.append("|---|---|---|---|---|---|")
+    lines.append("| VM | Language | Geo Mean | vs Fastest | Eval only | Compile | Check |")
+    lines.append("|---|---|---|---|---|---|---|")
 
     sorted_vms = sorted(present_vms, key=lambda vm: geo_means.get(vm, float("inf")))
     for vm in sorted_vms:
@@ -256,8 +278,10 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
         ratio = geo / fastest_geo if fastest_geo > 0 else 0
         comp = compile_ns.get(vm)
         comp_cell = f"{fmt_ns(int(geometric_mean(list(comp.values()))))} (compile excluded)" if comp else "-"
-        lines.append(f"| **{label}** | {lang} | {fmt_ns(int(geo))} | {ratio:.2f}x | {comp_cell} | "
-                     f"{check_label(gate, vm)} |")
+        ev = eval_ns.get(vm)
+        eval_cell = fmt_ns(int(geometric_mean(list(ev.values())))) if ev else "-"
+        lines.append(f"| **{label}** | {lang} | {fmt_ns(int(geo))} | {ratio:.2f}x | {eval_cell} | "
+                     f"{comp_cell} | {check_label(gate, vm)} |")
 
     if hidden:
         lines.append("")
@@ -296,8 +320,11 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
 
     lines.append("## Per-Script Results")
     lines.append("")
-    header = "| Script |" + "|".join(f" {VM_LABELS.get(vm, vm)} " for vm in present_vms) + "|"
-    separator = "|---|" + "|".join("---" for _ in present_vms) + "|"
+    # Each VM's D3 column, followed by its eval-only column if it has <vm>-eval.csv.
+    columns = [c for vm in present_vms for c in ([(vm, False), (vm, True)] if vm in eval_ns else [(vm, False)])]
+    header = "| Script |" + "|".join(
+        f" {VM_LABELS.get(vm, vm)}{' (eval only)' if ev else ''} " for vm, ev in columns) + "|"
+    separator = "|---|" + "|".join("---" for _ in columns) + "|"
     lines.append(header)
     lines.append(separator)
 
@@ -306,7 +333,11 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
         script_times = {vm: data[script].get(vm, 0) for vm in present_vms}
         fastest = min((t for t in script_times.values() if t > 0), default=0)
 
-        for vm in present_vms:
+        for vm, ev in columns:
+            if ev:
+                e = eval_ns[vm].get(script, 0)
+                row += f" {fmt_ns(e)} |" if e > 0 else " - |"
+                continue
             t = script_times[vm]
             if t > 0:
                 cell = fmt_ns(t)
@@ -321,7 +352,10 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
 
     lines.append("")
     lines.append("---")
-    lines.append("*Generated by [cardano-plutus-vm-benchmark](https://github.com/saib-inc/cardano-plutus-vm-benchmark)*")
+    lines.append("*Plutus VM Benchmark – maintained by [lantr](https://lantr.io), continued from "
+                 "[SAIB-Inc/cardano-plutus-vm-benchmark](https://github.com/SAIB-Inc/cardano-plutus-vm-benchmark) "
+                 "(MIT License, © 2025 SAIB Inc.). "
+                 "Source: [lantr-io/plutus-vm-benchmark](https://github.com/lantr-io/plutus-vm-benchmark)*")
 
     report = "\n".join(lines)
     report_path = os.path.join(run_dir, "report.md")
@@ -340,7 +374,7 @@ def check_label(gate: dict | None, vm: str) -> str:
 
 
 def generate_html(run_dir: str, env_info: str, data, present_vms, gate, hidden, compile_ns,
-                  history) -> None:
+                  eval_ns, history) -> None:
     """Generate docs/index.html from template + the timings of the shown VMs."""
     template_path = os.path.join(os.path.dirname(__file__), "template.html")
 
@@ -363,6 +397,7 @@ def generate_html(run_dir: str, env_info: str, data, present_vms, gate, hidden, 
             for vm, v in gate["vms"].items()},
         "hidden": hidden,
         "compile": {vm: s for vm, s in compile_ns.items() if vm in shown},
+        "eval": {vm: s for vm, s in eval_ns.items() if vm in shown},
         "history": history,
         "disclosure": DISCLOSURE,
     }
@@ -411,9 +446,13 @@ def generate(run_dir: str) -> None:
         for vm in hidden:
             data[s].pop(vm, None)
     compile_ns = {vm: v for vm, v in load_compile(run_dir).items() if vm in present_vms}
+    # A compiling VM's D3 time already is its eval time: no second column for it.
+    eval_ns = {vm: v for vm, v in load_eval(run_dir).items()
+               if vm in present_vms and vm not in compile_ns}
     history = load_history(run_dir)
-    generate_markdown(run_dir, data, scripts, present_vms, env_info, gate, hidden, compile_ns, history)
-    generate_html(run_dir, env_info, data, present_vms, gate, hidden, compile_ns, history)
+    generate_markdown(run_dir, data, scripts, present_vms, env_info, gate, hidden, compile_ns, eval_ns,
+                      history)
+    generate_html(run_dir, env_info, data, present_vms, gate, hidden, compile_ns, eval_ns, history)
 
 
 if __name__ == "__main__":
