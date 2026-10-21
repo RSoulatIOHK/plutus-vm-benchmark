@@ -1,20 +1,25 @@
 #!/bin/bash
 # scalus-jit: JMH JITBenchmark of images/scalus/harness. Per invocation: evaluation of the script
 # compiled once in setup, with the machine parameters of PlutusV3 at protocol version 11 and the
-# mainnet cost model and a counting budget spender (spec D3, check/README.md). Then the check and
+# mainnet cost model and a counting budget spender (spec D3, check/README.md). This loop is
+# eval-only already, so scalus-jit.csv and scalus-jit-eval.csv have the same rows. Then the check and
 # the compile column (spec D5): per script, the median time of SCALUS_JIT_COMPILE_RUNS (default 3)
-# flat decodes + JIT compiles, and one evaluation of the compiled script.
+# flat decodes + JIT compiles, and one evaluation of the compiled script, for every script of the
+# full corpus.
 set -euo pipefail
 
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
+# The check covers every script, also with BENCH_QUICK=1 (docs/IMAGE_CONTRACT.md).
+CHECK_DATA_DIR=/bench/data/plutus_use_cases
 BENCH_DIR="/bench/scalus"
 VM=scalus-jit
 
 echo "Scalus JIT (Scala / JVM / JMH)"
 
-# JMH timing; BENCH_QUICK=1 shortens warm-up and measurement.
-WARMUP=5s
+# JMH timing: one 20 s warm-up iteration (docs/IMAGE_CONTRACT.md); BENCH_QUICK=1 shortens
+# warm-up and measurement.
+WARMUP=20s
 MEASURE=5s
 if [[ "${BENCH_QUICK:-0}" == 1 ]]; then
     WARMUP=1s
@@ -49,9 +54,12 @@ python3 /bench/parsers/parse_jmh.py "$RUN_DIR/$VM-jmh.csv" "$VM" > "$RUN_DIR/$VM
 # Fill in -1 for any scripts that were given but produced no result
 python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM.csv" "$DATA_DIR" "$VM" "$RUN_DIR/$VM-raw.log"
 
+# The JIT loop evaluates the precompiled script: it is the eval-only timing too.
+cp "$RUN_DIR/$VM.csv" "$RUN_DIR/$VM-eval.csv"
+
 # Check (spec D4): one evaluation per script, same code and parameters -> $VM-check.csv,
 # and the compile time (decode + compile) -> $VM-compile.csv
 echo "=== check" | tee -a "$RUN_DIR/$VM-raw.log"
 # shellcheck disable=SC2086
-/opt/jdk-25/bin/java $JVM_FLAGS -Xmx4g -cp "$CP" pvb.scalus.Check jit "$RUN_DIR" \
+BENCH_DATA_DIR="$CHECK_DATA_DIR" /opt/jdk-25/bin/java $JVM_FLAGS -Xmx4g -cp "$CP" pvb.scalus.Check jit "$RUN_DIR" \
     2>&1 | tee -a "$RUN_DIR/$VM-raw.log" || true

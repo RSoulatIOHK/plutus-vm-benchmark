@@ -1,18 +1,23 @@
 #!/bin/bash
-# scalus-cek: JMH CekJVMBenchmark of images/scalus/harness. Per invocation: flat decode + CEK
-# evaluation on a PlutusV3 machine at protocol version 11 with the mainnet cost model and a
-# counting budget spender (spec D3, check/README.md). Then the check: one evaluation per script.
+# scalus-cek: JMH CekJVMBenchmark of images/scalus/harness, on a PlutusV3 machine at protocol
+# version 11 with the mainnet cost model and a counting budget spender (check/README.md):
+#   bench      per invocation flat decode + CEK evaluation (spec D3)  -> scalus-cek.csv
+#   benchEval  per invocation CEK evaluation of the program decoded in setup -> scalus-cek-eval.csv
+# Then the check: one evaluation per script of the full corpus.
 set -euo pipefail
 
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
+# The check covers every script, also with BENCH_QUICK=1 (docs/IMAGE_CONTRACT.md).
+CHECK_DATA_DIR=/bench/data/plutus_use_cases
 BENCH_DIR="/bench/scalus"
 VM=scalus-cek
 
 echo "Scalus CEK (Scala / JVM / JMH)"
 
-# JMH timing; BENCH_QUICK=1 shortens warm-up and measurement.
-WARMUP=5s
+# JMH timing: one 20 s warm-up iteration (docs/IMAGE_CONTRACT.md); BENCH_QUICK=1 shortens
+# warm-up and measurement.
+WARMUP=20s
 MEASURE=5s
 if [[ "${BENCH_QUICK:-0}" == 1 ]]; then
     WARMUP=1s
@@ -41,14 +46,16 @@ java -Xss64m -Xmx4g -cp "$CP" org.openjdk.jmh.Main \
     -rff "$RUN_DIR/$VM-jmh.csv" -p "file=$FILE_LIST" 'pvb.scalus.CekJVMBenchmark' \
     2>&1 | tee "$RUN_DIR/$VM-raw.log" || true
 
-# Parse JMH CSV into unified CSV
+# Parse JMH CSV into the D3 and the eval-only CSV
 python3 /bench/parsers/parse_jmh.py "$RUN_DIR/$VM-jmh.csv" "$VM" > "$RUN_DIR/$VM.csv" || true
+python3 /bench/parsers/parse_jmh.py "$RUN_DIR/$VM-jmh.csv" "$VM" --eval > "$RUN_DIR/$VM-eval.csv" || true
 
 # Fill in -1 for any scripts that were given but produced no result
 python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM.csv" "$DATA_DIR" "$VM" "$RUN_DIR/$VM-raw.log"
+python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM-eval.csv" "$DATA_DIR" "$VM" "$RUN_DIR/$VM-raw.log"
 
 # Check (spec D4): one evaluation per script, same code and parameters -> $VM-check.csv
 echo "=== check" | tee -a "$RUN_DIR/$VM-raw.log"
 # shellcheck disable=SC2086
-/opt/jdk-25/bin/java $JVM_FLAGS -Xmx4g -cp "$CP" pvb.scalus.Check cek "$RUN_DIR" \
+BENCH_DATA_DIR="$CHECK_DATA_DIR" /opt/jdk-25/bin/java $JVM_FLAGS -Xmx4g -cp "$CP" pvb.scalus.Check cek "$RUN_DIR" \
     2>&1 | tee -a "$RUN_DIR/$VM-raw.log" || true
