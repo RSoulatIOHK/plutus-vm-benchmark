@@ -133,7 +133,7 @@ jobs:
           scripts/hetzner/run-remote.sh start "$RUN_ID" "$NAME" $VMS
 
       - name: Delete server after a failed start
-        if: failure() && steps.plan.outputs.run_id != ''
+        if: (failure() || cancelled()) && steps.plan.outputs.run_id != ''
         env:
           RUN_ID: ${{ steps.plan.outputs.run_id }}
         run: nix shell nixpkgs#hcloud --command scripts/hetzner/down.sh "$RUN_ID"
