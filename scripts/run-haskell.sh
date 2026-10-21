@@ -5,19 +5,22 @@ set -euo pipefail
 
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
+# The check covers the whole corpus, also with BENCH_QUICK=1 (docs/IMAGE_CONTRACT.md).
+CHECK_DATA_DIR=/bench/data/plutus_use_cases
 BENCH_DIR="/bench/haskell"
 COST_MODEL="$BENCH_DIR/mainnet-plutusv3-costmodel.json"
 
 echo "plutus-core (Haskell / GHC / Criterion)"
 
-# Each script runs for at least 20 s; -L sets that time limit.
+# Each script runs for at least 20 s per loop; -L sets that time limit. Two loops: flat decode +
+# evaluation (haskell.csv, spec D3) and evaluation of a program decoded once (haskell-eval.csv).
 TIMING=()
 if [[ "${BENCH_QUICK:-0}" == 1 ]]; then
     TIMING=(-L 1)
 fi
 
 # Check (spec D4): one evaluation per script with the same parameters as the timed loop.
-"$BENCH_DIR/bin/pvb-bench" check "$COST_MODEL" "$DATA_DIR" > "$RUN_DIR/haskell-check.csv"
+"$BENCH_DIR/bin/pvb-bench" check "$COST_MODEL" "$CHECK_DATA_DIR" > "$RUN_DIR/haskell-check.csv"
 
 # Clean any leftover from aborted runs (Criterion appends, causing duplicate headers)
 rm -f "$RUN_DIR/haskell-criterion.csv"
@@ -32,3 +35,11 @@ python3 /bench/parsers/parse_criterion_hs.py "$RUN_DIR/haskell-criterion.csv" > 
 
 # Fill in -1 for any scripts that were given but produced no result
 python3 /bench/parsers/fill_failures.py "$RUN_DIR/haskell.csv" "$DATA_DIR" haskell "$RUN_DIR/haskell-raw.log"
+
+# Eval-only loop, same Criterion settings.
+rm -f "$RUN_DIR/haskell-eval-criterion.csv"
+"$BENCH_DIR/bin/pvb-bench" bench-eval "$COST_MODEL" "$DATA_DIR" \
+    --csv "$RUN_DIR/haskell-eval-criterion.csv" ${TIMING[@]+"${TIMING[@]}"} \
+    2>&1 | tee "$RUN_DIR/haskell-eval-raw.log" || true
+python3 /bench/parsers/parse_criterion_hs.py "$RUN_DIR/haskell-eval-criterion.csv" > "$RUN_DIR/haskell-eval.csv" || true
+python3 /bench/parsers/fill_failures.py "$RUN_DIR/haskell-eval.csv" "$DATA_DIR" haskell "$RUN_DIR/haskell-eval-raw.log"
