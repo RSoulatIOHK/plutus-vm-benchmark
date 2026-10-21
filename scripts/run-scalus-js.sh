@@ -20,6 +20,9 @@ echo "scalus-js (Scala.js / Node.js $(node --version) / V8), scalus $(node -p 'r
 # Correctness: one evaluation per script of the whole corpus.
 BENCH_QUICK=0 DATA_DIR="$CHECK_DATA_DIR" node check.mjs > "$RUN_DIR/$VM-check.csv" 2> >(tee -a "$RAW" >&2)
 
+# No eval-only timing (no scalus-js-eval.csv): the scalus npm API cannot evaluate an already
+# decoded program (images/scalus-js/README.md, "No eval-only timing").
+
 # Timing. A crash must not kill the run: missing scripts become -1 rows below.
 DATA_DIR="$DATA_DIR" npx vitest bench --run 2>&1 | tee -a "$RAW" || true
 

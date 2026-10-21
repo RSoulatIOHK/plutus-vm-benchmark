@@ -9,8 +9,9 @@ the npm package [`@lucid-evolution/uplc`](https://www.npmjs.com/package/@lucid-e
 `@lucid-evolution/uplc` 0.4.0 exports `eval_program_raw`, which evaluates a bare flat program. But it
 keeps decoded programs in a cache (`ProgramCache`, keyed by the hash of the flat bytes). After the
 first call, a timing loop measures hash + clone + eval, not flat decode + eval. The benchmark must
-time decode + eval (spec D3). So the image builds a small wrapper (`wasm/`) with one function,
-`eval_flat`. It makes the same calls as `eval_program_raw`, without the cache.
+time decode + eval (spec D3). So the image builds a small wrapper (`wasm/`) with the function
+`eval_flat`. It makes the same calls as `eval_program_raw`, without the cache. (Two more functions
+serve the eval-only timing, see below.)
 
 The wrapper is representative of what Lucid users run, because it is built the same way:
 
@@ -56,6 +57,22 @@ every iteration, so the WASM heap does not grow.
 machine ran the program to a value. It is `error` when evaluation failed or the flat did not
 decode. The ledger rule that a PlutusV3 script must return unit is not applied, because these are
 1.0.0 programs. `cpu` and `mem` are the consumed budget.
+
+## Eval-only timing
+
+`aiken-wasm-eval.csv` times the evaluation without the decode (docs/IMAGE_CONTRACT.md). The
+wrapper has two more functions for it, built in the same module from the same crate rev (so the
+`uplc_build_info()` guard covers them too):
+
+- `decode_flat(flat)` decodes once, before timing, and returns a handle to the decoded program.
+- `eval_decoded(handle)` runs it as `eval_flat` does after its decode: a new machine, a fresh
+  `ExBudget::max()` budget, the same protocol version and cost model. The decoded terms are
+  `Rc`-shared, so the clone that the machine takes copies only the root node.
+
+`eval_only.bench.mjs` times `eval_decoded` with the vitest options of `use_cases.bench.mjs`.
+Before timing, it evaluates the decoded program twice and requires the same budget both times.
+This is close to what the published package's `ProgramCache` path measures on a repeated script
+(about 0.30 ms on `auction_1-1`, above), minus its hash of the flat bytes.
 
 `median_ns` equals `mean_ns`, because the vitest text reporter shows no median. The blaze harness
 does the same.

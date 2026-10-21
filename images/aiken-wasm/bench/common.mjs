@@ -43,3 +43,20 @@ export function evalOnce(bytes) {
     r.free();
   }
 }
+
+/** Decode once, for evalDecoded. The caller frees the handle. Throws when the flat does not decode. */
+export const decodeOnce = (bytes) => wasm.decode_flat(bytes);
+
+/**
+ * Evaluate a decoded program (from decodeOnce) on a fresh machine and budget,
+ * as evalOnce does after its decode. Returns { ok, cpu, mem } and frees the
+ * WASM result object.
+ */
+export function evalDecoded(program) {
+  const r = wasm.eval_decoded(program);
+  try {
+    return { ok: r.ok, cpu: r.cpu, mem: r.mem };
+  } finally {
+    r.free();
+  }
+}

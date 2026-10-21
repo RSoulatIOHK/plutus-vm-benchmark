@@ -41,3 +41,16 @@ PlutusV1-era and most of them return the Scott-encoded unit `(delay (lam x x))`,
 has finished, and the budget is the full evaluation cost. The harness reports these scripts as
 `ok`. Any other error code (`SCRIPT_FAILURE`, `BUILTIN_FAILURE`, `OUT_OF_BUDGET`,
 `INTERNAL_ERROR`) is `error`.
+
+## No eval-only timing
+
+The image writes no `scalus-js-eval.csv` (docs/IMAGE_CONTRACT.md allows a missing file). The
+public API of `scalus` 1.4.0 cannot evaluate a program that was decoded before:
+
+- `evaluator.evaluateScript` takes the script bytes (hex or bytes of flat, single or double CBOR)
+  and decodes them on every call.
+- `uplc.decodeToFlat` and `uplc.applyArgs` return flat bytes, not a decoded program.
+- `TxEvaluator` with a `ScriptCache` keeps decoded scripts across evaluations, but it evaluates
+  the scripts of a transaction, not a bare program.
+
+The harness does not reach into the Scala.js internals of the bundle.

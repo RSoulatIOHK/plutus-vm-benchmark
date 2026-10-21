@@ -4,7 +4,14 @@ docs/IMAGE_CONTRACT.md, spec D3/D4/D11. Parameters (check/README.md, "Evaluation
 the mainnet PlutusV3 cost model, counting mode (no limit). opshin has no protocol version switch.
 
     python3 opshin_bench.py                 timing: flat decode + eval per iteration
+    python3 opshin_bench.py --eval          timing: eval of a program decoded once before timing
     python3 opshin_bench.py --check OUT     one evaluation per script, write vm,script,status,cpu,mem
+
+Both timing modes use the same loop and print the same lines (parsers/parse_opshin.py). --eval
+decodes each program once; each iteration calls uplc.tools.eval on it, which makes a fresh Machine
+(fresh budget and state) and runs opshin's own pre-pass (UniqueVariableTransformer, which copies
+the nodes it renames and leaves the decoded program as it was). Before timing, --eval runs the
+decoded program twice and requires the same cost both times; otherwise the script is skipped.
 
 Environment: BENCH_DATA_DIR (the .flat files), PVB_COSTMODEL_JSON (the mainnet cost model file,
 check/reference/mainnet-plutusv3-costmodel.json), PVB_PARAM_NAMES (images/opshin/
@@ -92,15 +99,19 @@ def mainnet_cost_models():
 CEK_COSTS, BUILTIN_COSTS = mainnet_cost_models()
 
 
-def run_once(cbor_flat: bytes):
-    """Flat decode + evaluation. Returns the ComputationResult."""
-    prog = unflatten(cbor_flat)
+def eval_decoded(prog):
+    """Evaluation of a decoded program with a fresh Machine. Returns the ComputationResult."""
     return eval(
         prog,
         budget=COUNTING_BUDGET,
         cek_machine_cost_model=CEK_COSTS,
         builtin_cost_model=BUILTIN_COSTS,
     )
+
+
+def run_once(cbor_flat: bytes):
+    """Flat decode + evaluation. Returns the ComputationResult."""
+    return eval_decoded(unflatten(cbor_flat))
 
 
 def failed(result) -> bool:
@@ -146,14 +157,39 @@ def check(out_path: str) -> None:
         f.write("\n".join(lines) + "\n")
 
 
-def bench() -> None:
+def timed_call(cbor_flat: bytes, eval_only: bool):
+    """The call to time for one script: decode + eval, or eval of a program decoded here, once.
+
+    Raises when the script does not decode or evaluate; with eval_only also when two evaluations
+    of the decoded program cost differently.
+    """
+    if not eval_only:
+        call = lambda: run_once(cbor_flat)  # noqa: E731
+    else:
+        prog = unflatten(cbor_flat)
+        call = lambda: eval_decoded(prog)  # noqa: E731
+    r = call()
+    if failed(r):
+        raise RuntimeError(r.result)
+    if eval_only:
+        again = call()
+        if failed(again) or again.cost != r.cost:
+            raise RuntimeError(
+                f"second evaluation of the decoded program differs: {again.cost} != {r.cost}"
+            )
+    return call
+
+
+def bench(eval_only: bool) -> None:
     # Interpreter warm-up
     first = list(scripts.values())[0]
+    first_prog = unflatten(first)
     for _ in range(20):
-        run_once(first)
+        eval_decoded(first_prog) if eval_only else run_once(first)
 
+    what = "eval of a decoded program" if eval_only else "flat decode + eval"
     print(f"Found {len(files)} benchmark files\n")
-    print("plutus_use_cases benchmarks (Python / OpShin uplc)")
+    print(f"plutus_use_cases benchmarks (Python / OpShin uplc), {what} per iteration")
     print("=" * 90)
 
     grand_total_ns = 0
@@ -162,25 +198,22 @@ def bench() -> None:
     for name, cbor_flat in scripts.items():
         # Verify it works
         try:
-            r = run_once(cbor_flat)
-            error = str(r.result)[:200] if failed(r) else None
+            call = timed_call(cbor_flat, eval_only)
         except Exception as e:
-            error = str(e)[:200]
-        if error is not None:
             print(f"  {name:<35} SKIP (eval error)")
-            print(f"    {error}")
+            print(f"    {str(e)[:200]}")
             continue
 
         # Warmup
         for _ in range(WARMUP):
-            run_once(cbor_flat)
+            call()
 
         # Measured
         samples = []
         total_s = 0.0
         while len(samples) < MIN_ITERS or total_s < TIME_BUDGET_S:
             t0 = time.perf_counter_ns()
-            r = run_once(cbor_flat)
+            r = call()
             elapsed = time.perf_counter_ns() - t0
             if failed(r):
                 raise RuntimeError(f"{name}: evaluation failed during timing: {r.result}")
@@ -215,7 +248,9 @@ if __name__ == "__main__":
     if len(sys.argv) == 3 and sys.argv[1] == "--check":
         check(sys.argv[2])
     elif len(sys.argv) == 1:
-        bench()
+        bench(eval_only=False)
+    elif sys.argv[1:] == ["--eval"]:
+        bench(eval_only=True)
     else:
-        print(f"usage: {sys.argv[0]} [--check OUT_CSV]", file=sys.stderr)
+        print(f"usage: {sys.argv[0]} [--eval | --check OUT_CSV]", file=sys.stderr)
         sys.exit(2)
