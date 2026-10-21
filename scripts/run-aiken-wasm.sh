@@ -25,7 +25,15 @@ cd /bench/aiken-wasm
 BENCH_QUICK=0 DATA_DIR="$CHECK_DATA_DIR" node check.mjs > "$RUN_DIR/$VM-check.csv" 2> >(tee -a "$RAW" >&2)
 
 # Timing. A crash must not kill the run: missing scripts become -1 rows below.
-DATA_DIR="$DATA_DIR" npx vitest bench --run 2>&1 | tee -a "$RAW" || true
-
+# Each call names its bench file: vitest.config.mjs includes every *.bench.mjs, and the two files
+# have the same bench names, so one run of both would mix them in the parser.
+# D3: flat decode + eval per iteration (use_cases.bench.mjs).
+DATA_DIR="$DATA_DIR" npx vitest bench --run use_cases 2>&1 | tee -a "$RAW" || true
 python3 /bench/parsers/parse_vitest.py "$VM" "$RAW" > "$RUN_DIR/$VM.csv"
 python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM.csv" "$DATA_DIR" "$VM" "$RAW"
+
+# Eval only: decode_flat once, eval_decoded per iteration (eval_only.bench.mjs).
+EVAL_RAW="$RUN_DIR/$VM-eval-raw.log"
+DATA_DIR="$DATA_DIR" npx vitest bench --run eval_only 2>&1 | tee "$EVAL_RAW" || true
+python3 /bench/parsers/parse_vitest.py "$VM" "$EVAL_RAW" > "$RUN_DIR/$VM-eval.csv"
+python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM-eval.csv" "$DATA_DIR" "$VM" "$EVAL_RAW"
