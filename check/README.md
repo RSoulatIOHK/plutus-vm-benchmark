@@ -3,12 +3,53 @@
 Spec decision D4: the result and the ExUnits of every script must equal Haskell. A VM that fails is
 not published.
 
+## Policy
+
+1. **Strict.** If the VM's API accepts a cost model, its harness loads the mainnet PlutusV3 model
+   (`reference/mainnet-plutusv3-costmodel.json`) for the timed loop and the check. Status, cpu and
+   mem must equal `reference/haskell-check.csv`. Verdict `pass` or `fail`.
+2. **Badge.** If the API cannot take a cost model, the VM runs with the model it ships. Its row is
+   published with an "outdated cost model" badge if status, cpu and mem equal Haskell evaluated with
+   that model (`reference/haskell-check-variant-c.csv`). This still proves the VM did the same work.
+   Verdict `badge`, or `fail` on any wrong status or mismatch. A badge VM that matches the strict
+   reference gets `pass`.
+3. A `fail` hides the row.
+
+### Mode per VM
+
+| VM | Mode | How the harness loads the mainnet model |
+|---|---|---|
+| haskell | strict | `gate-ref` path, or `HASKELL_SHA` at 1.63.0.0 (its compiled-in model = mainnet) |
+| scalus-cek, scalus-jit | strict | `MachineParams.fromProtocolParams(CardanoInfo.mainnet.protocolParams, PlutusV3)` with `makePlutusV3VM(params, vanRossemPV)` |
+| uplc-turbo | strict | Ships the variant E numbers in `BuiltinCostsV3::default()` |
+| plutigo | strict | `cek.NewEvalContext(lang.LanguageVersionV3, cek.ProtoVersion{Major: 11}, mainnetArray)` (`cek/eval_context.go:31`), then `cek.NewMachine(lang.LanguageVersionV3, 0, ctx)`. Takes the 350-value array (`lang/v3.go` has the V3 names up to PV11). The bench must stop taking the language from the program version |
+| julc-java | strict | `provider.setCostModelParams(mainnetArray, PlutusLanguage.PLUTUS_V3, 11, 0)` on the `JavaVmProvider` before `evaluate` (`JavaVmProvider.java:28`; `CostModelParser` accepts 350 values at PV11) |
+| opshin | strict | `uplc.tools.eval(prog, cek_machine_cost_model=updated_cek_machine_cost_model_from_network_config(default_cek_machine_cost_model_base(), named), builtin_cost_model=updated_builtin_cost_model_from_network_config(default_builtin_cost_model_base(), named))` (`cost_model.py:542,666`). `named` is a name -> value map: `PlutusV3Named` in the cost model file, with `-model-arguments-` removed from the quadratic parameters (`divideInteger-cpu-arguments-model-arguments-c00` -> `divideInteger-cpu-arguments-c00`): opshin reads the old names and uses 3e10 for a missing parameter |
+| blaze (V8, JSC) | strict, harness work | `new CekMachine(undefined, costs)` (`machine.ts:68`) takes `costs: Record<DefaultFunction, BuiltinCostModel>`, a structured table, not the array. blaze has no parser, so the harness maps the array into the table (or overrides the five builtins that differ: `equalsByteString` cpu 30623/28755/75, `c11` = 960 in `divideInteger`, `quotientInteger`, `remainderInteger`, `modInteger`). Machine step costs are constants in `machine.ts`, equal to mainnet. If nobody writes the mapping: badge |
+
+All four of plutigo, blaze, julc and opshin ship the same model: the plutus PlutusV3 variant C
+defaults (`builtinCostModelC.json`, unchanged from 2024 to plutus 1.63.0.0, and the 16000/100
+machine costs). Checked number by number for the 39 builtins the 89 scripts use; opshin's
+2024-07-30 network file equals `builtinCostModelC.json` in every parameter (the BLS12-381 ones are
+named differently and were not compared; the scripts do not use them). So one badge
+reference is enough.
+
+Two facts decide whether the strict path works:
+
+- Cost function shapes do not matter here. Variant E changed the division shape to
+  `above_and_below_diagonal`, and these VMs only have the C shape `const_above_diagonal`. With the
+  mainnet numbers and the C shapes, Scalus gives the strict reference on all 89 scripts.
+- The 11 UPLC 1.1.0 scripts (`coop-*`, `guardrail-*`) use `case` on builtin values (for example a
+  `Bool`), a protocol version 11 feature. A VM without it fails these 11 in both modes. opshin has
+  no case on builtin values (`machine.py:248`: "Scrutinized non-constr in case").
+
 | File | What it is |
 |---|---|
-| `reference/haskell-check.csv` | The reference: `vm,script,status,cpu,mem` for the 89 scripts, from Haskell plutus 1.63.0.0 |
+| `reference/haskell-check.csv` | The strict reference: `vm,script,status,cpu,mem` for the 89 scripts, from Haskell plutus 1.63.0.0 |
+| `reference/haskell-check-variant-c.csv` | The badge reference: the same, with the variant C cost model |
 | `reference/Dockerfile`, `reference/gate-ref/` | The Haskell program that produces the reference |
-| `reference/regenerate.sh` | Rebuilds the image and rewrites `reference/haskell-check.csv` |
-| `reference/mainnet-plutusv3-costmodel.json` | The mainnet PlutusV3 cost model the reference uses |
+| `reference/regenerate.sh` | Rebuilds the image and rewrites both references |
+| `reference/mainnet-plutusv3-costmodel.json` | The mainnet PlutusV3 cost model: `PlutusV3` (array), `PlutusV3Named` (name -> value) |
 | `scalus-crosscheck.sc` | Independent cross-check of the reference with the released Scalus 1.4.0 CEK |
 | `gate.py`, `test_gate.py` | The compare tool and its test |
 
@@ -84,6 +125,11 @@ flags line is `flags: +with-inline-r +with-cert`.
 check/reference/regenerate.sh          # needs Docker; CABAL_JOBS=2 by default
 ```
 
+The badge reference is `gate-ref ... variant-c`: semantics variant C with the variant C cost model
+compiled into plutus-core 1.63.0.0, and case on builtin values enabled (as at protocol version 11).
+Scalus 1.4.0 with `builtinCostModelC.json` gives the same file
+(`scala-cli run check/scalus-crosscheck.sc -- data/plutus_use_cases variant-c`).
+
 The first build compiles plutus-core and plutus-ledger-api (about 10 minutes in Docker on an
 M-series Mac). To use a new cost model, update `reference/mainnet-plutusv3-costmodel.json`, for example from
 `https://api.koios.rest/api/v1/cli_protocol_params` (`.costModels.PlutusV3`).
@@ -98,12 +144,17 @@ python3 check/gate.py /tmp/scalus-check.csv
 ## Run the gate
 
 ```bash
-python3 check/gate.py --json results/<date>/gate.json results/<date>/*-check.csv
+python3 check/gate.py --json results/<date>/gate.json \
+    --mode blaze-v8=badge:check/reference/haskell-check-variant-c.csv \
+    results/<date>/*-check.csv
 python3 -m unittest discover -s check -p 'test_*.py'
 ```
 
-Output: one line per VM (`PASS`/`FAIL`, matching count, the first mismatching scripts). The JSON
-has the full list. Exit code 1 if any VM fails, 2 on bad input. A row with empty `cpu`/`mem` fails
+`--mode VM=strict` is the default; `--mode VM=badge:REFERENCE_CSV` selects the badge path for one
+VM. Output: one line per VM (`PASS`/`BADGE`/`FAIL`, mode, reason, matching count, the first
+mismatching scripts). The JSON has, per VM, `verdict` (`pass`|`badge`|`fail`), `mode`, `reference`,
+`reason` and the full mismatch list; the top-level `ok` is false if any VM fails. Exit code 1 if any
+VM fails, 2 on bad input. A row with empty `cpu`/`mem` fails
 the VM as "no costing". A script that is in the reference but not in the VM's file fails as
 "missing".
 
@@ -122,12 +173,11 @@ Does the timed loop run with costing on, and how does each VM get a `<vm>-check.
 | julc-java | Costing on, unlimited budget (`null` budget) | PlutusV3, `DefaultCostModel` | `EvalResult.budgetConsumed()`, `isSuccess()` | Single-file Java with the same `evaluate` call. Trivial | Fail: ships variant C constants only |
 | opshin | Costing on, capped at the transaction limit (`default_budget()`) | V3 CEK and builtin cost models | `ComputationResult.cost` (budget minus remaining), `.result` holds the term or the exception | Python loop over `uplc.tools.eval`, status from `isinstance(r.result, Exception)`. Do not use the `uplc eval` CLI: it defaults to the PlutusV2 cost model. Trivial | Fail: ships variant C constants only (cost model files 2024-07-30) |
 
-The prediction comes from the cost model constants in each pinned repo: variant E has
-`divideInteger` = 30623/28755/75, variant C has 24548/29498/38. A VM with only C constants differs
-from the reference on all 89 scripts (measured with the C files in Scalus 1.4.0).
-Such a VM can pass without a new release if its API takes a cost model array: give it
-`reference/mainnet-plutusv3-costmodel.json` (plutigo has `NewEvalContext` with protocol parameter
-cost models; opshin reads cost model files). Check this per VM when its emitter is written.
+The prediction is for the default cost model at the pin. It comes from the constants in each pinned
+repo: variant E has `equalsByteString` cpu 30623/28755/75 and `c11` = 960 in the division builtins,
+variant C has 24548/29498/38 and 549. A VM with only C constants differs from the strict reference
+on all 89 scripts (measured with the C files in Scalus 1.4.0). See [Mode per VM](#mode-per-vm) for
+how each one loads the mainnet model instead.
 
 Other findings:
 
