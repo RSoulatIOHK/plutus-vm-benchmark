@@ -40,6 +40,13 @@ RUN apt-get update \
 COPY --from=build /usr/local/bin/bun /usr/local/bin/bun
 COPY --from=build /src /bench/blaze-plutus
 
+# Our harness (pvb.bench.ts, pvb-check.test.ts) and the mainnet PlutusV3 cost model mapped into
+# blaze's cost table (pvb-costs.ts). See the headers of images/blaze/*.ts.
+COPY images/blaze/pvb-costs.ts images/blaze/pvb.bench.ts images/blaze/pvb-check.test.ts \
+     /bench/blaze-plutus/packages/blaze-plutus/bench/
+COPY check/reference/mainnet-plutusv3-costmodel.json /bench/mainnet-plutusv3-costmodel.json
+COPY images/blaze/plutusv3-param-names.txt /bench/plutusv3-param-names.txt
+
 COPY parsers/ /bench/parsers/
 COPY scripts/image-entry.sh scripts/run-blaze-v8.sh scripts/run-blaze-jsc.sh /bench/scripts/
 
