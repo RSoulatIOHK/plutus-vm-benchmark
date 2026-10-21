@@ -12,11 +12,14 @@ Reads from the run dir:
                          with verdict "badge" is shown with an "outdated cost model" badge. Old runs
                          without gate.json are shown as they are
 - <vm>-compile.csv       compile time per script (vm,script,compile_ns), for VMs that compile
-                         before they run: "compile excluded" badge and a compile-time column
+                         before they run: "decode and compile excluded" badge and a
+                         compile-time column
 - <vm>-eval.csv          eval-only timing (program decoded once before the timed loop): an "eval
                          only" column next to the D3 time and its geometric mean. Not for a VM
                          with <vm>-compile.csv: its D3 time already is the eval time. The ranking
                          stays on the D3 time
+- drift.json             the drift probe (parsers/normalize.py): Haskell at the end of the run
+                         vs the start, shown as a note
 - ../<date>/             earlier runs next to this one, for the history chart: each VM's geometric
                          mean divided by Haskell's from the same run. Only runs with gate.json count
 """
@@ -46,6 +49,19 @@ DISCLOSURE = (
     "protocol version 11 with the mainnet cost model, like Plutus's own `validation` CEK benchmark; "
     "the node would run them as PlutusV1."
 )
+
+# One note per VM, shown on its card and in report.md. Markdown links [text](url) only.
+VM_NOTES = {
+    "aiken": "Aiken v1.1.24 copies the CEK environment on every lambda application (quadratic in "
+             "recursion depth). aiken main fixes it (PRs "
+             "[#1451](https://github.com/aiken-lang/aiken/pull/1451), "
+             "[#1452](https://github.com/aiken-lang/aiken/pull/1452): coop-6 92 ms -> 1.2 ms), "
+             "but no release contains the fix yet.",
+}
+
+# The badge of a VM with <vm>-compile.csv (Scalus JIT): its timed loop runs the compiled script,
+# so neither the flat decode nor the compile step is in its time.
+COMPILE_BADGE = "decode and compile excluded"
 
 VM_LABELS = {
     "uplc-turbo": "uplc-turbo AST walker (Rust)",
@@ -170,6 +186,24 @@ def ratio_to_haskell(data: dict[str, dict[str, int]], vm: str) -> float | None:
     return math.exp(sum(logs) / len(logs)) if logs else None
 
 
+def load_drift(run_dir: str) -> dict | None:
+    """drift.json of the run (parsers/normalize.py), or None."""
+    path = os.path.join(run_dir, "drift.json")
+    if not os.path.isfile(path):
+        return None
+    with open(path) as f:
+        drift = json.load(f)
+    return drift if isinstance(drift.get("percent"), (int, float)) else None
+
+
+def drift_text(drift: dict | None) -> str:
+    if drift is None:
+        return ""
+    vm = "Haskell" if drift.get("vm") == "haskell" else drift.get("vm", "?")
+    return (f"Drift ({vm}, end vs start): {drift['percent']:+.1f} % over {len(drift.get('scripts', {}))} "
+            f"scripts. The run timed Haskell again at its end; this is the change of its time.")
+
+
 def load_history(run_dir: str) -> dict:
     """Ratio to Haskell per VM for every run next to run_dir that has gate.json (new format).
 
@@ -238,7 +272,7 @@ def compute_geo_means(data, scripts, present_vms):
 
 
 def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, hidden, compile_ns,
-                      eval_ns, history) -> None:
+                      eval_ns, history, drift) -> None:
     """Generate report.md."""
     geo_means = compute_geo_means(data, scripts, present_vms)
 
@@ -260,13 +294,17 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
 
     lines.append(f"*{DISCLOSURE}*")
     lines.append("")
+    if drift:
+        lines.append(f"*{drift_text(drift)}*")
+        lines.append("")
 
     lines.append("## Summary (geometric mean across all scripts)")
     lines.append("")
     lines.append("*Note: VMs that fail or skip a script are assigned the slowest competitor's time for that script.*")
     if compile_ns:
-        lines.append("*Compile time is not in the geometric mean (\"compile excluded\"); "
-                     "the Compile column is its geometric mean over the scripts.*")
+        lines.append(f"*A compiling VM's timed loop runs the compiled script (\"{COMPILE_BADGE}\": the "
+                     "decode and the compile run once per script, before timing). The Compile column "
+                     "is the geometric mean of the compile time over the scripts.*")
     if eval_ns:
         lines.append("*Geo Mean: flat decode + evaluation (the ranking). Eval only: evaluation of a "
                      "program decoded before the timed loop, geometric mean over its scripts.*")
@@ -281,7 +319,7 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
         geo = geo_means[vm]
         ratio = geo / fastest_geo if fastest_geo > 0 else 0
         comp = compile_ns.get(vm)
-        comp_cell = f"{fmt_ns(int(geometric_mean(list(comp.values()))))} (compile excluded)" if comp else "-"
+        comp_cell = f"{fmt_ns(int(geometric_mean(list(comp.values()))))} ({COMPILE_BADGE})" if comp else "-"
         ev = eval_ns.get(vm)
         eval_cell = fmt_ns(int(geometric_mean(list(ev.values())))) if ev else "-"
         geo_cell, ratio_cell = (fmt_ns(int(geo)), f"{ratio:.2f}x") if geo > 0 else ("-", "-")
@@ -298,6 +336,14 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
         lines.append("|---|---|")
         for vm in sorted(hidden, key=lambda v: (VM_ORDER.index(v) if v in VM_ORDER else 99, v)):
             lines.append(f"| {VM_LABELS.get(vm, vm)} | {hidden[vm]} |")
+
+    notes = [vm for vm in sorted_vms if vm in VM_NOTES]
+    if notes:
+        lines.append("")
+        lines.append("### Notes")
+        lines.append("")
+        for vm in notes:
+            lines.append(f"- **{VM_LABELS.get(vm, vm)}**: {VM_NOTES[vm]}")
 
     if history["runs"]:
         lines.append("")
@@ -379,7 +425,7 @@ def check_label(gate: dict | None, vm: str) -> str:
 
 
 def generate_html(run_dir: str, env_info: str, data, present_vms, gate, hidden, compile_ns,
-                  eval_ns, history, write_index: bool) -> None:
+                  eval_ns, history, drift, write_index: bool) -> None:
     """Generate <run_dir>/index.html from template + the timings of the shown VMs.
 
     With write_index, also <repo>/docs/index.html, the published page (run.yml sets it).
@@ -408,6 +454,9 @@ def generate_html(run_dir: str, env_info: str, data, present_vms, gate, hidden, 
         "eval": {vm: s for vm, s in eval_ns.items() if vm in shown},
         "history": history,
         "disclosure": DISCLOSURE,
+        "notes": {vm: n for vm, n in VM_NOTES.items() if vm in shown},
+        "compile_badge": COMPILE_BADGE,
+        "drift": drift_text(drift),
     }
     # Safe inside <script>: no "</" can close the element.
     report_json = json.dumps(report, ensure_ascii=False).replace("</", "<\\/")
@@ -471,10 +520,11 @@ def generate(run_dir: str, write_index: bool = False) -> None:
     eval_ns = {vm: v for vm, v in eval_all.items()
                if vm in present_vms and not (vm in compile_ns and vm in has_d3)}
     history = load_history(run_dir)
+    drift = load_drift(run_dir)
     generate_markdown(run_dir, data, scripts, present_vms, env_info, gate, hidden, compile_ns, eval_ns,
-                      history)
+                      history, drift)
     generate_html(run_dir, env_info, data, present_vms, gate, hidden, compile_ns, eval_ns, history,
-                  write_index)
+                  drift, write_index)
 
 
 if __name__ == "__main__":

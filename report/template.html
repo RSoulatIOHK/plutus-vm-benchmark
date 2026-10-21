@@ -537,6 +537,8 @@
   .vm-badge.compile { color: var(--purple-bright); border-color: rgba(139,120,239,0.45); }
   .card .compile-time { font-family: var(--font-mono); color: var(--text-muted); font-size: 0.6rem; margin-bottom: 0.35rem; }
   th.compile-col, td.compile-col { color: var(--purple-bright); }
+  .card .vm-note { color: var(--text-muted); font-size: 0.6rem; line-height: 1.35; margin-bottom: 0.35rem; }
+  .card .vm-note a { color: var(--purple-bright); text-decoration: none; }
   .card .eval-time { font-family: var(--font-mono); color: var(--text-secondary); font-size: 0.6rem; margin-bottom: 0.35rem; }
   th.eval-col, td.eval-col { color: var(--text-muted); }
 
@@ -653,7 +655,8 @@
     <div class="section-title">Method</div>
     <div class="note" style="margin:0 0 0.6rem" id="method-disclosure"></div>
     <div class="note" style="margin:0 0 0.6rem">Two timings per script. The ranking uses <em>decode + eval</em>: each iteration flat-decodes the script and evaluates it, as a node does with a script it has not seen. <em>Eval only</em> evaluates a program decoded once before timing; decoding is a large share of the time for some VMs (about 66&nbsp;% for Haskell plutus-core), so the second column shows how fast the evaluator alone is.</div>
-    <div class="note" style="margin:0 0 0.6rem">Correctness gate: each VM evaluates every script once more and reports the result and the ExUnits. They must equal Haskell plutus-core; a VM that differs is not ranked (&ldquo;failed check&rdquo;). A VM whose API cannot take the mainnet cost model is ranked with an &ldquo;outdated cost model&rdquo; badge if it equals Haskell with the model the VM ships. A VM that compiles a script before it runs it (&ldquo;compile excluded&rdquo;) is timed without the compile step; its compile time is shown separately.</div>
+    <div class="note" style="margin:0 0 0.6rem">Correctness gate: each VM evaluates every script once more and reports the result and the ExUnits. They must equal Haskell plutus-core; a VM that differs is not ranked (&ldquo;failed check&rdquo;). A VM whose API cannot take the mainnet cost model is ranked with an &ldquo;outdated cost model&rdquo; badge if it equals Haskell with the model the VM ships. A VM that compiles a script before it runs it (&ldquo;decode and compile excluded&rdquo;) decodes and compiles each script once, before timing; its timed loop runs the compiled script, so neither step is in its time. Its compile time is shown separately.</div>
+    <div class="note" id="drift-note" style="margin:0 0 0.6rem;display:none"></div>
     <div class="note" style="margin:0">Flat decode + evaluation on 89 Plutus scripts. Each VM uses its native benchmark framework. Each VM runs in its own Docker image, one VM at a time. Geometric means within each category use only the scripts where every VM in that category produced a successful result, so all VMs in a category are compared on the same scripts.</div>
   </div>
 
@@ -672,7 +675,7 @@
 <script>
 const CSV_DATA = `{{CSV_DATA}}`;
 // gate: {vm: {verdict, mode, reason}} or null (run without gate.json); hidden: {vm: reason};
-// compile: {vm: {script: compile_ns}}; eval: {vm: {script: mean_ns}} (eval-only timing, absent
+// compile: {vm: {script: compile_ns}}; notes: {vm: markdown text}; drift: text or ''; eval: {vm: {script: mean_ns}} (eval-only timing, absent
 // for a VM with compile data: its D3 time already is the eval time); history: {runs: [dir], series: {vm: [ratio or null]}}.
 const REPORT = {{REPORT_JSON}};
 
@@ -721,7 +724,7 @@ function badges(vm) {
   const v = REPORT.gate ? REPORT.gate[vm] : null;
   if (v && v.verdict === 'pass') out.push('<span class="vm-badge pass" title="Result and ExUnits equal Haskell plutus-core on every script">check passed</span>');
   if (v && v.verdict === 'badge') out.push('<span class="vm-badge outdated" title="The VM cannot load the mainnet cost model; its ExUnits equal Haskell with the model the VM ships">outdated cost model</span>');
-  if (REPORT.compile[vm]) out.push('<span class="vm-badge compile" title="Each script is compiled before the timed loop; the compile time is not in the geometric mean">compile excluded</span>');
+  if (REPORT.compile[vm]) out.push('<span class="vm-badge compile" title="Each script is decoded and compiled once, before the timed loop; the timed loop runs the compiled script, so neither the decode nor the compile is in the geometric mean">' + REPORT.compile_badge + '</span>');
   return out.length ? '<div class="vm-badges">' + out.join('') + '</div>' : '';
 }
 const EVAL = REPORT.eval || {};
@@ -730,6 +733,13 @@ function evalLine(vm, common) {
   const g = geoMean(common.map(s => e[s] || 0));
   return g > 0 ? '<div class="eval-time">eval only ' + fmtNs(Math.round(g)) + ' (geo mean, decode excluded)</div>' : '';
 }
+// A VM note: escaped text with markdown links [text](https://...) as links.
+function noteLine(vm) {
+  const n = (REPORT.notes || {})[vm]; if (!n) return '';
+  const html = n.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\[([^\]]+)\]\((https:[^)\s]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+  return '<div class="vm-note">' + html + '</div>';
+}
 function compileLine(vm) {
   const g = compileGeo(vm);
   return g > 0 ? '<div class="compile-time">compile ' + fmtNs(Math.round(g)) + ' (geo mean, not timed)</div>' : '';
@@ -737,6 +747,7 @@ function compileLine(vm) {
 const disclosureHtml = REPORT.disclosure.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/`([^`]+)`/g, '<code>$1</code>');
 document.getElementById('disclosure').innerHTML = disclosureHtml;
 document.getElementById('method-disclosure').innerHTML = disclosureHtml;
+if (REPORT.drift) { const d = document.getElementById('drift-note'); d.textContent = REPORT.drift; d.style.display = ''; }
 // Raw geo means (only scripts where ALL VMs have a positive result)
 const commonScripts = scripts.filter(s => presentVMs.every(vm => (data[s]?.[vm] || 0) > 0));
 const geoMeans = {};
@@ -785,7 +796,7 @@ const CATS = [
     blurb: 'CEK machines or AST tree-walkers that run on a host runtime. They do the same work, so their times compare directly.',
     matches: ['int'] },
   { key: 'comp', label: 'Compiler-based VMs',
-    blurb: 'Have a UPLC compilation pass: to a custom bytecode (Bytecode VMs) or to host machine code (JIT compilers). The compile step is not timed (compile excluded); its time is shown in a separate column.',
+    blurb: 'Have a UPLC compilation pass: to a custom bytecode (Bytecode VMs) or to host machine code (JIT compilers). The decode and the compile step run once per script, before timing (decode and compile excluded); the compile time is shown in a separate column.',
     matches: ['bc', 'jit'] },
 ];
 
@@ -822,7 +833,7 @@ rankingsHost.innerHTML = CATS.map(cat => {
     const compatHtml=fail>0
       ? '<div class="compat"><span class="pass">'+pass+'</span>/<span>'+scripts.length+'</span> passed · <span class="fail">'+fail+' failed</span></div>'
       : '<div class="compat"><span class="pass">'+pass+'/'+scripts.length+'</span> passed</div>';
-    return '<div class="card '+cls+'"><div class="rank">#'+(i+1)+'</div><div class="vm-name">'+m.label+'</div><div class="lang">'+langLine(m)+'</div><div class="engine '+engineClass(m)+'">'+engineCode(m)+'</div>'+badges(vm)+compatHtml+compileLine(vm)+evalLine(vm, cm.common)+'<div class="geo-mean">'+fmtNs(Math.round(geo))+'<span class="ratio">'+ratio+'×</span></div></div>';
+    return '<div class="card '+cls+'"><div class="rank">#'+(i+1)+'</div><div class="vm-name">'+m.label+'</div><div class="lang">'+langLine(m)+'</div><div class="engine '+engineClass(m)+'">'+engineCode(m)+'</div>'+badges(vm)+compatHtml+compileLine(vm)+evalLine(vm, cm.common)+noteLine(vm)+'<div class="geo-mean">'+fmtNs(Math.round(geo))+'<span class="ratio">'+ratio+'×</span></div></div>';
   }).join('');
   const code = cat.key === 'int' ? 'INT' : 'COMP';
   return '<section class="cat-section '+cat.key+'" data-cat="'+cat.key+'"><div class="cat-header"><span class="cat-mark">'+code+' · '+cvms.length+'</span><span class="cat-name">'+cat.label+'<em>'+sampleNote+'</em></span></div><p class="cat-blurb">'+cat.blurb+'</p><div class="summary">'+cards+'</div></section>';
