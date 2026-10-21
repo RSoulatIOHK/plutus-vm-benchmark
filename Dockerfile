@@ -79,9 +79,12 @@ RUN apt-get update \
     && apt-get install -y curl xz-utils git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fsSL "https://ziglang.org/download/${ZIG_VERSION}/zig-x86_64-linux-${ZIG_VERSION}.tar.xz" \
+# Arch-aware Zig download — uname -m yields x86_64 / aarch64, matching Zig's
+# tarball naming, so this builds natively on both amd64 and arm64 hosts.
+RUN ARCH="$(uname -m)" \
+    && curl -fsSL "https://ziglang.org/download/${ZIG_VERSION}/zig-${ARCH}-linux-${ZIG_VERSION}.tar.xz" \
     | tar -xJ -C /opt \
-    && ln -s /opt/zig-x86_64-linux-${ZIG_VERSION}/zig /usr/local/bin/zig
+    && ln -s "/opt/zig-${ARCH}-linux-${ZIG_VERSION}/zig" /usr/local/bin/zig
 
 RUN git clone "$PLUTUZ_REPO" /src \
     && cd /src && git checkout "$PLUTUZ_SHA"
@@ -135,14 +138,7 @@ RUN git clone "$SCALUS_REPO" /src \
 
 WORKDIR /src
 
-# Patch: raise NativeStack JIT depth threshold from 1000 to 25000 so the
-# Hybrid JIT no longer falls back to CEK on moderately-recursive scripts.
-# Default 1000 makes scripts like future-pay-out-4 pay both JIT-up-to-1000
-# AND full CEK re-evaluation. 25000 covers all plutus_use_cases scripts
-# tested while staying well within -Xss512m (~5MB native stack usage).
-RUN sed -i 's/val MAX_STACK_DEPTH = 1000$/val MAX_STACK_DEPTH = 25000/' \
-    scalus-uplc-jit-compiler/src/main/scala/scalus/uplc/jit/nativestack/NativeStackContext.scala \
-    && grep "MAX_STACK_DEPTH" scalus-uplc-jit-compiler/src/main/scala/scalus/uplc/jit/nativestack/NativeStackContext.scala
+# No depth patch: since 60083c162 Scalus defaults to maxDepth 25000 (NativeStackContext.DefaultMaxDepth)
 
 # Pre-compile JMH benchmarks (this downloads deps + compiles everything)
 RUN sbt bench/Jmh/compile
@@ -217,6 +213,11 @@ RUN sed -i 's/flags: +with-inline-r/flags: -with-inline-r/' cabal.project \
 
 RUN cabal update
 RUN cabal build plutus-benchmark:bench:validation -j
+
+# Stage the built bench binary at an arch-independent path. dist-newstyle nests
+# the binary under <arch>-linux (x86_64-linux or aarch64-linux), so glob it here
+# and let the runner COPY from a fixed location.
+RUN cp dist-newstyle/build/*-linux/ghc-*/plutus-benchmark-*/b/validation/build/validation/validation /src/validation-bin
 
 # =============================================================================
 # Build stage: llvm-uplc (C++ / LLVM LLJIT)
@@ -326,7 +327,7 @@ RUN ldconfig
 # Chrysalis: full source + build output (BenchmarkDotNet needs project at runtime)
 COPY --from=build-chrysalis /src /bench/chrysalis
 
-# uplc-turbo: compiled bench binary + data
+# uplc-turbo: re-pinned to main 39c82af (old SHA 6f0ef8e4 was force-removed upstream).
 COPY --from=build-uplc-turbo /src/target /bench/uplc-turbo/target
 COPY --from=build-uplc-turbo /src/crates/uplc/benches /bench/uplc-turbo/crates/uplc/benches
 COPY --from=build-uplc-turbo /src/crates/uplc/Cargo.toml /bench/uplc-turbo/crates/uplc/Cargo.toml
@@ -354,7 +355,7 @@ COPY --from=build-opshin /src /bench/opshin
 COPY scripts/opshin_bench.py /bench/opshin/bench_plutus_use_cases.py
 
 # Haskell: compiled Criterion benchmark binary (data loaded from /bench/data/ at runtime)
-COPY --from=build-haskell /src/dist-newstyle/build/x86_64-linux/ghc-9.6.4/plutus-benchmark-0.1.0.0/b/validation/build/validation/validation /bench/haskell/bin/validation
+COPY --from=build-haskell /src/validation-bin /bench/haskell/bin/validation
 
 # Scalus: full sbt project + compiled JMH benchmarks (JMH needs sbt at runtime)
 COPY --from=build-scalus /src /bench/scalus
@@ -368,7 +369,7 @@ COPY --from=build-julc /src/julc-benchmark/build/libs/*-jmh.jar /bench/julc/julc
 
 # Install JDK 21 for Scalus + GHC runtime deps for Haskell + libssl runtime for llvm-uplc
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    openjdk-21-jre-headless \
+    openjdk-21-jdk-headless \
     libgmp10 libsodium-dev libsecp256k1-dev libstdc++6 libssl3t64 \
     && rm -rf /var/lib/apt/lists/* \
     && ldconfig
