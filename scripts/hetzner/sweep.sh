@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Delete every bench server and SSH key older than MAX_AGE_HOURS (default 12).
+# Delete every bench server and SSH key older than MAX_AGE_HOURS (default 16).
 # Third cleanup layer, after the workflow's always() step and the server's self-destruct timer.
 #
 #   HCLOUD_TOKEN=... scripts/hetzner/sweep.sh
 set -euo pipefail
 
-MAX_AGE_HOURS="${MAX_AGE_HOURS:-12}"
+MAX_AGE_HOURS="${MAX_AGE_HOURS:-16}"
 : "${HCLOUD_TOKEN:?HCLOUD_TOKEN must be set}"
 export HCLOUD_TOKEN
 cutoff=$(( $(date +%s) - MAX_AGE_HOURS * 3600 ))

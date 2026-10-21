@@ -8,7 +8,8 @@
 #
 # Environment:
 #   IMAGE_PREFIX   image name prefix                 (default ghcr.io/lantr-io/pvb-)
-#   IMAGE_TAG      tag to run                        (default latest)
+#   IMAGE_TAG      tag to run                        (default latest; auto = scripts/images.sh tag <vm>,
+#                  the exact image of the checked-out files)
 #   PULL=1         docker pull each image first      (default 0: use local images)
 #   BENCH_QUICK=1  passed to the images: first 5 scripts, short timing
 #   DATA_DIR       corpus dir with plutus_use_cases/ (default <repo>/data)
@@ -50,7 +51,7 @@ VMS=$(echo "$*" | tr ',' ' ')
     echo "docker: $(docker version --format '{{.Server.Version}} ({{.Server.Os}}/{{.Server.Arch}})' 2>/dev/null || echo unknown)"
     echo "docker cpus: $(docker info --format '{{.NCPU}}' 2>/dev/null || echo unknown)"
     echo "docker memory: $(( $(docker info --format '{{.MemTotal}}' 2>/dev/null || echo 0) / 1048576 )) MiB"
-    echo "harness: $(git -C "$REPO_ROOT" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+    echo "harness: ${PVB_HARNESS:-$(git -C "$REPO_ROOT" rev-parse --short HEAD 2>/dev/null || echo unknown)}"
     echo "bench_quick: $BENCH_QUICK"
 } > "$RUN_DIR/environment.txt"
 cat "$RUN_DIR/environment.txt"
@@ -58,7 +59,9 @@ cat "$RUN_DIR/environment.txt"
 # --- run each VM ------------------------------------------------------------------------
 FAILED=""
 for vm in $VMS; do
-    image="${IMAGE_PREFIX}${vm}:${IMAGE_TAG}"
+    tag="$IMAGE_TAG"
+    [[ "$tag" == auto ]] && tag=$("$REPO_ROOT/scripts/images.sh" tag "$vm")
+    image="${IMAGE_PREFIX}${vm}:${tag}"
     echo ""
     echo "---------------------------------------------"
     echo " ${vm}: ${image}"

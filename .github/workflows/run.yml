@@ -1,0 +1,249 @@
+# The benchmark run: creates a bench server on Hetzner, runs every VM image on it, gates the
+# results, commits results/<date> and publishes the report on GitHub Pages, and deletes the server.
+#
+# A GitHub-hosted job lasts at most 6 h and a full run takes about as long, so the run is detached
+# on the server (scripts/hetzner/run-remote.sh) and two wait jobs poll it. The server deletes
+# itself 14 h after boot if every job here dies (nix/runner.nix); sweep.yml is the last guard.
+name: run
+
+on:
+  schedule:
+    # The 1st of each month; skipped when nothing but results changed since the last run.
+    - cron: "41 2 1 * *"
+  workflow_dispatch:
+    inputs:
+      vms:
+        description: VMs to run, space-separated (empty = all)
+        default: ""
+      quick:
+        description: BENCH_QUICK=1 (5 scripts, short timing); results are not committed
+        type: boolean
+        default: false
+      server_type:
+        description: Hetzner server type (keep it fixed for comparable history)
+        default: ccx33
+      force:
+        description: Run even if nothing changed since the last run
+        type: boolean
+        default: false
+
+concurrency: bench-hetzner
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY_PREFIX: ghcr.io/lantr-io/pvb-
+  BENCH_STATE: /tmp/bench-hetzner
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    environment: bench-run
+    timeout-minutes: 60
+    outputs:
+      run_id: ${{ steps.plan.outputs.run_id }}
+      name: ${{ steps.plan.outputs.name }}
+      skip: ${{ steps.plan.outputs.skip }}
+      ip: ${{ steps.up.outputs.ip }}
+    env:
+      HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+      BENCH_SERVER_TYPE: ${{ inputs.server_type || 'ccx33' }}
+      BENCH_QUICK: ${{ inputs.quick && '1' || '0' }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - id: plan
+        env:
+          FORCE: ${{ inputs.force || false }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          # Skip a scheduled run when only results/ and the published page changed since the
+          # last results commit.
+          last=$(git log -1 --format=%H -- results/ || true)
+          changed=$(git log --format=%h "${last:+$last..}HEAD" -- . ':!results' ':!docs/index.html' | head -1)
+          if [[ "$EVENT" == schedule && "$FORCE" != true && -z "$changed" ]]; then
+            echo "nothing changed since $last; skipping"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [[ "$BENCH_QUICK" == 1 ]]; then
+            name="quick-$(date -u +%Y-%m-%dT%H%M)"
+          else
+            name="$(date -u +%Y-%m-%d)"
+            n=2
+            while [[ -e "results/$name" ]]; do name="$(date -u +%Y-%m-%d)-$n"; n=$((n + 1)); done
+          fi
+          {
+            echo "skip=false"
+            echo "name=$name"
+            echo "run_id=run-${{ github.run_id }}"
+          } >> "$GITHUB_OUTPUT"
+
+      # Every image must exist at the tag of the checked-out files before we pay for a server.
+      - name: Check images
+        if: steps.plan.outputs.skip != 'true'
+        env:
+          VMS: ${{ inputs.vms }}
+        run: |
+          missing=0
+          for vm in ${VMS:-$(scripts/images.sh list)}; do
+            image="${REGISTRY_PREFIX}${vm}:$(scripts/images.sh tag "$vm")"
+            if docker buildx imagetools inspect "$image" >/dev/null 2>&1; then
+              echo "ok      $image"
+            else
+              echo "MISSING $image (run the images workflow first)"
+              missing=1
+            fi
+          done
+          exit $missing
+
+      - uses: cachix/install-nix-action@v31
+        if: steps.plan.outputs.skip != 'true'
+
+      - name: Create server and install NixOS
+        id: up
+        if: steps.plan.outputs.skip != 'true'
+        env:
+          RUN_ID: ${{ steps.plan.outputs.run_id }}
+          SSH_KEY: ${{ secrets.BENCH_SSH_KEY }}
+        run: |
+          mkdir -p "$BENCH_STATE/$RUN_ID"
+          key="$BENCH_STATE/$RUN_ID/id_ed25519"
+          (umask 077 && printf '%s\n' "$SSH_KEY" > "$key")
+          ssh-keygen -y -f "$key" > "$key.pub"
+          ip=$(nix shell nixpkgs#hcloud nixpkgs#jq --command scripts/hetzner/up.sh "$RUN_ID" | tail -1)
+          echo "ip=$ip" >> "$GITHUB_OUTPUT"
+
+      - name: Start the run
+        if: steps.plan.outputs.skip != 'true'
+        env:
+          RUN_ID: ${{ steps.plan.outputs.run_id }}
+          NAME: ${{ steps.plan.outputs.name }}
+          VMS: ${{ inputs.vms }}
+        # VMS is a space-separated list: split it on purpose.
+        run: |
+          # shellcheck disable=SC2086
+          scripts/hetzner/run-remote.sh start "$RUN_ID" "$NAME" $VMS
+
+      - name: Delete server after a failed start
+        if: failure() && steps.plan.outputs.run_id != ''
+        env:
+          RUN_ID: ${{ steps.plan.outputs.run_id }}
+        run: nix shell nixpkgs#hcloud --command scripts/hetzner/down.sh "$RUN_ID"
+
+  wait-1:
+    needs: start
+    if: needs.start.outputs.skip == 'false'
+    runs-on: ubuntu-latest
+    environment: bench-run
+    timeout-minutes: 355
+    outputs:
+      done: ${{ steps.wait.outputs.done }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: wait
+        uses: ./.github/actions/wait-run
+        with:
+          run_id: ${{ needs.start.outputs.run_id }}
+          ip: ${{ needs.start.outputs.ip }}
+          ssh_key: ${{ secrets.BENCH_SSH_KEY }}
+          minutes: "345"
+
+  wait-2:
+    needs: [start, wait-1]
+    if: needs.start.outputs.skip == 'false' && needs.wait-1.outputs.done != 'true' && !cancelled()
+    runs-on: ubuntu-latest
+    environment: bench-run
+    timeout-minutes: 355
+    outputs:
+      done: ${{ steps.wait.outputs.done }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: wait
+        uses: ./.github/actions/wait-run
+        with:
+          run_id: ${{ needs.start.outputs.run_id }}
+          ip: ${{ needs.start.outputs.ip }}
+          ssh_key: ${{ secrets.BENCH_SSH_KEY }}
+          minutes: "345"
+
+  finish:
+    needs: [start, wait-1, wait-2]
+    if: always() && needs.start.outputs.skip == 'false' && needs.start.outputs.ip != ''
+    runs-on: ubuntu-latest
+    environment: bench-run
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    outputs:
+      published: ${{ steps.commit.outputs.published }}
+    env:
+      HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+      RUN_ID: ${{ needs.start.outputs.run_id }}
+      NAME: ${{ needs.start.outputs.name }}
+      QUICK: ${{ inputs.quick && 'true' || 'false' }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Collect results
+        id: collect
+        continue-on-error: true
+        env:
+          IP: ${{ needs.start.outputs.ip }}
+          SSH_KEY: ${{ secrets.BENCH_SSH_KEY }}
+        run: |
+          mkdir -p "$BENCH_STATE/$RUN_ID"
+          (umask 077 && printf '%s\n' "$SSH_KEY" > "$BENCH_STATE/$RUN_ID/id_ed25519")
+          echo "$IP" > "$BENCH_STATE/$RUN_ID/ip"
+          scripts/hetzner/run-remote.sh status "$RUN_ID"
+          scripts/hetzner/run-remote.sh collect "$RUN_ID" "$NAME"
+
+      - uses: cachix/install-nix-action@v31
+        if: always()
+
+      - name: Delete server
+        if: always()
+        run: nix shell nixpkgs#hcloud --command scripts/hetzner/down.sh "$RUN_ID"
+
+      - uses: actions/upload-artifact@v4
+        if: steps.collect.outcome == 'success'
+        with:
+          name: results-${{ needs.start.outputs.name }}
+          path: |
+            results/${{ needs.start.outputs.name }}
+            docs/index.html
+
+      - name: Commit results
+        id: commit
+        if: steps.collect.outcome == 'success' && env.QUICK != 'true'
+        run: |
+          git config user.name "plutus-vm-bench"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "results/$NAME" docs/index.html
+          git commit -m "results: $NAME"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "published=true" >> "$GITHUB_OUTPUT"
+
+  pages:
+    needs: finish
+    if: needs.finish.outputs.published == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - id: deploy
+        uses: actions/deploy-pages@v4

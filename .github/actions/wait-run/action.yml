@@ -1,0 +1,42 @@
+name: wait-run
+description: Poll a detached benchmark run on the bench server until it is done or time runs out
+inputs:
+  run_id:
+    required: true
+  ip:
+    required: true
+  ssh_key:
+    required: true
+  minutes:
+    description: How long to wait before handing over to the next wait job
+    required: true
+outputs:
+  done:
+    description: "'true' when the run finished (whatever its exit code)"
+    value: ${{ steps.poll.outputs.done }}
+runs:
+  using: composite
+  steps:
+    - id: poll
+      shell: bash
+      env:
+        RUN_ID: ${{ inputs.run_id }}
+        IP: ${{ inputs.ip }}
+        SSH_KEY: ${{ inputs.ssh_key }}
+        MINUTES: ${{ inputs.minutes }}
+      run: |
+        mkdir -p "$BENCH_STATE/$RUN_ID"
+        (umask 077 && printf '%s\n' "$SSH_KEY" > "$BENCH_STATE/$RUN_ID/id_ed25519")
+        echo "$IP" > "$BENCH_STATE/$RUN_ID/ip"
+        deadline=$(( $(date +%s) + MINUTES * 60 ))
+        while [[ $(date +%s) -lt $deadline ]]; do
+          # An SSH hiccup is not a failed run: keep polling.
+          status=$(scripts/hetzner/run-remote.sh status "$RUN_ID" || echo unreachable)
+          echo "$(date -u +%H:%M) $status"
+          if [[ "$status" == done:* ]]; then
+            echo "done=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          sleep 300
+        done
+        echo "done=false" >> "$GITHUB_OUTPUT"
