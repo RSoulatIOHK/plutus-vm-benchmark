@@ -41,7 +41,11 @@ for loc in $LOCATIONS; do
   fi
   echo "no $SERVER_TYPE in $loc, trying the next location" >&2
 done
-[ -n "$created" ] || { echo "no location has $SERVER_TYPE: $LOCATIONS" >&2; exit 1; }
+if [ -z "$created" ]; then
+  echo "no location has $SERVER_TYPE: $LOCATIONS. Available now:" >&2
+  "$(dirname "$0")/capacity.sh" >&2 || true
+  exit 1
+fi
 echo "created $NAME ($SERVER_TYPE) in $created" >&2
 
 IP="$(hcloud server ip "$NAME")"

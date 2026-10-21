@@ -26,7 +26,7 @@ jobs:
       - uses: cachix/install-nix-action@v31
 
       - name: Create server and install NixOS
-        run: nix shell nixpkgs#hcloud --command scripts/hetzner/up.sh "$RUN_ID"
+        run: nix shell nixpkgs#hcloud nixpkgs#jq --command scripts/hetzner/up.sh "$RUN_ID"
 
       - name: Check the installed system
         run: |
