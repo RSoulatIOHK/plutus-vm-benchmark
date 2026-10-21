@@ -1,6 +1,5 @@
 # scalus-js: the Scalus CEK machine compiled with Scala.js, from the `scalus` npm package.
-# Build context is the repo root:
-#   docker build -f images/scalus-js/Dockerfile --build-arg SCALUS_JS_VERSION=... -t pvb-scalus-js .
+# Build context: repo root. Contract: docs/IMAGE_CONTRACT.md. Build: scripts/images.sh build scalus-js
 
 # Node 22, the same major as the blaze-v8 harness (nodesource setup_22.x in the root Dockerfile).
 FROM node:22-bookworm-slim
@@ -22,6 +21,8 @@ RUN npm ci --no-audit --no-fund \
     && node -e 'const v=require("./node_modules/scalus/package.json").version; if (v !== process.argv[1]) { console.error("scalus " + v + " != " + process.argv[1]); process.exit(1) }' "${SCALUS_JS_VERSION}"
 
 COPY parsers/ /bench/parsers/
-COPY images/scalus-js/common.mjs images/scalus-js/check.mjs images/scalus-js/scalus-js.bench.mjs images/scalus-js/run.sh ./
+COPY images/scalus-js/common.mjs images/scalus-js/check.mjs images/scalus-js/scalus-js.bench.mjs ./
+COPY scripts/image-entry.sh scripts/run-scalus-js.sh /bench/scripts/
 
-CMD ["/bench/scalus-js/run.sh"]
+ENV PVB_VM=scalus-js
+ENTRYPOINT ["bash", "/bench/scripts/image-entry.sh"]
