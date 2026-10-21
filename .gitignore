@@ -37,3 +37,8 @@ Thumbs.db
 results/**/criterion-output*/
 results/**/PlutusUseCasesBenchmarks-report-full-compressed.json
 results/**/PlutusUseCasesBenchmarks-report.html
+
+# Local and partial runs: never committed (run.yml publishes only full runs)
+results/partial-*/
+results/quick-*/
+results/local-*/
