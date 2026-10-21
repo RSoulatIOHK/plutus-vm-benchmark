@@ -20,7 +20,7 @@ not published.
 | VM | Mode | How the harness loads the mainnet model |
 |---|---|---|
 | haskell | strict | `gate-ref` path, or `HASKELL_SHA` at 1.63.0.0 (its compiled-in model = mainnet) |
-| scalus-cek, scalus-jit | strict | `MachineParams.fromProtocolParams(CardanoInfo.mainnet.protocolParams, PlutusV3)` with `makePlutusV3VM(params, vanRossemPV)` |
+| scalus-cek, scalus-jit | strict | The harness reads `reference/mainnet-plutusv3-costmodel.json` (copied into the image, path in `SCALUS_COST_MODEL`): `MachineParams.fromCostModels(CostModels(Map(PlutusV3.ordinal -> array)), PlutusV3, vanRossemPV)`, then `makePlutusV3VM(params, vanRossemPV)` (`images/scalus/harness/.../Harness.scala`) |
 | uplc-turbo | strict | Ships the variant E numbers in `BuiltinCostsV3::default()` |
 | plutigo | strict | `cek.NewEvalContext(lang.LanguageVersionV3, cek.ProtoVersion{Major: 11}, mainnetArray)` (`cek/eval_context.go:31`), then `cek.NewMachine(lang.LanguageVersionV3, 0, ctx)`. Takes the 350-value array (`lang/v3.go` has the V3 names up to PV11). The bench must stop taking the language from the program version |
 | julc-java | strict | `provider.setCostModelParams(mainnetArray, PlutusLanguage.PLUTUS_V3, 11, 0)` on the `JavaVmProvider` before `evaluate` (`JavaVmProvider.java:28`; `CostModelParser` accepts 350 values at PV11) |
@@ -67,6 +67,12 @@ Every VM evaluates every script with these parameters, in the timed loop and in 
 | Budget mode | Counting: no limit, add up the cost. On success this gives the same numbers as the node's restricting mode |
 | `status` | `ok` if the evaluation returns a term, `error` if it fails. The PlutusV3 ledger rule that the result must be `unit` (CIP-117) is **not** applied, see below |
 | `cpu`, `mem` | The total ExUnits of one evaluation, including the machine startup cost |
+
+Reuse rule (`docs/IMAGE_CONTRACT.md`): the cost model, the machine parameters and, if the VM's API
+allows it, the machine object are built once, outside the timed loops. Every iteration makes a new
+budget counter and a new evaluation state, and the D3 loop also decodes the flat file again. The
+eval-only loop (`<vm>-eval.csv`) evaluates a program decoded once before timing. The check uses the
+same objects for one evaluation per script.
 
 The mainnet cost model is the same as the default PlutusV3 cost model of plutus 1.63.0.0 (variant E:
 `builtinCostModelE.json` and `cekMachineCostsE.json`). Two checks show it:

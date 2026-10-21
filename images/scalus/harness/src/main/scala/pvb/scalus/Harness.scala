@@ -44,18 +44,25 @@ object Harness {
         vm
     }
 
-    /** scalus-cek: flat decode + CEK evaluation. Throws if the evaluation fails. */
-    def cekEval(vm: PlutusVM, flat: Array[Byte], spender: BudgetSpender): Term = {
-        val program = DeBruijnedProgram.fromFlatEncoded(flat)
-        vm.evaluateDeBruijnedTerm(program.term, spender, NoLogger)
-    }
+    /** Flat decode of a script. */
+    def decode(flat: Array[Byte]): DeBruijnedProgram = DeBruijnedProgram.fromFlatEncoded(flat)
+
+    /** scalus-cek: flat decode + CEK evaluation (the D3 loop). Throws if the evaluation fails. */
+    def cekEval(vm: PlutusVM, flat: Array[Byte], spender: BudgetSpender): Term =
+        cekEvalTerm(vm, decode(flat).term, spender)
+
+    /** scalus-cek: CEK evaluation of a decoded term (the eval-only loop). Each call runs a new CEK
+      * machine state; the VM and its machine parameters are reused.
+      */
+    def cekEvalTerm(vm: PlutusVM, term: Term, spender: BudgetSpender): Term =
+        vm.evaluateDeBruijnedTerm(term, spender, NoLogger)
 
     /** A script compiled by the JIT, with its De Bruijn term for the CEK fallback. */
     final class Jitted(val code: CompiledTerm, val deBruijned: Term)
 
     /** scalus-jit compile: flat decode + JIT compile (the compile column, spec D5). */
     def jitCompile(flat: Array[Byte]): Jitted = {
-        val program = DeBruijnedProgram.fromFlatEncoded(flat)
+        val program = decode(flat)
         Jitted(UplcCompiler.compile(program.toProgram.term).code, program.term)
     }
 
