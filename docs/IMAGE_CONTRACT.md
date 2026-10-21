@@ -44,13 +44,26 @@ docker run --rm --cap-add SYS_NICE \
 | `<vm>.csv` | Timing, schema `vm,script,mean_ns,median_ns,min_ns,max_ns,stddev_ns,iterations`. A failed script has `-1` in every number column |
 | `<vm>-check.csv` | Correctness, schema `vm,script,status,cpu,mem`. `status` is `ok` or `error`. `cpu`/`mem` are the ExUnits the VM's own costing reports for one evaluation (empty when the VM has no costing) |
 | `<vm>-raw.log` | Raw tool output, for debugging |
+| `<vm>-eval.csv` | Eval-only timing, same schema as `<vm>.csv`: evaluation of a program decoded once outside the timed loop. Shown as a second column next to the D3 time |
 | `<vm>-compile.csv` | Only for VMs that compile before they run (Scalus JIT): `vm,script,compile_ns` |
 
-## What the timed loop does (spec D3)
+## What the timed loops do (spec D3, D11)
 
-Flat decode + evaluation of the decoded program, with costing on and the latest PlutusV3 cost model
-that the VM ships. The check is one evaluation per script with the same parameters. The gate
-(`check/`) compares `<vm>-check.csv` with the Haskell reference.
+Parameters: PlutusV3 semantics at protocol version 11 with the mainnet cost model
+(`check/reference/mainnet-plutusv3-costmodel.json`), costing on (counting mode or an enormous
+restricting budget).
+
+- `<vm>.csv` (D3, the ranking): each iteration does flat decode + evaluation.
+- `<vm>-eval.csv`: each iteration evaluates a program that was decoded once before timing.
+  For a compiling VM (Scalus JIT) this is its only loop; it writes the same numbers to both files.
+- Built once, outside the loops (the ledger also caches its evaluation context): cost model, machine
+  parameters, and a machine object if the VM's API allows reuse. Fresh in every iteration: decode
+  (D3 loop only), the budget counter, and the evaluation state.
+- Warm-up: JMH VMs use one 20 s warm-up iteration (`-wi 1 -w 20s`); the staged Scalus JIT needs
+  about 20 s. Other frameworks keep their own warm-up rules.
+
+The check is one evaluation per script with the same parameters. The gate (`check/`) compares
+`<vm>-check.csv` with the Haskell reference.
 
 ## After the run
 
