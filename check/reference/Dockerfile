@@ -41,14 +41,18 @@ RUN git clone --depth 1 --branch "$PLUTUS_TAG" "$PLUTUS_REPO" /src \
 
 WORKDIR /src
 
-# Add gate-ref to the plutus project; no tests, benchmarks, inline-r (libR) or plutus-cert.
-COPY gate-ref /src/gate-ref
-RUN sed -i 's/^packages: cardano-constitution/packages: gate-ref\n          cardano-constitution/' cabal.project \
-    && sed -i 's/^tests: true/tests: false/; s/^benchmarks: true/benchmarks: false/' cabal.project \
+# No tests, benchmarks, inline-r (libR) or plutus-cert.
+RUN sed -i 's/^tests: true/tests: false/; s/^benchmarks: true/benchmarks: false/' cabal.project \
     && sed -i 's/flags: +with-inline-r +with-cert/flags: -with-inline-r -with-cert/' cabal.project
 
 RUN cabal update
-RUN cabal build gate-ref -j${CABAL_JOBS} --disable-documentation
+# Build the dependencies first, so that a change to gate-ref does not rebuild plutus.
+RUN cabal build plutus-core plutus-core:flat plutus-ledger-api -j${CABAL_JOBS} --disable-documentation
+
+# Add gate-ref to the plutus project and build it.
+COPY gate-ref /src/gate-ref
+RUN sed -i 's/^packages: cardano-constitution/packages: gate-ref\n          cardano-constitution/' cabal.project \
+    && cabal build gate-ref -j${CABAL_JOBS} --disable-documentation
 RUN cp "$(cabal list-bin gate-ref)" /usr/local/bin/gate-ref
 
 FROM debian:bookworm-slim

@@ -14,7 +14,13 @@ plutus-benchmark:validation uses (the cost model compiled into plutus-core for s
 variant E). The program prints the number of scripts where the two disagree on stderr and
 exits 2 if there is any.
 
-Usage: gate-ref COSTMODEL_JSON FLAT_DIR -}
+With the extra argument @variant-c@ it writes the reference for VMs that ship the older PlutusV3
+cost model instead (the "outdated cost model" badge, check/README.md): builtin semantics variant C
+with the variant C cost model compiled into plutus-core (builtinCostModelC.json and
+cekMachineCostsC.json, unchanged since 2024), and case on builtin types enabled as at protocol
+version 11, so that the 11 UPLC 1.1.0 scripts still run.
+
+Usage: gate-ref COSTMODEL_JSON FLAT_DIR [variant-c] -}
 module Main (main) where
 
 import Control.Monad (forM, unless)
@@ -33,7 +39,7 @@ import System.FilePath (dropExtension, (</>))
 import System.IO (hPutStrLn, stderr)
 
 import PlutusCore.Builtin qualified as PLC
-import PlutusCore.Default (BuiltinSemanticsVariant (DefaultFunSemanticsVariantE))
+import PlutusCore.Default (BuiltinSemanticsVariant (..), DefaultFun)
 import PlutusCore.Evaluation.Machine.ExBudget (ExBudget (..))
 import PlutusCore.Evaluation.Machine.ExBudgetingDefaults qualified as PLC
 import PlutusCore.Evaluation.Machine.ExMemory (ExCPU (..), ExMemory (..))
@@ -66,18 +72,20 @@ mainnetContext params =
         fail ("cost model parameter count (expected, actual): " ++ show [(Common.cmExpected w, Common.cmActual w) | w <- warns])
       pure ctx
 
--- | The context of plutus-benchmark:validation (PlutusBenchmark.Common.mkEvalCtx PlutusV3 E).
-benchContext :: IO Common.EvaluationContext
-benchContext =
-  case PLC.defaultCostModelParamsForVariant DefaultFunSemanticsVariantE of
-    Nothing -> fail "no default cost model for variant E"
+{-| A PlutusV3 context with the cost model compiled into plutus-core for one semantics variant,
+case on builtin types enabled. For variant E this is the context of plutus-benchmark:validation
+(PlutusBenchmark.Common.mkEvalCtx PlutusV3 E). -}
+compiledContext :: BuiltinSemanticsVariant DefaultFun -> IO Common.EvaluationContext
+compiledContext semvar =
+  case PLC.defaultCostModelParamsForVariant semvar of
+    Nothing -> fail ("no default cost model for variant " ++ show semvar)
     Just p ->
       case runExcept
         ( Common.mkDynEvaluationContext
             Common.PlutusV3
             (\_ -> PLC.CaserBuiltin PLC.caseBuiltin)
-            [DefaultFunSemanticsVariantE]
-            (const DefaultFunSemanticsVariantE)
+            [semvar]
+            (const semvar)
             p
         ) of
         Left e -> fail ("mkDynEvaluationContext: " ++ show e)
@@ -100,21 +108,42 @@ decode file bytes =
 main :: IO ()
 main = do
   args <- getArgs
-  (costModelPath, dir) <- case args of
-    [c, d] -> pure (c, d)
-    _ -> fail "usage: gate-ref COSTMODEL_JSON FLAT_DIR"
+  (costModelPath, dir, variantC) <- case args of
+    [c, d] -> pure (c, d, False)
+    [c, d, "variant-c"] -> pure (c, d, True)
+    _ -> fail "usage: gate-ref COSTMODEL_JSON FLAT_DIR [variant-c]"
+  files <- sort . filter (".flat" `isSuffixOf`) <$> listDirectory dir
+  if variantC then writeVariantC dir files else writeMainnet costModelPath dir files
+
+csvRow :: String -> Outcome -> String
+csvRow name (status, cpu, mem) =
+  "haskell," ++ name ++ "," ++ status ++ "," ++ show cpu ++ "," ++ show mem
+
+writeVariantC :: FilePath -> [FilePath] -> IO ()
+writeVariantC dir files = do
+  ctx <- compiledContext DefaultFunSemanticsVariantC
+  putStrLn "vm,script,status,cpu,mem"
+  mapM_
+    ( \file -> do
+        term <- decode file <$> BS.readFile (dir </> file)
+        putStrLn (csvRow (dropExtension file) (evaluate ctx term))
+    )
+    files
+  hPutStrLn stderr (show (length files) ++ " scripts, variant C cost model")
+
+writeMainnet :: FilePath -> FilePath -> [FilePath] -> IO ()
+writeMainnet costModelPath dir files = do
   params <- readCostModel costModelPath
   hPutStrLn stderr ("PlutusV3 cost model parameters: " ++ show (length params))
   mainnet <- mainnetContext params
-  bench <- benchContext
-  files <- sort . filter (".flat" `isSuffixOf`) <$> listDirectory dir
+  bench <- compiledContext DefaultFunSemanticsVariantE
   putStrLn "vm,script,status,cpu,mem"
   diffs <- forM files $ \file -> do
     term <- decode file <$> BS.readFile (dir </> file)
-    let o@(status, cpu, mem) = evaluate mainnet term
+    let o = evaluate mainnet term
         o' = evaluate bench term
         name = dropExtension file
-    putStrLn ("haskell," ++ name ++ "," ++ status ++ "," ++ show cpu ++ "," ++ show mem)
+    putStrLn (csvRow name o)
     unless (o == o') $
       hPutStrLn stderr ("DIFF " ++ name ++ ": mainnet " ++ show o ++ " vs bench-default-E " ++ show o')
     pure (o /= o')

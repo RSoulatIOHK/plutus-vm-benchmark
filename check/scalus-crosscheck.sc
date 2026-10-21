@@ -4,7 +4,11 @@
 
 // Cross-check of the Haskell reference with the Scalus CEK machine (released Scalus from Maven).
 //
-// Usage: scala-cli run check/scalus-crosscheck.sc -- data/plutus_use_cases > /tmp/scalus-check.csv
+// Usage: scala-cli run check/scalus-crosscheck.sc -- data/plutus_use_cases [variant-c] > /tmp/scalus-check.csv
+//
+// With variant-c: the cost model of the "outdated cost model" badge instead (builtinCostModelC.json,
+// the same file as in plutus 1.63.0.0, and the variant C machine costs), protocol version 11 features on.
+// Compare with check/reference/haskell-check-variant-c.csv.
 //
 // stdout: vm,script,status,cpu,mem with the gate parameters (check/README.md): PlutusV3, protocol
 // version 11, the mainnet PlutusV3 cost model (Scalus 1.4.0 ships it as CardanoInfo.mainnet,
@@ -22,6 +26,7 @@ import scala.jdk.CollectionConverters.*
 
 val dir = Paths.get(args.headOption.getOrElse("data/plutus_use_cases"))
 val pv = MajorProtocolVersion.vanRossemPV
+val variantC = args.lift(1).contains("variant-c")
 
 val mainnetParams = MachineParams.fromProtocolParams(CardanoInfo.mainnet.protocolParams, Language.PlutusV3)
 require(CardanoInfo.mainnet.majorProtocolVersion == pv, s"mainnet PV is ${CardanoInfo.mainnet.majorProtocolVersion}")
@@ -36,6 +41,11 @@ val variantEParams = {
     }
     MachineParams(CekMachineCosts.fromMap(machine.toMap), builtins)
 }
+
+val variantCParams = MachineParams(
+  CekMachineCosts.defaultMachineCostsC,
+  BuiltinCostModel.fromJsonString(resource("/builtinCostModelC.json"))
+)
 
 def run(params: MachineParams, program: DeBruijnedProgram): (String, Long, Long) = {
     val vm = PlutusVM.makePlutusV3VM(params, pv)
@@ -53,8 +63,8 @@ var diffs = 0
 for f <- files do
     val program = DeBruijnedProgram.fromFlatEncoded(Files.readAllBytes(f))
     val name = f.getFileName.toString.stripSuffix(".flat")
-    val m = run(mainnetParams, program)
-    val e = run(variantEParams, program)
+    val m = run(if variantC then variantCParams else mainnetParams, program)
+    val e = if variantC then m else run(variantEParams, program)
     println(s"scalus-cek,$name,${m._1},${m._2},${m._3}")
     if m != e then
         diffs += 1
