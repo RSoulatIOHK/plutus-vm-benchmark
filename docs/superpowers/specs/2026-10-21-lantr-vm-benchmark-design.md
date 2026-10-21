@@ -16,7 +16,8 @@ Status: approved 2026-10-21.
 | D8 | Corpus | The existing 89 `plutus_use_cases` scripts. A mainnet PlutusV3 corpus is v2, as a separate ranking |
 | D9 | Orchestration | GitHub Actions + `hcloud` CLI; NixOS installed on a fresh Ubuntu server by nixos-anywhere on each run |
 | D10 | Older cost model | Where a VM API accepts a cost model, the harness passes the mainnet PlutusV3 model and D4 applies. Otherwise the row is published with an "outdated cost model" badge; the gate then requires ExUnits equal to Haskell under that VM's own semantics variant and model. Wrong results still hide the row |
-| D11 | Gate parameters | PlutusV3, protocol version 11 (variant E), mainnet cost model, counting mode. CIP-117 unit-result rule not applied (78 PlutusV1-era scripts return a non-unit term) |
+| D11 | Gate parameters | PlutusV3, protocol version 11 (variant E), mainnet cost model, counting mode. CIP-117 unit-result rule not applied (78 PlutusV1-era scripts return a non-unit term) . The 89 scripts are PlutusV1-era; they are evaluated as PlutusV3 programs, like Plutus's own `validation` CEK benchmark (plutus-benchmark BenchCek.hs), and the page says so. Owner chose this over node-exact PlutusV1 rules (variant D), which would push the Scalus JIT to its CEK fallback |
+| D12 | Pins | Release tags for every VM (Aiken v1.1.24, Scalus v1.4.0, plutus 1.63.0.0). Exception: aiken-wasm builds the exact revision `@lucid-evolution/uplc` ships |
 
 ### Line-up (rule: the VM has a downstream user today)
 
