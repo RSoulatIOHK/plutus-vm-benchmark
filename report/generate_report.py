@@ -10,17 +10,11 @@ from collections import defaultdict
 VM_ORDER = [
     "haskell", "scalus-jit", "scalus-cek",
     "julc-java",
-    "llvm-uplc-jit",
-    "uplc-turbo-bc", "uplc-turbo",
-    "plutuz", "chrysalis", "chrysalis-aot",
+    "uplc-turbo",
     "plutigo", "blaze-jsc", "blaze-v8", "opshin",
 ]
 VM_LABELS = {
     "uplc-turbo": "uplc-turbo AST walker (Rust)",
-    "uplc-turbo-bc": "uplc-turbo Bytecode VM (Rust)",
-    "plutuz": "Plutuz CEK (Zig)",
-    "chrysalis": "Chrysalis CEK (C# / .NET)",
-    "chrysalis-aot": "Chrysalis CEK (C# / .NET AOT)",
     "plutigo": "Plutigo CEK (Go)",
     "blaze-jsc": "blaze-plutus CEK (TypeScript / Bun JSC)",
     "blaze-v8": "blaze-plutus CEK (TypeScript / Node V8)",
@@ -29,7 +23,6 @@ VM_LABELS = {
     "scalus-cek": "Scalus CEK (Scala / JVM)",
     "scalus-jit": "Scalus UPLC→JVM JIT (Scala / JVM)",
     "julc-java": "Julc CEK (Java / GraalVM)",
-    "llvm-uplc-jit": "llvm-uplc UPLC→native JIT (C++ / LLVM)",
 }
 
 

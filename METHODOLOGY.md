@@ -27,22 +27,19 @@ Each VM uses its own benchmark framework rather than a uniform harness:
 
 | VM | Framework | Warmup | Min Iterations | Time Budget |
 |---|---|---|---|---|
-| Chrysalis | BenchmarkDotNet | Automatic (pilot + overhead) | 50 | Auto |
 | uplc-turbo | Criterion.rs | Automatic (warmup phase) | Auto | Auto |
 | Plutigo | Go testing.B | Automatic (b.N scaling) | Auto | 5s |
 | blaze-plutus | Vitest bench | Automatic | Auto | Auto |
-| Plutuz | Custom | 5 iterations | 50 | 5s |
 | opshin-uplc | Custom | 5 iterations | 50 | 5s |
-| llvm-uplc | Custom (`uplcbench`) | 5 iterations | 50 | 5s |
 
 Each framework handles warmup, iteration count, and outlier detection using its own proven methodology. Reimplementing this in a uniform harness would be less accurate and harder to maintain.
 
 ## Fairness Constraints
 
 - **Same data**: all VMs decode the same 78 `.flat` files
-- **Same machine**: all VMs run inside a single Docker container (`ubuntu:24.04`, glibc)
+- **Same machine**: each VM runs in its own Docker image on the same host, one after the other (glibc base images; see `images/`)
 - **Sequential execution**: VMs run one at a time to avoid CPU contention
-- **Pinned versions**: exact git SHAs recorded in `versions.env`
+- **Pinned versions**: exact git SHAs in `.env`; `environment.txt` of each run records the image digests
 - **No custom harnesses**: each VM's own benchmark code is used unmodified
 
 ## Unified Output
@@ -70,7 +67,8 @@ Anyone with Docker can reproduce results:
 ```bash
 git clone https://github.com/saib-inc/cardano-plutus-vm-benchmark.git
 cd cardano-plutus-vm-benchmark
-docker compose up
+scripts/images.sh build <vm>      # for each VM, or PULL=1 to use the published images
+scripts/run-images.sh results/$(date +%F)
 ```
 
 For the most consistent results, run on a dedicated machine with no other workloads.

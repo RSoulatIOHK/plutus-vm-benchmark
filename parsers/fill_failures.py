@@ -25,14 +25,9 @@ ERROR_PATTERNS = [
     r"java\.\S+Exception",
     r"scala\.\S+Exception",
     r"Caused by:",
-    # .NET (Chrysalis)
-    r"Unhandled exception",
-    r"System\.\S+Exception",
     # Go (Plutigo)
     r"^panic:",
     r"^goroutine\s+\d+",
-    # Zig (Plutuz)
-    r"panic\{",
     # Python (opshin)
     r"^Traceback ",
     r"SKIP \(eval error\)",
@@ -122,7 +117,7 @@ def fill_failures(
     header_line = "vm,script,mean_ns,median_ns,min_ns,max_ns,stddev_ns,iterations\n"
     if os.path.isfile(csv_path):
         with open(csv_path) as f:
-            header_line = f.readline()
+            header_line = f.readline() or header_line  # empty file: the parser crashed
         with open(csv_path) as f:
             for row in csv.DictReader(f):
                 rows.append(row)

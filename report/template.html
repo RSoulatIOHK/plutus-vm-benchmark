@@ -575,7 +575,7 @@
 
   <div class="section" id="exec-model">
     <div class="section-title">Execution Model <em>why categories matter</em></div>
-    <div class="note" style="margin-bottom:0.85rem">VMs differ in <em>how</em> they execute UPLC. A UPLC-level JIT compiler is doing fundamentally different work than a CEK interpreter, even when both happen to run on a JIT-compiled host runtime like JVM or .NET. Within-category numbers are like-for-like; cross-category numbers are not directly comparable.</div>
+    <div class="note" style="margin-bottom:0.85rem">VMs differ in <em>how</em> they execute UPLC. A UPLC-level JIT compiler is doing fundamentally different work than a CEK interpreter, even when both happen to run on a JIT-compiled host runtime like the JVM or V8. Within-category numbers are like-for-like; cross-category numbers are not directly comparable.</div>
     <div class="engine-groups" id="engine-groups"></div>
   </div>
 
@@ -606,10 +606,6 @@ const CSV_DATA = `{{CSV_DATA}}`;
 
 const VM_META = {
   'uplc-turbo':     { label: 'uplc-turbo AST', lang: 'Rust',        runtime: 'AST walker',     engine: 'AST walker',                   color: '#dea584', compiler: 'rustc 1.94' },
-  'uplc-turbo-bc':  { label: 'uplc-turbo BC',  lang: 'Rust',        runtime: 'Bytecode VM',    engine: 'UPLC → bytecode VM',           color: '#c48a6a', compiler: 'rustc 1.94' },
-  'plutuz':         { label: 'Plutuz',         lang: 'Zig',         runtime: 'CEK',            engine: 'CEK interpreter',              color: '#f69d50', compiler: 'Zig 0.15.2' },
-  'chrysalis':      { label: 'Chrysalis',      lang: 'C#',          runtime: '.NET',           engine: 'CEK interpreter',              color: '#9b6dff', compiler: '.NET SDK 10.0' },
-  'chrysalis-aot':  { label: 'Chrysalis',      lang: 'C#',          runtime: '.NET AOT',       engine: 'CEK interpreter',              color: '#c9a0ff', compiler: '.NET SDK 10.0' },
   'plutigo':        { label: 'Plutigo',        lang: 'Go',          runtime: 'CEK',            engine: 'CEK interpreter',              color: '#00d4aa', compiler: 'Go 1.26' },
   'blaze-jsc':      { label: 'blaze-plutus',   lang: 'TypeScript',  runtime: 'Bun (JSC)',      engine: 'CEK interpreter',              color: '#f7df1e', compiler: 'Bun 1.3.10' },
   'blaze-v8':       { label: 'blaze-plutus',   lang: 'TypeScript',  runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: '#5b9bd5', compiler: 'Node.js 22' },
@@ -618,9 +614,8 @@ const VM_META = {
   'scalus-cek':     { label: 'Scalus CEK',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'CEK interpreter',              color: '#dc322f', compiler: 'GraalVM JDK 25 / Scala 3' },
   'scalus-jit':     { label: 'Scalus JIT',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'UPLC → JVM bytecode JIT',      color: '#ff6b6b', compiler: 'GraalVM JDK 25 / Scala 3' },
   'julc-java':      { label: 'Julc CEK',       lang: 'Java',        runtime: 'GraalVM',        engine: 'CEK interpreter',              color: '#f89820', compiler: 'GraalVM JDK 25' },
-  'llvm-uplc-jit':  { label: 'llvm-uplc',      lang: 'C++',         runtime: 'LLVM',           engine: 'UPLC → native JIT',            color: '#00b4d8', compiler: 'LLVM 22.1.0' },
 };
-const VM_ORDER = ['llvm-uplc-jit','haskell','scalus-jit','scalus-cek','julc-java','uplc-turbo-bc','uplc-turbo','plutuz','chrysalis','chrysalis-aot','blaze-v8','blaze-jsc','plutigo','opshin'];
+const VM_ORDER = ['haskell','scalus-jit','scalus-cek','julc-java','uplc-turbo','blaze-v8','blaze-jsc','plutigo','opshin'];
 
 function parseCSV(csv) {
   const lines = csv.trim().split('\n'), header = lines[0].split(',');
@@ -768,7 +763,7 @@ document.getElementById('overall-table').innerHTML = sortedPenalized.map((vm, i)
 // Engine groups — typology of UPLC execution models (Interpreters vs Compiler-based)
 const ENGINE_GROUPS = [
   { matches: ['int'],      cls: '',    code: 'Interpreters',         title: 'Interpreters',
-    desc: 'CEK machines or AST tree-walkers. Whether the host runtime is GHC, JVM, .NET, V8, or CPython is a host-implementation detail — the UPLC program itself is never compiled.' },
+    desc: 'CEK machines or AST tree-walkers. Whether the host runtime is GHC, JVM, V8, or CPython is a host-implementation detail — the UPLC program itself is never compiled.' },
   { matches: ['bc','jit'], cls: 'jit', code: 'Compiler-based VMs',  title: 'Compiler-based VMs',
     desc: 'Have a UPLC compilation pass — either to a custom bytecode at startup (Bytecode VMs) or to host machine code at run time (JIT compilers). The compilation pass itself is part of what is being benchmarked.' },
 ];

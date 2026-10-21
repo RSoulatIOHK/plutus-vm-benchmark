@@ -1,26 +1,15 @@
 #!/usr/bin/env python3
-"""Merge per-VM CSV files into a single unified.csv."""
+"""Merge per-VM CSV files into a single unified.csv.
+
+Every *.csv in the run dir whose header is the timing schema (HEADER) is a per-VM result, so a new
+VM needs no change here. Other CSVs in the dir (<vm>-check.csv, <vm>-compile.csv, raw JMH or
+Criterion CSVs, unified.csv itself) have a different header or name and are skipped.
+"""
 
 import csv
 import os
 import sys
 
-VM_FILES = [
-    "chrysalis.csv",
-    "chrysalis-aot.csv",
-    "uplc-turbo.csv",
-    "uplc-turbo-bc.csv",
-    "plutigo.csv",
-    "blaze-jsc.csv",
-    "blaze-v8.csv",
-    "plutuz.csv",
-    "opshin.csv",
-    "haskell.csv",
-    "scalus-cek.csv",
-    "scalus-jit.csv",
-    "julc-java.csv",
-    "llvm-uplc-jit.csv",
-]
 
 HEADER = ["vm", "script", "mean_ns", "median_ns", "min_ns", "max_ns", "stddev_ns", "iterations"]
 
@@ -29,14 +18,15 @@ def normalize(run_dir: str) -> None:
     output_path = os.path.join(run_dir, "unified.csv")
     rows = []
 
-    for vm_file in VM_FILES:
+    for vm_file in sorted(os.listdir(run_dir)):
         path = os.path.join(run_dir, vm_file)
-        if not os.path.isfile(path):
-            print(f"  skip: {vm_file} (not found)", file=sys.stderr)
+        if vm_file == "unified.csv" or not vm_file.endswith(".csv") or not os.path.isfile(path):
             continue
 
         with open(path) as f:
             reader = csv.DictReader(f)
+            if reader.fieldnames != HEADER:
+                continue
             count = 0
             for row in reader:
                 rows.append(row)

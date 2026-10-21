@@ -10,8 +10,9 @@ BENCH_DIR = os.path.expanduser(
     "~/Projects/Chrysalis-Plutus/benchmarks/data/plutus_use_cases"
 )
 WARMUP = 3
-MIN_ITERS = 20
-TIME_BUDGET_S = 2.0
+# BENCH_QUICK=1 lowers these through the environment (scripts/run-opshin.sh).
+MIN_ITERS = int(os.environ.get("OPSHIN_MIN_ITERS", "20"))
+TIME_BUDGET_S = float(os.environ.get("OPSHIN_TIME_BUDGET_S", "2.0"))
 
 
 def fmt_ns(ns: int) -> str:
