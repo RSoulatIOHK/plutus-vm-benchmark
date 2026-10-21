@@ -263,9 +263,7 @@ jobs:
         if: steps.collect.outcome == 'success'
         with:
           name: results-${{ needs.start.outputs.name }}
-          path: |
-            results/${{ needs.start.outputs.name }}
-            docs/index.html
+          path: results/${{ needs.start.outputs.name }}
 
       - name: Commit results
         id: commit
@@ -273,6 +271,8 @@ jobs:
         run: |
           git config user.name "plutus-vm-bench"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # The published page: the same report as results/$NAME/index.html, written to docs/.
+          python3 report/generate_report.py --write-index "results/$NAME" > /dev/null
           git add "results/$NAME" docs/index.html
           git commit -m "results: $NAME"
           git pull --rebase origin main

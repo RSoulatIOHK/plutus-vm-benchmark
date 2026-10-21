@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Generate markdown and HTML comparison reports from unified.csv.
 
+Usage: generate_report.py [--write-index] <run-dir>
+Writes <run-dir>/report.md and <run-dir>/index.html. With --write-index, also writes the same page
+to <repo>/docs/index.html, the published page: only run.yml sets it, for a published run.
+
 Reads from the run dir:
 - unified.csv            timings of every VM
 - gate.json              correctness verdicts (check/gate.py). When present, a VM with verdict
@@ -19,6 +23,7 @@ Reads from the run dir:
 
 from __future__ import annotations
 
+import base64
 import csv
 import glob
 import json
@@ -32,6 +37,9 @@ VM_ORDER = [
     "aiken", "uplc-turbo",
     "plutigo", "blaze-jsc", "blaze-v8",
 ]
+
+# The header logo in report/template.html, a file in docs/.
+LOGO = "lantr-logo-dark.png"
 
 DISCLOSURE = (
     "The 89 scripts are PlutusV1-era programs. Every VM evaluates them as PlutusV3 programs at "
@@ -371,8 +379,11 @@ def check_label(gate: dict | None, vm: str) -> str:
 
 
 def generate_html(run_dir: str, env_info: str, data, present_vms, gate, hidden, compile_ns,
-                  eval_ns, history) -> None:
-    """Generate docs/index.html from template + the timings of the shown VMs."""
+                  eval_ns, history, write_index: bool) -> None:
+    """Generate <run_dir>/index.html from template + the timings of the shown VMs.
+
+    With write_index, also <repo>/docs/index.html, the published page (run.yml sets it).
+    """
     template_path = os.path.join(os.path.dirname(__file__), "template.html")
 
     if not os.path.isfile(template_path):
@@ -424,18 +435,23 @@ def generate_html(run_dir: str, env_info: str, data, present_vms, gate, hidden, 
     html = (template.replace("{{CSV_DATA}}", csv_data).replace("{{ENV_BADGE}}", env_badge)
             .replace("{{REPORT_JSON}}", report_json))
 
-    # Write to docs/index.html (relative to repo root)
-    repo_root = os.path.dirname(os.path.dirname(__file__))
-    docs_dir = os.path.join(repo_root, "docs")
-    os.makedirs(docs_dir, exist_ok=True)
-    html_path = os.path.join(docs_dir, "index.html")
-    with open(html_path, "w") as f:
-        f.write(html)
+    docs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs")
+    if write_index:
+        html_path = os.path.join(docs_dir, "index.html")
+        with open(html_path, "w") as f:
+            f.write(html)
+        print(f"HTML report saved to: {html_path}", file=sys.stderr)
 
+    # The run dir's copy has no docs/ next to it: embed the logo.
+    with open(os.path.join(docs_dir, LOGO), "rb") as f:
+        logo = "data:image/png;base64," + base64.b64encode(f.read()).decode()
+    html_path = os.path.join(run_dir, "index.html")
+    with open(html_path, "w") as f:
+        f.write(html.replace(f'src="{LOGO}"', f'src="{logo}"'))
     print(f"HTML report saved to: {html_path}", file=sys.stderr)
 
 
-def generate(run_dir: str) -> None:
+def generate(run_dir: str, write_index: bool = False) -> None:
     data, scripts, all_vms, env_info = load_data(run_dir)
     # A run without the d3 loop (BENCH_LOOPS) has an empty unified.csv: take the VMs and scripts
     # of the eval-only files too, so their column is shown.
@@ -457,11 +473,13 @@ def generate(run_dir: str) -> None:
     history = load_history(run_dir)
     generate_markdown(run_dir, data, scripts, present_vms, env_info, gate, hidden, compile_ns, eval_ns,
                       history)
-    generate_html(run_dir, env_info, data, present_vms, gate, hidden, compile_ns, eval_ns, history)
+    generate_html(run_dir, env_info, data, present_vms, gate, hidden, compile_ns, eval_ns, history,
+                  write_index)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <run-dir>", file=sys.stderr)
+    args = [a for a in sys.argv[1:] if a != "--write-index"]
+    if len(args) != 1:
+        print(f"Usage: {sys.argv[0]} [--write-index] <run-dir>", file=sys.stderr)
         sys.exit(1)
-    generate(sys.argv[1])
+    generate(args[0], "--write-index" in sys.argv[1:])
