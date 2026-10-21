@@ -25,7 +25,7 @@ FILE_LIST=$(ls bench/src/main/resources/data/*.flat | xargs -I{} basename {} | p
 sbt "bench/Jmh/run -i 1 -wi 1 -w 5s -r 5s -f 1 -t 1 \
     -jvm /opt/jdk-25/bin/java \
     -jvmArgsAppend \"--enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g\" \
-    -rff $RUN_DIR/scalus-jit-jmh.csv -p file=$FILE_LIST .*JITHybridBenchmark" \
+    -rff $RUN_DIR/scalus-jit-jmh.csv -p file=$FILE_LIST .*JITBenchmark" \
     2>&1 | tee "$RUN_DIR/scalus-jit-raw.log"
 
 # Parse JMH CSV into unified CSV
