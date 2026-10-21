@@ -21,8 +21,8 @@
 //                        it into a second arena, which is reset after every iteration. The machine
 //                        and its budget are new on every call (Program::eval_version_budget).
 // PVB_COSTMODEL=<file>: the mainnet PlutusV3 array, one integer per line (run-uplc-turbo.sh).
-// PVB_DATA_DIR=<dir>: read the .flat files from <dir> instead of DATA_DIR (the check reads the
-// whole corpus, also with BENCH_QUICK=1).
+// PVB_DATA_DIR=<dir>: read the .flat files from <dir> instead of DATA_DIR (run-uplc-turbo.sh
+// passes the selected scripts, $BENCH_DATA_DIR).
 
 use amaru_uplc::{
     arena::Arena,

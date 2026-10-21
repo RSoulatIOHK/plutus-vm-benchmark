@@ -1,10 +1,16 @@
 #!/bin/bash
+# uplc-turbo: timing and check (docs/IMAGE_CONTRACT.md). Called by image-entry.sh.
+#
+#   run-uplc-turbo.sh <results-dir>
+#
+# pvb-loops: d3 eval check
+# Runs the loops of $BENCH_LOOPS over the scripts in $BENCH_DATA_DIR; $BENCH_TIMING=quick shortens
+# the timing. The check covers the same scripts.
 set -euo pipefail
 
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
-# The check covers the whole corpus, also with BENCH_QUICK=1 (docs/IMAGE_CONTRACT.md).
-CHECK_DATA_DIR=/bench/data/plutus_use_cases
+loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 BENCH_DIR="/bench/uplc-turbo"
 
 echo "uplc-turbo AST (Rust / Criterion)"
@@ -12,7 +18,6 @@ echo "uplc-turbo AST (Rust / Criterion)"
 # The bench binary is our harness (images/uplc-turbo/use_cases.rs): PlutusV3, protocol version 11,
 # counting mode. Two Criterion loops with the same settings: flat decode + eval per iteration
 # (uplc-turbo.csv) and, with PVB_EVAL_ONLY=1, eval of a program decoded once (uplc-turbo-eval.csv).
-# PVB_CHECK_ONLY=1 runs only the check.
 export PVB_COSTMODEL=/tmp/uplc-turbo-costmodel.txt
 python3 -c "
 import json, sys
@@ -22,7 +27,7 @@ open(sys.argv[1], 'w').write('\\n'.join(map(str, values)) + '\\n')
 
 # Criterion flags override the measurement_time set in the harness's main().
 TIMING=()
-if [[ "${BENCH_QUICK:-0}" == 1 ]]; then
+if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
     TIMING=(--warm-up-time 1 --measurement-time 1)
 fi
 
@@ -42,15 +47,10 @@ fi
 
 run_check() {
     # Spec D4: one evaluation per script with the timed loop's parameters.
-    PVB_DATA_DIR="$CHECK_DATA_DIR" PVB_CHECK_OUT="$RUN_DIR/uplc-turbo-check.csv" "$BENCH_BIN" 2>&1 \
+    PVB_DATA_DIR="$DATA_DIR" PVB_CHECK_OUT="$RUN_DIR/uplc-turbo-check.csv" "$BENCH_BIN" 2>&1 \
         | tee "$RUN_DIR/uplc-turbo-check.log"
     echo "Wrote $RUN_DIR/uplc-turbo-check.csv"
 }
-
-if [[ "${PVB_CHECK_ONLY:-0}" == 1 ]]; then
-    run_check
-    exit 0
-fi
 
 # One Criterion loop: time_loop <csv> <raw log> <criterion copy dir> [VAR=value ...]
 time_loop() {
@@ -96,8 +96,12 @@ PY
     python3 /bench/parsers/fill_failures.py "$csv" "$DATA_DIR" uplc-turbo "$raw"
 }
 
-time_loop "$RUN_DIR/uplc-turbo.csv" "$RUN_DIR/uplc-turbo-raw.log" "$RUN_DIR/criterion-output-ast"
-time_loop "$RUN_DIR/uplc-turbo-eval.csv" "$RUN_DIR/uplc-turbo-eval-raw.log" \
-    "$RUN_DIR/criterion-output-eval" PVB_EVAL_ONLY=1
+if loop d3; then
+    time_loop "$RUN_DIR/uplc-turbo.csv" "$RUN_DIR/uplc-turbo-raw.log" "$RUN_DIR/criterion-output-ast"
+fi
+if loop eval; then
+    time_loop "$RUN_DIR/uplc-turbo-eval.csv" "$RUN_DIR/uplc-turbo-eval-raw.log" \
+        "$RUN_DIR/criterion-output-eval" PVB_EVAL_ONLY=1
+fi
 
-run_check || echo "WARNING: uplc-turbo check failed" >&2
+if loop check; then run_check || echo "WARNING: uplc-turbo check failed" >&2; fi

@@ -70,8 +70,8 @@ fn guarded<R>(f: impl FnOnce() -> R) -> Result<R, String> {
     })
 }
 
-/// All `*.flat` files of the directory, sorted by name. With `BENCH_QUICK=1`
-/// only the first 5.
+/// All `*.flat` files of the directory, sorted by name. The harness puts only the selected
+/// scripts there (scripts/image-entry.sh).
 pub fn scripts(dir: &Path) -> Vec<(String, Vec<u8>)> {
     let mut names: Vec<String> = fs::read_dir(dir)
         .unwrap_or_else(|e| panic!("cannot read {}: {e}", dir.display()))
@@ -80,9 +80,6 @@ pub fn scripts(dir: &Path) -> Vec<(String, Vec<u8>)> {
         .filter(|n| n.ends_with(".flat"))
         .collect();
     names.sort();
-    if quick() {
-        names.truncate(5);
-    }
     names
         .into_iter()
         .map(|n| {
@@ -92,8 +89,9 @@ pub fn scripts(dir: &Path) -> Vec<(String, Vec<u8>)> {
         .collect()
 }
 
+/// Short timing (`BENCH_TIMING=quick`).
 pub fn quick() -> bool {
-    std::env::var("BENCH_QUICK").map(|v| v == "1").unwrap_or(false)
+    std::env::var("BENCH_TIMING").is_ok_and(|v| v == "quick")
 }
 
 pub fn data_dir() -> std::path::PathBuf {

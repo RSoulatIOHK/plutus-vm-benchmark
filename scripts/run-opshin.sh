@@ -3,14 +3,15 @@
 #
 #   run-opshin.sh <results-dir>
 #
-# Times the scripts in $BENCH_DATA_DIR (5 with BENCH_QUICK=1). The check covers every script of
-# the corpus, also with BENCH_QUICK=1, so the gate always sees all of them.
+# pvb-loops: d3 eval check
+# Runs the loops of $BENCH_LOOPS over the scripts in $BENCH_DATA_DIR; $BENCH_TIMING=quick shortens
+# the timing. The check covers the same scripts.
 set -euo pipefail
 
 VM=opshin
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
-CHECK_DATA_DIR=/bench/data/plutus_use_cases
+loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 BENCH_DIR="/bench/opshin"
 
 echo "opshin-uplc (Python)"
@@ -24,18 +25,13 @@ export PVB_COSTMODEL_JSON=/bench/mainnet-plutusv3-costmodel.json
 export PVB_PARAM_NAMES=/bench/plutusv3-param-names.txt
 
 run_check() {
-    # Spec D4: one evaluation per script of the whole corpus, with the timed loop's parameters.
-    BENCH_DATA_DIR="$CHECK_DATA_DIR" python3 bench_plutus_use_cases.py --check "$RUN_DIR/$VM-check.csv" \
+    # Spec D4: one evaluation per script, with the timed loop's parameters.
+    python3 bench_plutus_use_cases.py --check "$RUN_DIR/$VM-check.csv" \
         2>&1 | tee "$RUN_DIR/$VM-check.log"
     echo "Wrote $RUN_DIR/$VM-check.csv"
 }
 
-if [[ "${PVB_CHECK_ONLY:-0}" == 1 ]]; then
-    run_check
-    exit 0
-fi
-
-if [[ "${BENCH_QUICK:-0}" == 1 ]]; then
+if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
     export OPSHIN_TIME_BUDGET_S=0.2 OPSHIN_MIN_ITERS=3
 fi
 
@@ -60,8 +56,8 @@ run_bench() {
 }
 
 # D3: flat decode + eval per iteration.
-run_bench "$VM"
+if loop d3; then run_bench "$VM"; fi
 # Eval only: the program decoded once, fresh Machine and budget per iteration.
-run_bench "$VM-eval" --eval
+if loop eval; then run_bench "$VM-eval" --eval; fi
 
-run_check || echo "WARNING: $VM check failed" >&2
+if loop check; then run_check || echo "WARNING: $VM check failed" >&2; fi

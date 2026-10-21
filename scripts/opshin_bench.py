@@ -51,7 +51,7 @@ BENCH_DIR = os.environ.get("BENCH_DATA_DIR", "/bench/data/plutus_use_cases")
 COSTMODEL_JSON = os.environ.get("PVB_COSTMODEL_JSON", "/bench/mainnet-plutusv3-costmodel.json")
 PARAM_NAMES = os.environ.get("PVB_PARAM_NAMES", "/bench/plutusv3-param-names.txt")
 WARMUP = 3
-# BENCH_QUICK=1 lowers these through the environment (scripts/run-opshin.sh).
+# BENCH_TIMING=quick lowers these through the environment (scripts/run-opshin.sh).
 MIN_ITERS = int(os.environ.get("OPSHIN_MIN_ITERS", "20"))
 TIME_BUDGET_S = float(os.environ.get("OPSHIN_TIME_BUDGET_S", "2.0"))
 sys.setrecursionlimit(int(os.environ.get("OPSHIN_RECURSION_LIMIT", "100000")))

@@ -22,7 +22,7 @@ const files = readdirSync(dataDir)
   .filter((f) => f.endsWith(".flat"))
   .sort();
 const costs = harnessCosts();
-const options = process.env.BENCH_QUICK === "1" ? { time: 100, warmupTime: 20 } : {};
+const options = process.env.BENCH_TIMING === "quick" ? { time: 100, warmupTime: 20 } : {};
 
 type Program = ReturnType<typeof decodeFlatDeBruijn>;
 

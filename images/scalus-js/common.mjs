@@ -4,7 +4,8 @@ import { join } from "node:path";
 import { evaluator, EvaluationOptions } from "scalus";
 
 export const DATA_DIR = process.env.DATA_DIR ?? "/bench/data/plutus_use_cases";
-export const QUICK = process.env.BENCH_QUICK === "1";
+// Short timing (scripts/image-entry.sh, BENCH_TIMING=quick).
+export const QUICK = process.env.BENCH_TIMING === "quick";
 
 // Latest PlutusV3 machine: the mainnet protocol parameters bundled in the package
 // (protocol version 11, the PlutusV3 cost model). Built once; evaluateScript still
@@ -12,10 +13,10 @@ export const QUICK = process.env.BENCH_QUICK === "1";
 // to reuse a machine across calls.
 export const OPTIONS = EvaluationOptions.mainnet("PlutusV3");
 
-/** The scripts to run: [name, flat bytes], sorted by name, the first 5 under BENCH_QUICK. */
+/** The scripts to run: [name, flat bytes], sorted by name. DATA_DIR holds only the selected ones. */
 export function scripts() {
   const files = readdirSync(DATA_DIR).filter((f) => f.endsWith(".flat")).sort();
-  return (QUICK ? files.slice(0, 5) : files).map((f) => [
+  return files.map((f) => [
     f.slice(0, -".flat".length),
     new Uint8Array(readFileSync(join(DATA_DIR, f))),
   ]);

@@ -3,24 +3,27 @@
 #
 #   run-aiken.sh <results-dir>
 #
-# Times the scripts in $BENCH_DATA_DIR (5 with BENCH_QUICK=1). The check covers every script of
-# the corpus, also with BENCH_QUICK=1, so the gate always sees all of them.
+# pvb-loops: d3 eval check
+# Runs the loops of $BENCH_LOOPS over the scripts in $BENCH_DATA_DIR; $BENCH_TIMING=quick shortens
+# the timing. The check covers the same scripts.
 set -uo pipefail
 
 VM=aiken
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
-CHECK_DATA_DIR=/bench/data/plutus_use_cases
+loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 RAW="$RUN_DIR/$VM-raw.log"
 export CRITERION_HOME=/tmp/criterion
 
 {
     echo "aiken uplc (Rust / Criterion) aiken-lang/aiken@${AIKEN_SHA:-unknown}"
-    echo "BENCH_QUICK=${BENCH_QUICK:-0}"
+    echo "BENCH_LOOPS=${BENCH_LOOPS:-d3,eval,check} BENCH_TIMING=${BENCH_TIMING:-normal}"
 } | tee "$RAW"
 
-# Correctness: one evaluation per script of the whole corpus.
-BENCH_QUICK=0 DATA_DIR="$CHECK_DATA_DIR" aiken-check > "$RUN_DIR/$VM-check.csv" 2> >(tee -a "$RAW" >&2)
+# Correctness: one evaluation per script.
+if loop check; then
+    DATA_DIR="$DATA_DIR" aiken-check > "$RUN_DIR/$VM-check.csv" 2> >(tee -a "$RAW" >&2)
+fi
 
 # Timing, twice with the same Criterion settings: flat decode + eval per iteration (aiken.csv, the
 # D3 ranking), then eval of a program decoded once before timing (PVB_EVAL_ONLY=1, aiken-eval.csv).
@@ -55,9 +58,10 @@ PY
     python3 /bench/parsers/fill_failures.py "$csv" "$DATA_DIR" "$VM" "$raw"
 }
 
-time_loop "$RUN_DIR/$VM.csv" "$RAW"
-# BENCH_SKIP_EVAL=1 skips the eval-only loop.
-if [[ "${BENCH_SKIP_EVAL:-0}" != 1 ]]; then
+if loop d3; then
+    time_loop "$RUN_DIR/$VM.csv" "$RAW"
+fi
+if loop eval; then
     : > "$RUN_DIR/$VM-eval-raw.log"
     time_loop "$RUN_DIR/$VM-eval.csv" "$RUN_DIR/$VM-eval-raw.log" PVB_EVAL_ONLY=1
 fi

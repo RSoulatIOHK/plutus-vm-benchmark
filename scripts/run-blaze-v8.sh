@@ -3,14 +3,15 @@
 #
 #   run-blaze-v8.sh <results-dir>
 #
-# Times the scripts in $BENCH_DATA_DIR (5 with BENCH_QUICK=1). The check covers every script of
-# the corpus, also with BENCH_QUICK=1, so the gate always sees all of them.
+# pvb-loops: d3 eval check
+# Runs the loops of $BENCH_LOOPS over the scripts in $BENCH_DATA_DIR; $BENCH_TIMING=quick shortens
+# the timing (read by pvb.bench.ts and pvb-eval.bench.ts). The check covers the same scripts.
 set -euo pipefail
 
 VM=blaze-v8
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
-CHECK_DATA_DIR=/bench/data/plutus_use_cases
+loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 BENCH_DIR="/bench/blaze-plutus"
 
 echo "blaze-v8 (TypeScript / Node.js / V8)"
@@ -20,22 +21,15 @@ echo "blaze-v8 (TypeScript / Node.js / V8)"
 export PVB_DATA_DIR="$DATA_DIR"
 export PVB_COSTMODEL_JSON=/bench/mainnet-plutusv3-costmodel.json
 export PVB_PARAM_NAMES=/bench/plutusv3-param-names.txt
-export BENCH_QUICK="${BENCH_QUICK:-0}"
 
 cd "$BENCH_DIR/packages/blaze-plutus"
 
 run_check() {
-    # Spec D4: one evaluation per script of the whole corpus, with the timed loop's parameters,
-    # on the same engine.
-    PVB_VM=$VM PVB_DATA_DIR="$CHECK_DATA_DIR" PVB_CHECK_OUT="$RUN_DIR/$VM-check.csv" \
+    # Spec D4: one evaluation per script, with the timed loop's parameters, on the same engine.
+    PVB_VM=$VM PVB_DATA_DIR="$DATA_DIR" PVB_CHECK_OUT="$RUN_DIR/$VM-check.csv" \
         npx vitest run pvb-check 2>&1 | tee "$RUN_DIR/$VM-check.log"
     echo "Wrote $RUN_DIR/$VM-check.csv"
 }
-
-if [[ "${PVB_CHECK_ONLY:-0}" == 1 ]]; then
-    run_check
-    exit 0
-fi
 
 # timing: vitest bench on Node.js (V8). $1 = bench file filter, $2 = output name.
 run_bench() {
@@ -47,8 +41,8 @@ run_bench() {
 }
 
 # D3: flat decode + eval per iteration.
-run_bench pvb.bench "$VM"
+if loop d3; then run_bench pvb.bench "$VM"; fi
 # Eval only: the program decoded once, fresh machine and budget per iteration.
-run_bench pvb-eval.bench "$VM-eval"
+if loop eval; then run_bench pvb-eval.bench "$VM-eval"; fi
 
-run_check || echo "WARNING: $VM check failed" >&2
+if loop check; then run_check || echo "WARNING: $VM check failed" >&2; fi

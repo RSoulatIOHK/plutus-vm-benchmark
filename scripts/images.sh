@@ -53,6 +53,8 @@ env_value() {
 cmd_build_args() {
     local vm="$1" dir arg value
     dir=$(cmd_dir "$vm")
+    # ARG names are single words.
+    # shellcheck disable=SC2013
     for arg in $(sed -n 's/^ARG[[:space:]]\{1,\}\([A-Z0-9_]\{1,\}\).*/\1/p' "$REPO_ROOT/$dir/Dockerfile" | sort -u); do
         if [[ "$arg" == VM ]]; then
             echo "VM=$vm"
@@ -81,6 +83,8 @@ input_files() {
                 | sed 's/^COPY[[:space:]]*//; s/--[a-z]*=[^[:space:]]*//g' \
                 | awk '{ for (i = 1; i < NF; i++) print $i }' \
                 | while read -r src; do
+                    # $src may be a glob (COPY a/*.txt): unquoted on purpose.
+                    # shellcheck disable=SC2086
                     if [[ -d "$src" ]]; then find "$src" -type f; else ls -1 $src; fi
                 done
         } | sed 's|^\./||; s|/$||' | grep -v -e '__pycache__' -e '\.pyc$' | LC_ALL=C sort -u

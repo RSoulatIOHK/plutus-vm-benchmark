@@ -3,7 +3,7 @@
 //
 // Per iteration: flat decode + evaluation with costing on, counting mode (unlimited budget), the
 // mainnet PlutusV3 cost model (pvb-costs.ts). A script that fails its first evaluation prints
-// "EVAL_FAIL: <name>" and is not timed. BENCH_QUICK=1 shortens the timing.
+// "EVAL_FAIL: <name>" and is not timed. BENCH_TIMING=quick shortens the timing.
 
 import { readdirSync, readFileSync } from "fs";
 import { join } from "path";
@@ -18,7 +18,7 @@ const files = readdirSync(dataDir)
   .filter((f) => f.endsWith(".flat"))
   .sort();
 const costs = harnessCosts();
-const options = process.env.BENCH_QUICK === "1" ? { time: 100, warmupTime: 20 } : {};
+const options = process.env.BENCH_TIMING === "quick" ? { time: 100, warmupTime: 20 } : {};
 
 function evalOnce(bytes: Uint8Array): void {
   const program = decodeFlatDeBruijn(bytes);
