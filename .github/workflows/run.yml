@@ -26,6 +26,10 @@ on:
         description: Run even if nothing changed since the last run
         type: boolean
         default: false
+      publish:
+        description: Commit results/<date> and deploy the page (otherwise the results are only an artifact)
+        type: boolean
+        default: false
 
 concurrency: bench-hetzner
 
@@ -185,6 +189,8 @@ jobs:
       RUN_ID: ${{ needs.start.outputs.run_id }}
       NAME: ${{ needs.start.outputs.name }}
       QUICK: ${{ inputs.quick && 'true' || 'false' }}
+      # A scheduled run always publishes; a manual run only when asked.
+      PUBLISH: ${{ (github.event_name == 'schedule' || inputs.publish) && 'true' || 'false' }}
     steps:
       - uses: actions/checkout@v5
 
@@ -220,7 +226,7 @@ jobs:
 
       - name: Commit results
         id: commit
-        if: steps.collect.outcome == 'success' && env.QUICK != 'true'
+        if: steps.collect.outcome == 'success' && env.QUICK != 'true' && env.PUBLISH == 'true'
         run: |
           git config user.name "plutus-vm-bench"
           git config user.email "github-actions[bot]@users.noreply.github.com"
