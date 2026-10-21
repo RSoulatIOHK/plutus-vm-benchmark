@@ -10,6 +10,9 @@ FROM rust:${RUST_VERSION}-bookworm AS build
 
 ARG UPLC_TURBO_REPO
 ARG UPLC_TURBO_SHA
+# Keep peak memory low when other images build at the same time.
+ARG CARGO_BUILD_JOBS=2
+ENV CARGO_BUILD_JOBS=${CARGO_BUILD_JOBS}
 
 RUN git clone "$UPLC_TURBO_REPO" /src \
     && cd /src && git checkout "$UPLC_TURBO_SHA"
