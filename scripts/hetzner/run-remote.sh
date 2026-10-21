@@ -28,12 +28,14 @@ case "$CMD" in
     git -C "$REPO_ROOT" archive --format=tar HEAD \
       | "${SSH[@]}" 'rm -rf /root/repo && mkdir -p /root/repo && tar x -C /root/repo'
     # One string for the remote shell; VMS and NAME are plain words (no quotes needed).
+    # A transient unit gets a minimal PATH on NixOS (no bash, docker, git): give it the system one.
     "${SSH[@]}" "rm -f $DONE && systemd-run --unit=pvb-bench --collect \
       --working-directory=/root/repo \
+      --setenv=PATH=/run/current-system/sw/bin \
       --setenv=PULL=1 --setenv=IMAGE_TAG=auto \
       --setenv=BENCH_QUICK=${BENCH_QUICK:-0} \
       --setenv=PVB_HARNESS=$(git -C "$REPO_ROOT" rev-parse --short HEAD) \
-      bash -c 'scripts/run-images.sh results/$NAME $VMS > /root/run.log 2>&1; echo \$? > $DONE'"
+      /run/current-system/sw/bin/bash -c 'scripts/run-images.sh results/$NAME $VMS > /root/run.log 2>&1; echo \$? > $DONE'"
     echo "started run $NAME on $IP"
     ;;
   status)

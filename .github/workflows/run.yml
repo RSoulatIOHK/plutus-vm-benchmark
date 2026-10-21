@@ -198,7 +198,9 @@ jobs:
           mkdir -p "$BENCH_STATE/$RUN_ID"
           (umask 077 && printf '%s\n' "$SSH_KEY" > "$BENCH_STATE/$RUN_ID/id_ed25519")
           echo "$IP" > "$BENCH_STATE/$RUN_ID/ip"
-          scripts/hetzner/run-remote.sh status "$RUN_ID"
+          status=$(scripts/hetzner/run-remote.sh status "$RUN_ID")
+          echo "run status: $status"
+          echo "status=$status" >> "$GITHUB_OUTPUT"
           scripts/hetzner/run-remote.sh collect "$RUN_ID" "$NAME"
 
       - uses: cachix/install-nix-action@v31
@@ -227,6 +229,17 @@ jobs:
           git pull --rebase origin main
           git push origin HEAD:main
           echo "published=true" >> "$GITHUB_OUTPUT"
+
+      # Partial results are still committed above (one failed VM must not hide the others), but
+      # the job must not look green when the run or the collection failed.
+      - name: Fail if the run failed
+        if: always()
+        env:
+          COLLECT: ${{ steps.collect.outcome }}
+          STATUS: ${{ steps.collect.outputs.status }}
+        run: |
+          if [[ "$COLLECT" != success ]]; then echo "collecting the results failed"; exit 1; fi
+          if [[ "$STATUS" != done:0 ]]; then echo "the run ended with $STATUS (see results/<name>/run.log)"; exit 1; fi
 
   pages:
     needs: finish
