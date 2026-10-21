@@ -93,7 +93,8 @@ restricting budget).
   parameters, and a machine object if the VM's API allows reuse. Fresh in every iteration: decode
   (D3 loop only), the budget counter, and the evaluation state.
 - Warm-up: JMH VMs use one 20 s warm-up iteration (`-wi 1 -w 20s`); the staged Scalus JIT needs
-  about 20 s. Other frameworks keep their own warm-up rules.
+  about 20 s. Then three 5 s measurement iterations (`-i 3 -r 5s`). Other frameworks keep their own
+  warm-up rules.
 
 The check is one evaluation per script with the same parameters. The gate (`check/`) compares
 `<vm>-check.csv` with the Haskell reference.

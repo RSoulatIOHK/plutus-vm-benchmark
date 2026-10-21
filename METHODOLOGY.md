@@ -93,7 +93,7 @@ and the runner is `scripts/run-<vm>.sh`.
 | VM | Framework | Warm-up and measurement (normal timing) |
 |---|---|---|
 | haskell | Criterion | Criterion's warm-up; at least 20 s per script (`timeLimit = 20`) |
-| scalus-cek, scalus-jit | JMH | One 20 s warm-up iteration, one 5 s measurement iteration, 1 fork (`-wi 1 -w 20s -i 1 -r 5s -f 1`) |
+| scalus-cek, scalus-jit | JMH | One 20 s warm-up iteration, three 5 s measurement iterations, 1 fork (`-wi 1 -w 20s -i 3 -r 5s -f 1`) |
 | aiken | Criterion.rs | Criterion.rs defaults |
 | uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 10 s measurement |
 | plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
@@ -139,6 +139,10 @@ run. The ratio is less sensitive to hardware changes and to drift between runs t
 
 - **Different statistics**: each framework computes mean, median and standard deviation in its own
   way. Go testing.B reports only the mean time per operation.
+  - JMH (scalus-cek, scalus-jit) reports the mean time per operation of each measurement iteration.
+    `median_ns`, `min_ns`, `max_ns` and `stddev_ns` are over the 3 iteration means, not over single
+    operations. `stddev_ns` is the sample standard deviation (n - 1). `iterations` is the number of
+    measurement iterations. JMH's "Score Error" is a 99.9% confidence interval, so it is not used.
 - **JIT warm-up**: the JVM, V8 and JSC compile hot code at run time. Their frameworks warm up first,
   but the execution model differs from ahead-of-time compiled VMs.
 - **Cost model rebuilt per iteration**: some public APIs do not let a harness keep the cost model
