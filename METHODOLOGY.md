@@ -1,56 +1,126 @@
 # Methodology
 
-## What is Measured
+## What Is Measured
 
-Each benchmark iteration performs:
+The ranking time (the "D3" loop) is node-equivalent. Each iteration does:
 
-1. **Flat decode** — deserialize a `.flat`-encoded UPLC program into an AST
-2. **CEK evaluate** — run the decoded program through the CEK machine with unlimited budget
+1. **Flat decode**: deserialize the `.flat`-encoded UPLC program.
+2. **Evaluation**: run the decoded program with costing on.
 
-This is the end-to-end cost of evaluating a Plutus script from its on-chain representation.
+Every VM uses the same parameters, in the timed loops and in the correctness check:
+
+| Parameter | Value |
+|---|---|
+| Ledger language | PlutusV3 |
+| Protocol version | 11 (builtin semantics variant E, `case` on builtin values enabled) |
+| Cost model | The mainnet PlutusV3 cost model, 350 parameters ([`check/reference/mainnet-plutusv3-costmodel.json`](check/reference/mainnet-plutusv3-costmodel.json)). It equals the default PlutusV3 model of plutus 1.63.0.0, the version of the production node |
+| Budget | Costing on: counting mode, or a restricting budget too large to run out |
+
+Costing is part of the timed work, as on a node. The full parameter list and the reasons are in
+[check/README.md](check/README.md#evaluation-parameters).
+
+### Reuse rule
+
+From [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md):
+
+- Built once, outside the timed loops: the cost model, the machine parameters and, if the VM's API
+  allows reuse, a machine object. The ledger also caches its evaluation context.
+- Fresh in every iteration: the flat decode (D3 loop only), the budget counter and the evaluation state.
+
+### Eval-only column
+
+A second loop (`<vm>-eval.csv`) evaluates a program that was decoded once before timing. The page
+shows it next to the D3 time. Decoding is a large share of the D3 time for some VMs, so this
+column shows the speed of the evaluator alone. The ranking uses the D3 time.
+
+### Compiled VMs
+
+The Scalus JIT compiles a script to JVM bytecode before it runs it. Its timed loop evaluates the
+compiled script, so the compile step is not timed. The page shows it with a "compile excluded"
+badge and a compile-time column (`<vm>-compile.csv`, the median of 3 compiles per script). The
+page shows it in the "Compiler-based VMs" category and in the overall ranking with the interpreters.
 
 ## Test Data
 
-78 flat-encoded Plutus smart contract scripts from the `plutus-use-cases` test suite. These are real-world contracts covering:
+89 flat-encoded Plutus scripts from the `plutus-use-cases` test suite, in `data/plutus_use_cases/`.
+They cover:
 
 - Auction, Crowdfunding, Currency, Escrow
 - Futures (settle, pay-out, increase-margin)
 - Game state machines, Multisig state machines
 - Ping-pong, Prism, Pubkey
 - Stablecoin, Token account, Uniswap, Vesting
+- `coop-*` and `guardrail-*` (UPLC 1.1.0)
 
-Script sizes range from 3 KB to 13 KB. All VMs use the same canonical copies from `data/plutus_use_cases/`.
+File sizes range from about 2 KB to 13 KB. All VMs read the same files.
 
-## Why Native Benchmarks
+### PlutusV1-era scripts
 
-Each VM uses its own benchmark framework rather than a uniform harness:
+78 of the 89 scripts are PlutusV1-era validators (UPLC 1.0.0). The other 11 (`coop-*`,
+`guardrail-*`) are UPLC 1.1.0 programs that use `constr`/`case`. The benchmark evaluates all 89 as
+PlutusV3 programs at protocol version 11. Plutus's own `validation` CEK benchmark
+(`plutus-benchmark`, `BenchCek.hs`) does the same. A node would run the 78 older scripts as PlutusV1.
 
-| VM | Framework | Warmup | Min Iterations | Time Budget |
-|---|---|---|---|---|
-| uplc-turbo | Criterion.rs | Automatic (warmup phase) | Auto | Auto |
-| Plutigo | Go testing.B | Automatic (b.N scaling) | Auto | 5s |
-| blaze-plutus | Vitest bench | Automatic | Auto | Auto |
-| opshin-uplc | Custom | 5 iterations | 50 | 5s |
-
-Each framework handles warmup, iteration count, and outlier detection using its own proven methodology. Reimplementing this in a uniform harness would be less accurate and harder to maintain.
-
-## Fairness Constraints
-
-- **Same data**: all VMs decode the same 78 `.flat` files
-- **Same machine**: each VM runs in its own Docker image on the same host, one after the other (glibc base images; see `images/`)
-- **Sequential execution**: VMs run one at a time to avoid CPU contention
-- **Pinned versions**: exact git SHAs in `.env`; `environment.txt` of each run records the image digests
-- **No custom harnesses**: each VM's own benchmark code is used unmodified
+The PlutusV3 rule that a script must return `unit` (CIP-117) is not applied. The 78 PlutusV1-era
+scripts return a non-unit term. The benchmark measures the evaluator, so the status is the
+evaluation result only. The rule does not change the ExUnits.
 
 ## Correctness Gate
 
-Before a VM's timings are published, its results must equal Haskell plutus (spec D4). Each VM image
-writes `<vm>-check.csv` (`vm,script,status,cpu,mem`, one evaluation per script, costing on), and
-`check/gate.py` compares it with `check/reference/haskell-check.csv`. Status, CPU and memory must all
-be equal for all 89 scripts; a VM without costing fails.
+Before the timings of a VM are published, its results must equal Haskell plutus-core. Each image
+writes `<vm>-check.csv` (`vm,script,status,cpu,mem`): one evaluation per script, with the
+parameters above. [`check/gate.py`](check/gate.py) compares it with
+[`check/reference/haskell-check.csv`](check/reference/haskell-check.csv).
 
-All VMs use the same parameters: PlutusV3, protocol version 11 (builtin semantics variant E) and the
-mainnet PlutusV3 cost model, which is the default of plutus 1.63.0.0. See `check/README.md`.
+There are two modes ([check/README.md](check/README.md#policy)):
+
+- **Strict** (the default). The VM loads the mainnet cost model. Status, CPU and memory must equal
+  the Haskell reference for every script. A VM without costing fails.
+- **Badge.** For a VM whose API cannot take a cost model. The VM runs with the model it ships. It
+  must equal Haskell evaluated with that model
+  ([`check/reference/haskell-check-variant-c.csv`](check/reference/haskell-check-variant-c.csv)).
+  The page then shows the VM with an "outdated cost model" badge.
+
+A VM that fails is not ranked; the page lists it as "failed check". The mode of each VM is in
+[`check/modes.conf`](check/modes.conf). Today every VM is strict.
+
+## Why Native Benchmark Frameworks
+
+Each VM is timed with a benchmark framework of its own language. The framework handles warm-up,
+iteration count and outlier detection. The harness code that calls the VM is in `images/<vm>/`,
+and the runner is `scripts/run-<vm>.sh`.
+
+| VM | Framework | Warm-up and measurement (normal timing) |
+|---|---|---|
+| haskell | Criterion | Criterion's warm-up; at least 20 s per script (`timeLimit = 20`) |
+| scalus-cek, scalus-jit | JMH | One 20 s warm-up iteration, one 5 s measurement iteration, 1 fork (`-wi 1 -w 20s -i 1 -r 5s -f 1`) |
+| julc-java | JMH | The same as Scalus: `-wi 1 -w 20s -i 1 -r 5s -f 1` |
+| aiken | Criterion.rs | Criterion.rs defaults |
+| uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 10 s measurement |
+| plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
+| blaze-v8, blaze-jsc | Vitest bench | Vitest bench defaults |
+| scalus-js | Vitest bench | Vitest bench defaults (the same Vitest version as blaze-v8) |
+| opshin | Custom loop ([`scripts/opshin_bench.py`](scripts/opshin_bench.py)) | 20 evaluations of the first script, then per script 3 warm-up iterations and at least 20 iterations and 2 s |
+
+The JMH warm-up is 20 s because the staged Scalus JIT needs about 20 s to warm up.
+`BENCH_TIMING=quick` shortens every warm-up and measurement, for smoke tests only.
+
+## Fairness Constraints
+
+- **Same data**: all VMs decode the same 89 `.flat` files.
+- **Same parameters**: PlutusV3, protocol version 11, the mainnet cost model, costing on.
+- **Same machine, one VM at a time**: each VM runs in its own Docker image on the same server, one
+  after the other, so VMs do not compete for CPU.
+- **Pinned versions**: `.env` pins each VM; `environment.txt` of each run records the image digests.
+- **Same results**: the correctness gate proves that each published VM did the same work.
+
+## Hardware
+
+The monthly run uses a Hetzner Cloud dedicated-vCPU server, type `ccx33` (the default of
+`run.yml`): AMD EPYC, 8 dedicated vCPUs, 32 GB RAM. A new server is created for each run. NixOS is
+installed on it from [`nix/runner.nix`](nix/runner.nix), with the CPU governor set to
+`performance`. The server runs one VM at a time and is deleted after the run. `environment.txt`
+records the CPU, cores and memory of each run.
 
 ## Unified Output
 
@@ -60,25 +130,44 @@ All results are normalized to a common CSV schema:
 vm,script,mean_ns,median_ns,min_ns,max_ns,stddev_ns,iterations
 ```
 
-Times are in **nanoseconds**. The summary uses **geometric mean** across all 78 scripts, which is standard for cross-benchmark comparison (it handles the wide range of script complexities without being dominated by outliers).
+Times are in **nanoseconds**. The summary uses the **geometric mean** of the scripts that every VM
+in a category ran successfully. The geometric mean handles the wide range of script sizes and is
+not dominated by the largest scripts.
+
+The history chart shows each VM's geometric mean divided by the Haskell geometric mean of the same
+run. The ratio is less sensitive to hardware changes and to drift between runs than absolute times.
 
 ## Limitations
 
-- **Different statistical methodologies**: each framework computes mean/median/stddev differently. BenchmarkDotNet and Criterion are the most sophisticated; Go bench and the custom frameworks are simpler.
-- **Go bench lacks stddev/min/max**: only reports mean ns/op in default output.
-- **JIT warmup variance**: .NET and Node.js/Bun have JIT compilation, meaning early iterations are slower. Their frameworks account for this, but it's a fundamentally different execution model than ahead-of-time compiled VMs.
-- **Memory comparison**: each VM uses different allocators and GC strategies. Memory numbers are not directly comparable across languages.
-- **Docker overhead**: container execution adds minimal but non-zero overhead vs bare metal. This affects all VMs equally.
+- **Different statistics**: each framework computes mean, median and standard deviation in its own
+  way. Go testing.B reports only the mean time per operation.
+- **JIT warm-up**: the JVM, V8 and JSC compile hot code at run time. Their frameworks warm up first,
+  but the execution model differs from ahead-of-time compiled VMs.
+- **Cost model rebuilt per iteration**: some public APIs do not let a harness keep the cost model
+  or machine parameters across evaluations. uplc-turbo builds its default cost model in every
+  evaluation call, because the crate keeps the cost model types private. Aiken's machine takes the
+  cost model by value, and the crate's evaluation entry point builds a new one per call.
+  scalus-js turns the cost model into machine parameters on every call. This work is in their
+  timed loops.
+- **No eval-only time for scalus-js**: its public API has no call that evaluates an already decoded
+  program, so it has no eval-only column.
+- **Memory use is not compared**: the VMs use different allocators and garbage collectors.
+- **Docker overhead**: containers add a small overhead compared with bare metal. It applies to all VMs.
 
 ## Reproducing
 
-Anyone with Docker can reproduce results:
+Anyone with Docker can reproduce the results:
 
 ```bash
-git clone https://github.com/saib-inc/cardano-plutus-vm-benchmark.git
-cd cardano-plutus-vm-benchmark
-scripts/images.sh build <vm>      # for each VM, or PULL=1 to use the published images
-scripts/run-images.sh results/$(date +%F)
+git clone https://github.com/lantr-io/plutus-vm-benchmark.git
+cd plutus-vm-benchmark
+scripts/images.sh build <vm>                    # for each VM
+scripts/run-images.sh results/$(date +%F)       # or PULL=1 to use the published images
 ```
 
-For the most consistent results, run on a dedicated machine with no other workloads.
+For the most consistent results, use a dedicated machine with no other workloads.
+
+The monthly run is [`.github/workflows/run.yml`](.github/workflows/run.yml). It creates the server,
+runs [`scripts/run-images.sh`](scripts/run-images.sh) on it with the published images, and commits
+the results. A maintainer can start it by hand with a subset of VMs, scripts and loops; such a
+partial run is never published.
