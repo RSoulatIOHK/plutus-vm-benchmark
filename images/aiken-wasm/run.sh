@@ -17,8 +17,8 @@ if ! ls "$DATA_DIR"/*.flat >/dev/null 2>&1; then
 fi
 
 {
-    echo "aiken-wasm (@lucid-evolution/uplc / Node $(node --version) / vitest bench)"
-    echo "uplc_build_info: $(node --input-type=module -e 'import { uplc_build_info } from "@lucid-evolution/uplc"; console.log(uplc_build_info())')"
+    echo "aiken-wasm (uplc crate -> WASM / Node $(node --version) / vitest bench)"
+    echo "uplc crate: $(node --input-type=module -e 'import { buildInfo } from "./common.mjs"; console.log(buildInfo())')"
     echo "BENCH_QUICK=${BENCH_QUICK:-0}"
 } | tee "$RAW"
 
