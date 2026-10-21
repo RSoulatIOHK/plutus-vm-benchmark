@@ -24,26 +24,30 @@ SSH_OPTS=(-i "$KEY" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null 
 
 hcloud ssh-key create --name "$NAME" --public-key-from-file "$KEY.pub" --label bench-run="$RUN_ID" >/dev/null
 
-# A location can be out of capacity for a server type (resource_unavailable), so try each in turn.
+# A location can be out of capacity for a server type (resource_unavailable). Shortages are
+# usually brief, so try every location, wait, and try again for up to ROUNDS rounds.
 # The labels let sweep.sh find stale servers.
+ROUNDS="${BENCH_CREATE_ROUNDS:-10}"
 created=""
-for loc in $LOCATIONS; do
-  if hcloud server create \
-    --name "$NAME" \
-    --type "$SERVER_TYPE" \
-    --location "$loc" \
-    --image ubuntu-24.04 \
-    --ssh-key "$NAME" \
-    --label bench-run="$RUN_ID" \
-    --label created="$(date +%s)" >/dev/null; then
-    created="$loc"
-    break
-  fi
-  echo "no $SERVER_TYPE in $loc, trying the next location" >&2
+for round in $(seq 1 "$ROUNDS"); do
+  for loc in $LOCATIONS; do
+    if hcloud server create \
+      --name "$NAME" \
+      --type "$SERVER_TYPE" \
+      --location "$loc" \
+      --image ubuntu-24.04 \
+      --ssh-key "$NAME" \
+      --label bench-run="$RUN_ID" \
+      --label created="$(date +%s)" >/dev/null; then
+      created="$loc"
+      break 2
+    fi
+    echo "round $round: no $SERVER_TYPE in $loc" >&2
+  done
+  if [ "$round" -lt "$ROUNDS" ]; then sleep 60; fi
 done
 if [ -z "$created" ]; then
-  echo "no location has $SERVER_TYPE: $LOCATIONS. Available now:" >&2
-  "$(dirname "$0")/capacity.sh" >&2 || true
+  echo "no $SERVER_TYPE in $LOCATIONS after $ROUNDS rounds" >&2
   exit 1
 fi
 echo "created $NAME ($SERVER_TYPE) in $created" >&2

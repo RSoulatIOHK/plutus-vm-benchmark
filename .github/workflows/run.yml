@@ -114,8 +114,8 @@ jobs:
           key="$BENCH_STATE/$RUN_ID/id_ed25519"
           (umask 077 && printf '%s\n' "$SSH_KEY" > "$key")
           ssh-keygen -y -f "$key" > "$key.pub"
-          ip=$(nix shell nixpkgs#hcloud nixpkgs#jq --command scripts/hetzner/up.sh "$RUN_ID" | tail -1)
-          echo "ip=$ip" >> "$GITHUB_OUTPUT"
+          nix shell nixpkgs#hcloud nixpkgs#jq --command scripts/hetzner/up.sh "$RUN_ID"
+          echo "ip=$(cat "$BENCH_STATE/$RUN_ID/ip")" >> "$GITHUB_OUTPUT"
 
       - name: Start the run
         if: steps.plan.outputs.skip != 'true'
@@ -136,7 +136,7 @@ jobs:
 
   wait-1:
     needs: start
-    if: needs.start.outputs.skip == 'false'
+    if: needs.start.result == 'success' && needs.start.outputs.skip == 'false'
     runs-on: ubuntu-latest
     environment: bench-run
     timeout-minutes: 355
@@ -154,7 +154,7 @@ jobs:
 
   wait-2:
     needs: [start, wait-1]
-    if: needs.start.outputs.skip == 'false' && needs.wait-1.outputs.done != 'true' && !cancelled()
+    if: needs.start.result == 'success' && needs.wait-1.result == 'success' && needs.wait-1.outputs.done != 'true' && !cancelled()
     runs-on: ubuntu-latest
     environment: bench-run
     timeout-minutes: 355
