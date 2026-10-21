@@ -1,8 +1,14 @@
 #!/bin/bash
+# julc-java: JMH pvb.CekJavaBenchmark (images/julc-java/pvb/), PlutusV3 at protocol version 11 with
+# the mainnet cost model, counting mode:
+#   bench      per invocation flat decode + evaluation (spec D3)          -> julc-java.csv
+#   benchEval  per invocation evaluation of the program decoded in setup  -> julc-java-eval.csv
+# Then the check: one evaluation per script of the full corpus, also with BENCH_QUICK=1.
 set -euo pipefail
 
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
+CHECK_DATA_DIR=/bench/data/plutus_use_cases
 BENCH_DIR="/bench/julc"
 
 echo "Julc Java VM CEK (Java / GraalVM / JMH)"
@@ -25,7 +31,7 @@ open(sys.argv[1], 'w').write('\\n'.join(map(str, values)) + '\\n')
 
 run_check() {
     # Spec D4: one evaluation per script with the timed loop's parameters.
-    /opt/jdk-25/bin/java -cp julc-benchmark-jmh.jar pvb.Check data "$RUN_DIR/julc-java-check.csv" \
+    /opt/jdk-25/bin/java -cp julc-benchmark-jmh.jar pvb.Check "$CHECK_DATA_DIR" "$RUN_DIR/julc-java-check.csv" \
         2>&1 | tee "$RUN_DIR/julc-java-check.log"
     echo "Wrote $RUN_DIR/julc-java-check.csv"
 }
@@ -35,8 +41,9 @@ if [[ "${PVB_CHECK_ONLY:-0}" == 1 ]]; then
     exit 0
 fi
 
-# JMH timing; BENCH_QUICK=1 shortens warm-up and measurement.
-WARMUP=5s
+# JMH timing: one 20 s warm-up iteration (docs/IMAGE_CONTRACT.md); BENCH_QUICK=1 shortens
+# warm-up and measurement.
+WARMUP=20s
 MEASURE=5s
 if [[ "${BENCH_QUICK:-0}" == 1 ]]; then
     WARMUP=1s
@@ -55,10 +62,12 @@ FILE_LIST=$(ls data/*.flat | xargs -I{} basename {} | paste -sd, -)
     '^pvb\.CekJavaBenchmark\.' \
     2>&1 | tee "$RUN_DIR/julc-java-raw.log" || true
 
-# Parse JMH CSV into unified CSV
+# Parse JMH CSV into the D3 and the eval-only CSV
 python3 /bench/parsers/parse_jmh.py "$RUN_DIR/julc-java-jmh.csv" julc-java > "$RUN_DIR/julc-java.csv" || true
+python3 /bench/parsers/parse_jmh.py "$RUN_DIR/julc-java-jmh.csv" julc-java --eval > "$RUN_DIR/julc-java-eval.csv" || true
 
 # Fill in -1 for any scripts that were given but produced no result
 python3 /bench/parsers/fill_failures.py "$RUN_DIR/julc-java.csv" "$DATA_DIR" julc-java "$RUN_DIR/julc-java-raw.log"
+python3 /bench/parsers/fill_failures.py "$RUN_DIR/julc-java-eval.csv" "$DATA_DIR" julc-java "$RUN_DIR/julc-java-raw.log"
 
 run_check || echo "WARNING: julc-java check failed" >&2

@@ -22,10 +22,13 @@ import java.util.concurrent.TimeUnit;
  * <ul>
  *   <li>the mainnet PlutusV3 cost model through {@code setCostModelParams(array, PLUTUS_V3, 11, 0)}
  *       instead of the shipped variant C defaults;</li>
- *   <li>flat decode inside the timed method (upstream decodes once in setup);</li>
+ *   <li>flat decode inside the timed method {@code bench} (spec D3, the ranking); {@code benchEval}
+ *       evaluates the program decoded once in setup (julc-java-eval.csv);</li>
  *   <li>the evaluation result is checked: a failure throws, so it is never timed as a pass.</li>
  * </ul>
  * Budget {@code null}: counting mode, no limit. The file list comes from {@code -p file=...}.
+ * The provider (cost model) is reused; each {@code evaluate} makes a new cost tracker and CEK
+ * machine ({@code JavaVmProvider.evaluateInternal}).
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
@@ -40,11 +43,13 @@ public class CekJavaBenchmark {
     static final EvalOptions OPTIONS = EvalOptions.DEFAULT.withBuiltinTrace(false);
 
     private byte[] flat;
+    private Program program;
     private JavaVmProvider provider;
 
     @Setup(Level.Trial)
     public void setup() throws IOException {
         flat = Files.readAllBytes(Path.of("data", file));
+        program = UplcFlatDecoder.decodeProgram(flat);
         provider = mainnetProvider();
         // A failing script fails its trial here (JMH goes on with the next file).
         EvalResult first = evaluate(provider, flat);
@@ -63,9 +68,22 @@ public class CekJavaBenchmark {
         return r;
     }
 
+    @Benchmark
+    public EvalResult benchEval() {
+        EvalResult r = evaluateProgram(provider, program);
+        if (!r.isSuccess()) {
+            throw new IllegalStateException("evaluation failed: " + file);
+        }
+        return r;
+    }
+
     /** One flat decode + evaluation, PlutusV3, counting mode. */
     static EvalResult evaluate(JavaVmProvider provider, byte[] flat) {
-        Program program = UplcFlatDecoder.decodeProgram(flat);
+        return evaluateProgram(provider, UplcFlatDecoder.decodeProgram(flat));
+    }
+
+    /** One evaluation of a decoded program, PlutusV3, counting mode. */
+    static EvalResult evaluateProgram(JavaVmProvider provider, Program program) {
         return provider.evaluate(program, PlutusLanguage.PLUTUS_V3, null, OPTIONS);
     }
 
