@@ -279,7 +279,8 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
         comp_cell = f"{fmt_ns(int(geometric_mean(list(comp.values()))))} (compile excluded)" if comp else "-"
         ev = eval_ns.get(vm)
         eval_cell = fmt_ns(int(geometric_mean(list(ev.values())))) if ev else "-"
-        lines.append(f"| **{label}** | {lang} | {fmt_ns(int(geo))} | {ratio:.2f}x | {eval_cell} | "
+        geo_cell, ratio_cell = (fmt_ns(int(geo)), f"{ratio:.2f}x") if geo > 0 else ("-", "-")
+        lines.append(f"| **{label}** | {lang} | {geo_cell} | {ratio_cell} | {eval_cell} | "
                      f"{comp_cell} | {check_label(gate, vm)} |")
 
     if hidden:
@@ -439,15 +440,23 @@ def generate_html(run_dir: str, env_info: str, data, present_vms, gate, hidden, 
 
 def generate(run_dir: str) -> None:
     data, scripts, all_vms, env_info = load_data(run_dir)
+    # A run without the d3 loop (BENCH_LOOPS) has an empty unified.csv: take the VMs and scripts
+    # of the eval-only files too, so their column is shown.
+    eval_all = load_eval(run_dir)
+    found = set(all_vms) | set(eval_all)
+    all_vms = [vm for vm in VM_ORDER if vm in found] + sorted(found - set(VM_ORDER))
+    scripts = sorted(set(scripts) | {s for v in eval_all.values() for s in v})
     gate = load_gate(run_dir)
     present_vms, hidden = gate_split(gate, all_vms)
     for s in scripts:
         for vm in hidden:
             data[s].pop(vm, None)
     compile_ns = {vm: v for vm, v in load_compile(run_dir).items() if vm in present_vms}
-    # A compiling VM's D3 time already is its eval time: no second column for it.
-    eval_ns = {vm: v for vm, v in load_eval(run_dir).items()
-               if vm in present_vms and vm not in compile_ns}
+    # A compiling VM's D3 time already is its eval time: no second column for it (unless the run
+    # had no d3 loop).
+    has_d3 = {vm for s in scripts for vm in data[s]}
+    eval_ns = {vm: v for vm, v in eval_all.items()
+               if vm in present_vms and not (vm in compile_ns and vm in has_d3)}
     history = load_history(run_dir)
     generate_markdown(run_dir, data, scripts, present_vms, env_info, gate, hidden, compile_ns, eval_ns,
                       history)
