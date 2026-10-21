@@ -208,7 +208,8 @@ else
 fi
 
 # --- report -----------------------------------------------------------------------------
-# generate_report.py also writes <repo>/docs/index.html.
+# report.md and index.html in the run dir. Not docs/index.html: run.yml writes the published page
+# (generate_report.py --write-index).
 "${PY[@]}" "$ROOT/report/generate_report.py" "$RUN"
 
 echo ""

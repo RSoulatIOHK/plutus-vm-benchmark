@@ -28,9 +28,6 @@ ERROR_PATTERNS = [
     # Go (Plutigo)
     r"^panic:",
     r"^goroutine\s+\d+",
-    # Python (opshin)
-    r"^Traceback ",
-    r"SKIP \(eval error\)",
     # Rust (uplc-turbo)
     r"^EVAL_FAIL:",
     r"thread '.*' panicked",
@@ -54,8 +51,6 @@ SCRIPT_CONTEXT_PATTERNS = [
     r"# Parameters:.*file\s*=\s*(\S+?)(?:\.flat)?\)",
     # uplc-turbo: "EVAL_FAIL: script-name"
     r"^EVAL_FAIL:\s+(\S+)",
-    # opshin: "script-name SKIP (eval error)"
-    r"^(\S+)\s+SKIP \(eval error\)",
     # Generic: script name appears on the error line itself
 ]
 

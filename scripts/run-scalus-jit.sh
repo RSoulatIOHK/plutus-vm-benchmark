@@ -20,13 +20,16 @@ loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 
 echo "Scalus JIT (Scala / JVM / JMH)"
 
-# JMH timing: one 20 s warm-up iteration (docs/IMAGE_CONTRACT.md); BENCH_TIMING=quick shortens
-# warm-up and measurement.
+# JMH timing: one 20 s warm-up iteration (docs/IMAGE_CONTRACT.md), then 3 measurement iterations of
+# 5 s each, so the CSV has a standard deviation over the iteration means. BENCH_TIMING=quick
+# shortens warm-up and measurement to one 1 s iteration each.
 WARMUP=20s
 MEASURE=5s
+ITERATIONS=3
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
     WARMUP=1s
     MEASURE=1s
+    ITERATIONS=1
     # The check compiles every selected script: one compile each instead of the median of 3.
     export SCALUS_JIT_COMPILE_RUNS="${SCALUS_JIT_COMPILE_RUNS:-1}"
 fi
@@ -49,15 +52,15 @@ cd "$BENCH_DIR"
 : > "$RUN_DIR/$VM-raw.log"
 if loop d3 || loop eval; then
     java -Xss64m -Xmx4g -cp "$CP" org.openjdk.jmh.Main \
-        -i 1 -wi 1 -w "$WARMUP" -r "$MEASURE" -f 1 -t 1 \
+        -i "$ITERATIONS" -wi 1 -w "$WARMUP" -r "$MEASURE" -f 1 -t 1 \
         -jvm /opt/jdk-25/bin/java \
         -jvmArgsAppend "$JVM_FLAGS -XX:+AlwaysPreTouch -Xms$HEAP" \
-        -rff "$RUN_DIR/$VM-jmh.csv" -p "file=$FILE_LIST" 'pvb.scalus.JITBenchmark' \
+        -rf json -rff "$RUN_DIR/$VM-jmh.json" -p "file=$FILE_LIST" 'pvb.scalus.JITBenchmark' \
         2>&1 | tee "$RUN_DIR/$VM-raw.log" || true
 
-    # Parse JMH CSV; fill in -1 for any scripts that were given but produced no result.
+    # Parse the JMH JSON; fill in -1 for any scripts that were given but produced no result.
     TIMING_CSV="$RUN_DIR/$VM-jit-timing.tmp"
-    python3 /bench/parsers/parse_jmh.py "$RUN_DIR/$VM-jmh.csv" "$VM" > "$TIMING_CSV" || true
+    python3 /bench/parsers/parse_jmh.py "$RUN_DIR/$VM-jmh.json" "$VM" > "$TIMING_CSV" || true
     python3 /bench/parsers/fill_failures.py "$TIMING_CSV" "$DATA_DIR" "$VM" "$RUN_DIR/$VM-raw.log"
 
     # The JIT loop evaluates the precompiled script: it is the D3 and the eval-only timing.
