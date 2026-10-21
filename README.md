@@ -84,6 +84,11 @@ What changed:
 
 That is 9 images: `scripts/images.sh list` prints them. The pins are in [`.env`](.env).
 
+Aiken v1.1.24 copies the CEK environment on every lambda application (quadratic in recursion
+depth). aiken main fixes it (PRs [#1451](https://github.com/aiken-lang/aiken/pull/1451),
+[#1452](https://github.com/aiken-lang/aiken/pull/1452): coop-6 92 ms -> 1.2 ms), but no release
+contains the fix yet.
+
 ## Not included
 
 A VM joins the line-up when it meets three conditions:
@@ -166,7 +171,8 @@ Results are written to the results dir:
 - `report.md` – markdown comparison table with geometric means
 - `gate.json` – the correctness verdict of each VM
 - `<vm>.csv`, `<vm>-eval.csv`, `<vm>-check.csv` and `<vm>-raw.log` per VM
-- `environment.txt` – the hardware, the switches and the image digests
+- `environment.txt` – the hardware, the switches, the image digests and the host noise data
+- `haskell-drift.csv`, `drift.json` – the drift probe: Haskell again at the end of the run
 
 See [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md) for the interface every image follows and the
 switches `BENCH_SCRIPTS` (regex on the script name), `BENCH_LOOPS` (`d3`, `eval`, `check`) and
