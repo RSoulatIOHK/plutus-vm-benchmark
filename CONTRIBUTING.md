@@ -10,7 +10,7 @@ Please be respectful and constructive in all interactions. We're building tools 
 
 ### Prerequisites
 
-- Docker and Docker Compose
+- Docker (with BuildKit) and bash
 - Git
 - Python 3.10+ (for running parsers locally)
 
@@ -30,8 +30,8 @@ Please be respectful and constructive in all interactions. We're building tools 
 ### Running Locally
 
 ```bash
-docker compose build
-docker compose run --rm benchmark
+scripts/images.sh build <vm>
+scripts/run-images.sh /tmp/run <vm>
 ```
 
 ## Development Workflow
@@ -45,10 +45,10 @@ docker compose run --rm benchmark
 
 2. Make your changes
 
-3. Test the full pipeline:
+3. Test the changed images (quick mode runs 5 scripts):
    ```bash
-   docker compose build
-   docker compose run --rm benchmark
+   scripts/images.sh build <vm>
+   BENCH_QUICK=1 scripts/run-images.sh /tmp/smoke <vm>
    ```
 
 4. Commit your changes following the [commit conventions](#commit-conventions)
@@ -87,7 +87,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) for clear an
 
 | Scope | Description |
 |-------|-------------|
-| `docker` | Dockerfile or docker-compose changes |
+| `docker` | `images/` Dockerfile changes |
 | `parsers` | Output parser changes |
 | `scripts` | Runner script changes |
 | `report` | Report generator changes |
@@ -132,18 +132,17 @@ docs: add methodology section on geometric mean
 
 To add a new Plutus VM implementation:
 
-1. Add a build stage to `Dockerfile`
-2. Add a runner script in `scripts/run-<vm-name>.sh`
-3. Add an output parser in `parsers/parse_<vm_name>.py`
-4. Add the VM's CSV filename to `parsers/normalize.py`
-5. Add the VM to `VM_ORDER` and `VM_LABELS` in `report/generate_report.py`
-6. Add pinned SHA to `.env`
-7. Update `README.md` and `METHODOLOGY.md`
+1. Add `images/<vm>/Dockerfile` following [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md)
+2. Add a runner script in `scripts/run-<vm-name>.sh` (reads `$BENCH_DATA_DIR`, honours `BENCH_QUICK`)
+3. Add an output parser in `parsers/parse_<vm_name>.py` if the framework is new
+4. Add the VM to `VM_ORDER` and `VM_LABELS` in `report/generate_report.py`, and to `VM_META` and `VM_ORDER` in `report/template.html`
+5. Add pinned SHA to `.env`
+6. Update `README.md` and `METHODOLOGY.md`
 
 ## Updating VM Versions
 
 1. Update the relevant `*_SHA` in `.env`
-2. Test with `docker compose build --no-cache && docker compose run --rm benchmark`
+2. Test with `scripts/images.sh build <vm> && BENCH_QUICK=1 scripts/run-images.sh /tmp/smoke <vm>`
 3. Submit PR with commit message: `chore: update <vm-name> to <commit/tag>`
 
 ### What NOT to Do

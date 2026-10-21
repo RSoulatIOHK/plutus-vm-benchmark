@@ -1,0 +1,9 @@
+# Build context is the repo root (docs/IMAGE_CONTRACT.md). Images take only parsers/, scripts/
+# and images/<vm>/; the corpus is mounted at run time.
+.git
+results
+docs
+data
+nix
+**/__pycache__
+**/*.pyc

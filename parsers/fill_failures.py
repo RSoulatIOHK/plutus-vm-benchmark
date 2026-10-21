@@ -117,7 +117,7 @@ def fill_failures(
     header_line = "vm,script,mean_ns,median_ns,min_ns,max_ns,stddev_ns,iterations\n"
     if os.path.isfile(csv_path):
         with open(csv_path) as f:
-            header_line = f.readline()
+            header_line = f.readline() or header_line  # empty file: the parser crashed
         with open(csv_path) as f:
             for row in csv.DictReader(f):
                 rows.append(row)
