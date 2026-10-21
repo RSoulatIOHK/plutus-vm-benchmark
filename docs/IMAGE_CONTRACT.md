@@ -29,14 +29,45 @@ docker run --rm --cap-add SYS_NICE \
 ```
 
 - Input: every `/bench/data/plutus_use_cases/*.flat`. The script name is the file name without `.flat`.
-- Default command runs the benchmark AND the check, then exits 0. It exits non-zero only when the VM
-  could not run at all. A single script that fails is a row with an error, not a failed container.
-- `BENCH_SKIP_EVAL=1` skips the eval-only loop (`<vm>-eval.csv`); today honoured by haskell, scalus-cek and aiken.
-- `BENCH_QUICK=1` runs only the first 5 scripts (C sort order) with short timing (for PR smoke tests).
-  The run script reads the scripts from `$BENCH_DATA_DIR` and reads `$BENCH_QUICK` for its timing flags.
-- The check covers every script of `/bench/data/plutus_use_cases`, also with `BENCH_QUICK=1`: the
-  smoke test times 5 scripts but gates all of them (spec, section 2). The check is one evaluation
-  per script, so it is cheap. A check with fewer scripts fails the gate as "missing".
+- Default command runs the timed loops AND the check over every script, then exits 0. A single
+  script that fails is a row with an error, not a failed container.
+
+### Switches
+
+Three environment variables select a subset. `image-entry.sh` checks them and exits 2 on a bad
+value; `scripts/run-images.sh` and the `run` workflow pass them through and record them in
+`environment.txt`.
+
+| Variable | Values | Default |
+|---|---|---|
+| `BENCH_SCRIPTS` | Extended regex, full match against the script name, e.g. `auction_.*\|uniswap-1`. No match is an error | empty = every script |
+| `BENCH_LOOPS` | Comma list of `d3` (`<vm>.csv`), `eval` (`<vm>-eval.csv`), `check` (`<vm>-check.csv`) | `d3,eval,check` |
+| `BENCH_TIMING` | `normal`, or `quick`: short warm-up and measurement (for smoke tests) | `normal` |
+
+`BENCH_QUICK=1` is a shortcut: `BENCH_TIMING=quick` and, when `BENCH_SCRIPTS` is empty, the first 5
+scripts (C sort order).
+
+How the image applies them:
+
+- `image-entry.sh` copies the selected scripts to a temporary dir and exports it as
+  `$BENCH_DATA_DIR` (without a selection it is `/bench/data/plutus_use_cases`). Every loop of the
+  run script, the check too, reads only `$BENCH_DATA_DIR`. So the check covers exactly the selected
+  scripts, and the gate compares only those (`check/gate.py --scripts`, written by `run-images.sh`
+  as `scripts.txt`). A selected script that a VM's check lacks still fails as "missing".
+- The run script gets `$BENCH_LOOPS` and `$BENCH_TIMING` and runs only the requested loops.
+- A run script declares the loops it has in a header line, for example `# pvb-loops: d3 check`
+  (scalus-js has no eval loop). `image-entry.sh` skips a requested loop the VM does not have, with a
+  note; when none is left it exits 0 without running anything.
+- The Scalus JIT has one timed loop (evaluation of the compiled script). It runs when `d3` or
+  `eval` is requested and writes the same rows to `<vm>.csv` (for `d3`) and `<vm>-eval.csv` (for
+  `eval`). `<vm>-compile.csv` comes from the check, so it needs `check`.
+
+### Exit code
+
+- 2: a bad switch, or `BENCH_SCRIPTS` matches no script.
+- 1: the VM could not run: a requested loop (that the VM has) wrote no file, no timing file has
+  a timed row, or the requested check file has no row.
+- 0: otherwise.
 
 ## Outputs (all in `/results`)
 
@@ -56,7 +87,8 @@ restricting budget).
 
 - `<vm>.csv` (D3, the ranking): each iteration does flat decode + evaluation.
 - `<vm>-eval.csv`: each iteration evaluates a program that was decoded once before timing.
-  For a compiling VM (Scalus JIT) this is its only loop; it writes the same numbers to both files.
+  For a compiling VM (Scalus JIT) this is its only loop; it writes the same numbers to both files
+  (each only when its loop is requested).
 - Built once, outside the loops (the ledger also caches its evaluation context): cost model, machine
   parameters, and a machine object if the VM's API allows reuse. Fresh in every iteration: decode
   (D3 loop only), the budget counter, and the evaluation state.
@@ -73,3 +105,7 @@ The check is one evaluation per script with the same parameters. The gate (`chec
 it builds the report: a VM that fails the gate, or has no `<vm>-check.csv`, is hidden and listed
 as "failed check". A VM with `<vm>-compile.csv` gets a "compile excluded" badge and a compile-time
 column.
+
+Without the `check` loop there is no gate and no `gate.json`; the report shows every VM as "not
+checked". Without the `d3` loop `unified.csv` has only its header, and the report shows the
+eval-only column.

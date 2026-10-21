@@ -133,7 +133,7 @@ docs: add methodology section on geometric mean
 To add a new Plutus VM implementation:
 
 1. Add `images/<vm>/Dockerfile` following [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md)
-2. Add a runner script in `scripts/run-<vm-name>.sh` (reads `$BENCH_DATA_DIR`, honours `BENCH_QUICK`)
+2. Add a runner script in `scripts/run-<vm-name>.sh` (reads only `$BENCH_DATA_DIR`, the check too; runs the loops of `$BENCH_LOOPS`; short timing for `BENCH_TIMING=quick`; declares its loops in a `# pvb-loops:` header line)
 3. Add an output parser in `parsers/parse_<vm_name>.py` if the framework is new
 4. Add the VM to `VM_ORDER` and `VM_LABELS` in `report/generate_report.py`, and to `VM_META` and `VM_ORDER` in `report/template.html`
 5. Add pinned SHA to `.env`

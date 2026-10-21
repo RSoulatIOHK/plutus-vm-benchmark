@@ -36,6 +36,16 @@ scripts/run-images.sh results/$(date +%F) uplc-turbo plutigo
 # Smoke test: first 5 scripts, short timing
 BENCH_QUICK=1 scripts/run-images.sh /tmp/smoke uplc-turbo
 
+# A subset: two scripts, D3 timing and check only, short timing
+BENCH_SCRIPTS='auction_1-1|uniswap-1' BENCH_LOOPS=d3,check BENCH_TIMING=quick \
+  scripts/run-images.sh /tmp/subset plutigo aiken
+
+# Only the correctness check, all 89 scripts, every VM
+BENCH_LOOPS=check scripts/run-images.sh /tmp/check
+
+# The same on the bench server (GitHub Actions); a partial run is never published
+gh workflow run run.yml -f vms="plutigo aiken" -f scripts='auction_.*' -f loops=eval -f timing=quick
+
 # Use the published images instead of local builds (what the bench server does)
 PULL=1 scripts/run-images.sh results/$(date +%F)
 ```
@@ -53,7 +63,9 @@ Results are written to the results dir:
 - `report.md` – markdown comparison table with geometric means
 - `<vm>.csv` and `<vm>-raw.log` per VM, `environment.txt` with the hardware and image digests
 
-See [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md) for the interface every image follows.
+See [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md) for the interface every image follows and the
+switches `BENCH_SCRIPTS` (regex on the script name), `BENCH_LOOPS` (`d3`, `eval`, `check`) and
+`BENCH_TIMING` (`normal`, `quick`).
 
 ## Updating VM Versions
 
