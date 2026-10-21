@@ -7,7 +7,16 @@ BENCH_DIR="/bench/uplc-turbo"
 
 echo "uplc-turbo AST (Rust / Criterion)"
 
-# Criterion flags override the measurement_time in the bench's criterion_group! config.
+# The bench binary is our harness (images/uplc-turbo/use_cases.rs): PlutusV3, protocol version 11,
+# counting mode, flat decode + eval per iteration. PVB_CHECK_ONLY=1 runs only the check.
+export PVB_COSTMODEL=/tmp/uplc-turbo-costmodel.txt
+python3 -c "
+import json, sys
+values = json.load(open('/bench/mainnet-plutusv3-costmodel.json'))['PlutusV3']
+open(sys.argv[1], 'w').write('\\n'.join(map(str, values)) + '\\n')
+" "$PVB_COSTMODEL"
+
+# Criterion flags override the measurement_time set in the harness's main().
 TIMING=()
 if [[ "${BENCH_QUICK:-0}" == 1 ]]; then
     TIMING=(--warm-up-time 1 --measurement-time 1)
@@ -25,6 +34,17 @@ BENCH_BIN=$(find "$BENCH_DIR/target/release/deps" -name 'use_cases-*' -type f ! 
 if [[ -z "$BENCH_BIN" ]]; then
     echo "ERROR: could not find use_cases benchmark binary" | tee "$RUN_DIR/uplc-turbo-raw.log"
     exit 1
+fi
+
+run_check() {
+    # Spec D4: one evaluation per script with the timed loop's parameters.
+    PVB_CHECK_OUT="$RUN_DIR/uplc-turbo-check.csv" "$BENCH_BIN" 2>&1 | tee "$RUN_DIR/uplc-turbo-check.log"
+    echo "Wrote $RUN_DIR/uplc-turbo-check.csv"
+}
+
+if [[ "${PVB_CHECK_ONLY:-0}" == 1 ]]; then
+    run_check
+    exit 0
 fi
 
 # Clear previous criterion output to avoid stale results
@@ -64,8 +84,4 @@ rm -f "$RUN_DIR/uplc-turbo-raw.csv"
 # Fill in -1 for any scripts that were given but produced no result
 python3 /bench/parsers/fill_failures.py "$RUN_DIR/uplc-turbo.csv" "$DATA_DIR" uplc-turbo "$RUN_DIR/uplc-turbo-raw.log"
 
-# ---------------------------------------------------------------------------
-# CHECK HOOK (spec D4): the correctness check runs here, one evaluation per script with
-# the same parameters as the timed loop, and writes "$RUN_DIR/uplc-turbo-check.csv"
-# (vm,script,status,cpu,mem). Implemented by check/, not yet wired in.
-# ---------------------------------------------------------------------------
+run_check || echo "WARNING: uplc-turbo check failed" >&2

@@ -16,6 +16,10 @@ RUN git clone "$UPLC_TURBO_REPO" /src \
 
 WORKDIR /src
 
+# Our harness replaces the upstream use_cases bench (PV 11, continues after a failing script,
+# PVB_CHECK_OUT check mode). See the header of images/uplc-turbo/use_cases.rs.
+COPY images/uplc-turbo/use_cases.rs /src/crates/uplc/benches/use_cases/main.rs
+
 RUN cargo build --release --bench use_cases --manifest-path crates/uplc/Cargo.toml
 
 # =============================================================================
@@ -37,6 +41,7 @@ COPY --from=build /src/Cargo.lock /bench/uplc-turbo/Cargo.lock
 RUN bin=$(find /bench/uplc-turbo/target/release/deps -name 'use_cases-*' -type f ! -name '*.d' | head -1) \
     && test -n "$bin" && ! ldd "$bin" | grep 'not found'
 
+COPY check/reference/mainnet-plutusv3-costmodel.json /bench/mainnet-plutusv3-costmodel.json
 COPY parsers/ /bench/parsers/
 COPY scripts/image-entry.sh scripts/run-uplc-turbo.sh /bench/scripts/
 
