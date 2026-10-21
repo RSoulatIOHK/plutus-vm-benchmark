@@ -681,14 +681,13 @@ const VM_META = {
   'plutigo':        { label: 'Plutigo',        lang: 'Go',          runtime: 'CEK',            engine: 'CEK interpreter',              color: '#00d4aa', compiler: 'Go 1.26' },
   'blaze-jsc':      { label: 'blaze-plutus',   lang: 'TypeScript',  runtime: 'Bun (JSC)',      engine: 'CEK interpreter',              color: '#f7df1e', compiler: 'Bun 1.3.10' },
   'blaze-v8':       { label: 'blaze-plutus',   lang: 'TypeScript',  runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: '#5b9bd5', compiler: 'Node.js 22' },
-  'opshin':         { label: 'opshin',         lang: 'Python',      runtime: 'CPython',        engine: 'CEK interpreter',              color: '#4b8bbe', compiler: 'CPython 3.14' },
   'haskell':        { label: 'plutus-core',    lang: 'Haskell',     runtime: 'GHC',            engine: 'CEK interpreter',              color: '#5e5086', compiler: 'GHC 9.6.4' },
   'scalus-cek':     { label: 'Scalus CEK',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'CEK interpreter',              color: '#dc322f', compiler: 'GraalVM JDK 25 / Scala 3' },
   'scalus-jit':     { label: 'Scalus JIT',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'UPLC → JVM bytecode JIT',      color: '#ff6b6b', compiler: 'GraalVM JDK 25 / Scala 3' },
   'scalus-js':      { label: 'Scalus.js CEK',  lang: 'Scala.js',    runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: '#ff8fab', compiler: 'scalus npm / Node.js 22' },
   'aiken':          { label: 'Aiken uplc',     lang: 'Rust',        runtime: 'native',         engine: 'CEK interpreter',              color: '#e44d7b', compiler: 'rustc 1.94' },
 };
-const VM_ORDER = ['haskell','scalus-jit','scalus-cek','scalus-js','aiken','uplc-turbo','blaze-v8','blaze-jsc','plutigo','opshin'];
+const VM_ORDER = ['haskell','scalus-jit','scalus-cek','scalus-js','aiken','uplc-turbo','blaze-v8','blaze-jsc','plutigo'];
 
 function parseCSV(csv) {
   const lines = csv.trim().split('\n'), header = lines[0].split(',');

@@ -99,7 +99,6 @@ and the runner is `scripts/run-<vm>.sh`.
 | plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
 | blaze-v8, blaze-jsc | Vitest bench | Vitest bench defaults |
 | scalus-js | Vitest bench | Vitest bench defaults (the same Vitest version as blaze-v8) |
-| opshin | Custom loop ([`scripts/opshin_bench.py`](scripts/opshin_bench.py)) | 20 evaluations of the first script, then per script 3 warm-up iterations and at least 20 iterations and 2 s |
 
 The JMH warm-up is 20 s because the staged Scalus JIT needs about 20 s to warm up.
 `BENCH_TIMING=quick` shortens every warm-up and measurement, for smoke tests only.

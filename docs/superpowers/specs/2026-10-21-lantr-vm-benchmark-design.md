@@ -31,9 +31,8 @@ Status: approved 2026-10-21.
 | uplc-turbo (Amaru) | Rust | exists |
 | plutigo (Dingo) | Go | exists |
 | blaze-plutus (V8, JSC) | TypeScript | exists |
-| OpShin uplc | Python | exists |
 
-Dropped: Chrysalis, Plutuz, llvm-uplc. Julc removed 2026-10-21: no stable release (only 0.1.0-preNN) and no visible downstream users; it rejoins at its first stable release. Aiken WASM removed 2026-10-21: the Aiken team ships no UPLC WASM; the only released one, `@lucid-evolution/uplc`, caches decoded programs with no off switch, so it cannot run the D3 loop as published. plu-ts and Helios join if their authors send a PR.
+Dropped: Chrysalis, Plutuz, llvm-uplc. Julc removed 2026-10-21: no stable release (only 0.1.0-preNN) and no visible downstream users; it rejoins at its first stable release. OpShin uplc removed 2026-10-21: it fails the correctness gate on the 11 UPLC 1.1.0 scripts (no `case` on builtin values, a protocol version 11 feature) at its latest release 1.3.3; it rejoins when it passes the gate. Aiken WASM removed 2026-10-21: the Aiken team ships no UPLC WASM; the only released one, `@lucid-evolution/uplc`, caches decoded programs with no off switch, so it cannot run the D3 loop as published. plu-ts and Helios join if their authors send a PR.
 
 ## 1. Components
 

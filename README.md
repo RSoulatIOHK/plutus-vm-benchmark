@@ -47,7 +47,8 @@ What changed:
 - **Node-equivalent parameters.** Flat decode + evaluation with PlutusV3 semantics, protocol version 11,
   the mainnet cost model and costing on, for every VM.
 - **Curated line-up.** A VM joins if it has a downstream user today and a stable release. Not
-  included today: Chrysalis, Plutuz, llvm-uplc, Aiken WASM and Julc (no stable release yet).
+  included today: Chrysalis, Plutuz, llvm-uplc, Aiken WASM, Julc (no stable release yet) and OpShin uplc
+  (fails the correctness gate).
   plu-ts and Helios can join through a pull request.
 - **Eval-only column.** A second timing evaluates a program decoded once before timing.
 - **Automated monthly runs.** GitHub Actions creates a Hetzner server, installs NixOS on it, runs the
@@ -64,7 +65,6 @@ What changed:
 | **uplc-turbo** | `uplc-turbo` | Rust | Criterion.rs | [pragma-org/uplc](https://github.com/pragma-org/uplc) |
 | **Plutigo** | `plutigo` | Go | testing.B | [blinklabs-io/plutigo](https://github.com/blinklabs-io/plutigo) |
 | **blaze-plutus** | `blaze-v8`, `blaze-jsc` | TypeScript | Vitest bench (Node V8, Bun JSC) | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) |
-| **opshin-uplc** | `opshin` | Python | Custom loop | [OpShin/uplc](https://github.com/OpShin/uplc) |
 
 That is 11 images: `scripts/images.sh list` prints them. The pins are in [`.env`](.env).
 

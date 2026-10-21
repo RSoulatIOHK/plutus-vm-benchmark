@@ -30,7 +30,7 @@ from collections import defaultdict
 VM_ORDER = [
     "haskell", "scalus-jit", "scalus-cek", "scalus-js",
     "aiken", "uplc-turbo",
-    "plutigo", "blaze-jsc", "blaze-v8", "opshin",
+    "plutigo", "blaze-jsc", "blaze-v8",
 ]
 
 DISCLOSURE = (
@@ -44,7 +44,6 @@ VM_LABELS = {
     "plutigo": "Plutigo CEK (Go)",
     "blaze-jsc": "blaze-plutus CEK (TypeScript / Bun JSC)",
     "blaze-v8": "blaze-plutus CEK (TypeScript / Node V8)",
-    "opshin": "opshin CEK (Python / CPython)",
     "haskell": "plutus-core CEK (Haskell / GHC)",
     "scalus-cek": "Scalus CEK (Scala / JVM)",
     "scalus-jit": "Scalus UPLC→JVM JIT (Scala / JVM)",
