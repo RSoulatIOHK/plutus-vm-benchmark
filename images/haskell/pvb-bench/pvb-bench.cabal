@@ -1,0 +1,21 @@
+cabal-version: 3.0
+name:          pvb-bench
+version:       0.1.0
+synopsis:      plutus-vm-benchmark Haskell row: timed flat decode + CEK evaluation, and the check
+build-type:    Simple
+
+executable pvb-bench
+  main-is:          Main.hs
+  default-language: Haskell2010
+  ghc-options:      -O2 -Wall -rtsopts
+  build-depends:
+    , aeson
+    , base
+    , bytestring
+    , criterion
+    , directory
+    , filepath
+    , mtl
+    , plutus-core
+    , plutus-core:flat
+    , plutus-ledger-api
