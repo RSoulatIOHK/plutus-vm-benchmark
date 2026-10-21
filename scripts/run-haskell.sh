@@ -29,13 +29,13 @@ fi
 
 # One Criterion loop: time_loop <pvb-bench command> <output name>. A failed script gets a -1 row.
 time_loop() {
-    local raw="$RUN_DIR/$2-raw.log" criterion="$RUN_DIR/$2-criterion.csv"
+    local raw="$RUN_DIR/$2-raw.log" criterion="$RUN_DIR/$2-criterion.csv" report="$RUN_DIR/$2-criterion.json"
     # Clean any leftover from aborted runs (Criterion appends, causing duplicate headers)
-    rm -f "$criterion"
+    rm -f "$criterion" "$report"
     "$BENCH_DIR/bin/pvb-bench" "$1" "$COST_MODEL" "$DATA_DIR" \
-        --csv "$criterion" ${TIMING[@]+"${TIMING[@]}"} \
+        --csv "$criterion" --json "$report" ${TIMING[@]+"${TIMING[@]}"} \
         2>&1 | tee "$raw" || true
-    python3 /bench/parsers/parse_criterion_hs.py "$criterion" > "$RUN_DIR/$2.csv" || true
+    python3 /bench/parsers/parse_criterion_hs.py "$criterion" "$report" > "$RUN_DIR/$2.csv" || true
     python3 /bench/parsers/fill_failures.py "$RUN_DIR/$2.csv" "$DATA_DIR" haskell "$raw"
 }
 

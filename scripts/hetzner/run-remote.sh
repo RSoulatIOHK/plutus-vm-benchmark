@@ -7,7 +7,7 @@
 #
 # `start` copies the checked-out files (git archive HEAD) to the server and starts
 # scripts/run-images.sh there as a detached systemd unit, so the run outlives the SSH session
-# and the 6 h limit of a GitHub-hosted job. `collect` copies results/<name>, docs/index.html and
+# and the 6 h limit of a GitHub-hosted job. `collect` copies results/<name> and
 # the run log back into this checkout. BENCH_SCRIPTS, BENCH_LOOPS, BENCH_TIMING and BENCH_QUICK are
 # passed through (scripts/run-images.sh).
 set -euo pipefail
@@ -52,7 +52,7 @@ case "$CMD" in
   collect)
     NAME="${3:?results name missing}"
     mkdir -p "$REPO_ROOT/results"
-    "${SSH[@]}" "tar c -C /root/repo results/$NAME docs/index.html -C /root run.log" \
+    "${SSH[@]}" "tar c -C /root/repo results/$NAME -C /root run.log" \
       | tar x -C "$REPO_ROOT"
     mv "$REPO_ROOT/run.log" "$REPO_ROOT/results/$NAME/run.log"
     echo "collected results/$NAME"

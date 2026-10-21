@@ -132,7 +132,7 @@ parameters and hardware. Do not compare them with the current runs.
 # Build one image locally (pins come from .env)
 scripts/images.sh build uplc-turbo
 
-# Run images one at a time, then write unified.csv, report.md and docs/index.html
+# Run images one at a time, then write unified.csv, report.md and index.html into the run dir
 scripts/run-images.sh results/$(date +%F) uplc-turbo plutigo
 
 # Smoke test: first 5 scripts, short timing
