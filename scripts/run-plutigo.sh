@@ -3,6 +3,8 @@ set -euo pipefail
 
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
+# The check covers the whole corpus, also with BENCH_QUICK=1 (docs/IMAGE_CONTRACT.md).
+CHECK_DATA_DIR=/bench/data/plutus_use_cases
 BENCH_DIR="/bench/plutigo"
 
 echo "Plutigo (Go / testing.B)"
@@ -13,7 +15,8 @@ if [[ "${BENCH_QUICK:-0}" == 1 ]]; then
 fi
 
 # Our harness (images/plutigo/pvb_bench_test.go): PlutusV3, protocol version 11, the mainnet
-# PlutusV3 cost model through cek.NewEvalContext, counting mode, flat decode + eval per iteration.
+# PlutusV3 cost model through cek.NewEvalContext, counting mode. BenchmarkPvbFlatFiles: flat decode
+# + eval per iteration (plutigo.csv). BenchmarkPvbEval: eval of a program decoded once (plutigo-eval.csv).
 export PVB_DATA_DIR="$DATA_DIR"
 export PVB_COSTMODEL=/tmp/plutigo-costmodel.txt
 python3 -c "
@@ -26,7 +29,7 @@ cd "$BENCH_DIR"
 
 run_check() {
     # Spec D4: one evaluation per script with the timed loop's parameters.
-    PVB_CHECK_OUT="$RUN_DIR/plutigo-check.csv" ./plutigo-bench \
+    PVB_DATA_DIR="$CHECK_DATA_DIR" PVB_CHECK_OUT="$RUN_DIR/plutigo-check.csv" ./plutigo-bench \
         -test.run='^TestPvbCheck$' -test.v -test.count=1 \
         2>&1 | tee "$RUN_DIR/plutigo-check.log"
     echo "Wrote $RUN_DIR/plutigo-check.csv"
@@ -50,5 +53,17 @@ python3 /bench/parsers/parse_go_bench.py "$RUN_DIR/plutigo-raw.log" > "$RUN_DIR/
 
 # Fill in -1 for any scripts that were given but produced no result
 python3 /bench/parsers/fill_failures.py "$RUN_DIR/plutigo.csv" "$DATA_DIR" plutigo "$RUN_DIR/plutigo-raw.log"
+
+# Eval-only loop: same testing.B settings, the program is decoded before timing.
+./plutigo-bench \
+    -test.bench='^BenchmarkPvbEval$' \
+    -test.benchmem \
+    -test.run='^$' \
+    -test.count=1 \
+    -test.benchtime="$BENCHTIME" \
+    2>&1 | tee "$RUN_DIR/plutigo-eval-raw.log" || true
+
+python3 /bench/parsers/parse_go_bench.py "$RUN_DIR/plutigo-eval-raw.log" > "$RUN_DIR/plutigo-eval.csv" || true
+python3 /bench/parsers/fill_failures.py "$RUN_DIR/plutigo-eval.csv" "$DATA_DIR" plutigo "$RUN_DIR/plutigo-eval-raw.log"
 
 run_check || echo "WARNING: plutigo check failed" >&2

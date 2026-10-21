@@ -14,6 +14,12 @@ the one of check/reference/gate-ref, so the check gives the reference numbers.
   One Criterion benchmark per script. Each iteration decodes the flat bytes and evaluates the
   program; reading the file is outside the timed loop. Each benchmark runs for at least 20 s, as in
   plutus-benchmark:validation (change it with -L). A script whose evaluation fails is not timed.
+
+@pvb-bench bench-eval COSTMODEL_JSON FLAT_DIR [criterion options]@
+  Eval only, with the same Criterion settings: the program is decoded (and fully forced) once
+  before timing, each iteration evaluates it. The evaluation context (machine parameters) is built
+  once, as for @bench@; 'Common.evaluateTerm' starts a new CEK machine with a new budget counter on
+  every call.
 -}
 module Main (main) where
 
@@ -93,6 +99,14 @@ decodeAndEvaluate ctx file bytes =
     Cek.CekReport res (Cek.CountingSt budget) _ ->
       budget `seq` isRight (Cek.cekResultToEither res)
 
+{-| The timed function of @bench-eval@: evaluate a decoded term. Forced like
+'decodeAndEvaluate'. -}
+evaluateDecoded :: Common.EvaluationContext -> Term -> Bool
+evaluateDecoded ctx term =
+  case run ctx term of
+    Cek.CekReport res (Cek.CountingSt budget) _ ->
+      budget `seq` isRight (Cek.cekResultToEither res)
+
 flatFiles :: FilePath -> IO [FilePath]
 flatFiles dir = sort . filter (".flat" `isSuffixOf`) <$> listDirectory dir
 
@@ -110,8 +124,11 @@ check costModelPath dir = do
     files
   hPutStrLn stderr (show (length files) ++ " scripts checked")
 
-benchmarks :: FilePath -> FilePath -> [String] -> IO ()
-benchmarks costModelPath dir criterionArgs = do
+-- | Which loop: flat decode + evaluation (spec D3), or evaluation of a program decoded once.
+data Loop = DecodeAndEval | EvalOnly
+
+benchmarks :: Loop -> FilePath -> FilePath -> [String] -> IO ()
+benchmarks loop costModelPath dir criterionArgs = do
   ctx <- mainnetContext costModelPath
   files <- flatFiles dir
   -- Evaluate once; a script that fails is not timed (the run script fills in a -1 row).
@@ -120,9 +137,14 @@ benchmarks costModelPath dir criterionArgs = do
     unless ok $ hPutStrLn stderr ("error: " ++ dropExtension file ++ ": evaluation failed, not timed")
     pure [file | ok]) $ files
   let mkBench :: FilePath -> Benchmark
-      mkBench file =
-        env (BS.readFile (dir </> file)) $ \ ~bytes ->
-          bench (dropExtension file) (whnf (decodeAndEvaluate ctx file) bytes)
+      mkBench file = case loop of
+        DecodeAndEval ->
+          env (BS.readFile (dir </> file)) $ \ ~bytes ->
+            bench (dropExtension file) (whnf (decodeAndEvaluate ctx file) bytes)
+        -- env forces the decoded term to normal form, so no decoding is left for the loop.
+        EvalOnly ->
+          env (decode file <$> BS.readFile (dir </> file)) $ \ ~term ->
+            bench (dropExtension file) (whnf (evaluateDecoded ctx) term)
       -- Same time limit as plutus-benchmark:validation, without its HTML report.
       cfg = defaultConfig {timeLimit = 20}
   withArgs criterionArgs (defaultMainWith cfg (map mkBench timed))
@@ -132,5 +154,6 @@ main = do
   args <- getArgs
   case args of
     ["check", c, d] -> check c d
-    "bench" : c : d : rest -> benchmarks c d rest
-    _ -> fail "usage: pvb-bench check COSTMODEL_JSON FLAT_DIR | pvb-bench bench COSTMODEL_JSON FLAT_DIR [criterion options]"
+    "bench" : c : d : rest -> benchmarks DecodeAndEval c d rest
+    "bench-eval" : c : d : rest -> benchmarks EvalOnly c d rest
+    _ -> fail "usage: pvb-bench check COSTMODEL_JSON FLAT_DIR | pvb-bench bench|bench-eval COSTMODEL_JSON FLAT_DIR [criterion options]"

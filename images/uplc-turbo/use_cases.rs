@@ -16,7 +16,13 @@
 //   PVB_CHECK_OUT=<csv>  one evaluation per script, write vm,script,status,cpu,mem; no timing
 //   otherwise            Criterion timing, flat decode + eval per iteration. A script that fails
 //                        its first evaluation prints "EVAL_FAIL: <name>" and is not timed.
+//   PVB_EVAL_ONLY=1      Criterion timing of evaluation only (uplc-turbo-eval.csv): the program is
+//                        decoded once into its own arena before timing; each iteration evaluates
+//                        it into a second arena, which is reset after every iteration. The machine
+//                        and its budget are new on every call (Program::eval_version_budget).
 // PVB_COSTMODEL=<file>: the mainnet PlutusV3 array, one integer per line (run-uplc-turbo.sh).
+// PVB_DATA_DIR=<dir>: read the .flat files from <dir> instead of DATA_DIR (the check reads the
+// whole corpus, also with BENCH_QUICK=1).
 
 use amaru_uplc::{
     arena::Arena,
@@ -32,8 +38,9 @@ const DATA_DIR: &str = "benches/use_cases/plutus_use_cases";
 const PROTOCOL_MAJOR: u32 = 11;
 
 fn scripts() -> Vec<(String, Vec<u8>)> {
-    let mut paths: Vec<PathBuf> = fs::read_dir(DATA_DIR)
-        .unwrap_or_else(|e| panic!("cannot read {DATA_DIR}: {e}"))
+    let dir = std::env::var("PVB_DATA_DIR").unwrap_or_else(|_| DATA_DIR.to_string());
+    let mut paths: Vec<PathBuf> = fs::read_dir(&dir)
+        .unwrap_or_else(|e| panic!("cannot read {dir}: {e}"))
         .map(|e| e.unwrap().path())
         .filter(|p| p.is_file() && p.extension().is_some_and(|x| x == "flat"))
         .collect();
@@ -136,6 +143,33 @@ fn bench(c: &mut Criterion) {
     }
 }
 
+fn bench_eval_only(c: &mut Criterion) {
+    let mut arena = Arena::from_bump(Bump::with_capacity(1_048_576));
+    for (name, bytes) in scripts() {
+        let first = eval_once(&arena, &bytes);
+        arena.reset();
+        if let Err((msg, _, _)) = first {
+            let msg: String = msg.chars().take(200).collect();
+            println!("EVAL_FAIL: {name}");
+            println!("  {msg}");
+            continue;
+        }
+        // The decoded program lives in its own arena for the whole benchmark of this script.
+        let program_arena = Arena::from_bump(Bump::with_capacity(1_048_576));
+        let program =
+            flat::decode::<DeBruijn>(&program_arena, &bytes, PlutusVersion::V3, PROTOCOL_MAJOR)
+                .expect("decode");
+        c.bench_function(&name, |b| {
+            b.iter(|| {
+                let result = program.eval_version_budget(&arena, PlutusVersion::V3, ExBudget::max());
+                std::hint::black_box(result.term.is_ok());
+                drop(result);
+                arena.reset();
+            })
+        });
+    }
+}
+
 fn main() {
     if let Ok(out) = std::env::var("PVB_CHECK_OUT") {
         check(&out);
@@ -144,6 +178,10 @@ fn main() {
     let mut c = Criterion::default()
         .measurement_time(Duration::from_secs(10))
         .configure_from_args();
-    bench(&mut c);
+    if std::env::var("PVB_EVAL_ONLY").is_ok_and(|v| v == "1") {
+        bench_eval_only(&mut c);
+    } else {
+        bench(&mut c);
+    }
     c.final_summary();
 }

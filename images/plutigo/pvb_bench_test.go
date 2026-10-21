@@ -7,6 +7,8 @@
 //
 //	BenchmarkPvbFlatFiles  flat decode + eval per iteration. A script that fails its first
 //	                       evaluation prints "EVAL_FAIL: <name>" and is not timed.
+//	BenchmarkPvbEval       eval only: the program is decoded once before timing, each iteration
+//	                       runs it on the reused machine (plutigo-eval.csv, see below).
 //	TestPvbCheck           one evaluation per script, writes $PVB_CHECK_OUT
 //	                       (vm,script,status,cpu,mem)
 //
@@ -139,6 +141,60 @@ func BenchmarkPvbFlatFiles(b *testing.B) {
 					b.Fatalf("decode error: %v", err)
 				}
 				if _, err := machine.Run(program.Term); err != nil {
+					b.Fatalf("eval error: %v", err)
+				}
+			}
+		})
+	}
+}
+
+// BenchmarkPvbEval times evaluation only: the program is decoded once, outside the timed loop.
+//
+// The machine is built once per script, as in BenchmarkPvbFlatFiles. Machine.Run at the pinned
+// SHA gives every call fresh evaluation state (cek/machine.go, Run): it restores the initial
+// budget when the caller did not change it (lines 939-942), empties Logs and the unbudgeted step
+// counters (950-952), resets the frame stack (944, 957), and its deferred block clears the value
+// and env arenas (953-971); the environment of a run starts empty (stack_machine_debruijn.go 265).
+// What survives a run is allocator state: object pools, arena chunks and an interning cache of
+// immutable integer constants (cek/value.go 98-113).
+//
+// Before timing, the prelude checks this: two runs on the reused machine must consume the same
+// budget as a run on a fresh machine. A mismatch prints "EVAL_FAIL: <name>" and the script is not
+// timed.
+func BenchmarkPvbEval(b *testing.B) {
+	ctx := pvbEvalContext(b)
+	for _, s := range pvbScripts(b) {
+		cpu, mem, err := pvbEvalOnce(ctx, s.content)
+		if err != nil {
+			fmt.Printf("EVAL_FAIL: %s\n  %.200s\n", s.name, err.Error())
+			continue
+		}
+		program, err := syn.Decode[syn.DeBruijn](s.content)
+		if err != nil {
+			fmt.Printf("EVAL_FAIL: %s\n  decode: %.200s\n", s.name, err.Error())
+			continue
+		}
+		machine := pvbMachine(ctx)
+		reuseOk := true
+		for range 2 {
+			if _, err := machine.Run(program.Term); err != nil {
+				reuseOk = false
+				break
+			}
+			if pvbBudget.Cpu-machine.ExBudget.Cpu != cpu || pvbBudget.Mem-machine.ExBudget.Mem != mem {
+				reuseOk = false
+				break
+			}
+		}
+		if !reuseOk {
+			fmt.Printf("EVAL_FAIL: %s\n  a reused machine does not reproduce the budget of a fresh one\n", s.name)
+			continue
+		}
+		b.Run(s.name, func(b *testing.B) {
+			machine := pvbMachine(ctx)
+			term := program.Term
+			for b.Loop() {
+				if _, err := machine.Run(term); err != nil {
 					b.Fatalf("eval error: %v", err)
 				}
 			}

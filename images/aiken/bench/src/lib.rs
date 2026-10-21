@@ -22,15 +22,7 @@ pub const PROTOCOL: u16 = VAN_ROSSEM_PROTOCOL_VERSION;
 /// error, so one bad script does not stop the run. Call [`silence_panics`]
 /// first, or the default hook prints the panic to the raw log.
 pub fn decode_and_eval(bytes: &[u8]) -> Result<EvalResult, String> {
-    std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| decode_and_eval_unguarded(bytes)))
-        .unwrap_or_else(|p| {
-            let msg = p
-                .downcast_ref::<String>()
-                .cloned()
-                .or_else(|| p.downcast_ref::<&str>().map(|s| s.to_string()))
-                .unwrap_or_default();
-            Err(format!("panic: {msg}"))
-        })
+    guarded(|| decode_and_eval_unguarded(bytes)).and_then(|r| r)
 }
 
 /// Replace the panic hook with a silent one. Its default output contains
@@ -41,9 +33,41 @@ pub fn silence_panics() {
 }
 
 fn decode_and_eval_unguarded(bytes: &[u8]) -> Result<EvalResult, String> {
+    Ok(eval_unguarded(decode_unguarded(bytes)?))
+}
+
+/// Flat decode + conversion to named De Bruijn: the part of [`decode_and_eval`]
+/// that the eval-only loop does once, before timing.
+pub fn decode(bytes: &[u8]) -> Result<Program<NamedDeBruijn>, String> {
+    guarded(|| decode_unguarded(bytes)).and_then(|r| r)
+}
+
+/// Evaluate a decoded program, guarded like [`decode_and_eval`]. Takes the
+/// program by value because the crate's eval consumes it; a clone is cheap
+/// (the term's children are `Rc`). The machine and its budget are new on
+/// every call.
+pub fn eval(program: Program<NamedDeBruijn>) -> Result<EvalResult, String> {
+    guarded(|| eval_unguarded(program))
+}
+
+fn decode_unguarded(bytes: &[u8]) -> Result<Program<NamedDeBruijn>, String> {
     let program = Program::<FakeNamedDeBruijn>::from_flat(bytes).map_err(|e| e.to_string())?;
-    let program: Program<NamedDeBruijn> = program.into();
-    Ok(program.eval_version_with_protocol(ExBudget::max(), &Language::PlutusV3, PROTOCOL))
+    Ok(program.into())
+}
+
+fn eval_unguarded(program: Program<NamedDeBruijn>) -> EvalResult {
+    program.eval_version_with_protocol(ExBudget::max(), &Language::PlutusV3, PROTOCOL)
+}
+
+fn guarded<R>(f: impl FnOnce() -> R) -> Result<R, String> {
+    std::panic::catch_unwind(std::panic::AssertUnwindSafe(f)).map_err(|p| {
+        let msg = p
+            .downcast_ref::<String>()
+            .cloned()
+            .or_else(|| p.downcast_ref::<&str>().map(|s| s.to_string()))
+            .unwrap_or_default();
+        format!("panic: {msg}")
+    })
 }
 
 /// All `*.flat` files of the directory, sorted by name. With `BENCH_QUICK=1`
