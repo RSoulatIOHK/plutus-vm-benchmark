@@ -9,7 +9,7 @@ them one at a time. This file is the interface between an image and the rest of 
   `parsers/`, `scripts/` and `images/<vm>/`.
 - Pins (repo URL, SHA or tag, toolchain versions) come from `.env` as build args with the same names. An `ARG` with a
   default in the Dockerfile (for example `ARG CARGO_BUILD_JOBS=2`) needs no `.env` value.
-- `<vm>` is lowercase with dashes, for example `scalus-cek`, `aiken-wasm`.
+- `<vm>` is lowercase with dashes, for example `scalus-cek`, `blaze-v8`.
 - Published as `ghcr.io/lantr-io/pvb-<vm>:<tag>` and `:latest`. The tag is `scripts/images.sh tag <vm>`:
   a hash of `images/<dir>/`, the repo files the Dockerfile `COPY`s and the `.env` values of its `ARG`s.
   An unchanged VM keeps its tag, so CI does not rebuild it.

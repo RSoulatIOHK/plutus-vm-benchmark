@@ -17,7 +17,7 @@ Status: approved 2026-10-21.
 | D9 | Orchestration | GitHub Actions + `hcloud` CLI; NixOS installed on a fresh Ubuntu server by nixos-anywhere on each run |
 | D10 | Older cost model | Where a VM API accepts a cost model, the harness passes the mainnet PlutusV3 model and D4 applies. Otherwise the row is published with an "outdated cost model" badge; the gate then requires ExUnits equal to Haskell under that VM's own semantics variant and model. Wrong results still hide the row |
 | D11 | Gate parameters | PlutusV3, protocol version 11 (variant E), mainnet cost model, counting mode. CIP-117 unit-result rule not applied (78 PlutusV1-era scripts return a non-unit term) . The 89 scripts are PlutusV1-era; they are evaluated as PlutusV3 programs, like Plutus's own `validation` CEK benchmark (plutus-benchmark BenchCek.hs), and the page says so. Owner chose this over node-exact PlutusV1 rules (variant D), which would push the Scalus JIT to its CEK fallback |
-| D12 | Pins | Release tags for every VM (Aiken v1.1.24, Scalus v1.4.0, plutus 1.63.0.0). Exception: aiken-wasm builds the exact revision `@lucid-evolution/uplc` ships |
+| D12 | Pins | Release tags for every VM (Aiken v1.1.24, Scalus v1.4.0, plutus 1.63.0.0). |
 
 ### Line-up (rule: the VM has a downstream user today)
 
@@ -28,14 +28,13 @@ Status: approved 2026-10-21.
 | Scalus JIT | Scala (JVM) | exists |
 | Scalus.js | Scala.js (Node) | **new** |
 | Aiken | Rust | **new** |
-| Aiken WASM (`@lucid-evolution/uplc`) | Rust → WASM (Node) | **new** |
 | uplc-turbo (Amaru) | Rust | exists |
 | plutigo (Dingo) | Go | exists |
 | blaze-plutus (V8, JSC) | TypeScript | exists |
 | Julc (bloxbean) | Java | exists |
 | OpShin uplc | Python | exists |
 
-Dropped: Chrysalis, Plutuz, llvm-uplc. plu-ts and Helios join if their authors send a PR.
+Dropped: Chrysalis, Plutuz, llvm-uplc. Aiken WASM removed 2026-10-21: the Aiken team ships no UPLC WASM; the only released one, `@lucid-evolution/uplc`, caches decoded programs with no off switch, so it cannot run the D3 loop as published. plu-ts and Helios join if their authors send a PR.
 
 ## 1. Components
 
@@ -43,7 +42,7 @@ Repo `lantr-io/plutus-vm-benchmark`:
 
 | Unit | Does | Change from today |
 |---|---|---|
-| `harness/<vm>/` + `scripts/run-<vm>.sh` | One harness per VM | Add `aiken`, `aiken-wasm`, `scalus-js`. Remove chrysalis, plutuz, llvm-uplc |
+| `harness/<vm>/` + `scripts/run-<vm>.sh` | One harness per VM | Add `aiken`, `scalus-js`. Remove chrysalis, plutuz, llvm-uplc |
 | `.env` | Pins each VM to a SHA or tag | Haskell pinned to the plutus tag of the production node (today 1.63.0.0) |
 | `images/` | One Docker image per VM, pushed to GHCR | Replaces the single image: a bump rebuilds one VM only |
 | `check/` | Correctness gate: each VM writes result + ExUnits per script; the gate diffs them against Haskell | New |
@@ -119,7 +118,7 @@ Expected run time: 3–5 h for the full line-up (the 4-VM run took 1.5 h on an M
 ## 4. Testing
 
 - Gate test: feed a VM output with one wrong ExUnits value; the gate must fail. Run this in `smoke.yml`.
-- Each new harness (Aiken, Aiken WASM, Scalus.js) must pass the gate on all 89 scripts before it joins.
+- Each new harness (Aiken, Scalus.js) must pass the gate on all 89 scripts before it joins.
 - Dry run of `run.yml` with a cheap shared-vCPU server type and 3 VMs; verify the server is gone afterwards.
 - First real run: compare Haskell ratios with the M3 Max runs of 2026-10-11; flag differences above 20%.
 

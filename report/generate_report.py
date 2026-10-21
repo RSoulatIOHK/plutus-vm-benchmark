@@ -30,7 +30,7 @@ from collections import defaultdict
 VM_ORDER = [
     "haskell", "scalus-jit", "scalus-cek", "scalus-js",
     "julc-java",
-    "aiken", "aiken-wasm", "uplc-turbo",
+    "aiken", "uplc-turbo",
     "plutigo", "blaze-jsc", "blaze-v8", "opshin",
 ]
 
@@ -52,7 +52,6 @@ VM_LABELS = {
     "julc-java": "Julc CEK (Java / GraalVM)",
     "scalus-js": "Scalus CEK (Scala.js / Node V8)",
     "aiken": "Aiken uplc CEK (Rust)",
-    "aiken-wasm": "Aiken uplc CEK (Rust → WASM / Node V8)",
 }
 
 

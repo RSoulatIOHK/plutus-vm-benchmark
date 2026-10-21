@@ -681,9 +681,8 @@ const VM_META = {
   'julc-java':      { label: 'Julc CEK',       lang: 'Java',        runtime: 'GraalVM',        engine: 'CEK interpreter',              color: '#f89820', compiler: 'GraalVM JDK 25' },
   'scalus-js':      { label: 'Scalus.js CEK',  lang: 'Scala.js',    runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: '#ff8fab', compiler: 'scalus npm / Node.js 22' },
   'aiken':          { label: 'Aiken uplc',     lang: 'Rust',        runtime: 'native',         engine: 'CEK interpreter',              color: '#e44d7b', compiler: 'rustc 1.94' },
-  'aiken-wasm':     { label: 'Aiken uplc WASM', lang: 'Rust → WASM', runtime: 'Node (V8)',     engine: 'CEK interpreter',              color: '#a07cf0', compiler: 'rustc 1.94 / wasm-bindgen / Node.js 22' },
 };
-const VM_ORDER = ['haskell','scalus-jit','scalus-cek','scalus-js','julc-java','aiken','aiken-wasm','uplc-turbo','blaze-v8','blaze-jsc','plutigo','opshin'];
+const VM_ORDER = ['haskell','scalus-jit','scalus-cek','scalus-js','julc-java','aiken','uplc-turbo','blaze-v8','blaze-jsc','plutigo','opshin'];
 
 function parseCSV(csv) {
   const lines = csv.trim().split('\n'), header = lines[0].split(',');
