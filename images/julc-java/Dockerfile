@@ -25,6 +25,10 @@ RUN git clone "$JULC_REPO" /src \
 
 WORKDIR /src
 
+# Our harness (pvb.CekJavaBenchmark, pvb.Check): mainnet PlutusV3 cost model at protocol
+# version 11, flat decode in the timed method, result checked. See images/julc-java/pvb/.
+COPY images/julc-java/pvb/ /src/julc-benchmark/src/jmh/java/pvb/
+
 # Build fat JMH benchmark JAR (includes all dependencies)
 RUN ./gradlew :julc-benchmark:jmhJar --no-daemon
 
@@ -42,8 +46,10 @@ RUN apt-get update \
 # GraalVM JDK 25 (Java 25 bytecode needs JDK 25) and the fat JMH jar: no Gradle at run time.
 COPY --from=build /root/.sdkman/candidates/java/current /opt/jdk-25
 COPY --from=build /src/julc-benchmark/build/libs/*-jmh.jar /bench/julc/julc-benchmark-jmh.jar
-RUN /opt/jdk-25/bin/java -version
+RUN /opt/jdk-25/bin/java -version \
+    && /opt/jdk-25/bin/jar tf /bench/julc/julc-benchmark-jmh.jar | grep -q '^pvb/Check.class$'
 
+COPY check/reference/mainnet-plutusv3-costmodel.json /bench/mainnet-plutusv3-costmodel.json
 COPY parsers/ /bench/parsers/
 COPY scripts/image-entry.sh scripts/run-julc-java.sh /bench/scripts/
 

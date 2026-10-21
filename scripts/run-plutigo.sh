@@ -12,17 +12,33 @@ if [[ "${BENCH_QUICK:-0}" == 1 ]]; then
     BENCHTIME=1s
 fi
 
-# Go test binary uses runtime.Caller(0) which hardcodes the source path /src/tests/bench
-# We must place data at that exact path
-mkdir -p /src/tests
-rm -rf /src/tests/bench
-ln -sf "$DATA_DIR" /src/tests/bench
+# Our harness (images/plutigo/pvb_bench_test.go): PlutusV3, protocol version 11, the mainnet
+# PlutusV3 cost model through cek.NewEvalContext, counting mode, flat decode + eval per iteration.
+export PVB_DATA_DIR="$DATA_DIR"
+export PVB_COSTMODEL=/tmp/plutigo-costmodel.txt
+python3 -c "
+import json, sys
+values = json.load(open('/bench/mainnet-plutusv3-costmodel.json'))['PlutusV3']
+open(sys.argv[1], 'w').write('\n'.join(map(str, values)) + '\n')
+" "$PVB_COSTMODEL"
 
 cd "$BENCH_DIR"
 
-# Run compiled Go test binary with benchmark flags
+run_check() {
+    # Spec D4: one evaluation per script with the timed loop's parameters.
+    PVB_CHECK_OUT="$RUN_DIR/plutigo-check.csv" ./plutigo-bench \
+        -test.run='^TestPvbCheck$' -test.v -test.count=1 \
+        2>&1 | tee "$RUN_DIR/plutigo-check.log"
+    echo "Wrote $RUN_DIR/plutigo-check.csv"
+}
+
+if [[ "${PVB_CHECK_ONLY:-0}" == 1 ]]; then
+    run_check
+    exit 0
+fi
+
 ./plutigo-bench \
-    -test.bench=BenchmarkFlatFiles \
+    -test.bench='^BenchmarkPvbFlatFiles$' \
     -test.benchmem \
     -test.run='^$' \
     -test.count=1 \
@@ -35,8 +51,4 @@ python3 /bench/parsers/parse_go_bench.py "$RUN_DIR/plutigo-raw.log" > "$RUN_DIR/
 # Fill in -1 for any scripts that were given but produced no result
 python3 /bench/parsers/fill_failures.py "$RUN_DIR/plutigo.csv" "$DATA_DIR" plutigo "$RUN_DIR/plutigo-raw.log"
 
-# ---------------------------------------------------------------------------
-# CHECK HOOK (spec D4): the correctness check runs here, one evaluation per script with
-# the same parameters as the timed loop, and writes "$RUN_DIR/plutigo-check.csv"
-# (vm,script,status,cpu,mem). Implemented by check/, not yet wired in.
-# ---------------------------------------------------------------------------
+run_check || echo "WARNING: plutigo check failed" >&2
