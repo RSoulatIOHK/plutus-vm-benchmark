@@ -2,7 +2,7 @@
 
 Reproducible, cross-language benchmark suite for Plutus (UPLC) virtual machine implementations.
 
-Builds 14 VM variants from source inside Docker, runs each VM's **native benchmark framework**, and generates a unified comparison report. [View full results](https://saib-inc.github.io/cardano-plutus-vm-benchmark/)
+Builds 9 VM variants from source inside Docker, runs each VM's **native benchmark framework**, and generates a unified comparison report. [View full results](https://saib-inc.github.io/cardano-plutus-vm-benchmark/)
 
 ## Latest Results (2026-03-10)
 
@@ -10,10 +10,7 @@ Builds 14 VM variants from source inside Docker, runs each VM's **native benchma
 
 | VM | Language | Geo Mean | vs Fastest |
 |---|---|---|---|
-| **Plutuz** | Zig | 408 us | 1.00x |
 | **uplc-turbo** | Rust | 495 us | 1.21x |
-| **Chrysalis (JIT)** | C# / .NET | 549 us | 1.35x |
-| **Chrysalis (AOT)** | C# / .NET | 567 us | 1.39x |
 | **blaze-plutus (V8)** | TypeScript | 1.17 ms | 2.88x |
 | **blaze-plutus (JSC)** | TypeScript | 1.18 ms | 2.89x |
 | **Plutigo** | Go | 2.28 ms | 5.59x |
@@ -37,13 +34,10 @@ Builds 14 VM variants from source inside Docker, runs each VM's **native benchma
 | VM | Language | Benchmark Framework | Repository |
 |---|---|---|---|
 | **uplc-turbo** | Rust | Criterion.rs | [pragma-org/uplc](https://github.com/pragma-org/uplc) |
-| **Plutuz** | Zig | Custom (JSON) | [utxo-company/plutuz](https://github.com/utxo-company/plutuz) |
-| **Chrysalis** | C# / .NET | BenchmarkDotNet (JIT + AOT) | [SAIB-Inc/Chrysalis](https://github.com/SAIB-Inc/Chrysalis) |
 | **Plutigo** | Go | testing.B | [blinklabs-io/plutigo](https://github.com/blinklabs-io/plutigo) |
 | **blaze-plutus** | TypeScript | Vitest bench (V8 + JSC) | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) |
 | **opshin-uplc** | Python | Custom | [OpShin/uplc](https://github.com/OpShin/uplc) |
 | **Julc** | Java | JMH (CEK) | [bloxbean/julc](https://github.com/bloxbean/julc) |
-| **llvm-uplc** | C++ / LLVM | Custom (`uplcbench`, JSON) | [SeungheonOh/llvm-uplc](https://github.com/SeungheonOh/llvm-uplc) |
 | **Scalus** | Scala / GraalVM 25 | JMH (CEK + Hybrid JIT) | [scalus3/scalus](https://github.com/scalus3/scalus) |
 
 ## What's Measured
@@ -63,7 +57,7 @@ docker compose build
 docker compose run --rm benchmark
 
 # Run specific VMs only
-docker compose run --rm -e BENCH_VMS=chrysalis,uplc-turbo benchmark
+docker compose run --rm -e BENCH_VMS=plutigo,uplc-turbo benchmark
 ```
 
 Results are written to `./results/<date>/`:

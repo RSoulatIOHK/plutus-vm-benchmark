@@ -4,16 +4,12 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - CHRYSALIS_REPO
-        - CHRYSALIS_SHA
         - UPLC_TURBO_REPO
         - UPLC_TURBO_SHA
         - PLUTIGO_REPO
         - PLUTIGO_SHA
         - BLAZE_REPO
         - BLAZE_SHA
-        - PLUTUZ_REPO
-        - PLUTUZ_SHA
         - OPSHIN_REPO
         - OPSHIN_SHA
         - HASKELL_REPO
@@ -22,12 +18,8 @@ services:
         - SCALUS_SHA
         - JULC_REPO
         - JULC_SHA
-        - LLVM_UPLC_REPO
-        - LLVM_UPLC_SHA
-        - ZIG_VERSION
         - GHC_VERSION
         - JDK_SDK_VERSION
-        - LLVM_VERSION
     cap_add:
       - SYS_NICE
     user: "${UID:-1000}:${GID:-1000}"

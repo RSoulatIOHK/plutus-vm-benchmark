@@ -25,14 +25,9 @@ ERROR_PATTERNS = [
     r"java\.\S+Exception",
     r"scala\.\S+Exception",
     r"Caused by:",
-    # .NET (Chrysalis)
-    r"Unhandled exception",
-    r"System\.\S+Exception",
     # Go (Plutigo)
     r"^panic:",
     r"^goroutine\s+\d+",
-    # Zig (Plutuz)
-    r"panic\{",
     # Python (opshin)
     r"^Traceback ",
     r"SKIP \(eval error\)",

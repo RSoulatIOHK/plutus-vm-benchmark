@@ -27,13 +27,10 @@ Each VM uses its own benchmark framework rather than a uniform harness:
 
 | VM | Framework | Warmup | Min Iterations | Time Budget |
 |---|---|---|---|---|
-| Chrysalis | BenchmarkDotNet | Automatic (pilot + overhead) | 50 | Auto |
 | uplc-turbo | Criterion.rs | Automatic (warmup phase) | Auto | Auto |
 | Plutigo | Go testing.B | Automatic (b.N scaling) | Auto | 5s |
 | blaze-plutus | Vitest bench | Automatic | Auto | Auto |
-| Plutuz | Custom | 5 iterations | 50 | 5s |
 | opshin-uplc | Custom | 5 iterations | 50 | 5s |
-| llvm-uplc | Custom (`uplcbench`) | 5 iterations | 50 | 5s |
 
 Each framework handles warmup, iteration count, and outlier detection using its own proven methodology. Reimplementing this in a uniform harness would be less accurate and harder to maintain.
 

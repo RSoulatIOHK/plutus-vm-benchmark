@@ -6,21 +6,6 @@
 #   docker run -v ./results:/results plutus-bench
 
 # =============================================================================
-# Build stage: Chrysalis (.NET / BenchmarkDotNet)
-# =============================================================================
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-chrysalis
-
-ARG CHRYSALIS_REPO
-ARG CHRYSALIS_SHA
-
-RUN git clone "$CHRYSALIS_REPO" /src \
-    && cd /src && git checkout "$CHRYSALIS_SHA"
-
-WORKDIR /src
-RUN dotnet restore benchmarks/PlutusBench/PlutusBench.csproj
-RUN dotnet build -c Release -p:TreatWarningsAsErrors=false benchmarks/PlutusBench/PlutusBench.csproj
-
-# =============================================================================
 # Build stage: uplc-turbo (Rust / Criterion)
 # =============================================================================
 FROM rust:1.94-bookworm AS build-uplc-turbo
@@ -65,34 +50,6 @@ RUN git clone "$BLAZE_REPO" /src \
 
 WORKDIR /src
 RUN bun install
-
-# =============================================================================
-# Build stage: Plutuz (Zig)
-# =============================================================================
-FROM debian:bookworm-slim AS build-plutuz
-
-ARG PLUTUZ_REPO
-ARG PLUTUZ_SHA
-ARG ZIG_VERSION
-
-RUN apt-get update \
-    && apt-get install -y curl xz-utils git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Arch-aware Zig download — uname -m yields x86_64 / aarch64, matching Zig's
-# tarball naming, so this builds natively on both amd64 and arm64 hosts.
-RUN ARCH="$(uname -m)" \
-    && curl -fsSL "https://ziglang.org/download/${ZIG_VERSION}/zig-${ARCH}-linux-${ZIG_VERSION}.tar.xz" \
-    | tar -xJ -C /opt \
-    && ln -s "/opt/zig-${ARCH}-linux-${ZIG_VERSION}/zig" /usr/local/bin/zig
-
-RUN git clone "$PLUTUZ_REPO" /src \
-    && cd /src && git checkout "$PLUTUZ_SHA"
-
-WORKDIR /src
-# Patch build.zig to install the bench binary (upstream only has a run step)
-RUN sed -i '/const run_bench = b.addRunArtifact(bench_exe);/i\    b.installArtifact(bench_exe);' build.zig
-RUN zig build -Doptimize=ReleaseFast
 
 # =============================================================================
 # Build stage: opshin-uplc (Python)
@@ -220,68 +177,6 @@ RUN cabal build plutus-benchmark:bench:validation -j
 RUN cp dist-newstyle/build/*-linux/ghc-*/plutus-benchmark-*/b/validation/build/validation/validation /src/validation-bin
 
 # =============================================================================
-# Build stage: llvm-uplc (C++ / LLVM LLJIT)
-# =============================================================================
-FROM ubuntu:24.04 AS build-llvm-uplc
-
-ARG LLVM_UPLC_REPO
-ARG LLVM_UPLC_SHA
-ARG LLVM_VERSION
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Derive the LLVM major version (e.g. 22) from LLVM_VERSION (e.g. 22.1.0)
-# for use with apt.llvm.org package naming.
-RUN LLVM_MAJOR="${LLVM_VERSION%%.*}" \
-    && echo "LLVM_MAJOR=${LLVM_MAJOR}" > /etc/environment
-
-# Build toolchain + llvm-uplc runtime library deps.
-# xxd is needed by runtime/CMakeLists.txt to embed bitcode blobs.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-       ca-certificates git cmake ninja-build pkg-config \
-       wget gnupg lsb-release software-properties-common \
-       build-essential xxd \
-       libgmp-dev libsodium-dev libsecp256k1-dev libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install LLVM ${LLVM_VERSION} from the official apt.llvm.org repository
-RUN set -eux; \
-    LLVM_MAJOR="${LLVM_VERSION%%.*}"; \
-    wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key \
-        | gpg --dearmor -o /usr/share/keyrings/llvm-archive-keyring.gpg; \
-    . /etc/os-release; \
-    echo "deb [signed-by=/usr/share/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/${UBUNTU_CODENAME}/ llvm-toolchain-${UBUNTU_CODENAME}-${LLVM_MAJOR} main" \
-        > /etc/apt/sources.list.d/llvm.list; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-        "clang-${LLVM_MAJOR}" "lld-${LLVM_MAJOR}" \
-        "llvm-${LLVM_MAJOR}-dev" "libclang-${LLVM_MAJOR}-dev" \
-        "libpolly-${LLVM_MAJOR}-dev"; \
-    rm -rf /var/lib/apt/lists/*
-
-RUN git clone "$LLVM_UPLC_REPO" /src \
-    && cd /src && git checkout "$LLVM_UPLC_SHA" \
-    && git submodule update --init --recursive
-
-WORKDIR /src
-
-# Configure + build only the benchmark harness target; this pulls in
-# uplc::frontend/codegen/runtime transitively and vendors BLST via
-# FetchContent during the configure step. Prepend /usr/lib/llvm-${MAJOR}/bin
-# so the unversioned clang/llvm-link/opt that runtime/CMakeLists.txt looks
-# up via find_program(... REQUIRED) resolve to the apt.llvm.org toolchain.
-RUN set -eux; \
-    LLVM_MAJOR="${LLVM_VERSION%%.*}"; \
-    export PATH="/usr/lib/llvm-${LLVM_MAJOR}/bin:${PATH}"; \
-    cmake -S . -B build -G Ninja \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_C_COMPILER="clang-${LLVM_MAJOR}" \
-        -DCMAKE_CXX_COMPILER="clang++-${LLVM_MAJOR}" \
-        -DLLVM_DIR="/usr/lib/llvm-${LLVM_MAJOR}/lib/cmake/llvm"; \
-    cmake --build build --target uplcbench -j"$(nproc)"
-
-# =============================================================================
 # Runtime stage: single ubuntu:24.04 image for all benchmarks
 # =============================================================================
 FROM ubuntu:24.04 AS runner
@@ -289,15 +184,8 @@ FROM ubuntu:24.04 AS runner
 ENV DEBIAN_FRONTEND=noninteractive
 ENV HOME=/root
 
-# Install .NET SDK
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-       wget apt-transport-https ca-certificates \
-    && wget -q https://dot.net/v1/dotnet-install.sh -O /tmp/dotnet-install.sh \
-    && chmod +x /tmp/dotnet-install.sh \
-    && /tmp/dotnet-install.sh --channel 10.0 --install-dir /usr/share/dotnet \
-    && ln -s /usr/share/dotnet/dotnet /usr/local/bin/dotnet \
-    && rm /tmp/dotnet-install.sh
+    && apt-get install -y --no-install-recommends wget ca-certificates
 
 # Install Python
 RUN apt-get install -y --no-install-recommends \
@@ -313,7 +201,7 @@ RUN apt-get install -y --no-install-recommends curl unzip \
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y --no-install-recommends nodejs
 
-# Install ICU, NativeAOT prerequisites (clang, zlib), and utilities
+# Install utilities
 RUN apt-get install -y --no-install-recommends \
     libicu-dev clang zlib1g-dev time procps \
     && rm -rf /var/lib/apt/lists/*
@@ -323,9 +211,6 @@ COPY --from=build-opshin /usr/local/lib/libsecp256k1* /usr/local/lib/
 RUN ldconfig
 
 # --- Copy VM builds ---
-
-# Chrysalis: full source + build output (BenchmarkDotNet needs project at runtime)
-COPY --from=build-chrysalis /src /bench/chrysalis
 
 # uplc-turbo: re-pinned to main 39c82af (old SHA 6f0ef8e4 was force-removed upstream).
 COPY --from=build-uplc-turbo /src/target /bench/uplc-turbo/target
@@ -339,11 +224,6 @@ COPY --from=build-plutigo /plutigo-bench /bench/plutigo/plutigo-bench
 
 # blaze-plutus: full source + node_modules
 COPY --from=build-blaze /src /bench/blaze-plutus
-
-# Plutuz: compiled bench binary
-COPY --from=build-plutuz /src/zig-out /bench/plutuz/zig-out
-COPY --from=build-plutuz /src/bench /bench/plutuz/bench
-COPY --from=build-plutuz /src/build.zig /bench/plutuz/build.zig
 
 # opshin: Copy Python 3.14 runtime (Ubuntu 24.04 has 3.12, but opshin was built with 3.14)
 COPY --from=build-opshin /usr/local/bin/python3.14 /usr/local/bin/python3.14
@@ -367,7 +247,7 @@ RUN ln -sf /opt/sbt/bin/sbt /usr/local/bin/sbt
 # Julc: fat JMH benchmark JAR (no sbt/gradle needed at runtime)
 COPY --from=build-julc /src/julc-benchmark/build/libs/*-jmh.jar /bench/julc/julc-benchmark-jmh.jar
 
-# Install JDK 21 for Scalus + GHC runtime deps for Haskell + libssl runtime for llvm-uplc
+# Install JDK 21 for Scalus + GHC runtime deps for Haskell + libstdc++
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openjdk-21-jdk-headless \
     libgmp10 libsodium-dev libsecp256k1-dev libstdc++6 libssl3t64 \
@@ -376,27 +256,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copy GraalVM JDK 25 from build stage for Julc (Java 25 bytecode requires JDK 25)
 COPY --from=build-julc /root/.sdkman/candidates/java/current /opt/jdk-25
-
-# llvm-uplc: install LLVM runtime lib from apt.llvm.org and copy the
-# pre-built uplcbench binary. The harness links against libLLVM-${MAJOR}
-# dynamically; static runtime/frontend libs are force_loaded into the
-# executable at build time so we only need the LLVM shared lib at runtime.
-ARG LLVM_VERSION
-RUN set -eux; \
-    LLVM_MAJOR="${LLVM_VERSION%%.*}"; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends gnupg wget; \
-    wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key \
-        | gpg --dearmor -o /usr/share/keyrings/llvm-archive-keyring.gpg; \
-    . /etc/os-release; \
-    echo "deb [signed-by=/usr/share/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/${UBUNTU_CODENAME}/ llvm-toolchain-${UBUNTU_CODENAME}-${LLVM_MAJOR} main" \
-        > /etc/apt/sources.list.d/llvm.list; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends "libllvm${LLVM_MAJOR}"; \
-    rm -rf /var/lib/apt/lists/*; \
-    ldconfig
-
-COPY --from=build-llvm-uplc /src/build/tools/bench/uplcbench /bench/llvm-uplc/uplcbench
 
 # --- Copy benchmark data and scripts ---
 COPY data/ /bench/data/
@@ -409,8 +268,7 @@ RUN chmod +x /bench/scripts/*.sh
 # Make everything writable so the container can run as any UID
 # Delete .NET obj dirs and sbt target dirs so they get recreated as the running user
 # (MSBuild and sbt need to set file attributes, which requires ownership)
-RUN chmod -R 777 /bench/ /root/ \
-    && find /bench/chrysalis -name obj -type d -exec rm -rf {} + 2>/dev/null; \
+RUN chmod -R 777 /bench/ /root/; \
     find /bench/scalus -name target -type d -exec rm -rf {} + 2>/dev/null; \
     mkdir -p /src/tests && chmod 777 /src /src/tests
 
