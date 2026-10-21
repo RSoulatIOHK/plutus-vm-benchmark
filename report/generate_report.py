@@ -1,18 +1,41 @@
 #!/usr/bin/env python3
-"""Generate markdown and HTML comparison reports from unified.csv."""
+"""Generate markdown and HTML comparison reports from unified.csv.
+
+Reads from the run dir:
+- unified.csv            timings of every VM
+- gate.json              correctness verdicts (check/gate.py). When present, a VM with verdict
+                         "fail" or without a verdict is hidden and listed as "failed check"; a VM
+                         with verdict "badge" is shown with an "outdated cost model" badge. Old runs
+                         without gate.json are shown as they are
+- <vm>-compile.csv       compile time per script (vm,script,compile_ns), for VMs that compile
+                         before they run: "compile excluded" badge and a compile-time column
+- ../<date>/             earlier runs next to this one, for the history chart: each VM's geometric
+                         mean divided by Haskell's from the same run. Only runs with gate.json count
+"""
+
+from __future__ import annotations
 
 import csv
+import glob
+import json
 import math
 import os
 import sys
 from collections import defaultdict
 
 VM_ORDER = [
-    "haskell", "scalus-jit", "scalus-cek",
+    "haskell", "scalus-jit", "scalus-cek", "scalus-js",
     "julc-java",
-    "uplc-turbo",
+    "aiken", "aiken-wasm", "uplc-turbo",
     "plutigo", "blaze-jsc", "blaze-v8", "opshin",
 ]
+
+DISCLOSURE = (
+    "The 89 scripts are PlutusV1-era programs. Every VM evaluates them as PlutusV3 programs at "
+    "protocol version 11 with the mainnet cost model, like Plutus's own `validation` CEK benchmark; "
+    "the node would run them as PlutusV1."
+)
+
 VM_LABELS = {
     "uplc-turbo": "uplc-turbo AST walker (Rust)",
     "plutigo": "Plutigo CEK (Go)",
@@ -23,6 +46,9 @@ VM_LABELS = {
     "scalus-cek": "Scalus CEK (Scala / JVM)",
     "scalus-jit": "Scalus UPLC→JVM JIT (Scala / JVM)",
     "julc-java": "Julc CEK (Java / GraalVM)",
+    "scalus-js": "Scalus CEK (Scala.js / Node V8)",
+    "aiken": "Aiken uplc CEK (Rust)",
+    "aiken-wasm": "Aiken uplc CEK (Rust → WASM / Node V8)",
 }
 
 
@@ -61,7 +87,8 @@ def load_data(run_dir: str):
             data[script][vm] = mean_ns
 
     scripts = sorted(data.keys())
-    present_vms = [vm for vm in VM_ORDER if any(vm in data[s] for s in scripts)]
+    found = {vm for s in scripts for vm in data[s]}
+    present_vms = [vm for vm in VM_ORDER if vm in found] + sorted(found - set(VM_ORDER))
 
     env_path = os.path.join(run_dir, "environment.txt")
     env_info = ""
@@ -70,6 +97,90 @@ def load_data(run_dir: str):
             env_info = f.read().strip()
 
     return data, scripts, present_vms, env_info
+
+
+def load_gate(run_dir: str) -> dict | None:
+    """The gate verdicts of the run, or None for a run without gate.json (old format)."""
+    path = os.path.join(run_dir, "gate.json")
+    if not os.path.isfile(path):
+        return None
+    with open(path) as f:
+        gate = json.load(f)
+    return gate if isinstance(gate.get("vms"), dict) else None
+
+
+def gate_split(gate: dict | None, vms: list[str]) -> tuple[list[str], dict[str, str]]:
+    """(shown VMs, {hidden VM: reason}). Without gate.json every VM is shown."""
+    if gate is None:
+        return list(vms), {}
+    shown, hidden = [], {}
+    for vm in vms:
+        v = gate["vms"].get(vm)
+        if v is None:
+            hidden[vm] = f"no {vm}-check.csv"
+        elif v.get("verdict") == "fail":
+            hidden[vm] = v.get("reason", "failed")
+        else:
+            shown.append(vm)
+    return shown, hidden
+
+
+def load_compile(run_dir: str) -> dict[str, dict[str, int]]:
+    """{vm: {script: compile_ns}} from every <vm>-compile.csv of the run."""
+    out: dict[str, dict[str, int]] = {}
+    for path in sorted(glob.glob(os.path.join(run_dir, "*-compile.csv"))):
+        with open(path) as f:
+            for row in csv.DictReader(f):
+                try:
+                    ns = int(float(row["compile_ns"]))
+                except (KeyError, TypeError, ValueError):
+                    continue
+                if ns > 0:
+                    out.setdefault(row["vm"], {})[row["script"]] = ns
+    return out
+
+
+def ratio_to_haskell(data: dict[str, dict[str, int]], vm: str) -> float | None:
+    """Geometric mean of vm/haskell over the scripts where both have a timing."""
+    logs = [math.log(t[vm] / t["haskell"]) for t in data.values()
+            if t.get(vm, 0) > 0 and t.get("haskell", 0) > 0]
+    return math.exp(sum(logs) / len(logs)) if logs else None
+
+
+def load_history(run_dir: str) -> dict:
+    """Ratio to Haskell per VM for every run next to run_dir that has gate.json (new format).
+
+    A run counts only if Haskell passed its gate there; a VM that failed the gate in a run has no
+    point for that run.
+    """
+    parent = os.path.dirname(os.path.abspath(run_dir))
+    runs: list[str] = []
+    series: dict[str, list[float | None]] = {}
+    for d in sorted(os.listdir(parent)):
+        rd = os.path.join(parent, d)
+        gate = load_gate(rd)
+        unified = os.path.join(rd, "unified.csv")
+        if gate is None or not os.path.isfile(unified):
+            continue
+        data: dict[str, dict[str, int]] = defaultdict(dict)
+        with open(unified) as f:
+            for row in csv.DictReader(f):
+                data[row["script"]][row["vm"]] = int(row["mean_ns"])
+        vms = sorted({vm for t in data.values() for vm in t})
+        shown, _ = gate_split(gate, vms)
+        if "haskell" not in shown:
+            continue
+        idx = len(runs)
+        runs.append(d)
+        for vm in shown:
+            r = ratio_to_haskell(data, vm)
+            if r is not None:
+                series.setdefault(vm, [None] * idx)
+        for vm in series:
+            series[vm].append(ratio_to_haskell(data, vm) if vm in shown else None)
+    order = {vm: i for i, vm in enumerate(VM_ORDER)}
+    return {"runs": runs,
+            "series": {vm: series[vm] for vm in sorted(series, key=lambda v: (order.get(v, 99), v))}}
 
 
 def compute_geo_means(data, scripts, present_vms):
@@ -103,7 +214,8 @@ def compute_geo_means(data, scripts, present_vms):
     return geo_means
 
 
-def generate_markdown(run_dir: str, data, scripts, present_vms, env_info) -> None:
+def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, hidden, compile_ns,
+                      history) -> None:
     """Generate report.md."""
     geo_means = compute_geo_means(data, scripts, present_vms)
 
@@ -123,12 +235,18 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info) -> Non
         lines.append("```")
         lines.append("")
 
+    lines.append(f"*{DISCLOSURE}*")
+    lines.append("")
+
     lines.append("## Summary (geometric mean across all scripts)")
     lines.append("")
     lines.append("*Note: VMs that fail or skip a script are assigned the slowest competitor's time for that script.*")
+    if compile_ns:
+        lines.append("*Compile time is not in the geometric mean (\"compile excluded\"); "
+                     "the Compile column is its geometric mean over the scripts.*")
     lines.append("")
-    lines.append("| VM | Language | Geo Mean | vs Fastest |")
-    lines.append("|---|---|---|---|")
+    lines.append("| VM | Language | Geo Mean | vs Fastest | Compile | Check |")
+    lines.append("|---|---|---|---|---|---|")
 
     sorted_vms = sorted(present_vms, key=lambda vm: geo_means.get(vm, float("inf")))
     for vm in sorted_vms:
@@ -136,7 +254,31 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info) -> Non
         lang = label.split("(")[-1].rstrip(")") if "(" in label else ""
         geo = geo_means[vm]
         ratio = geo / fastest_geo if fastest_geo > 0 else 0
-        lines.append(f"| **{label}** | {lang} | {fmt_ns(int(geo))} | {ratio:.2f}x |")
+        comp = compile_ns.get(vm)
+        comp_cell = f"{fmt_ns(int(geometric_mean(list(comp.values()))))} (compile excluded)" if comp else "-"
+        lines.append(f"| **{label}** | {lang} | {fmt_ns(int(geo))} | {ratio:.2f}x | {comp_cell} | "
+                     f"{check_label(gate, vm)} |")
+
+    if hidden:
+        lines.append("")
+        lines.append("### Failed check")
+        lines.append("")
+        lines.append("Not ranked: the result or the ExUnits differ from Haskell (check/README.md).")
+        lines.append("")
+        lines.append("| VM | Reason |")
+        lines.append("|---|---|")
+        for vm in sorted(hidden, key=lambda v: (VM_ORDER.index(v) if v in VM_ORDER else 99, v)):
+            lines.append(f"| {VM_LABELS.get(vm, vm)} | {hidden[vm]} |")
+
+    if history["runs"]:
+        lines.append("")
+        lines.append("### History (geometric mean / Haskell's, same run)")
+        lines.append("")
+        lines.append("| VM | " + " | ".join(history["runs"]) + " |")
+        lines.append("|---|" + "---|" * len(history["runs"]))
+        for vm, values in history["series"].items():
+            cells = [f"{v:.2f}x" if v is not None else "-" for v in values]
+            lines.append(f"| {VM_LABELS.get(vm, vm)} | " + " | ".join(cells) + " |")
 
     # Count scripts per VM
     lines.append("")
@@ -190,9 +332,16 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info) -> Non
     print(f"\nReport saved to: {report_path}", file=sys.stderr)
 
 
-def generate_html(run_dir: str, env_info: str) -> None:
-    """Generate docs/index.html from template + unified.csv data."""
-    unified_path = os.path.join(run_dir, "unified.csv")
+def check_label(gate: dict | None, vm: str) -> str:
+    if gate is None:
+        return "not checked"
+    verdict = gate["vms"].get(vm, {}).get("verdict")
+    return {"pass": "pass", "badge": "outdated cost model"}.get(verdict, "failed check")
+
+
+def generate_html(run_dir: str, env_info: str, data, present_vms, gate, hidden, compile_ns,
+                  history) -> None:
+    """Generate docs/index.html from template + the timings of the shown VMs."""
     template_path = os.path.join(os.path.dirname(__file__), "template.html")
 
     if not os.path.isfile(template_path):
@@ -202,28 +351,46 @@ def generate_html(run_dir: str, env_info: str) -> None:
     with open(template_path) as f:
         template = f.read()
 
-    with open(unified_path) as f:
-        csv_data = f.read().strip()
+    # Only the shown VMs: a hidden VM must not be a competitor in the penalty rule either.
+    shown = set(present_vms)
+    with open(os.path.join(run_dir, "unified.csv")) as f:
+        lines = f.read().strip().split("\n")
+    csv_data = "\n".join([lines[0]] + [l for l in lines[1:] if l.split(",", 1)[0] in shown])
+
+    report = {
+        "gate": None if gate is None else {
+            vm: {"verdict": v.get("verdict"), "mode": v.get("mode"), "reason": v.get("reason")}
+            for vm, v in gate["vms"].items()},
+        "hidden": hidden,
+        "compile": {vm: s for vm, s in compile_ns.items() if vm in shown},
+        "history": history,
+        "disclosure": DISCLOSURE,
+    }
+    # Safe inside <script>: no "</" can close the element.
+    report_json = json.dumps(report, ensure_ascii=False).replace("</", "<\\/")
 
     # Build environment badge
     if env_info:
         env_badge = ""
+        # environment.txt of run-images.sh has lowercase keys (cpu:, cores:, memory:).
         for line in env_info.split("\n"):
-            line = line.strip()
-            if line.startswith("CPU:"):
-                env_badge += f"<code>{line.split(':', 1)[1].strip()}</code>"
-            elif line.startswith("Cores:"):
-                env_badge += f" &middot; {line.split(':', 1)[1].strip()} cores"
-            elif line.startswith("RAM:"):
-                env_badge += f" &middot; {line.split(':', 1)[1].strip()}"
-            elif line.startswith("OS:"):
-                env_badge += f" &middot; {line.split(':', 1)[1].strip()}"
+            key, _, value = line.strip().partition(":")
+            key, value = key.lower(), value.strip()
+            if key == "cpu":
+                env_badge += f"<code>{value}</code>"
+            elif key == "cores":
+                env_badge += f" &middot; {value} cores"
+            elif key in ("ram", "memory"):
+                env_badge += f" &middot; {value}"
+            elif key == "os":
+                env_badge += f" &middot; {value}"
         date = os.path.basename(run_dir)
         env_badge += f" &middot; {date}"
     else:
         env_badge = os.path.basename(run_dir)
 
-    html = template.replace("{{CSV_DATA}}", csv_data).replace("{{ENV_BADGE}}", env_badge)
+    html = (template.replace("{{CSV_DATA}}", csv_data).replace("{{ENV_BADGE}}", env_badge)
+            .replace("{{REPORT_JSON}}", report_json))
 
     # Write to docs/index.html (relative to repo root)
     repo_root = os.path.dirname(os.path.dirname(__file__))
@@ -237,9 +404,16 @@ def generate_html(run_dir: str, env_info: str) -> None:
 
 
 def generate(run_dir: str) -> None:
-    data, scripts, present_vms, env_info = load_data(run_dir)
-    generate_markdown(run_dir, data, scripts, present_vms, env_info)
-    generate_html(run_dir, env_info)
+    data, scripts, all_vms, env_info = load_data(run_dir)
+    gate = load_gate(run_dir)
+    present_vms, hidden = gate_split(gate, all_vms)
+    for s in scripts:
+        for vm in hidden:
+            data[s].pop(vm, None)
+    compile_ns = {vm: v for vm, v in load_compile(run_dir).items() if vm in present_vms}
+    history = load_history(run_dir)
+    generate_markdown(run_dir, data, scripts, present_vms, env_info, gate, hidden, compile_ns, history)
+    generate_html(run_dir, env_info, data, present_vms, gate, hidden, compile_ns, history)
 
 
 if __name__ == "__main__":
