@@ -29,6 +29,21 @@ Library and node authors can use it to choose an evaluator.
 - **Monthly runs on fixed hardware.** One Hetzner dedicated-vCPU server type runs every VM, one at a time.
 - **History.** Each run stays in `results/`. The page shows each VM's time relative to Haskell over time.
 
+## Background
+
+- [Cardano](https://cardano.org) is a proof-of-stake blockchain.
+- [Plutus](https://plutus.cardano.intersectmbo.org/docs/) is the smart contract platform of Cardano
+  ([IntersectMBO/plutus](https://github.com/IntersectMBO/plutus)).
+- UPLC (Untyped Plutus Core) is the on-chain language. Compilers such as Plutus Tx, Aiken and Scalus emit it.
+  The node evaluates a UPLC script with a CEK machine. A cost model charges each step and each builtin
+  call in ExUnits (CPU and memory). See the
+  [Plutus Core specification](https://plutus.cardano.intersectmbo.org/resources/plutus-core-spec.pdf).
+- Many tools evaluate scripts, not only the node. Wallets and off-chain transaction builders evaluate
+  each script to estimate fees. Test frameworks and emulators evaluate scripts in every test. Indexers
+  evaluate scripts to report their costs. Alternative nodes such as [Amaru](https://github.com/pragma-org/amaru) and
+  [Dingo](https://github.com/blinklabs-io/dingo) evaluate them to validate blocks. A faster evaluator
+  makes all of these faster.
+
 ## Maintainers
 
 Maintained by Lantr ([lantr.io](https://lantr.io)), Alexander Nemish.
@@ -36,7 +51,8 @@ Maintained by Lantr ([lantr.io](https://lantr.io)), Alexander Nemish.
 ## Acknowledgement
 
 Forked from [SAIB-Inc/cardano-plutus-vm-benchmark](https://github.com/SAIB-Inc/cardano-plutus-vm-benchmark),
-created by SAIB Inc. and contributors. Thank you for the original harness, data set and methodology.
+created by Clark Alesna ([SAIB Inc.](https://github.com/SAIB-Inc)) and contributors. Thank you for the
+original harness, data set and methodology.
 
 What changed:
 
@@ -46,27 +62,52 @@ What changed:
   them with Haskell plutus-core ([check/README.md](check/README.md)).
 - **Node-equivalent parameters.** Flat decode + evaluation with PlutusV3 semantics, protocol version 11,
   the mainnet cost model and costing on, for every VM.
-- **Curated line-up.** A VM joins if it has a downstream user today and a stable release. Not
-  included today: Chrysalis, Plutuz, llvm-uplc, Aiken WASM, Julc (no stable release yet) and OpShin uplc
-  (fails the correctness gate).
-  plu-ts and Helios can join through a pull request.
+- **Curated line-up.** A VM joins if it has a downstream user today, a stable release and passes the
+  correctness gate. See [Not included](#not-included).
 - **Eval-only column.** A second timing evaluates a program decoded once before timing.
 - **Automated monthly runs.** GitHub Actions creates a Hetzner server, installs NixOS on it, runs the
   benchmark and deletes the server.
 
 ## VMs Benchmarked
 
-| VM | Image | Language | Benchmark framework | Repository |
-|---|---|---|---|---|
-| **plutus-core** | `haskell` | Haskell | Criterion | [IntersectMBO/plutus](https://github.com/IntersectMBO/plutus) |
-| **Scalus** | `scalus-cek`, `scalus-jit` | Scala / GraalVM 25 | JMH (CEK, and UPLC → JVM bytecode JIT) | [scalus3/scalus](https://github.com/scalus3/scalus) |
-| **Scalus.js** | `scalus-js` | Scala.js / Node.js | Vitest bench | [scalus3/scalus](https://github.com/scalus3/scalus) (npm `scalus`) |
-| **Aiken uplc** | `aiken` | Rust | Criterion.rs | [aiken-lang/aiken](https://github.com/aiken-lang/aiken) |
-| **uplc-turbo** | `uplc-turbo` | Rust | Criterion.rs | [pragma-org/uplc](https://github.com/pragma-org/uplc) |
-| **Plutigo** | `plutigo` | Go | testing.B | [blinklabs-io/plutigo](https://github.com/blinklabs-io/plutigo) |
-| **blaze-plutus** | `blaze-v8`, `blaze-jsc` | TypeScript | Vitest bench (Node V8, Bun JSC) | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) |
+| Image | VM | Language | Benchmark framework | Project | Pinned release |
+|---|---|---|---|---|---|
+| `haskell` | plutus-core | Haskell | Criterion | [IntersectMBO/plutus](https://github.com/IntersectMBO/plutus) | [1.63.0.0](https://github.com/IntersectMBO/plutus/releases/tag/1.63.0.0) |
+| `scalus-cek` | Scalus CEK | Scala / GraalVM 25 | JMH | [scalus3/scalus](https://github.com/scalus3/scalus) | [v1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |
+| `scalus-jit` | Scalus JIT (UPLC → JVM bytecode) | Scala / GraalVM 25 | JMH | [scalus3/scalus](https://github.com/scalus3/scalus) | [v1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |
+| `scalus-js` | Scalus.js | Scala.js / Node.js | Vitest bench | [scalus3/scalus](https://github.com/scalus3/scalus) | npm `scalus` [1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |
+| `aiken` | Aiken uplc | Rust | Criterion.rs | [aiken-lang/aiken](https://github.com/aiken-lang/aiken) | [v1.1.24](https://github.com/aiken-lang/aiken/releases/tag/v1.1.24) |
+| `uplc-turbo` | uplc-turbo (Amaru) | Rust | Criterion.rs | [pragma-org/uplc](https://github.com/pragma-org/uplc) | [amaru-uplc-v0.4.0](https://github.com/pragma-org/uplc/releases/tag/amaru-uplc-v0.4.0) |
+| `plutigo` | Plutigo (Dingo) | Go | testing.B | [blinklabs-io/plutigo](https://github.com/blinklabs-io/plutigo) | [v0.1.10](https://github.com/blinklabs-io/plutigo/releases/tag/v0.1.10) |
+| `blaze-v8` | blaze-plutus on Node (V8) | TypeScript | Vitest bench | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) | [@blaze-cardano/plutus 0.1.1](https://github.com/butaneprotocol/blaze-cardano/releases/tag/%40blaze-cardano%2Fplutus%400.1.1) |
+| `blaze-jsc` | blaze-plutus on Bun (JSC) | TypeScript | Vitest bench | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) | [@blaze-cardano/plutus 0.1.1](https://github.com/butaneprotocol/blaze-cardano/releases/tag/%40blaze-cardano%2Fplutus%400.1.1) |
 
-That is 11 images: `scripts/images.sh list` prints them. The pins are in [`.env`](.env).
+That is 9 images: `scripts/images.sh list` prints them. The pins are in [`.env`](.env).
+
+## Not included
+
+A VM joins the line-up when it meets three conditions:
+
+1. It has a downstream user today.
+2. It has a stable release.
+3. It passes the correctness gate.
+
+| Project | Reason |
+|---|---|
+| [Chrysalis](https://github.com/SAIB-Inc/Chrysalis) | SAIB's own .NET VM. No visible downstream users. |
+| [Plutuz](https://github.com/utxo-company/plutuz) | Zig VM. No visible downstream users. |
+| [llvm-uplc](https://github.com/SeungheonOh/llvm-uplc) | Research prototype. No releases and no users. |
+| Aiken WASM | The Aiken team publishes no UPLC WASM. The only released build, `@lucid-evolution/uplc`, caches decoded programs and has no off switch. So it cannot time decode + evaluation as published. |
+| [Julc](https://github.com/bloxbean/julc) | No stable release: only `0.1.0-preNN` pre-releases. It can join at its first stable release. |
+| [OpShin uplc](https://github.com/OpShin/uplc) | Fails the correctness gate at its latest release 1.3.3. It has no `case` on builtin values, a protocol version 11 feature. |
+| uplc-turbo-bc | The released `uplc-turbo` crate has no bytecode mode. |
+
+### How a VM can join
+
+Meet the three conditions above. Then open a pull request that adds an image. Follow
+[CONTRIBUTING.md](CONTRIBUTING.md) and [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md).
+Candidates today: plu-ts ([`@harmoniclabs/uplc`](https://github.com/HarmonicLabs/uplc)) and
+Helios ([HeliosLang/uplc](https://github.com/HeliosLang/uplc)).
 
 ## What Is Measured
 
