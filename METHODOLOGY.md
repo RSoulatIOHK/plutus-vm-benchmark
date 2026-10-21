@@ -94,7 +94,6 @@ and the runner is `scripts/run-<vm>.sh`.
 |---|---|---|
 | haskell | Criterion | Criterion's warm-up; at least 20 s per script (`timeLimit = 20`) |
 | scalus-cek, scalus-jit | JMH | One 20 s warm-up iteration, one 5 s measurement iteration, 1 fork (`-wi 1 -w 20s -i 1 -r 5s -f 1`) |
-| julc-java | JMH | The same as Scalus: `-wi 1 -w 20s -i 1 -r 5s -f 1` |
 | aiken | Criterion.rs | Criterion.rs defaults |
 | uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 10 s measurement |
 | plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
