@@ -630,19 +630,14 @@
   </div>
 
   <div class="section">
+    <div class="section-title">Ranking <em>decode + eval geometric mean, per execution model</em></div>
     <div class="cat-filter" id="cat-filter"></div>
     <div id="rankings-by-cat"></div>
-    <details class="overall-details">
+    <details class="overall-details" id="overall-details">
       <summary>Show overall cross-category ranking</summary>
       <div class="note" style="margin-bottom:0.7rem">Combined leaderboard with the penalty rule (missing/failed scripts get the slowest competitor's time). Useful for a single-number view, but cross-category numbers are not directly comparable. See <a href="#exec-model" style="color:var(--purple-bright);text-decoration:none">Execution Model</a> below.</div>
       <div class="overall-table" id="overall-table"></div>
     </details>
-  </div>
-
-  <div class="section" id="experimental-section" style="display:none">
-    <div class="section-title">Experimental <em>not ranked</em></div>
-    <div class="note" style="margin-bottom:0.7rem">These VMs are run, gated and shown with their numbers, but they are not ranked: they are not in the rankings above, not a competitor in the penalty rule, and not the 1.00&times; reference in the geometric-mean chart (where they are drawn hatched); the history chart draws them dashed, and never the fastest in the per-script table. The geometric mean uses the penalty rule against the ranked VMs.</div>
-    <div class="summary" id="experimental-cards"></div>
   </div>
 
   <div class="section" id="failed-section" style="display:none">
@@ -651,18 +646,18 @@
     <div class="failed-list" id="failed-list"></div>
   </div>
 
+  <div class="section">
+    <div class="section-title">Geometric mean <em>decode + eval, all VMs, fastest first</em></div>
+    <p class="chart-caption" id="bar-caption"></p>
+    <div class="bar-chart" id="bar-chart" role="img" aria-label="Geometric mean of the decode + eval time per VM, log scale"></div>
+  </div>
+
   <div class="section" id="history-section" style="display:none">
     <div class="section-title">History <em>speed relative to Haskell plutus-core, same run &ndash; higher is faster</em></div>
     <div class="note" style="margin-bottom:0.7rem">Each point is Haskell's geometric mean time divided by the VM's, from the same run: 2&times; faster means the VM needs half of Haskell's time. The solid grey line is Haskell (1&times;); a dashed line is an experimental VM. The ratio uses the scripts where both the VM and Haskell have a timing. Comparing ratios, not absolute times, removes most of the hardware and run-to-run drift. Log scale.</div>
     <div class="history-chart" id="history-chart"></div>
     <div class="history-legend" id="history-legend"></div>
     <div class="history-tip" id="history-tip"></div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Geometric mean <em>decode + eval, all VMs, fastest first</em></div>
-    <p class="chart-caption" id="bar-caption"></p>
-    <div class="bar-chart" id="bar-chart" role="img" aria-label="Geometric mean of the decode + eval time per VM, log scale"></div>
   </div>
 
   <div class="section">
@@ -675,6 +670,12 @@
         <tbody id="table-body"></tbody>
       </table>
     </div>
+  </div>
+
+  <div class="section" id="experimental-section" style="display:none">
+    <div class="section-title">Experimental <em>not ranked</em></div>
+    <div class="note" style="margin-bottom:0.7rem">These VMs are run, gated and shown with their numbers, but they are not ranked: they are not in the rankings above, not a competitor in the penalty rule, and not the 1.00&times; reference in the geometric-mean chart (where they are drawn hatched); the history chart draws them dashed, and never the fastest in the per-script table. The geometric mean uses the penalty rule against the ranked VMs.</div>
+    <div class="summary" id="experimental-cards"></div>
   </div>
 
   <div class="section" id="exec-model">
@@ -925,7 +926,13 @@ rankingsHost.innerHTML = CATS.map(cat => {
   return '<section class="cat-section '+cat.key+'" data-cat="'+cat.key+'"><div class="cat-header"><span class="cat-mark">'+code+' · '+cvms.length+'</span><span class="cat-name">'+cat.label+'<em>'+sampleNote+'</em></span></div><p class="cat-blurb">'+cat.blurb+'</p><div class="summary">'+cards+'</div></section>';
 }).join('');
 
-// Category filter chips
+// Category filter chips and the cross-category ranking: only when two or more categories have
+// ranked VMs (with one, the chip filters nothing and the overall ranking repeats the cards).
+const rankedCats = CATS.filter(c => vmsByCat[c.key].length).length;
+if (rankedCats < 2) {
+  document.getElementById('cat-filter').style.display = 'none';
+  document.getElementById('overall-details').style.display = 'none';
+}
 const catFilter = document.getElementById('cat-filter');
 const activeCats = new Set(CATS.map(c => c.key));
 catFilter.innerHTML = '<span class="label">Show:</span>' + CATS.map(cat => {
