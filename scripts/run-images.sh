@@ -16,10 +16,10 @@
 #   BENCH_TIMING   normal | quick                         (default normal)
 #   BENCH_QUICK=1  shortcut: BENCH_TIMING=quick, and the first 5 scripts when BENCH_SCRIPTS is empty
 #   DATA_DIR       corpus dir with plutus_use_cases/ (default <repo>/data)
-#   CPUSET         --cpuset-cpus of every container (default auto: on a Linux host with N >= 2
-#                  CPUs, 1..N-1, so CPU 0 stays free for the host; none on other hosts, for
-#                  example Docker Desktop, where CPU 0 belongs to the Docker VM, not to the host).
-#                  none = no CPU set
+#   CPUSET         --cpuset-cpus of every container (default auto: on a Linux host, every CPU
+#                  except CPU 0 and its SMT siblings, so the host keeps one whole physical core;
+#                  none on other hosts, for example Docker Desktop, where CPU 0 belongs to the
+#                  Docker VM, not to the host). none = no CPU set
 #   DRIFT          1 = drift probe (default), 0 = off. See "Drift probe" below
 # The four BENCH_ switches are passed to the images (docs/IMAGE_CONTRACT.md). A run of a subset of
 # the scripts writes their names to scripts.txt; the gate then compares only those.
@@ -124,14 +124,32 @@ sysfs_choice() {
 
 # --- docker run flags -------------------------------------------------------------------
 # --network none: no VM needs the network at run time. --cpuset-cpus: every VM gets the same CPUs,
-# and CPU 0 stays for the host (dockerd, sshd, interrupts). On Docker Desktop the containers run in
-# a Linux VM whose CPU 0 is not the host's, so the CPU set would protect nothing.
+# and the whole physical core of CPU 0 stays for the host (dockerd, sshd, interrupts). A Hetzner
+# ccx33 has 8 vCPUs = 4 cores x 2 SMT threads: leaving only CPU 0 would let the benchmark thread
+# share a core with host work through CPU 0's sibling. On Docker Desktop the containers run in a
+# Linux VM whose CPU 0 is not the host's, so the CPU set would protect nothing.
+
+# Expand a Linux CPU list such as "0-3,8" into one CPU number per line.
+expand_cpus() {
+    local part
+    for part in ${1//,/ }; do
+        if [[ "$part" == *-* ]]; then seq "${part%-*}" "${part#*-}"; else echo "$part"; fi
+    done
+}
+
 CPUSET="${CPUSET:-auto}"
 if [[ "$CPUSET" == auto ]]; then
     CPUSET=none
-    if [[ "$(uname -s)" == Linux ]]; then
-        ncpu=$(getconf _NPROCESSORS_ONLN)
-        if [[ $ncpu -eq 2 ]]; then CPUSET=1; elif [[ $ncpu -gt 2 ]]; then CPUSET="1-$((ncpu - 1))"; fi
+    sys=/sys/devices/system/cpu
+    if [[ "$(uname -s)" == Linux && -r $sys/online && -r $sys/cpu0/topology/thread_siblings_list ]]; then
+        host_cpus=" $(expand_cpus "$(cat $sys/cpu0/topology/thread_siblings_list)" | tr '\n' ' ')"
+        bench_cpus=()
+        for c in $(expand_cpus "$(cat $sys/online)"); do
+            [[ "$host_cpus" == *" $c "* ]] || bench_cpus+=("$c")
+        done
+        if [[ ${#bench_cpus[@]} -gt 0 ]]; then
+            CPUSET=$(IFS=,; echo "${bench_cpus[*]}")
+        fi
     fi
 fi
 DOCKER_FLAGS=(--rm --cap-add SYS_NICE --network none)
