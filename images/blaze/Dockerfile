@@ -12,6 +12,7 @@ FROM oven/bun:${BUN_VERSION}-debian AS build
 
 ARG BLAZE_REPO
 ARG BLAZE_SHA
+ARG VITEST_VERSION
 
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
@@ -20,6 +21,14 @@ RUN git clone "$BLAZE_REPO" /src \
 
 WORKDIR /src
 RUN bun install
+# Every JS row times under the same vitest (.env VITEST_VERSION). blaze's lockfile picks its own;
+# stop the build when it differs, so a blaze bump cannot change the timing tool silently.
+RUN f=$(find /src -path '*/node_modules/vitest/package.json' -not -path '*/node_modules/*/node_modules/*' | head -1) \
+    && v=$(sed -n 's/^ *"version": *"\([^"]*\)".*/\1/p' "$f" | head -1) \
+    && echo "vitest $v ($f)" \
+    && if [ "$v" != "$VITEST_VERSION" ]; then \
+           echo "blaze uses vitest $v, .env VITEST_VERSION is $VITEST_VERSION" >&2; exit 1; \
+       fi
 
 # =============================================================================
 # Runtime stage
