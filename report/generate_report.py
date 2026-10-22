@@ -554,6 +554,7 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
         "experimental": {vm: EXPERIMENTAL[vm] for vm in experimental},
         "drift": drift_text(drift),
         "drift_percent": drift["percent"] if drift else None,
+        "run": os.path.basename(os.path.abspath(run_dir)),
     }
     # Safe inside <script>: no "</" can close the element.
     report_json = json.dumps(report, ensure_ascii=False).replace("</", "<\\/")

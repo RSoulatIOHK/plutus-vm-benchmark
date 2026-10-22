@@ -88,6 +88,27 @@
   .gh-link:hover { color: var(--text); border-color: var(--border-accent); }
   .gh-link svg { fill: currentColor; }
 
+  /* Facts strip: what is measured and why to trust it */
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); margin-bottom: 1.4rem; }
+  .fact { padding: 0.7rem 0.9rem 0.75rem; }
+  .fact + .fact { border-left: 1px solid var(--border); }
+  .fact-k { font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); }
+  .fact-v { font-size: 0.86rem; font-weight: 600; color: var(--text); margin: 0.1rem 0 0.25rem; }
+  .fact-d { font-size: 0.62rem; color: var(--text-secondary); line-height: 1.45; }
+  .fact-d em { font-style: normal; color: var(--text); }
+  .fact-d code { font-family: var(--font-mono); font-size: 0.6rem; }
+  .fact-d a { color: var(--purple-bright); text-decoration: none; }
+  .fact-d a:hover { text-decoration: underline; }
+  @media (max-width: 900px) {
+    .facts { grid-template-columns: 1fr 1fr; }
+    .fact:nth-child(3) { border-left: 0; }
+    .fact:nth-child(n+3) { border-top: 1px solid var(--border); }
+  }
+  @media (max-width: 520px) {
+    .facts { grid-template-columns: 1fr; }
+    .fact + .fact { border-left: 0; border-top: 1px solid var(--border); }
+  }
+
   /* Note */
   .note {
     border-left: 2px solid var(--purple);
@@ -601,7 +622,12 @@
     </a>
   </div>
 
-  <div class="note" id="disclosure" style="margin-bottom:1rem"></div>
+  <div class="facts" id="facts">
+    <div class="fact"><div class="fact-k">Ranked on</div><div class="fact-v">decode + eval</div><div class="fact-d">Each timed iteration flat-decodes the script and evaluates it, as a node does with a script it has not seen. <em>Eval only</em> (decoded before timing) is shown beside it.</div></div>
+    <div class="fact"><div class="fact-k">Scripts</div><div class="fact-v"><span class="n-scripts"></span> scripts</div><div class="fact-d" id="disclosure"></div></div>
+    <div class="fact"><div class="fact-k">Correctness gate</div><div class="fact-v" id="gate-v"></div><div class="fact-d" id="gate-d"></div></div>
+    <div class="fact"><div class="fact-k">This run</div><div class="fact-v" id="run-v"></div><div class="fact-d">Harness commit {{HARNESS_LINK}}<span id="drift-d"></span>. <a href="#method">How it is measured</a></div></div>
+  </div>
 
   <div class="section">
     <div class="cat-filter" id="cat-filter"></div>
@@ -662,7 +688,7 @@
     <div class="toolchain" id="toolchain"></div>
   </div>
 
-  <div class="section">
+  <div class="section" id="method">
     <div class="section-title">Method</div>
     <div class="note" style="margin:0 0 0.6rem" id="method-disclosure"></div>
     <div class="note" style="margin:0 0 0.6rem">Two timings per script, eval only first. The ranking uses <em>decode + eval</em>: each iteration flat-decodes the script and evaluates it, as a node does with a script it has not seen. <em>Eval only</em> evaluates a program decoded once before timing; decoding is a large share of the time for some VMs (about 66&nbsp;% for Haskell plutus-core), so the second column shows how fast the evaluator alone is.</div>
@@ -793,6 +819,26 @@ const disclosureHtml = REPORT.disclosure.replace(/&/g,'&amp;').replace(/</g,'&lt
 document.getElementById('disclosure').innerHTML = disclosureHtml;
 document.getElementById('method-disclosure').innerHTML = disclosureHtml;
 document.querySelectorAll('.n-scripts').forEach(e => { e.textContent = scripts.length; });
+// The facts strip under the header: the gate result and the run.
+(function renderFacts() {
+  const nHidden = Object.keys(REPORT.hidden).length, total = shownVMs.length + nHidden;
+  const gv = document.getElementById('gate-v'), gd = document.getElementById('gate-d');
+  if (!REPORT.gate) {
+    gv.textContent = 'not checked';
+    gd.textContent = 'This run has no gate.json: the results and ExUnits were not compared with Haskell plutus-core.';
+  } else {
+    const outdated = shownVMs.filter(vm => REPORT.gate[vm]?.verdict === 'badge').length;
+    gv.textContent = shownVMs.length + ' of ' + total + ' VMs pass';
+    gd.textContent = 'Every script: the result and the ExUnits equal Haskell plutus-core. A VM that differs is not ranked'
+      + (nHidden ? ' (' + nHidden + ' failed, listed below)' : '') + '.'
+      + (outdated ? ' ' + outdated + ' with the cost model the VM ships (badge).' : '');
+  }
+  document.getElementById('run-v').textContent = REPORT.run;
+  if (REPORT.drift_percent !== null && REPORT.drift_percent !== undefined) {
+    const d = REPORT.drift_percent;
+    document.getElementById('drift-d').textContent = '; Haskell drift ' + (d >= 0 ? '+' : '') + d.toFixed(1) + ' % (end vs start)';
+  }
+})();
 if (REPORT.drift) { const d = document.getElementById('drift-note'); d.textContent = REPORT.drift; d.style.display = ''; }
 // Raw geo means (only scripts where ALL VMs have a positive result)
 const commonScripts = scripts.filter(s => presentVMs.every(vm => (data[s]?.[vm] || 0) > 0));
