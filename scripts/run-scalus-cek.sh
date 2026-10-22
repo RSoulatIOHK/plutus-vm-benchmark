@@ -58,47 +58,22 @@ elif loop d3; then PATTERN='pvb.scalus.CekJVMBenchmark.bench$'
 elif loop eval; then PATTERN='pvb.scalus.CekJVMBenchmark.benchEval$'
 fi
 
-# One JVM per script (spec D14) that runs both methods, bench (d3) first, then benchEval (eval),
-# each with its own warm-up and measurement iterations. JMH forks one JVM per method and parameter
-# value and cannot share a fork between two methods, so JMH runs without a fork (-f 0) in a
-# launcher JVM per script. That launcher is the JVM a fork was before: GraalVM 25 with the flags
-# JMH gives a fork. JMH 1.37 starts a fork with the launcher's -Xss64m -Xmx4g, then -jvmArgsAppend,
-# then -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -DcompilerBlackholesEnabled=true
-# (compiler blackholes) and -XX:CompileCommandFile with its compiler hints. A run without a fork
-# does not add these itself, so the launcher gets them here; the log line "# Blackhole mode:
-# compiler" shows that they work. JMH_HINTS is the hints file of a fork of this harness, as JMH 1.37
-# writes it (its default hints plus one inline line per @Benchmark and @Setup method).
-JMH_HINTS=/tmp/jmh-compilecommand
-cat > "$JMH_HINTS" <<'HINTS'
-quiet
-inline,org/openjdk/jmh/infra/Blackhole.consume
-dontinline,org/openjdk/jmh/infra/Blackhole.consumeCPU
-blackhole,org/openjdk/jmh/infra/Blackhole.consumeCompiler
-dontinline,*.*_all_jmhStub
-dontinline,*.*_avgt_jmhStub
-dontinline,*.*_sample_jmhStub
-dontinline,*.*_ss_jmhStub
-dontinline,*.*_thrpt_jmhStub
-inline,pvb/scalus/CekJVMBenchmark.bench
-inline,pvb/scalus/CekJVMBenchmark.benchEval
-inline,pvb/scalus/CekJVMBenchmark.setup
-inline,pvb/scalus/JITBenchmark.benchJIT
-inline,pvb/scalus/JITBenchmark.setup
-HINTS
-FORK_FLAGS="-XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -DcompilerBlackholesEnabled=true -XX:CompileCommandFile=$JMH_HINTS"
-
+# One JMH launcher per script, and JMH forks a fresh JVM (-f 1) for each method: bench (d3), then
+# benchEval (eval). A fork is JMH's standard isolation. Running both methods in one JVM without a
+# fork (-f 0) made the d3 time of this row 3-6 % faster on some scripts, so the fork stays: a
+# harness change must not move the numbers of one row only.
 cd "$BENCH_DIR"
 RAW="$RUN_DIR/$VM-raw.log"
 : > "$RAW"
 if [[ -n "$PATTERN" ]]; then
     jsons=$(mktemp -d /tmp/scalus-cek-jmh.XXXXXX)
     for f in $(cd "$DATA_DIR" && ls -- *.flat | LC_ALL=C sort); do
-        # $BASHPID is the pid of the subshell, which exec turns into the benchmark JVM.
+        # $BASHPID is the pid of the subshell, which exec turns into the JMH launcher of this script.
         # shellcheck disable=SC2086
         ( echo "--- ${f%.flat}: process $BASHPID"
-          exec /opt/jdk-25/bin/java -Xss64m -Xmx4g $JVM_FLAGS -XX:+AlwaysPreTouch -Xms$HEAP $FORK_FLAGS \
-              -cp "$CP" org.openjdk.jmh.Main \
-              -i "$ITERATIONS" -wi "$WARMUP_ITERATIONS" -w "$WARMUP" -r "$MEASURE" -f 0 -t 1 \
+          exec java -Xss64m -Xmx4g -cp "$CP" org.openjdk.jmh.Main \
+              -i "$ITERATIONS" -wi "$WARMUP_ITERATIONS" -w "$WARMUP" -r "$MEASURE" -f 1 -t 1 \
+              -jvm /opt/jdk-25/bin/java -jvmArgsAppend "$JVM_FLAGS -XX:+AlwaysPreTouch -Xms$HEAP" \
               -rf json -rff "$jsons/${f%.flat}.json" -p "file=$f" "$PATTERN" ) \
             2>&1 | tee -a "$RAW" || true
     done
