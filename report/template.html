@@ -844,7 +844,7 @@ document.querySelectorAll('.n-scripts').forEach(e => { e.textContent = scripts.l
     gv.textContent = shownVMs.length + ' of ' + total + ' VMs pass';
     gd.textContent = 'Every script: the result and the ExUnits equal Haskell plutus-core. A VM that differs is not ranked'
       + (nHidden ? ' (' + nHidden + ' failed, listed below)' : '') + '.'
-      + (outdated ? ' ' + outdated + ' with the cost model the VM ships (badge).' : '');
+      + (outdated ? ' ' + outdated + ' of them with the cost model it ships ("outdated cost model" badge).' : '');
   }
   document.getElementById('run-v').textContent = REPORT.run;
   if (REPORT.drift_percent !== null && REPORT.drift_percent !== undefined) {
