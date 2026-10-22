@@ -45,6 +45,10 @@ on:
         description: Run even if nothing changed since the last run
         type: boolean
         default: false
+      parallel:
+        description: Run beside another run (own server, own concurrency group); for tests only, never published
+        type: boolean
+        default: false
       publish:
         description: >-
           Commit results/<date> and deploy the page (otherwise the results are only an artifact).
@@ -53,7 +57,9 @@ on:
         type: boolean
         default: false
 
-concurrency: bench-hetzner
+# One run at a time, so scheduled runs never overlap. A manual test run with parallel=true gets its
+# own group and runs beside another one, on its own server.
+concurrency: ${{ inputs.parallel && format('bench-hetzner-{0}', github.run_id) || 'bench-hetzner' }}
 
 permissions:
   contents: read
@@ -272,7 +278,7 @@ jobs:
       NAME: ${{ needs.start.outputs.name }}
       PARTIAL: ${{ needs.start.outputs.partial }}
       # A scheduled run always publishes; a manual run only when asked, and never a partial run.
-      PUBLISH: ${{ (github.event_name == 'schedule' || inputs.publish) && 'true' || 'false' }}
+      PUBLISH: ${{ (github.event_name == 'schedule' || (inputs.publish && !inputs.parallel)) && 'true' || 'false' }}
     steps:
       - uses: actions/checkout@v5
 
