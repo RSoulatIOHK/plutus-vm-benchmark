@@ -24,9 +24,11 @@ export PVB_DATA_DIR="$DATA_DIR"
 export PVB_COSTMODEL_JSON=/bench/mainnet-plutusv3-costmodel.json
 export PVB_PARAM_NAMES=/bench/plutusv3-param-names.txt
 
-# Timing (spec D13): the JMH shape of the JVM rows, one 20 s warm-up round and 3 measured rounds of
-# 5 s (pvb-time.test.ts). BENCH_TIMING=quick: 0.5 s warm-up, one 0.5 s round.
-export PVB_WARMUP_MS=20000 PVB_ROUND_MS=5000 PVB_ROUNDS=3
+# Timing (spec D13): the JMH shape of the JVM rows, the adaptive warm-up and 3 measured rounds of
+# 5 s (pvb-time.test.ts). Adaptive: rounds of 1 s until at least 5 s have passed and the last 5 are
+# within 3 % of their median, 30 s at most. BENCH_TIMING=quick: a fixed 0.5 s warm-up, one 0.5 s
+# round.
+export PVB_WARMUP_MS=adaptive PVB_ROUND_MS=5000 PVB_ROUNDS=3
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
     export PVB_WARMUP_MS=500 PVB_ROUND_MS=500 PVB_ROUNDS=1
 fi
@@ -70,7 +72,9 @@ if [[ ${#LOOPS[@]} -gt 0 ]]; then
     # budget per operation.
     if loop d3; then parse_loop d3 "$RUN_DIR/$VM.csv"; fi
     if loop eval; then parse_loop eval "$RUN_DIR/$VM-eval.csv"; fi
-    # BENCH_TRACE=1: the warm-up in 1 s slices -> $VM-warmup.csv
+    # The length of each warm-up and whether it hit the cap -> $VM-warmup-used.csv.
+    # BENCH_TRACE=1: also the warm-up in 1 s slices -> $VM-warmup.csv
+    python3 /bench/parsers/parse_warmup.py --used "$VM" "$RAW" > "$RUN_DIR/$VM-warmup-used.csv" || true
     if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
         python3 /bench/parsers/parse_warmup.py "$VM" "$RAW" > "$RUN_DIR/$VM-warmup.csv" || true
     fi

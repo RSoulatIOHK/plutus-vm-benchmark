@@ -10,14 +10,17 @@
 // table (pvb-costs.ts). A loop prints "PVB_LOOP <loop> <name>" before it starts
 // (parsers/fill_failures.py --loop).
 //
-// The timing is the JMH shape of the JVM rows (`-wi 1 -w 20s -i 3 -r 5s`), not tinybench: one
-// warm-up round, then $PVB_ROUNDS measured rounds. A round runs operations back to back until
+// The timing is the JMH shape of the JVM rows (`-i 3 -r 5s`), not tinybench: the warm-up, then
+// $PVB_ROUNDS measured rounds. A round runs operations back to back until
 // its time is up and scores elapsed / ops, as JMH avgt does. The run script sets the times
 // ($PVB_WARMUP_MS, $PVB_ROUND_MS, $PVB_ROUNDS). tinybench cannot give a mean per round.
 //
-// BENCH_TRACE=1: the warm-up runs as rounds of 1 s with the same total time (as JMH -wi 20 -w 1s),
-// and the harness prints them after the warm-up as "PVB_WARMUP {json}" (parsers/parse_warmup.py ->
-// <vm>-warmup.csv). The measured rounds do not change.
+// Warm-up ($PVB_WARMUP_MS, METHODOLOGY.md D13): "adaptive" runs rounds of 1 s until at least 5 s
+// have passed and the last 5 rounds are within 3 % of their median, 30 s at most (the cap); the
+// same rule as the JMH rows (images/scalus/harness, AdaptiveWarmup.scala). A number is one fixed
+// warm-up round of that many ms (BENCH_TIMING=quick). After the warm-up of a loop the harness prints
+// "PVB_WARMUP {json}" with its slices and whether it hit the cap (parsers/parse_warmup.py ->
+// <vm>-warmup-used.csv, and <vm>-warmup.csv with BENCH_TRACE=1).
 //
 // Output: one line per round, then per loop "PVB_RESULT {json}" with the loop and its rounds, for
 // parsers/parse_vitest.py. A loop whose first evaluation fails prints "EVAL_FAIL: <name>" and is
@@ -33,11 +36,9 @@ import { harnessCosts } from "./pvb-costs";
 
 const name = process.env.PVB_SCRIPT!;
 const loops = (process.env.PVB_LOOPS ?? "").split(",").filter((l) => l !== "");
-const warmupMs = Number(process.env.PVB_WARMUP_MS);
+const warmupSpec = process.env.PVB_WARMUP_MS ?? "";
 const roundMs = Number(process.env.PVB_ROUND_MS);
 const rounds = Number(process.env.PVB_ROUNDS);
-// BENCH_TRACE=1 (scripts/image-entry.sh): run and log the warm-up in 1 s slices.
-const trace = process.env.BENCH_TRACE === "1";
 
 // Keeps the result of every operation reachable, so the engine cannot drop the work (JMH's
 // Blackhole).
@@ -63,15 +64,41 @@ function show(label: string, r: Round): string {
   return `${label}: ${(r.ns / 1e9).toFixed(2)} s, ${r.ops} ops, ${(r.ns / r.ops).toFixed(0)} ns/op`;
 }
 
-/**
- * Trace mode: the warm-up as rounds of 1 s (the last one shorter if ms is not a whole number of
- * seconds), as JMH's -wi 20 -w 1s. The same round() as the measured rounds, so it is warm too.
- */
-function warmupSlices(op: () => unknown, ms: number): Round[] {
-  const slices: Round[] = [];
-  for (let left = ms; left > 0; left -= 1000) slices.push(round(op, Math.min(1000, left)));
-  return slices;
+// The adaptive warm-up rule. Keep it the same in every harness: images/blaze/pvb-time.test.ts,
+// images/scalus-js/time.mjs, images/aiken-wasm/time.mjs and AdaptiveWarmup.scala in
+// images/scalus/harness.
+const SLICE_MS = 1000;
+const WINDOW = 5;
+const TOLERANCE = 0.03;
+const MIN_MS = 5000;
+const CAP_MS = 30000;
+
+/** True when the last WINDOW slices are all within ±TOLERANCE of their median. */
+function steady(slices: Round[]): boolean {
+  if (slices.length < WINDOW) return false;
+  const last = slices.slice(-WINDOW).map((s) => s.ns / s.ops);
+  const median = [...last].sort((a, b) => a - b)[Math.floor(WINDOW / 2)];
+  return last.every((x) => Math.abs(x - median) <= TOLERANCE * median);
 }
+
+/**
+ * The warm-up: "adaptive", or one fixed round of spec ms. Slices use the same round() as the
+ * measured rounds. Returns { slices, end }, end is "steady", "capped" or "fixed".
+ */
+function warmUp(op: () => unknown, spec: string): { slices: Round[]; end: string } {
+  if (spec !== "adaptive") return { slices: [round(op, Number(spec))], end: "fixed" };
+  const start = performance.now();
+  const slices: Round[] = [];
+  for (;;) {
+    slices.push(round(op, SLICE_MS));
+    const elapsed = performance.now() - start;
+    if (elapsed >= MIN_MS && steady(slices)) return { slices, end: "steady" };
+    if (elapsed >= CAP_MS) return { slices, end: "capped" };
+  }
+}
+
+/** The longest warm-up of one loop, for the test timeout. */
+const warmupMaxMs = warmupSpec === "adaptive" ? CAP_MS + SLICE_MS : Number(warmupSpec);
 
 type Program = ReturnType<typeof decodeFlatDeBruijn>;
 
@@ -108,8 +135,9 @@ function operation(loop: string, bytes: Uint8Array, costs: ReturnType<typeof har
 test(
   `pvb ${loops.join(",")} ${name}`,
   () => {
-    if (!name || loops.length === 0 || loops.some((l) => l !== "d3" && l !== "eval") || !(rounds >= 1)) {
-      throw new Error("set PVB_SCRIPT, PVB_LOOPS (d3, eval or d3,eval), PVB_WARMUP_MS, PVB_ROUND_MS, PVB_ROUNDS");
+    if (!name || loops.length === 0 || loops.some((l) => l !== "d3" && l !== "eval") || !(rounds >= 1)
+        || !(warmupMaxMs > 0)) {
+      throw new Error("set PVB_SCRIPT, PVB_LOOPS (d3, eval or d3,eval), PVB_WARMUP_MS (adaptive or ms), PVB_ROUND_MS, PVB_ROUNDS");
     }
     const costs = harnessCosts();
     const bytes = new Uint8Array(readFileSync(join(process.env.PVB_DATA_DIR!, `${name}.flat`)));
@@ -119,16 +147,10 @@ test(
       if (!op) continue;
 
       const tag = `${loop} ${name} pid ${process.pid}`;
-      let warmup: Round;
-      if (trace) {
-        const slices = warmupSlices(op, warmupMs);
-        warmup = { ops: slices.reduce((n, sl) => n + sl.ops, 0), ns: slices.reduce((n, sl) => n + sl.ns, 0) };
-        slices.forEach((sl, i) => console.log(show(`${tag} warm-up second ${i + 1}`, sl)));
-        console.log(`PVB_WARMUP ${JSON.stringify({ script: name, loop, slices })}`);
-      } else {
-        warmup = round(op, warmupMs);
-      }
-      console.log(show(`${tag} warm-up`, warmup));
+      const { slices, end } = warmUp(op, warmupSpec);
+      const warmup = { ops: slices.reduce((n, sl) => n + sl.ops, 0), ns: slices.reduce((n, sl) => n + sl.ns, 0) };
+      console.log(`${show(`${tag} warm-up`, warmup)}, ${slices.length} slices, ${end}`);
+      console.log(`PVB_WARMUP ${JSON.stringify({ script: name, loop, slices, capped: end === "capped" })}`);
       const measured: Round[] = [];
       for (let i = 1; i <= rounds; i++) {
         const r = round(op, roundMs);
@@ -139,5 +161,5 @@ test(
     }
     if (sink === Symbol.for("never")) console.log("unreachable");
   },
-  loops.length * (warmupMs + rounds * roundMs) + 120_000,
+  loops.length * ((warmupMaxMs || 0) + rounds * roundMs) + 120_000,
 );
