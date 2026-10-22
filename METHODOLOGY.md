@@ -130,11 +130,11 @@ and the runner is `scripts/run-<vm>.sh`.
 | haskell | Criterion | Criterion's warm-up; about 5 s per script, Criterion's default (`timeLimit = 5`) |
 | scalus-cek, scalus-jit | JMH | One 20 s warm-up iteration, three 5 s measurement iterations (`-wi 1 -w 20s -i 3 -r 5s`). scalus-jit: 1 fork per script (`-f 1`). scalus-cek: one JVM per script runs both loops (`-f 0`, see below) |
 | aiken | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
-| uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 10 s measurement |
+| uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
-| blaze-v8, blaze-jsc | Vitest bench | 20 s warm-up, three 5 s measurements |
-| aiken-wasm | Vitest bench | 20 s warm-up, three 5 s measurements (a JIT runtime, V8) |
-| scalus-js | Vitest bench | 20 s warm-up, three 5 s measurements (the same Vitest version as blaze-v8) |
+| blaze-v8, blaze-jsc | Own loop (JMH shape), launched by Vitest | 20 s warm-up, three 5 s measurements |
+| aiken-wasm | Own loop (JMH shape), plain Node.js | 20 s warm-up, three 5 s measurements (a JIT runtime, V8) |
+| scalus-js | Own loop (JMH shape), plain Node.js | 20 s warm-up, three 5 s measurements (the same loop as blaze-v8) |
 
 The JIT runtimes (JVM, V8, JSC) all get 20 s of warm-up, because the staged Scalus JIT needs about
 20 s to warm up. See [Fairness rules](#fairness-rules). `BENCH_TIMING=quick` shortens every
@@ -145,6 +145,14 @@ scalus-cek runs JMH without a fork (`-f 0`) in one JVM per script, with both met
 the flags that JMH gives a fork: the JVM flags of the row, compiler blackholes and JMH's compiler
 hints ([`scripts/run-scalus-cek.sh`](scripts/run-scalus-cek.sh)). The log shows
 `# Blackhole mode: compiler`, as in a fork.
+
+The JS rows share one timing loop. A round runs operations back to back for a fixed time and
+scores elapsed / ops, as JMH `avgt` does. scalus-js and aiken-wasm run it with plain `node`: the
+harness is plain JavaScript, and the VM is an npm package that Node.js loads natively. The blaze
+rows run it under Vitest. blaze has no built package in the image, so Vitest loads its TypeScript
+sources (`src/cek`, `src/flat`) and transforms them. A bundle or Bun's own TypeScript loader
+would give a different module shape, and V8 and JSC would then not run the same transformed
+code.
 
 ## Fairness Rules
 

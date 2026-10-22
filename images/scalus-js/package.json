@@ -4,7 +4,6 @@
   "type": "module",
   "description": "Plutus VM benchmark harness for the Scalus CEK machine from the scalus npm package (Scala.js on Node)",
   "dependencies": {
-    "scalus": "1.4.0",
-    "vitest": "4.1.10"
+    "scalus": "1.4.0"
   }
 }

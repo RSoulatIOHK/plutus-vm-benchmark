@@ -25,9 +25,9 @@ if loop check; then
 fi
 
 # Timing (spec D3, D13): the JMH shape of the JVM rows, one 20 s warm-up round and 3 measured rounds
-# of 5 s (time.test.mjs). BENCH_TIMING=quick: 0.5 s warm-up, one 0.5 s round.
-# A new vitest process per script (spec D14), so no JIT profile or GC state carries over from
-# another script. The "Benchmarking <name>" line ties a crash in the log to its script
+# of 5 s (time.mjs). BENCH_TIMING=quick: 0.5 s warm-up, one 0.5 s round.
+# A new node process per script (spec D14), so no JIT profile or GC state carries over from
+# another script. The "--- <name>: process <pid>" line ties a crash in the log to its script
 # (fill_failures.py); a script without a PVB_RESULT line gets -1. A crash must not kill the run.
 export PVB_WARMUP_MS=20000 PVB_ROUND_MS=5000 PVB_ROUNDS=3
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
@@ -36,8 +36,9 @@ fi
 if loop d3; then
     for f in $(cd "$DATA_DIR" && ls -- *.flat | LC_ALL=C sort); do
         name="${f%.flat}"
-        echo "Benchmarking $name" | tee -a "$RAW"
-        DATA_DIR="$DATA_DIR" PVB_SCRIPT="$name" npx vitest run time.test 2>&1 | tee -a "$RAW" || true
+        # $BASHPID is the pid of the subshell, which exec turns into the node process.
+        ( echo "--- $name: process $BASHPID"
+          DATA_DIR="$DATA_DIR" PVB_SCRIPT="$name" exec node time.mjs ) 2>&1 | tee -a "$RAW" || true
     done
     python3 /bench/parsers/parse_vitest.py "$VM" "$RAW" > "$RUN_DIR/$VM.csv"
     python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM.csv" "$DATA_DIR" "$VM" "$RAW"
