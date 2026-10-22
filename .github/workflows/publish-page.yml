@@ -1,0 +1,118 @@
+# Rebuilds the published page from the latest full run's committed data, without a new benchmark run.
+# Runs when the report template or its assets change on main, and on demand (optionally for one run).
+#
+# The page needs only results/<run>/ (CSV files, gate.json, environment.txt, pins.env), so a template
+# change reaches plutus-vm-bench.lantr.io in about a minute and costs no Hetzner time.
+name: publish-page
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "report/**"
+      - "docs/lantr-logo.png"
+      - "docs/lantr-logo-dark.png"
+      - "docs/favicon.svg"
+      - ".github/workflows/publish-page.yml"
+  workflow_dispatch:
+    inputs:
+      run:
+        description: Results dir to publish, e.g. 2026-11-01 (empty = the latest full run)
+        default: ""
+
+# One publisher at a time; run.yml's publish step pushes to main too, so retry the push on a race.
+concurrency: publish-page
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    outputs:
+      published: ${{ steps.pick.outputs.run != '' }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # A full run's dir is named YYYY-MM-DD or YYYY-MM-DD-N and has gate.json (new format).
+      - id: pick
+        env:
+          RUN: ${{ inputs.run }}
+        run: |
+          if [[ -n "$RUN" ]]; then
+            [[ -f "results/$RUN/unified.csv" ]] || { echo "no results/$RUN/unified.csv" >&2; exit 1; }
+            run="$RUN"
+          else
+            run=$(find results -mindepth 1 -maxdepth 1 -type d -regextype posix-extended \
+                    -regex 'results/[0-9]{4}-[0-9]{2}-[0-9]{2}(-[0-9]+)?' \
+                    -exec test -f '{}/gate.json' ';' -print | sed 's|results/||' | sort -V | tail -1)
+          fi
+          if [[ -z "$run" ]]; then
+            echo "::notice::no full run with gate.json yet; nothing to publish"
+          else
+            echo "publishing results/$run"
+          fi
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+
+      # --write-index also writes docs/robots.txt, docs/sitemap.xml and docs/og.png (with Chrome,
+      # which the runner has). The run's own index.html and report.md are rebuilt too.
+      - name: Render
+        if: steps.pick.outputs.run != ''
+        env:
+          RUN: ${{ steps.pick.outputs.run }}
+        run: python report/generate_report.py --write-index "results/$RUN"
+
+      - name: Commit if the page changed
+        if: steps.pick.outputs.run != ''
+        env:
+          RUN: ${{ steps.pick.outputs.run }}
+        run: |
+          git add docs/index.html docs/robots.txt docs/sitemap.xml docs/og.png \
+                  "results/$RUN/index.html" "results/$RUN/report.md"
+          if git diff --cached --quiet; then
+            echo "page unchanged"
+            exit 0
+          fi
+          git config user.name "plutus-vm-bench"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "page: re-render results/$RUN"
+          for _ in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1
+
+  pages:
+    needs: build
+    if: needs.build.outputs.published == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      # Publish only the page and its assets, not the internal docs in docs/ (same as run.yml).
+      - name: Collect site files
+        run: |
+          mkdir -p _site
+          cp docs/index.html docs/favicon.svg docs/og.png docs/robots.txt docs/sitemap.xml \
+             docs/lantr-logo.png docs/lantr-logo-dark.png _site/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4

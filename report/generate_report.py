@@ -215,10 +215,13 @@ def vm_links(env: dict[str, str]) -> dict[str, dict]:
     return out
 
 
-def load_vm_links() -> dict[str, dict]:
-    """vm_links of the .env at the repo root (the pins of the checkout, not of the run)."""
-    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    return vm_links(read_env(os.path.join(root, ".env")))
+def load_vm_links(run_dir: str) -> dict[str, dict]:
+    """vm_links of the run's pins: <run>/pins.env (the .env the run used, copied by run-images.sh),
+    else the .env at the repo root (older runs), so a re-rendered page shows the run's versions."""
+    pins = os.path.join(run_dir, "pins.env")
+    if not os.path.isfile(pins):
+        pins = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env")
+    return vm_links(read_env(pins))
 
 
 def vm_anchor(vm: str) -> str:
@@ -682,7 +685,7 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
         lines.append(row)
 
     lines.append("")
-    links = load_vm_links()
+    links = load_vm_links(run_dir)
     lines.extend(vm_list_markdown(vm_list_order(data, scripts, present_vms, experimental, hidden), links,
                                   gate, hidden, compile_ns))
     lines.append("")
@@ -753,7 +756,7 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
 
     # Only the shown VMs: a hidden VM must not be a competitor in the penalty rule either.
     shown = set(present_vms) | set(experimental)
-    links = load_vm_links()
+    links = load_vm_links(run_dir)
     vm_list = vm_list_html(vm_list_order(data, scripts, present_vms, experimental, hidden), links, gate,
                            hidden, compile_ns)
     with open(os.path.join(run_dir, "unified.csv")) as f:

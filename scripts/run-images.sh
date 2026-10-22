@@ -216,6 +216,8 @@ RUN_TICKS_START=$(cpu_ticks)
     echo "bench_timing: $BENCH_TIMING"
 } > "$RUN_DIR/environment.txt"
 cat "$RUN_DIR/environment.txt"
+# The pins of this run, so a page re-rendered later (publish-page.yml) shows the versions that ran.
+cp "$REPO_ROOT/.env" "$RUN_DIR/pins.env"
 
 image_of() {
     local tag="$IMAGE_TAG"
