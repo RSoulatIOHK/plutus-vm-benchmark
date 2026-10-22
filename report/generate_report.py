@@ -47,8 +47,9 @@ VM_ORDER = [
 # The header logo in report/template.html, a file in docs/.
 LOGO = "lantr-logo-dark.png"
 
+# {n}: the number of scripts of the run.
 DISCLOSURE = (
-    "The 89 scripts are PlutusV1-era programs. Every VM evaluates them as PlutusV3 programs at "
+    "The {n} scripts are PlutusV1-era programs. Every VM evaluates them as PlutusV3 programs at "
     "protocol version 11 with the mainnet cost model, like Plutus's own `validation` CEK benchmark; "
     "the node would run them as PlutusV1."
 )
@@ -327,7 +328,7 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
         lines.append("```")
         lines.append("")
 
-    lines.append(f"*{DISCLOSURE}*")
+    lines.append(f"*{DISCLOSURE.format(n=len(scripts))}*")
     lines.append("")
     if drift:
         lines.append(f"*{drift_text(drift)}*")
@@ -516,8 +517,8 @@ def harness_commit(env_info):
     return None
 
 
-def generate_html(run_dir: str, env_info: str, data, present_vms, experimental, gate, hidden, compile_ns,
-                  eval_ns, history, drift, write_index: bool) -> None:
+def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, experimental, gate, hidden,
+                  compile_ns, eval_ns, history, drift, write_index: bool) -> None:
     """Generate <run_dir>/index.html from template + the timings of the shown VMs (ranked and
     experimental; the page leaves the experimental ones out of the ranking).
 
@@ -546,12 +547,14 @@ def generate_html(run_dir: str, env_info: str, data, present_vms, experimental, 
         "compile": {vm: s for vm, s in compile_ns.items() if vm in shown},
         "eval": {vm: s for vm, s in eval_ns.items() if vm in shown},
         "history": history,
-        "disclosure": DISCLOSURE,
+        "disclosure": DISCLOSURE.format(n=len(scripts)),
         "notes": {vm: n for vm, n in VM_NOTES.items() if vm in shown},
         "compile_badge": COMPILE_BADGE,
         "badges": {vm: b for vm, b in VM_BADGES.items() if vm in shown},
         "experimental": {vm: EXPERIMENTAL[vm] for vm in experimental},
         "drift": drift_text(drift),
+        "drift_percent": drift["percent"] if drift else None,
+        "run": os.path.basename(os.path.abspath(run_dir)),
     }
     # Safe inside <script>: no "</" can close the element.
     report_json = json.dumps(report, ensure_ascii=False).replace("</", "<\\/")
@@ -629,8 +632,8 @@ def generate(run_dir: str, write_index: bool = False) -> None:
     drift = load_drift(run_dir)
     generate_markdown(run_dir, data, scripts, present_vms, experimental, env_info, gate, hidden,
                       compile_ns, eval_ns, history, drift)
-    generate_html(run_dir, env_info, data, present_vms, experimental, gate, hidden, compile_ns,
-                  eval_ns, history, drift, write_index)
+    generate_html(run_dir, env_info, data, scripts, present_vms, experimental, gate, hidden,
+                  compile_ns, eval_ns, history, drift, write_index)
 
 
 if __name__ == "__main__":

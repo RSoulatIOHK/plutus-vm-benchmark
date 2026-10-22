@@ -22,12 +22,10 @@
     --border-accent: #2a2a44;
     --text: #e4e4ec;
     --text-secondary: #9494b0;
-    --text-muted: #5c5c78;
+    --text-muted: #8484a2;
     --purple: #7660e3;
     --purple-bright: #8b78ef;
     --gold: #e8b83a;
-    --silver: #a8b0c0;
-    --bronze: #c48050;
     --green: #4ade80;
     --red: #e05555;
 
@@ -90,6 +88,27 @@
   .gh-link:hover { color: var(--text); border-color: var(--border-accent); }
   .gh-link svg { fill: currentColor; }
 
+  /* Facts strip: what is measured and why to trust it */
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); margin-bottom: 1.4rem; }
+  .fact { padding: 0.7rem 0.9rem 0.75rem; }
+  .fact + .fact { border-left: 1px solid var(--border); }
+  .fact-k { font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); }
+  .fact-v { font-size: 0.86rem; font-weight: 600; color: var(--text); margin: 0.1rem 0 0.25rem; }
+  .fact-d { font-size: 0.62rem; color: var(--text-secondary); line-height: 1.45; }
+  .fact-d em { font-style: normal; color: var(--text); }
+  .fact-d code { font-family: var(--font-mono); font-size: 0.6rem; }
+  .fact-d a { color: var(--purple-bright); text-decoration: none; }
+  .fact-d a:hover { text-decoration: underline; }
+  @media (max-width: 900px) {
+    .facts { grid-template-columns: 1fr 1fr; }
+    .fact:nth-child(3) { border-left: 0; }
+    .fact:nth-child(n+3) { border-top: 1px solid var(--border); }
+  }
+  @media (max-width: 520px) {
+    .facts { grid-template-columns: 1fr; }
+    .fact + .fact { border-left: 0; border-top: 1px solid var(--border); }
+  }
+
   /* Note */
   .note {
     border-left: 2px solid var(--purple);
@@ -132,21 +151,23 @@
     transition: border-color 0.15s;
   }
   .card:hover { border-color: var(--border-accent); }
+  .card { display: flex; flex-direction: column; }
+  .card.first { border-color: rgba(175,175,232,0.55); }
+  .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.6rem; }
   .card .rank {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.85rem;
-    font-family: var(--font-sans);
-    font-size: 1.5rem;
-    font-weight: 700;
-    opacity: 0.18;
-    letter-spacing: -0.02em;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
   }
+  .card .metric-label { font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.2rem; }
+  .card-meta { margin-top: 0.7rem; padding-top: 0.6rem; border-top: 1px solid var(--border); }
   .card .vm-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.05rem; }
   .card .lang { font-family: var(--font-mono); color: var(--text-muted); font-size: 0.62rem; margin-bottom: 0.25rem; }
   .card .engine {
     font-family: var(--font-mono);
-    font-size: 0.54rem;
+    font-size: 0.58rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.16em;
@@ -194,7 +215,7 @@
     gap: 0.5rem;
     margin-bottom: 0.45rem;
     font-family: var(--font-mono);
-    font-size: 0.55rem;
+    font-size: 0.58rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.2em;
@@ -237,7 +258,7 @@
   .eg-vm .runtime-tag { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-muted); }
   .eg-vm .vm-subtype {
     font-family: var(--font-mono);
-    font-size: 0.52rem;
+    font-size: 0.58rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.14em;
@@ -255,72 +276,59 @@
     font-family: var(--font-sans);
     font-size: 1.3rem;
     font-weight: 600;
-    font-variant-numeric: tabular-nums;
     letter-spacing: -0.02em;
-    line-height: 1;
+    line-height: 1.1;
     color: var(--text);
+    white-space: nowrap;
+    margin-bottom: 0.2rem;
   }
-  .card .ratio {
-    font-family: var(--font-mono);
-    color: var(--text-muted);
-    font-size: 0.62rem;
-    font-weight: 500;
-    margin-left: 0.4rem;
-  }
+  .card .ratio { color: var(--text-secondary); font-size: 0.66rem; margin-bottom: 0.15rem; }
 
-  .card.gold { border-color: var(--gold); }
-  .card.gold .geo-mean { color: var(--gold); }
-  .card.gold .rank { color: var(--gold); opacity: 0.2; }
-  .card.silver { border-color: var(--silver); }
-  .card.silver .geo-mean { color: var(--silver); }
-  .card.silver .rank { color: var(--silver); opacity: 0.2; }
-  .card.bronze { border-color: var(--bronze); }
-  .card.bronze .geo-mean { color: var(--bronze); }
-  .card.bronze .rank { color: var(--bronze); opacity: 0.2; }
-
-  /* Bar chart — labels inside bars */
-  .bar-chart { display: flex; flex-direction: column; gap: 0.4rem; }
-  .bar-row { position: relative; height: 36px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
-  .bar-fill {
-    height: 100%;
-    border-radius: 0;
-    min-width: 2px;
-  }
-  .bar-info {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 0.75rem;
-    pointer-events: none;
-  }
-  .bar-info-left { display: flex; align-items: baseline; gap: 0.55rem; }
-  .bar-vm { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+  /* Geometric-mean chart: name | log-scale bar | time | ratio. Text never sits on the bar. */
+  .chart-caption { font-size: 0.68rem; color: var(--text-secondary); margin: -0.2rem 0 0.8rem; max-width: 80ch; }
+  .chart-caption em { font-style: normal; color: var(--text); font-weight: 500; }
+  .bar-chart { display: flex; flex-direction: column; }
+  .gm-row { display: grid; grid-template-columns: minmax(11rem, 15rem) 1fr 4.6rem 3.4rem; gap: 0 0.8rem; align-items: center; padding: 0.3rem 0; border-bottom: 1px solid var(--border); }
+  .gm-row:hover { background: var(--surface-hover); }
+  .gm-name { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+  .bar-vm { font-size: 0.78rem; font-weight: 600; color: var(--text); }
   .bar-lang { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-muted); }
-  .bar-info-right { display: flex; align-items: baseline; gap: 0.65rem; }
-  .bar-time { font-family: var(--font-mono); font-size: 0.74rem; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text); }
-  .bar-ratio { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-muted); }
+  .gm-row.exp .bar-lang { color: var(--text-secondary); font-style: italic; }
+  .gm-track { position: relative; height: 22px; }
+  .gm-bar { position: absolute; left: 0; top: 4px; height: 14px; border-radius: 0 4px 4px 0; background: var(--lavender); opacity: 0.75; }
+  .gm-row.exp .gm-bar { opacity: 1; background: repeating-linear-gradient(45deg, rgba(175,175,232,0.75) 0 3px, transparent 3px 7px); box-shadow: inset 0 0 0 1px rgba(175,175,232,0.6); }
+  .gm-grid { position: absolute; top: -0.3rem; bottom: -0.3rem; width: 1px; background: var(--border); }
+  .gm-grid.ref { background: var(--text-muted); }
+  .gm-time { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text); text-align: right; white-space: nowrap; }
+  .gm-ratio { font-family: var(--font-mono); font-size: 0.64rem; color: var(--text-secondary); text-align: right; font-variant-numeric: tabular-nums; }
+  .gm-axis { border-bottom: 0; }
+  .gm-axis:hover { background: none; }
+  .gm-axis .gm-track { height: 1rem; }
+  .gm-tick { position: absolute; transform: translateX(-50%); font-family: var(--font-mono); font-size: 0.58rem; color: var(--text-muted); white-space: nowrap; }
+  @media (max-width: 640px) {
+    .gm-row { grid-template-columns: 1fr auto auto; grid-template-areas: "name time ratio" "track track track"; gap: 0.15rem 0.6rem; }
+    .gm-name { grid-area: name; } .gm-track { grid-area: track; } .gm-time { grid-area: time; } .gm-ratio { grid-area: ratio; }
+    .gm-axis .gm-name, .gm-axis .gm-time, .gm-axis .gm-ratio { display: none; }
+  }
 
-  /* Table */
+  /* Table: two header rows (VM, then eval only / decode + eval), a sticky script column, a
+     divider between VMs. */
   .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
-  table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.72rem; }
   th {
     background: var(--surface);
-    position: sticky;
-    top: 0;
     font-weight: 600;
     text-align: right;
-    padding: 0.5rem 0.65rem;
-    border-bottom: 1px solid var(--border);
+    padding: 0.45rem 0.65rem 0.2rem;
     white-space: nowrap;
     color: var(--text);
   }
-  th:first-child { text-align: left; }
-  th .th-lang { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 0.55rem; color: var(--text-muted); margin-top: 0.15rem; }
+  th.vm-head { text-align: center; border-bottom: 1px solid var(--border); }
+  tr.sub-head th { font-family: var(--font-mono); font-weight: 500; font-size: 0.6rem; color: var(--text-secondary); padding: 0.3rem 0.65rem 0.4rem; border-bottom: 1px solid var(--border-accent); }
+  tr.sub-head th.eval-col { color: var(--text-muted); }
+  th.script-col { text-align: left; vertical-align: bottom; border-bottom: 1px solid var(--border-accent); }
+  th.compile-col { vertical-align: bottom; border-bottom: 1px solid var(--border-accent); }
+  th .th-lang { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 0.58rem; color: var(--text-muted); margin-top: 0.1rem; }
   td {
     padding: 0.35rem 0.65rem;
     border-bottom: 1px solid var(--border);
@@ -328,13 +336,20 @@
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
-    color: var(--text-secondary);
+    color: var(--text);
   }
-  td:first-child { text-align: left; font-family: var(--font-sans); font-weight: 500; color: var(--text); font-size: 0.74rem; }
+  tbody tr:last-child td { border-bottom: 0; }
+  .g { border-left: 1px solid var(--border-accent); }
+  .script-col { position: sticky; left: 0; z-index: 1; background: var(--surface); text-align: left; box-shadow: 1px 0 0 var(--border-accent); }
+  td.script-col { font-family: var(--font-sans); font-weight: 500; color: var(--text); font-size: 0.72rem; }
   tr:hover td { background: var(--surface-hover); }
+  td.eval-col { color: var(--text-secondary); }
   td.fastest { color: var(--green); font-weight: 600; }
-  td.missing { color: var(--text-muted); opacity: 0.4; }
-  td.failed { color: var(--red); font-weight: 500; font-size: 0.62rem; opacity: 0.75; }
+  td.missing { color: var(--text-muted); }
+  td.failed { color: var(--red); font-weight: 500; font-size: 0.62rem; }
+  .table-caption { font-size: 0.66rem; color: var(--text-secondary); margin: 0 0 0.6rem; }
+  .table-caption em { font-style: normal; color: var(--text); font-weight: 500; }
+  .table-caption .fastest-key { color: var(--green); font-weight: 600; font-family: var(--font-mono); }
 
   /* Toolchain */
   .toolchain {
@@ -364,7 +379,7 @@
 
   /* Category-grouped rankings */
   .cat-filter { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
-  .cat-filter .label { font-family: var(--font-mono); font-size: 0.55rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-muted); margin-right: 0.4rem; }
+  .cat-filter .label { font-family: var(--font-mono); font-size: 0.58rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-muted); margin-right: 0.4rem; }
   .cat-chip {
     background: transparent;
     border: 1px solid var(--border);
@@ -406,7 +421,7 @@
   }
   .cat-header .cat-mark {
     font-family: var(--font-mono);
-    font-size: 0.55rem;
+    font-size: 0.58rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.2em;
@@ -459,7 +474,7 @@
   .overall-vm .vm-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
   .overall-cat {
     font-family: var(--font-mono);
-    font-size: 0.55rem;
+    font-size: 0.58rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.16em;
@@ -522,7 +537,7 @@
   .vm-badges { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 0.35rem; }
   .vm-badge {
     font-family: var(--font-mono);
-    font-size: 0.52rem;
+    font-size: 0.58rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -538,11 +553,12 @@
   .vm-badge.timing { color: var(--text-secondary); border-color: rgba(91,155,213,0.55); }
   .card .exp-reason { color: var(--text-muted); font-size: 0.6rem; line-height: 1.35; margin-bottom: 0.35rem; font-style: italic; }
   .card .compile-time { font-family: var(--font-mono); color: var(--text-muted); font-size: 0.6rem; margin-bottom: 0.35rem; }
-  th.compile-col, td.compile-col { color: var(--purple-bright); }
+  td.compile-col { color: var(--purple-bright); }
   .card .vm-note { color: var(--text-muted); font-size: 0.6rem; line-height: 1.35; margin-bottom: 0.35rem; }
   .card .vm-note a { color: var(--purple-bright); text-decoration: none; }
-  .card .eval-time { font-family: var(--font-mono); color: var(--text-secondary); font-size: 0.6rem; margin-bottom: 0.35rem; }
-  th.eval-col, td.eval-col { color: var(--text-muted); }
+  .card .eval-time { color: var(--text-secondary); font-size: 0.66rem; }
+  .card .eval-time b { color: var(--text); font-weight: 600; }
+  .card .eval-time span { color: var(--text-muted); }
 
   .failed-list { border: 1px solid rgba(224,85,85,0.35); border-radius: 6px; padding: 0.55rem 0.85rem; font-size: 0.68rem; }
   .failed-list .fl-row { display: flex; gap: 0.7rem; padding: 0.15rem 0; }
@@ -550,18 +566,26 @@
   .failed-list .fl-reason { color: var(--text-secondary); }
 
   /* History chart */
-  .history-chart svg { width: 100%; height: auto; display: block; }
-  .history-chart .grid { stroke: var(--border); stroke-width: 1; }
-  .history-chart .base { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 3 3; }
-  .history-chart .axis-label { fill: var(--text-muted); font-family: var(--font-mono); font-size: 10px; }
-  .history-chart .line-label { font-family: var(--font-sans); font-size: 10px; fill: var(--text-secondary); }
+  .history-chart svg { display: block; max-width: 100%; }
+  .history-chart .grid { stroke: var(--border-accent); stroke-width: 1; }
+  .history-chart .base { stroke: var(--text-secondary); stroke-width: 1; }
+  .history-chart .crosshair { stroke: var(--text-muted); stroke-width: 1; }
+  .history-chart .leader { fill: none; stroke: var(--text-muted); stroke-width: 1; }
+  .history-chart .axis-label { fill: var(--text-muted); font-family: var(--font-mono); font-size: 11px; }
+  .history-chart .axis-label.base-label { fill: var(--text-secondary); }
+  .history-chart .line-label { font-family: var(--font-sans); font-size: 11px; fill: var(--text-secondary); }
   .history-legend { display: flex; flex-wrap: wrap; gap: 0.35rem 0.9rem; margin-top: 0.5rem; font-size: 0.64rem; color: var(--text-secondary); }
   .history-legend span.sw { display: inline-block; width: 14px; height: 2px; vertical-align: middle; margin-right: 0.35rem; }
+  .history-legend span.base-sw { height: 1px; background: var(--text-secondary); }
   .history-tip {
     position: fixed; pointer-events: none; display: none; z-index: 10;
     background: var(--surface); border: 1px solid var(--border-accent); border-radius: 6px;
-    padding: 0.35rem 0.55rem; font-size: 0.64rem; color: var(--text);
+    padding: 0.4rem 0.6rem; font-size: 0.64rem; color: var(--text-secondary);
   }
+  .history-tip .tip-title { font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 0.2rem; }
+  .history-tip .tip-row { display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
+  .history-tip .tip-row b { color: var(--text); font-weight: 600; min-width: 5.5rem; }
+  .history-tip .tip-key { display: inline-block; width: 12px; height: 0; }
 
   /* Footer */
   footer {
@@ -578,6 +602,17 @@
 
   @media (max-width: 768px) {
     .summary { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  }
+  /* Phones: one column of cards, a wrapping header, less page padding. */
+  @media (max-width: 560px) {
+    .page { padding: 1.1rem 0.9rem 0.8rem; }
+    .header { flex-wrap: wrap; gap: 0.75rem; }
+    .header-brand { align-items: flex-start; gap: 0.7rem; min-width: 0; }
+    .header-logo { height: 30px; }
+    .gh-link { order: -1; margin-left: auto; }
+    .summary { grid-template-columns: 1fr; }
+    .failed-list .fl-row { flex-direction: column; gap: 0; }
+    .failed-list .fl-vm { min-width: 0; }
   }
 </style>
 </head>
@@ -598,22 +633,22 @@
     </a>
   </div>
 
-  <div class="note" id="disclosure" style="margin-bottom:1rem"></div>
+  <div class="facts" id="facts">
+    <div class="fact"><div class="fact-k">Ranked on</div><div class="fact-v">decode + eval</div><div class="fact-d">Each timed iteration flat-decodes the script and evaluates it, as a node does with a script it has not seen. <em>Eval only</em> (decoded before timing) is shown beside it.</div></div>
+    <div class="fact"><div class="fact-k">Scripts</div><div class="fact-v"><span class="n-scripts"></span> scripts</div><div class="fact-d" id="disclosure"></div></div>
+    <div class="fact"><div class="fact-k">Correctness gate</div><div class="fact-v" id="gate-v"></div><div class="fact-d" id="gate-d"></div></div>
+    <div class="fact"><div class="fact-k">This run</div><div class="fact-v" id="run-v"></div><div class="fact-d">Harness commit {{HARNESS_LINK}}<span id="drift-d"></span>. <a href="#method">How it is measured</a></div></div>
+  </div>
 
   <div class="section">
+    <div class="section-title">Ranking <em>decode + eval geometric mean, per execution model</em></div>
     <div class="cat-filter" id="cat-filter"></div>
     <div id="rankings-by-cat"></div>
-    <details class="overall-details">
+    <details class="overall-details" id="overall-details">
       <summary>Show overall cross-category ranking</summary>
       <div class="note" style="margin-bottom:0.7rem">Combined leaderboard with the penalty rule (missing/failed scripts get the slowest competitor's time). Useful for a single-number view, but cross-category numbers are not directly comparable. See <a href="#exec-model" style="color:var(--purple-bright);text-decoration:none">Execution Model</a> below.</div>
       <div class="overall-table" id="overall-table"></div>
     </details>
-  </div>
-
-  <div class="section" id="experimental-section" style="display:none">
-    <div class="section-title">Experimental <em>not ranked</em></div>
-    <div class="note" style="margin-bottom:0.7rem">These VMs are run, gated and shown with their numbers, but they are not ranked: they are not in the rankings above, not a competitor in the penalty rule, and not the 1.00&times; reference in the geometric-mean chart (where they are drawn hatched); the history chart draws them dashed, and never the fastest in the per-script table. The geometric mean uses the penalty rule against the ranked VMs.</div>
-    <div class="summary" id="experimental-cards"></div>
   </div>
 
   <div class="section" id="failed-section" style="display:none">
@@ -622,28 +657,36 @@
     <div class="failed-list" id="failed-list"></div>
   </div>
 
+  <div class="section">
+    <div class="section-title">Geometric mean <em>decode + eval, all VMs, fastest first</em></div>
+    <p class="chart-caption" id="bar-caption"></p>
+    <div class="bar-chart" id="bar-chart" role="img" aria-label="Geometric mean of the decode + eval time per VM, log scale"></div>
+  </div>
+
   <div class="section" id="history-section" style="display:none">
     <div class="section-title">History <em>speed relative to Haskell plutus-core, same run &ndash; higher is faster</em></div>
-    <div class="note" style="margin-bottom:0.7rem">Each point is Haskell's geometric mean time divided by the VM's, from the same run: 2&times; faster means the VM needs half of Haskell's time. The dashed line is Haskell. The ratio uses the scripts where both the VM and Haskell have a timing. Comparing ratios, not absolute times, removes most of the hardware and run-to-run drift. Log scale.</div>
+    <div class="note" style="margin-bottom:0.7rem">Each point is Haskell's geometric mean time divided by the VM's, from the same run: 2&times; faster means the VM needs half of Haskell's time. The solid grey line is Haskell (1&times;); a dashed line is an experimental VM. The ratio uses the scripts where both the VM and Haskell have a timing. Comparing ratios, not absolute times, removes most of the hardware and run-to-run drift. Log scale.</div>
     <div class="history-chart" id="history-chart"></div>
     <div class="history-legend" id="history-legend"></div>
     <div class="history-tip" id="history-tip"></div>
   </div>
 
   <div class="section">
-    <div class="section-title">Geometric Mean <em>visualised</em></div>
-    <div class="bar-chart" id="bar-chart"></div>
-  </div>
-
-  <div class="section">
     <div class="section-title">Per-Script Results</div>
     <div class="filter-bar" id="filters"></div>
+    <p class="table-caption">Mean time per script. For each VM: <em>eval only</em> (decode excluded), then <em>decode + eval</em> (the ranking metric). <span class="fastest-key">Green</span>: the fastest ranked VM on the script, per column type; an experimental VM is never marked. The buttons hide and show VMs.</p>
     <div class="table-wrap">
       <table>
         <thead id="table-head"></thead>
         <tbody id="table-body"></tbody>
       </table>
     </div>
+  </div>
+
+  <div class="section" id="experimental-section" style="display:none">
+    <div class="section-title">Experimental <em>not ranked</em></div>
+    <div class="note" style="margin-bottom:0.7rem">These VMs are run, gated and shown with their numbers, but they are not ranked: they are not in the rankings above, not a competitor in the penalty rule, and not the 1.00&times; reference in the geometric-mean chart (where they are drawn hatched); the history chart draws them dashed, and never the fastest in the per-script table. The geometric mean uses the penalty rule against the ranked VMs.</div>
+    <div class="summary" id="experimental-cards"></div>
   </div>
 
   <div class="section" id="exec-model">
@@ -657,13 +700,13 @@
     <div class="toolchain" id="toolchain"></div>
   </div>
 
-  <div class="section">
+  <div class="section" id="method">
     <div class="section-title">Method</div>
     <div class="note" style="margin:0 0 0.6rem" id="method-disclosure"></div>
     <div class="note" style="margin:0 0 0.6rem">Two timings per script, eval only first. The ranking uses <em>decode + eval</em>: each iteration flat-decodes the script and evaluates it, as a node does with a script it has not seen. <em>Eval only</em> evaluates a program decoded once before timing; decoding is a large share of the time for some VMs (about 66&nbsp;% for Haskell plutus-core), so the second column shows how fast the evaluator alone is.</div>
     <div class="note" style="margin:0 0 0.6rem">Correctness gate: each VM evaluates every script once more and reports the result and the ExUnits. They must equal Haskell plutus-core; a VM that differs is not ranked (&ldquo;failed check&rdquo;). A VM whose API cannot take the mainnet cost model is ranked with an &ldquo;outdated cost model&rdquo; badge if it equals Haskell with the model the VM ships. A VM that compiles a script before it runs it (&ldquo;decode and compile excluded&rdquo;) decodes and compiles each script once, before timing; its timed loop runs the compiled script, so neither step is in its time. Its compile time is shown separately. A VM whose library caches decoded programs (&ldquo;decode cached (by the library)&rdquo;) decodes a script only on the first call, in the warm-up; its timed loop runs the cache lookup and the evaluation, so its two columns have the same numbers.</div>
     <div class="note" id="drift-note" style="margin:0 0 0.6rem;display:none"></div>
-    <div class="note" style="margin:0">Flat decode + evaluation on 89 Plutus scripts. Each VM uses its native benchmark framework. Each VM runs in its own Docker image, one VM at a time. Geometric means within each category use only the scripts where every VM in that category produced a successful result, so all VMs in a category are compared on the same scripts.</div>
+    <div class="note" style="margin:0">Flat decode + evaluation on <span class="n-scripts"></span> Plutus scripts. Each VM uses its native benchmark framework. Each VM runs in its own Docker image, one VM at a time. Geometric means within each category use only the scripts where every VM in that category produced a successful result, so all VMs in a category are compared on the same scripts.</div>
   </div>
 
   <footer>
@@ -688,17 +731,21 @@ const CSV_DATA = `{{CSV_DATA}}`;
 // badges: {vm: {text, title}} (how the VM is timed); experimental: {vm: reason} (shown, not ranked).
 const REPORT = {{REPORT_JSON}};
 
+// One fixed colour per VM, the same in every run (the colour follows the VM, never its rank): the
+// 8 slots of the validated dark categorical palette (dataviz validate_palette.js on #09090f and
+// #111119: CVD ΔE >= 8.4, normal-vision ΔE >= 19.3, all >= 3:1). plutus-core is the reference and
+// takes the neutral grey; the experimental Scalus JIT is a receding mid neutral, dashed / hatched.
 const VM_META = {
-  'uplc-turbo':     { label: 'uplc-turbo AST', lang: 'Rust',        runtime: 'AST walker',     engine: 'AST walker',                   color: '#dea584', compiler: 'rustc 1.94' },
-  'plutigo':        { label: 'Plutigo',        lang: 'Go',          runtime: 'CEK',            engine: 'CEK interpreter',              color: '#00d4aa', compiler: 'Go 1.26' },
-  'blaze-jsc':      { label: 'blaze-plutus',   lang: 'TypeScript',  runtime: 'Bun (JSC)',      engine: 'CEK interpreter',              color: '#f7df1e', compiler: 'Bun 1.3.10' },
-  'blaze-v8':       { label: 'blaze-plutus',   lang: 'TypeScript',  runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: '#5b9bd5', compiler: 'Node.js 22' },
-  'haskell':        { label: 'plutus-core',    lang: 'Haskell',     runtime: 'GHC',            engine: 'CEK interpreter',              color: '#5e5086', compiler: 'GHC 9.6.4' },
-  'scalus-cek':     { label: 'Scalus CEK',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'CEK interpreter',              color: '#dc322f', compiler: 'GraalVM JDK 25 / Scala 3' },
-  'scalus-jit':     { label: 'Scalus JIT',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'UPLC → JVM bytecode JIT',      color: '#ff6b6b', compiler: 'GraalVM JDK 25 / Scala 3' },
-  'scalus-js':      { label: 'Scalus.js CEK',  lang: 'Scala.js',    runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: '#ff8fab', compiler: 'scalus npm / Node.js 22' },
-  'aiken':          { label: 'Aiken uplc',     lang: 'Rust',        runtime: 'native',         engine: 'CEK interpreter',              color: '#e44d7b', compiler: 'rustc 1.94' },
-  'aiken-wasm':     { label: 'Aiken uplc WASM', lang: 'Rust → WASM', runtime: 'Node (V8)',     engine: 'CEK interpreter',              color: '#a07cf0', compiler: '@lucid-evolution/uplc npm / Node.js 22' },
+  'uplc-turbo':     { label: 'uplc-turbo AST', lang: 'Rust',        runtime: 'AST walker',     engine: 'AST walker',                   color: '#199e70', compiler: 'rustc 1.94' },
+  'plutigo':        { label: 'Plutigo',        lang: 'Go',          runtime: 'CEK',            engine: 'CEK interpreter',              color: '#e66767', compiler: 'Go 1.26' },
+  'blaze-jsc':      { label: 'blaze-plutus',   lang: 'TypeScript',  runtime: 'Bun (JSC)',      engine: 'CEK interpreter',              color: '#9085e9', compiler: 'Bun 1.3.10' },
+  'blaze-v8':       { label: 'blaze-plutus',   lang: 'TypeScript',  runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: '#008300', compiler: 'Node.js 22' },
+  'haskell':        { label: 'plutus-core',    lang: 'Haskell',     runtime: 'GHC',            engine: 'CEK interpreter',              color: '#8484a2', compiler: 'GHC 9.6.4' },
+  'scalus-cek':     { label: 'Scalus CEK',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'CEK interpreter',              color: '#3987e5', compiler: 'GraalVM JDK 25 / Scala 3' },
+  'scalus-jit':     { label: 'Scalus JIT',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'UPLC → JVM bytecode JIT',      color: '#a0a0bc', compiler: 'GraalVM JDK 25 / Scala 3' },
+  'scalus-js':      { label: 'Scalus.js CEK',  lang: 'Scala.js',    runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: '#d95926', compiler: 'scalus npm / Node.js 22' },
+  'aiken':          { label: 'Aiken uplc',     lang: 'Rust',        runtime: 'native',         engine: 'CEK interpreter',              color: '#d55181', compiler: 'rustc 1.94' },
+  'aiken-wasm':     { label: 'Aiken uplc WASM', lang: 'Rust → WASM', runtime: 'Node (V8)',     engine: 'CEK interpreter',              color: '#c98500', compiler: '@lucid-evolution/uplc npm / Node.js 22' },
 };
 const VM_ORDER = ['haskell','scalus-jit','scalus-cek','scalus-js','aiken','aiken-wasm','uplc-turbo','blaze-v8','blaze-jsc','plutigo'];
 
@@ -714,7 +761,6 @@ function fmtNs(ns) {
 }
 function geoMean(a) { const v=a.filter(x=>x>0); return v.length?Math.exp(v.reduce((s,x)=>s+Math.log(x),0)/v.length):0; }
 function langLine(m) { return m.lang+' \u00b7 '+m.runtime; }
-function engineLine(m) { return m.engine||''; }
 function engineClass(m) { const e=m.engine||''; if (e.includes('JIT')) return 'jit'; if (e.toLowerCase().includes('bytecode')) return 'bc'; return ''; }
 function engineCode(m) { const c = engineClass(m); return c==='jit' ? 'JIT compiler' : c==='bc' ? 'Bytecode VM' : 'Interpreter'; }
 function fullLabel(vm) { const m=VM_META[vm]; return m.label+' ('+m.runtime+')'; }
@@ -747,7 +793,28 @@ const EVAL = REPORT.eval || {};
 function evalLine(vm, common) {
   const e = EVAL[vm]; if (!e) return '';
   const g = geoMean(common.map(s => e[s] || 0));
-  return g > 0 ? '<div class="eval-time">eval only ' + fmtNs(Math.round(g)) + ' (geo mean, decode excluded)</div>' : '';
+  return g > 0 ? '<div class="eval-time" title="Geometric mean of the evaluation of a program decoded once before timing">eval only <b>' + fmtNs(Math.round(g)) + '</b> <span>(decode excluded)</span></div>' : '';
+}
+// A VM card: name and rank, then the headline number (decode + eval geometric mean, the ranking
+// metric) at the same height in every card, then eval only, the type, the badges and the notes.
+// rank: '#1' or 'exp'; ratio: the time / the fastest ranked VM of the category, or null.
+function cardHtml(vm, rank, geo, ratio, common, extra) {
+  const m = VM_META[vm];
+  const pass = scripts.filter(sc => data[sc]?.[vm] > 0).length;
+  const fail = scripts.filter(sc => data[sc]?.[vm] < 0).length;
+  const compatHtml = fail > 0
+    ? '<div class="compat"><span class="pass">'+pass+'</span>/<span>'+scripts.length+'</span> scripts passed · <span class="fail">'+fail+' failed</span></div>'
+    : '<div class="compat"><span class="pass">'+pass+'/'+scripts.length+'</span> scripts passed</div>';
+  const ratioHtml = ratio === null ? ''
+    : ratio === 1 ? '<div class="ratio">fastest in the category</div>'
+    : '<div class="ratio" title="Geometric mean time divided by the fastest VM of the category">' + ratio.toFixed(2) + '× the fastest time</div>';
+  return '<div class="card' + (rank === '#1' ? ' first' : '') + '">'
+    + '<div class="card-head"><div><div class="vm-name">' + m.label + '</div><div class="lang">' + langLine(m) + '</div></div><div class="rank">' + rank + '</div></div>'
+    + '<div class="metric-label">decode + eval &middot; geo mean</div>'
+    + '<div class="geo-mean">' + (geo > 0 ? fmtNs(Math.round(geo)) : '—') + '</div>' + ratioHtml
+    + evalLine(vm, common)
+    + '<div class="card-meta"><div class="engine ' + engineClass(m) + '">' + engineCode(m) + '</div>' + badges(vm) + compatHtml + compileLine(vm) + noteLine(vm) + (extra || '') + '</div>'
+    + '</div>';
 }
 // A VM note: escaped text with markdown links [text](https://...) as links.
 function noteLine(vm) {
@@ -763,6 +830,27 @@ function compileLine(vm) {
 const disclosureHtml = REPORT.disclosure.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/`([^`]+)`/g, '<code>$1</code>');
 document.getElementById('disclosure').innerHTML = disclosureHtml;
 document.getElementById('method-disclosure').innerHTML = disclosureHtml;
+document.querySelectorAll('.n-scripts').forEach(e => { e.textContent = scripts.length; });
+// The facts strip under the header: the gate result and the run.
+(function renderFacts() {
+  const nHidden = Object.keys(REPORT.hidden).length, total = shownVMs.length + nHidden;
+  const gv = document.getElementById('gate-v'), gd = document.getElementById('gate-d');
+  if (!REPORT.gate) {
+    gv.textContent = 'not checked';
+    gd.textContent = 'This run has no gate.json: the results and ExUnits were not compared with Haskell plutus-core.';
+  } else {
+    const outdated = shownVMs.filter(vm => REPORT.gate[vm]?.verdict === 'badge').length;
+    gv.textContent = shownVMs.length + ' of ' + total + ' VMs pass';
+    gd.textContent = 'Every script: the result and the ExUnits equal Haskell plutus-core. A VM that differs is not ranked'
+      + (nHidden ? ' (' + nHidden + ' failed, listed below)' : '') + '.'
+      + (outdated ? ' ' + outdated + ' of them with the cost model it ships ("outdated cost model" badge).' : '');
+  }
+  document.getElementById('run-v').textContent = REPORT.run;
+  if (REPORT.drift_percent !== null && REPORT.drift_percent !== undefined) {
+    const d = REPORT.drift_percent;
+    document.getElementById('drift-d').textContent = '; Haskell drift ' + (d >= 0 ? '+' : '') + d.toFixed(1) + ' % (end vs start)';
+  }
+})();
 if (REPORT.drift) { const d = document.getElementById('drift-note'); d.textContent = REPORT.drift; d.style.display = ''; }
 // Raw geo means (only scripts where ALL VMs have a positive result)
 const commonScripts = scripts.filter(s => presentVMs.every(vm => (data[s]?.[vm] || 0) > 0));
@@ -842,20 +930,20 @@ rankingsHost.innerHTML = CATS.map(cat => {
     ? sampleSize + '/' + scripts.length + ' common scripts'
     : 'all ' + scripts.length + ' scripts compatible';
   const cards = sorted.map((vm, i) => {
-    const m=VM_META[vm], geo=means[vm], ratio=(geo/fastest).toFixed(2);
-    const cls=i===0?'gold':i===1?'silver':i===2?'bronze':'';
-    const pass=scripts.filter(sc=>data[sc]?.[vm]>0).length;
-    const fail=scripts.filter(sc=>data[sc]?.[vm]<0).length;
-    const compatHtml=fail>0
-      ? '<div class="compat"><span class="pass">'+pass+'</span>/<span>'+scripts.length+'</span> passed · <span class="fail">'+fail+' failed</span></div>'
-      : '<div class="compat"><span class="pass">'+pass+'/'+scripts.length+'</span> passed</div>';
-    return '<div class="card '+cls+'"><div class="rank">#'+(i+1)+'</div><div class="vm-name">'+m.label+'</div><div class="lang">'+langLine(m)+'</div><div class="engine '+engineClass(m)+'">'+engineCode(m)+'</div>'+badges(vm)+compatHtml+compileLine(vm)+evalLine(vm, cm.common)+noteLine(vm)+'<div class="geo-mean">'+fmtNs(Math.round(geo))+'<span class="ratio">'+ratio+'×</span></div></div>';
+    const r = means[vm] / fastest;
+    return cardHtml(vm, '#' + (i + 1), means[vm], i === 0 ? 1 : r, cm.common);
   }).join('');
   const code = cat.key === 'int' ? 'INT' : 'COMP';
   return '<section class="cat-section '+cat.key+'" data-cat="'+cat.key+'"><div class="cat-header"><span class="cat-mark">'+code+' · '+cvms.length+'</span><span class="cat-name">'+cat.label+'<em>'+sampleNote+'</em></span></div><p class="cat-blurb">'+cat.blurb+'</p><div class="summary">'+cards+'</div></section>';
 }).join('');
 
-// Category filter chips
+// Category filter chips and the cross-category ranking: only when two or more categories have
+// ranked VMs (with one, the chip filters nothing and the overall ranking repeats the cards).
+const rankedCats = CATS.filter(c => vmsByCat[c.key].length).length;
+if (rankedCats < 2) {
+  document.getElementById('cat-filter').style.display = 'none';
+  document.getElementById('overall-details').style.display = 'none';
+}
 const catFilter = document.getElementById('cat-filter');
 const activeCats = new Set(CATS.map(c => c.key));
 catFilter.innerHTML = '<span class="label">Show:</span>' + CATS.map(cat => {
@@ -924,14 +1012,30 @@ const pFastest = penalizedGeoMeans[sortedPenalized[0]];
 const barGeo = Object.assign({}, penalizedGeoMeans);
 experimentalVMs.forEach(vm => { const g = experimentalGeo(vm); if (g > 0) barGeo[vm] = g; });
 const barVMs = Object.keys(barGeo).filter(vm => barGeo[vm] > 0).sort((a, b) => barGeo[a] - barGeo[b]);
-const logMax=Math.log(barGeo[barVMs[barVMs.length-1]]), logMin=Math.log(barGeo[barVMs[0]]);
+// Log axis in "× the fastest ranked VM": the bar runs from the axis start to the value, ticks at
+// 1-2-5 steps, so the length is read against labelled ticks, not as a linear ratio.
+const barRatio = vm => barGeo[vm] / pFastest;
+const axLo = Math.log10(Math.min(...barVMs.map(barRatio))) - 0.3;
+const axHi = Math.log10(Math.max(...barVMs.map(barRatio))) + 0.04;
+const axPos = r => 100 * (Math.log10(r) - axLo) / (axHi - axLo || 1);
+const axTicks = [];
+for (let d = Math.floor(axLo); d <= Math.ceil(axHi); d++) [1, 2, 5].forEach(k => {
+  const v = k * Math.pow(10, d); if (Math.log10(v) >= axLo && Math.log10(v) <= axHi) axTicks.push(v);
+});
+const fmtTick = v => (v >= 1 ? String(v) : String(+v.toFixed(2))) + '×';
+const gridHtml = axTicks.map(v => `<span class="gm-grid${v === 1 ? ' ref' : ''}" style="left:${axPos(v)}%"></span>`).join('');
+document.getElementById('bar-caption').innerHTML = 'Geometric mean of the <em>decode + eval</em> time over the ' + scripts.length
+  + ' scripts; a failed or missing script counts as the slowest VM&rsquo;s time. Shorter is faster. Log scale: the ratio is the time divided by the fastest ranked VM ('
+  + VM_META[sortedPenalized[0]].label + ' ' + VM_META[sortedPenalized[0]].runtime + ', 1&times;).'
+  + (experimentalVMs.length ? ' Hatched: experimental, not ranked.' : '');
 document.getElementById('bar-chart').innerHTML = barVMs.map(vm => {
-  const m=VM_META[vm], geo=barGeo[vm], ratio=(geo/pFastest).toFixed(2), exp = vm in EXPERIMENTAL;
-  const pct=5+95*(Math.log(geo)-logMin)/(logMax-logMin||1);
-  const fill = exp ? `background:repeating-linear-gradient(45deg,${m.color} 0 6px,transparent 6px 12px);opacity:0.35` : `background:${m.color};opacity:0.28`;
-  const tag = exp ? ' · <em>experimental, not ranked</em>' : '';
-  return `<div class="bar-row"><div class="bar-fill" style="width:${pct}%;${fill}"></div><div class="bar-info"><div class="bar-info-left"><span class="bar-vm">${m.label}</span><span class="bar-lang">${langLine(m)} · ${engineLine(m)}${tag}</span></div><div class="bar-info-right"><span class="bar-time">${fmtNs(Math.round(geo))}</span><span class="bar-ratio">${ratio}×</span></div></div></div>`;
-}).join('');
+  const m = VM_META[vm], geo = barGeo[vm], ratio = barRatio(vm), exp = vm in EXPERIMENTAL;
+  const tag = exp ? ' · experimental, not ranked' : '';
+  const title = `${m.label} (${m.runtime}): ${fmtNs(Math.round(geo))}, ${ratio.toFixed(2)}× the fastest ranked VM${tag}`;
+  return `<div class="gm-row${exp ? ' exp' : ''}" title="${title}"><div class="gm-name"><span class="bar-vm">${m.label}</span><span class="bar-lang">${langLine(m)}${m.engine && m.engine !== m.runtime ? ' · ' + m.engine : ''}${tag}</span></div>`
+    + `<div class="gm-track">${gridHtml}<div class="gm-bar" style="width:${axPos(ratio)}%"></div></div>`
+    + `<div class="gm-time">${fmtNs(Math.round(geo))}</div><div class="gm-ratio">${ratio.toFixed(2)}×</div></div>`;
+}).join('') + `<div class="gm-row gm-axis" aria-hidden="true"><div class="gm-name"></div><div class="gm-track">${axTicks.map(v => `<span class="gm-tick" style="left:${axPos(v)}%">${fmtTick(v)}</span>`).join('')}</div><div class="gm-time"></div><div class="gm-ratio"></div></div>`;
 
 // Toolchain tags
 document.getElementById('toolchain').innerHTML = sortedPenalized.concat(experimentalVMs).map(vm => {
@@ -956,8 +1060,12 @@ function renderTable() {
   const vms=tableVMs.filter(vm=>activeVMs.has(vm));
   const compVMs=vms.filter(vm=>REPORT.compile[vm]);
   // Each VM's eval-only column (if it has one) first, then its decode + eval column.
-  document.getElementById('table-head').innerHTML='<tr><th>Script</th>'+vms.map(vm=>{const m=VM_META[vm];return(EVAL[vm]?`<th class="eval-col">${m.label} eval only<span class="th-lang">decode excluded</span></th>`:'')+`<th>${m.label}<span class="th-lang">${langLine(m)} \u00b7 decode + eval${vm in EXPERIMENTAL?' \u00b7 experimental':''}</span></th>`;}).join('')
-    +compVMs.map(vm=>`<th class="compile-col">${VM_META[vm].label} compile<span class="th-lang">not in the timing</span></th>`).join('')+'</tr>';
+  // Two header rows: the VM spans its eval-only and decode + eval columns.
+  const sub = vm => { const m = VM_META[vm]; return m.runtime + (vm in EXPERIMENTAL ? ' · experimental' : ''); };
+  document.getElementById('table-head').innerHTML = '<tr><th rowspan="2" class="script-col">Script</th>'
+    + vms.map(vm => `<th class="vm-head g"${EVAL[vm] ? ' colspan="2"' : ''}>${VM_META[vm].label}<span class="th-lang">${sub(vm)}</span></th>`).join('')
+    + compVMs.map(vm => `<th rowspan="2" class="compile-col g">${VM_META[vm].label} compile<span class="th-lang">not in the timing</span></th>`).join('') + '</tr>'
+    + '<tr class="sub-head">' + vms.map(vm => (EVAL[vm] ? '<th class="eval-col g">eval only</th><th>decode + eval</th>' : '<th class="g">decode + eval</th>')).join('') + '</tr>';
   document.getElementById('table-body').innerHTML=scripts.map(script=>{
     const times={}; let min=Infinity;
     // The fastest is taken over the ranked VMs only.
@@ -965,9 +1073,10 @@ function renderTable() {
     // The fastest eval-only time, also over the ranked VMs only.
     const evalVMs=vms.filter(vm=>EVAL[vm]&&EVAL[vm][script]>0&&!(vm in EXPERIMENTAL));
     const minEval=Math.min(...evalVMs.map(vm=>EVAL[vm][script]));
-    const evalCell=vm=>{if(!EVAL[vm])return'';const e=EVAL[vm][script];if(!(e>0))return'<td class="missing">\u2014</td>';const best=e===minEval&&!(vm in EXPERIMENTAL)&&evalVMs.length>1;return`<td class="eval-col${best?' fastest':''}">${fmtNs(e)}</td>`;};
-    return'<tr><td>'+script+'</td>'+vms.map(vm=>{const t=times[vm];if(t===undefined||t===0)return evalCell(vm)+'<td class="missing">\u2014</td>';if(t<0)return evalCell(vm)+'<td class="failed">FAIL</td>';return evalCell(vm)+`<td${t===min&&!(vm in EXPERIMENTAL)&&vms.filter(v=>times[v]>0&&!(v in EXPERIMENTAL)).length>1?' class="fastest"':''}>${fmtNs(t)}</td>`;}).join('')
-      +compVMs.map(vm=>{const c=REPORT.compile[vm][script];return c?`<td class="compile-col">${fmtNs(c)}</td>`:'<td class="missing">\u2014</td>';}).join('')+'</tr>';
+    const evalCell=vm=>{if(!EVAL[vm])return'';const e=EVAL[vm][script];if(!(e>0))return'<td class="missing g">\u2014</td>';const best=e===minEval&&!(vm in EXPERIMENTAL)&&evalVMs.length>1;return`<td class="eval-col g${best?' fastest':''}">${fmtNs(e)}</td>`;};
+    const g=vm=>EVAL[vm]?'':' g';
+    return'<tr><td class="script-col">'+script+'</td>'+vms.map(vm=>{const t=times[vm];if(t===undefined||t===0)return evalCell(vm)+'<td class="missing'+g(vm)+'">\u2014</td>';if(t<0)return evalCell(vm)+'<td class="failed'+g(vm)+'">FAIL</td>';return evalCell(vm)+`<td class="d3${g(vm)}${t===min&&!(vm in EXPERIMENTAL)&&vms.filter(v=>times[v]>0&&!(v in EXPERIMENTAL)).length>1?' fastest':''}">${fmtNs(t)}</td>`;}).join('')
+      +compVMs.map(vm=>{const c=REPORT.compile[vm][script];return c?`<td class="compile-col g">${fmtNs(c)}</td>`:'<td class="missing g">\u2014</td>';}).join('')+'</tr>';
   }).join('');
 }
 renderTable();
@@ -977,15 +1086,8 @@ renderTable();
 if (experimentalVMs.length) {
   document.getElementById('experimental-section').style.display = '';
   document.getElementById('experimental-cards').innerHTML = experimentalVMs.map(vm => {
-    const m = VM_META[vm];
-    const geo = experimentalGeo(vm);
-    const pass = scripts.filter(sc => data[sc]?.[vm] > 0).length;
-    const fail = scripts.filter(sc => data[sc]?.[vm] < 0).length;
-    const compatHtml = fail > 0
-      ? '<div class="compat"><span class="pass">'+pass+'</span>/<span>'+scripts.length+'</span> passed · <span class="fail">'+fail+' failed</span></div>'
-      : '<div class="compat"><span class="pass">'+pass+'/'+scripts.length+'</span> passed</div>';
     const reason = String(EXPERIMENTAL[vm]).replace(/&/g,'&amp;').replace(/</g,'&lt;');
-    return '<div class="card"><div class="rank">exp</div><div class="vm-name">'+m.label+'</div><div class="lang">'+langLine(m)+'</div><div class="engine '+engineClass(m)+'">'+engineCode(m)+'</div>'+badges(vm)+compatHtml+compileLine(vm)+evalLine(vm, scripts)+noteLine(vm)+'<div class="exp-reason">'+reason+'</div><div class="geo-mean">'+(geo > 0 ? fmtNs(Math.round(geo)) : '\u2014')+'</div></div>';
+    return cardHtml(vm, 'exp', experimentalGeo(vm), null, scripts, '<div class="exp-reason">' + reason + '</div>');
   }).join('');
 }
 
@@ -1010,64 +1112,90 @@ if (hiddenVMs.length) {
   if (!runs.length || !vms.length) return;
   // Label with the runtime, so the two blaze-plutus lines (V8, JSC) can be told apart.
   const histLabel = vm => { const m = VM_META[vm] || { label: vm, runtime: '' };
-    return m.label + (m.runtime ? ' \u00b7 ' + m.runtime : '') + (vm in EXPERIMENTAL ? ' (experimental)' : ''); };
+    return m.label + (m.runtime ? ' · ' + m.runtime : '') + (vm in EXPERIMENTAL ? ' (experimental)' : ''); };
   // 2.4 -> "2.4× faster", 0.25 -> "4.0× slower", 1 -> "Haskell"
   const fmtSpeed = s => Math.abs(Math.log10(s)) < 0.004 ? '1× (Haskell)'
     : s > 1 ? (s < 10 ? s.toFixed(1) : s.toFixed(0)) + '× faster'
     : (1 / s < 10 ? (1 / s).toFixed(1) : (1 / s).toFixed(0)) + '× slower';
+  const colorOf = vm => (VM_META[vm] || { color: '#9494b0' }).color;
+  const dashOf = vm => vm in EXPERIMENTAL ? ' stroke-dasharray="6 4"' : '';
   document.getElementById('history-section').style.display = '';
-  const W = 960, H = 320, L = 78, R = 250, T = 14, B = 34;
+  const host = document.getElementById('history-chart');
+  const tip = document.getElementById('history-tip');
   const vals = vms.flatMap(vm => h.series[vm]).filter(v => v > 0).concat([1]);
   const lo = Math.log10(Math.min(...vals)) - 0.1, hi = Math.log10(Math.max(...vals)) + 0.1;
-  const x = i => runs.length === 1 ? L + (W - L - R) / 2 : L + i * (W - L - R) / (runs.length - 1);
-  const y = v => T + (hi - Math.log10(v)) * (H - T - B) / (hi - lo);
-  let svg = '';
-  // Grid at 1-2-5 steps of each decade
-  for (let d = Math.floor(lo); d <= Math.ceil(hi); d++) [1, 2, 5].forEach(k => {
-    const v = k * Math.pow(10, d), lv = Math.log10(v);
-    if (lv < lo || lv > hi) return;
-    svg += `<line class="${v === 1 ? 'base' : 'grid'}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/>`;
-    svg += `<text class="axis-label" x="${L - 6}" y="${y(v) + 3}" text-anchor="end">${v === 1 ? 'Haskell' : v > 1 ? v + '× faster' : Math.round(1 / v) + '× slower'}</text>`;
-  });
-  runs.forEach((r, i) => { svg += `<text class="axis-label" x="${x(i)}" y="${H - B + 16}" text-anchor="middle">${r}</text>`; });
-  // Lines, markers, end labels (identity is never color alone)
-  const labels = [];
-  vms.forEach(vm => {
-    const m = VM_META[vm] || { label: vm, color: '#9494b0' }, pts = h.series[vm];
-    let path = '', pen = false;
-    pts.forEach((v, i) => { if (v > 0) { path += (pen ? 'L' : 'M') + x(i) + ' ' + y(v); pen = true; } else pen = false; });
-    const dash = vm in EXPERIMENTAL ? ' stroke-dasharray="6 4"' : '';
-    svg += `<path d="${path}" fill="none" stroke="${m.color}" stroke-width="2" stroke-linejoin="round"${dash}/>`;
-    pts.forEach((v, i) => { if (v > 0) svg += `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="${m.color}" stroke="var(--bg)" stroke-width="2"/>`; });
-    const last = pts.map((v, i) => [v, i]).filter(p => p[0] > 0).pop();
-    if (last) labels.push({ y: y(last[0]), x: x(last[1]), text: histLabel(vm) + ' ' + fmtSpeed(last[0]) });
-  });
-  // Keep end labels 12 px apart
-  labels.sort((a, b) => a.y - b.y).forEach((l, i, a) => { if (i && l.y - a[i - 1].y < 12) l.y = a[i - 1].y + 12; });
-  labels.forEach(l => { svg += `<text class="line-label" x="${l.x + 8}" y="${l.y + 3}">${l.text}</text>`; });
-  // Hover: one invisible column per run
-  runs.forEach((r, i) => {
-    const w = runs.length === 1 ? (W - L - R) : (W - L - R) / (runs.length - 1);
-    svg += `<rect data-run="${i}" x="${x(i) - w / 2}" y="${T}" width="${w}" height="${H - T - B}" fill="transparent"/>`;
-  });
-  const host = document.getElementById('history-chart');
-  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Speed relative to Haskell per run, higher is faster">${svg}</svg>`;
-  document.getElementById('history-legend').innerHTML = vms.map(vm => {
-    const m = VM_META[vm] || { label: vm, color: '#9494b0' };
-    const sw = vm in EXPERIMENTAL ? `background:repeating-linear-gradient(90deg,${m.color} 0 4px,transparent 4px 7px)` : `background:${m.color}`;
+
+  // Drawn at the container's width in real pixels, so the text stays 11 px on a phone. Narrow:
+  // no end labels (the legend and the tooltip name the lines).
+  function draw() {
+    const W = Math.max(300, host.clientWidth), narrow = W < 640;
+    // Room for the longest end label (~6 px per character at 11 px), at most 45 % of the width.
+    const longest = Math.max(...vms.map(vm => (histLabel(vm) + ' 10.0× faster').length));
+    const H = narrow ? 260 : 320, L = 78, R = narrow ? 40 : Math.min(W * 0.45, 32 + longest * 6), T = 14, B = 34;
+    const x = i => runs.length === 1 ? L + (W - L - R) / 2 : L + i * (W - L - R) / (runs.length - 1);
+    const y = v => T + (hi - Math.log10(v)) * (H - T - B) / (hi - lo);
+    let svg = '';
+    // Grid at 1-2-5 steps of each decade; Haskell (1×) is the solid, brighter reference line.
+    for (let d = Math.floor(lo); d <= Math.ceil(hi); d++) [1, 2, 5].forEach(k => {
+      const v = k * Math.pow(10, d), lv = Math.log10(v);
+      if (lv < lo || lv > hi) return;
+      svg += `<line class="${v === 1 ? 'base' : 'grid'}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/>`;
+      svg += `<text class="axis-label${v === 1 ? ' base-label' : ''}" x="${L - 6}" y="${y(v) + 3}" text-anchor="end">${v === 1 ? 'Haskell 1×' : v > 1 ? v + '× faster' : Math.round(1 / v) + '× slower'}</text>`;
+    });
+    runs.forEach((r, i) => {
+      // With many runs, label every k-th date so the labels do not overlap.
+      const k = Math.ceil(runs.length * 80 / (W - L - R + 80));
+      if (i % k === 0 || i === runs.length - 1) svg += `<text class="axis-label" x="${x(i)}" y="${H - B + 16}" text-anchor="middle">${r}</text>`;
+    });
+    svg += `<line class="crosshair" x1="0" x2="0" y1="${T}" y2="${H - B}" style="display:none"/>`;
+    const labels = [];
+    vms.forEach(vm => {
+      const pts = h.series[vm];
+      let path = '', pen = false;
+      pts.forEach((v, i) => { if (v > 0) { path += (pen ? 'L' : 'M') + x(i) + ' ' + y(v); pen = true; } else pen = false; });
+      svg += `<path d="${path}" fill="none" stroke="${colorOf(vm)}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"${dashOf(vm)}/>`;
+      pts.forEach((v, i) => { if (v > 0) svg += `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="${colorOf(vm)}" stroke="var(--bg)" stroke-width="2"/>`; });
+      const last = pts.map((v, i) => [v, i]).filter(p => p[0] > 0).pop();
+      if (last) labels.push({ y0: y(last[0]), y: y(last[0]), x: x(last[1]), text: histLabel(vm) + ' ' + fmtSpeed(last[0]) });
+    });
+    if (!narrow) {
+      // Keep end labels 13 px apart; a label moved off its line end gets a leader line.
+      labels.sort((a, b) => a.y - b.y).forEach((l, i, a) => { if (i && l.y - a[i - 1].y < 13) l.y = a[i - 1].y + 13; });
+      labels.forEach(l => {
+        if (Math.abs(l.y - l.y0) > 1.5) svg += `<polyline class="leader" points="${l.x + 6},${l.y0} ${l.x + 14},${l.y0} ${l.x + 22},${l.y}"/>`;
+        svg += `<text class="line-label" x="${l.x + 26}" y="${l.y + 4}">${l.text}</text>`;
+      });
+    }
+    // Hover: one column per run, the crosshair snaps to the run.
+    runs.forEach((r, i) => {
+      const w = runs.length === 1 ? (W - L - R) : (W - L - R) / (runs.length - 1);
+      svg += `<rect data-run="${i}" x="${x(i) - w / 2}" y="${T}" width="${w}" height="${H - T - B}" fill="transparent"/>`;
+    });
+    host.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Speed relative to Haskell per run, higher is faster">${svg}</svg>`;
+    const cross = host.querySelector('.crosshair');
+    host.querySelectorAll('rect[data-run]').forEach(rect => {
+      rect.addEventListener('mousemove', e => {
+        const i = +rect.dataset.run;
+        cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.style.display = '';
+        // Value first, then the series, keyed with a short line in its colour.
+        const rows = vms.filter(vm => h.series[vm][i] > 0).sort((a, b) => h.series[b][i] - h.series[a][i])
+          .map(vm => `<div class="tip-row"><span class="tip-key" style="border-top:2px ${vm in EXPERIMENTAL ? 'dashed' : 'solid'} ${colorOf(vm)}"></span><b>${fmtSpeed(h.series[vm][i])}</b> <span>${histLabel(vm)}</span></div>`);
+        tip.innerHTML = '<div class="tip-title">' + runs[i] + '</div>' + rows.join('');
+        tip.style.display = 'block';
+        const tw = tip.offsetWidth;
+        tip.style.left = Math.min(e.clientX + 14, window.innerWidth - tw - 8) + 'px'; tip.style.top = (e.clientY + 14) + 'px';
+      });
+      rect.addEventListener('mouseleave', () => { tip.style.display = 'none'; cross.style.display = 'none'; });
+    });
+  }
+  draw();
+  let lastW = host.clientWidth, timer = 0;
+  window.addEventListener('resize', () => { clearTimeout(timer); timer = setTimeout(() => { if (host.clientWidth !== lastW) { lastW = host.clientWidth; draw(); } }, 150); });
+
+  document.getElementById('history-legend').innerHTML = '<span><span class="sw base-sw"></span>plutus-core (Haskell), the 1× reference</span>' + vms.map(vm => {
+    const sw = vm in EXPERIMENTAL ? `background:repeating-linear-gradient(90deg,${colorOf(vm)} 0 4px,transparent 4px 7px)` : `background:${colorOf(vm)}`;
     return `<span><span class="sw" style="${sw}"></span>${histLabel(vm)}</span>`;
   }).join('');
-  const tip = document.getElementById('history-tip');
-  host.querySelectorAll('rect[data-run]').forEach(rect => {
-    rect.addEventListener('mousemove', e => {
-      const i = +rect.dataset.run;
-      const lines = vms.filter(vm => h.series[vm][i] > 0).sort((a, b) => h.series[b][i] - h.series[a][i])
-        .map(vm => histLabel(vm) + ': ' + fmtSpeed(h.series[vm][i]));
-      tip.innerHTML = '<strong>' + runs[i] + '</strong><br>' + lines.join('<br>');
-      tip.style.display = 'block'; tip.style.left = (e.clientX + 14) + 'px'; tip.style.top = (e.clientY + 14) + 'px';
-    });
-    rect.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
-  });
 })();
 </script>
 </body>
