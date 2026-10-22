@@ -28,7 +28,9 @@ Library and node authors can use it to choose an evaluator.
   [plutus-core](https://github.com/IntersectMBO/plutus). A VM that fails is not ranked.
 - **Released versions only.** Every VM is pinned to a release in `.env`. Pre-releases, such as
   `-alpha` or `0.1.0-preNN` versions, do not count.
-- **Monthly runs on fixed hardware.** One Hetzner dedicated-vCPU server type runs every VM, one at a time.
+- **Monthly runs on fixed hardware.** One Hetzner dedicated-vCPU server type (`ccx43`) runs every VM,
+  up to 3 at once, each on its own CPU cores. Each run first checks that its server is not slow
+  (server qualification, see [METHODOLOGY.md](METHODOLOGY.md#hardware)).
 - **History.** Each run stays in `results/`. The page shows each VM's time relative to Haskell over time.
 
 ## Background
@@ -79,8 +81,9 @@ What changed:
   badge. An unranked [Experimental](#experimental) section shows VMs that miss the downstream-user
   rule or publish no artifact. See [Not included](#not-included).
 - **Eval-only column.** A second timing evaluates a program decoded once before timing.
-- **Automated monthly runs.** GitHub Actions creates a Hetzner server, installs NixOS on it, runs the
-  benchmark and deletes the server.
+- **Automated monthly runs.** GitHub Actions creates a Hetzner server, installs NixOS on it, checks
+  its speed against a stored Haskell reference, runs the benchmark and deletes the server. A slow
+  server is replaced, up to 3 times.
 
 ## VMs Benchmarked
 
