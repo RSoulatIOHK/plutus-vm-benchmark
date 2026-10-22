@@ -58,7 +58,8 @@ def decide(means: dict[str, float], reference: dict, server_type: str,
     missing = sorted(s for s in ref if s not in means or means[s] <= 0)
     if missing:
         return BAD_INPUT, None, f"no timing for {', '.join(missing)}"
-    ratio = math.exp(sum(math.log(means[s] / ref[s]) for s in ref) / len(ref))
+    # Rounded to the printed precision, so the verdict and the printed ratio agree at the limit.
+    ratio = round(math.exp(sum(math.log(means[s] / ref[s]) for s in ref) / len(ref)), 3)
     detail = ", ".join(f"{s} {means[s] / ref[s]:.2f}" for s in sorted(ref))
     source = f"{server_type} reference (harness {entry.get('harness', '?')}, {entry.get('measured', '?')})"
     if ratio > max_ratio:
