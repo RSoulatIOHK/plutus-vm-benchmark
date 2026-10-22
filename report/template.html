@@ -603,6 +603,18 @@
   @media (max-width: 768px) {
     .summary { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
   }
+  /* Phones: one column of cards, a wrapping header, less page padding. */
+  @media (max-width: 560px) {
+    html { font-size: 17px; }
+    .page { padding: 1.1rem 0.9rem 0.8rem; }
+    .header { flex-wrap: wrap; gap: 0.75rem; }
+    .header-brand { align-items: flex-start; gap: 0.7rem; min-width: 0; }
+    .header-logo { height: 30px; }
+    .gh-link { order: -1; margin-left: auto; }
+    .summary { grid-template-columns: 1fr; }
+    .failed-list .fl-row { flex-direction: column; gap: 0; }
+    .failed-list .fl-vm { min-width: 0; }
+  }
 </style>
 </head>
 <body>
@@ -1120,7 +1132,7 @@ if (hiddenVMs.length) {
     const W = Math.max(300, host.clientWidth), narrow = W < 640;
     // Room for the longest end label (~6 px per character at 11 px), at most 45 % of the width.
     const longest = Math.max(...vms.map(vm => (histLabel(vm) + ' 10.0× faster').length));
-    const H = narrow ? 260 : 320, L = narrow ? 64 : 78, R = narrow ? 12 : Math.min(W * 0.45, 32 + longest * 6), T = 14, B = 34;
+    const H = narrow ? 260 : 320, L = 78, R = narrow ? 40 : Math.min(W * 0.45, 32 + longest * 6), T = 14, B = 34;
     const x = i => runs.length === 1 ? L + (W - L - R) / 2 : L + i * (W - L - R) / (runs.length - 1);
     const y = v => T + (hi - Math.log10(v)) * (H - T - B) / (hi - lo);
     let svg = '';
