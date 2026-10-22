@@ -722,6 +722,28 @@
     .vml-k { font-family: var(--font-mono); font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-right: 0.15rem; }
     .vml-note { flex-basis: 100%; font-size: 0.64rem; color: var(--text-muted); line-height: 1.45; }
     @media (max-width: 640px) { .vml-row { grid-template-columns: 1fr; } }
+    /* History highlight: the hovered or selected VM stays full colour and thick, the others dim. */
+    .history-chart .series, .history-chart .end-label { transition: opacity 0.12s; pointer-events: none; }
+    .history-chart.focus .series { opacity: 0.15; }
+    .history-chart.focus .end-label { opacity: 0.3; }
+    .history-chart.focus .series.on, .history-chart.focus .end-label.on { opacity: 1; }
+    .history-chart .series.on path { stroke-width: 3.5; }
+    .history-chart .end-label.on .line-label { fill: var(--text); font-weight: 600; }
+    .history-chart rect[data-run] { cursor: pointer; }
+    .history-legend .lg-item { display: inline-flex; align-items: center; gap: 0.1rem; }
+    .history-legend button.lg-btn { background: transparent; border: 1px solid transparent; border-radius: 4px; color: inherit; font: inherit; padding: 0.1rem 0.35rem; cursor: pointer; transition: opacity 0.12s; }
+    .history-legend button.lg-btn:hover { border-color: var(--border-accent); color: var(--text); }
+    .history-legend button.lg-btn:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 1px; }
+    .history-legend button.lg-btn[aria-pressed="true"] { border-color: var(--text-secondary); color: var(--text); background: var(--surface); }
+    .history-legend.focus button.lg-btn:not(.on) { opacity: 0.45; }
+    .history-legend a.lg-info { color: var(--text-muted); text-decoration: none; font-size: 0.6rem; padding: 0.1rem 0.2rem; }
+    .history-legend a.lg-info:hover { color: var(--text); }
+    .history-tip .tip-row.on b, .history-tip .tip-row.on span { color: var(--text); }
+    /* Geometric-mean bars: the same highlight */
+    .bar-chart .gm-row:not(.gm-axis) { cursor: pointer; }
+    .bar-chart.focus .gm-row:not(.gm-axis):not(.on) .gm-bar { opacity: 0.25; }
+    .bar-chart.focus .gm-row:not(.gm-axis):not(.on) .gm-name { opacity: 0.55; }
+    .bar-chart .gm-row.on { background: var(--surface-hover); }
   </style>
 
   <div class="section" id="vms">
@@ -1071,6 +1093,39 @@ document.getElementById('bar-chart').innerHTML = barVMs.map(vm => {
     + `<div class="gm-time">${fmtNs(Math.round(geo))}</div><div class="gm-ratio">${ratio.toFixed(2)}×</div></div>`;
 }).join('') + `<div class="gm-row gm-axis" aria-hidden="true"><div class="gm-name"></div><div class="gm-track">${axTicks.map(v => `<span class="gm-tick" style="left:${axPos(v)}%">${fmtTick(v)}</span>`).join('')}</div><div class="gm-time"></div><div class="gm-ratio"></div></div>`;
 
+// Highlight one VM in the geometric-mean bars and the history chart: hover (a mouse over a bar
+// row, a history line or a legend entry) previews it; a click or tap on a row, a line or a legend
+// entry selects it until a second click on it, a click on empty space, or Escape. Hover wins over
+// the selection while the pointer is there.
+const HL = {
+  hover: null, selected: null, views: [],
+  active() { return this.hover || this.selected; },
+  update() { const vm = this.active(); this.views.forEach(f => f(vm)); },
+  setHover(vm) { if (this.hover !== vm) { this.hover = vm; this.update(); } },
+  // A click toggles the selection; it also ends the hover preview, so a second tap on a touch
+  // screen (where no pointer leaves) clears the highlight.
+  toggle(vm) { this.selected = this.selected === vm ? null : vm; this.hover = null; this.update(); },
+  clear() { if (this.selected || this.hover) { this.selected = null; this.hover = null; this.update(); } },
+};
+document.addEventListener('click', e => {
+  if (!e.target.closest('.history-legend .lg-btn, #history-chart rect[data-run], #bar-chart .gm-row[data-vm]')) HL.clear();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') HL.clear(); });
+(function barHighlight() {
+  const chart = document.getElementById('bar-chart');
+  const rowOf = e => e.target.closest('.gm-row[data-vm]');
+  chart.addEventListener('pointerover', e => { const r = rowOf(e); if (r && e.pointerType === 'mouse') HL.setHover(r.dataset.vm); });
+  chart.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') HL.setHover(null); });
+  // The VM name is a link: it navigates and does not select.
+  chart.addEventListener('click', e => { const r = rowOf(e); if (r && !e.target.closest('a')) HL.toggle(r.dataset.vm); });
+  HL.views.push(vm => {
+    const rows = chart.querySelectorAll('.gm-row[data-vm]');
+    const on = [...rows].some(r => r.dataset.vm === vm);
+    chart.classList.toggle('focus', on);
+    rows.forEach(r => r.classList.toggle('on', on && r.dataset.vm === vm));
+  });
+})();
+
 // Toolchain tags
 document.getElementById('toolchain').innerHTML = sortedPenalized.concat(experimentalVMs).map(vm => {
   const m=VM_META[vm];
@@ -1183,21 +1238,24 @@ if (hiddenVMs.length) {
     });
     svg += `<line class="crosshair" x1="0" x2="0" y1="${T}" y2="${H - B}" style="display:none"/>`;
     const labels = [];
+    // One group per VM (path and points): the highlight dims the others and lifts it to the front.
     vms.forEach(vm => {
       const pts = h.series[vm];
       let path = '', pen = false;
       pts.forEach((v, i) => { if (v > 0) { path += (pen ? 'L' : 'M') + x(i) + ' ' + y(v); pen = true; } else pen = false; });
-      svg += `<path d="${path}" fill="none" stroke="${colorOf(vm)}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"${dashOf(vm)}/>`;
+      svg += `<g class="series" data-vm="${vm}"><path d="${path}" fill="none" stroke="${colorOf(vm)}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"${dashOf(vm)}/>`;
       pts.forEach((v, i) => { if (v > 0) svg += `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="${colorOf(vm)}" stroke="var(--bg)" stroke-width="2"/>`; });
+      svg += '</g>';
       const last = pts.map((v, i) => [v, i]).filter(p => p[0] > 0).pop();
-      if (last) labels.push({ y0: y(last[0]), y: y(last[0]), x: x(last[1]), text: histLabel(vm) + ' ' + fmtSpeed(last[0]) });
+      if (last) labels.push({ vm, y0: y(last[0]), y: y(last[0]), x: x(last[1]), text: histLabel(vm) + ' ' + fmtSpeed(last[0]) });
     });
     if (!narrow) {
       // Keep end labels 13 px apart; a label moved off its line end gets a leader line.
       labels.sort((a, b) => a.y - b.y).forEach((l, i, a) => { if (i && l.y - a[i - 1].y < 13) l.y = a[i - 1].y + 13; });
       labels.forEach(l => {
+        svg += `<g class="end-label" data-vm="${l.vm}">`;
         if (Math.abs(l.y - l.y0) > 1.5) svg += `<polyline class="leader" points="${l.x + 6},${l.y0} ${l.x + 14},${l.y0} ${l.x + 22},${l.y}"/>`;
-        svg += `<text class="line-label" x="${l.x + 26}" y="${l.y + 4}">${l.text}</text>`;
+        svg += `<text class="line-label" x="${l.x + 26}" y="${l.y + 4}">${l.text}</text></g>`;
       });
     }
     // Hover: one column per run, the crosshair snaps to the run.
@@ -1206,14 +1264,16 @@ if (hiddenVMs.length) {
       svg += `<rect data-run="${i}" x="${x(i) - w / 2}" y="${T}" width="${w}" height="${H - T - B}" fill="transparent"/>`;
     });
     host.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Speed relative to Haskell per run, higher is faster">${svg}</svg>`;
+    geom = { x, y };
     const cross = host.querySelector('.crosshair');
     host.querySelectorAll('rect[data-run]').forEach(rect => {
       rect.addEventListener('mousemove', e => {
         const i = +rect.dataset.run;
         cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.style.display = '';
-        // Value first, then the series, keyed with a short line in its colour.
+        // Value first, then the series, keyed with a short line in its colour; the highlighted VM's row is brighter.
+        const on = HL.active();
         const rows = vms.filter(vm => h.series[vm][i] > 0).sort((a, b) => h.series[b][i] - h.series[a][i])
-          .map(vm => `<div class="tip-row"><span class="tip-key" style="border-top:2px ${vm in EXPERIMENTAL ? 'dashed' : 'solid'} ${colorOf(vm)}"></span><b>${fmtSpeed(h.series[vm][i])}</b> <span>${histLabel(vm)}</span></div>`);
+          .map(vm => `<div class="tip-row${vm === on ? ' on' : ''}"><span class="tip-key" style="border-top:2px ${vm in EXPERIMENTAL ? 'dashed' : 'solid'} ${colorOf(vm)}"></span><b>${fmtSpeed(h.series[vm][i])}</b> <span>${histLabel(vm)}</span></div>`);
         tip.innerHTML = '<div class="tip-title">' + runs[i] + '</div>' + rows.join('');
         tip.style.display = 'block';
         const tw = tip.offsetWidth;
@@ -1221,15 +1281,76 @@ if (hiddenVMs.length) {
       });
       rect.addEventListener('mouseleave', () => { tip.style.display = 'none'; cross.style.display = 'none'; });
     });
+    applyHighlight(HL.active());
   }
+
+  // The VM whose line passes nearest to the pointer, within 12 px (20 px for a finger), or null. A
+  // line is straight between two runs, so its y at the pointer is the linear interpolation.
+  let geom = null;
+  function nearestVm(e) {
+    const box = host.querySelector('svg').getBoundingClientRect();
+    const px = e.clientX - box.left, py = e.clientY - box.top, reach = e.pointerType === 'touch' ? 20 : 12;
+    let best = null, bestD = reach;
+    vms.forEach(vm => {
+      const pts = h.series[vm];
+      let yy = null;
+      for (let i = 0; i < runs.length; i++) {
+        const xi = geom.x(i), xj = i + 1 < runs.length ? geom.x(i + 1) : xi;
+        if (pts[i] > 0 && Math.abs(px - xi) <= reach) yy = geom.y(pts[i]);
+        if (i + 1 < runs.length && pts[i] > 0 && pts[i + 1] > 0 && px >= xi && px <= xj) {
+          const t = (px - xi) / (xj - xi || 1);
+          yy = geom.y(pts[i]) + t * (geom.y(pts[i + 1]) - geom.y(pts[i]));
+          break;
+        }
+      }
+      if (yy !== null && Math.abs(py - yy) < bestD) { bestD = Math.abs(py - yy); best = vm; }
+    });
+    return best;
+  }
+  host.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && e.target.matches('rect[data-run]')) HL.setHover(nearestVm(e)); });
+  host.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') HL.setHover(null); });
+  // A click or tap on a line selects it (again: clears); on empty plot space it clears.
+  host.addEventListener('click', e => {
+    if (!e.target.matches('rect[data-run]')) return;
+    const vm = nearestVm(e);
+    if (vm) HL.toggle(vm); else HL.clear();
+  });
+
+  const legend = document.getElementById('history-legend');
+  function applyHighlight(vm) {
+    const on = vms.includes(vm) ? vm : null;
+    host.classList.toggle('focus', !!on);
+    host.querySelectorAll('.series, .end-label').forEach(el => el.classList.toggle('on', el.dataset.vm === on));
+    if (on) {
+      // Lift the line in front of the others (the end labels and hit areas stay above it).
+      const g = [...host.querySelectorAll('.series')].find(el => el.dataset.vm === on);
+      if (g) g.parentNode.insertBefore(g, host.querySelector('.end-label, rect[data-run]'));
+    }
+    legend.classList.toggle('focus', !!on);
+    legend.querySelectorAll('.lg-btn').forEach(b => {
+      b.classList.toggle('on', b.dataset.vm === on);
+      b.setAttribute('aria-pressed', String(b.dataset.vm === HL.selected));
+    });
+  }
+
   draw();
+  HL.views.push(applyHighlight);
   let lastW = host.clientWidth, timer = 0;
   window.addEventListener('resize', () => { clearTimeout(timer); timer = setTimeout(() => { if (host.clientWidth !== lastW) { lastW = host.clientWidth; draw(); } }, 150); });
 
-  document.getElementById('history-legend').innerHTML = '<span><span class="sw base-sw"></span>' + vmLink('haskell', 'plutus-core (Haskell)') + ', the 1× reference</span>' + vms.map(vm => {
+  // Legend entries are buttons: hover previews, click / Enter / Space toggles the selection. The
+  // arrow next to each one links to the VM's row in "VMs in this benchmark".
+  legend.innerHTML = '<span class="lg-item"><span class="sw base-sw"></span>' + vmLink('haskell', 'plutus-core (Haskell)') + ', the 1× reference</span>' + vms.map(vm => {
     const sw = vm in EXPERIMENTAL ? `background:repeating-linear-gradient(90deg,${colorOf(vm)} 0 4px,transparent 4px 7px)` : `background:${colorOf(vm)}`;
-    return `<span><span class="sw" style="${sw}"></span>${vmLink(vm, histLabel(vm))}</span>`;
+    return `<span class="lg-item"><button type="button" class="lg-btn" data-vm="${vm}" aria-pressed="false" title="Highlight this line (click again to clear)"><span class="sw" style="${sw}"></span>${histLabel(vm)}</button>`
+      + `<a class="lg-info" href="#${vmAnchor(vm)}" title="About ${fullLabel(vm)}" aria-label="About ${fullLabel(vm)}">↓</a></span>`;
   }).join('');
+  legend.querySelectorAll('.lg-btn').forEach(b => {
+    b.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') HL.setHover(b.dataset.vm); });
+    b.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') HL.setHover(null); });
+    b.addEventListener('click', () => HL.toggle(b.dataset.vm));
+  });
+  applyHighlight(HL.active());
 })();
 </script>
 </body>
