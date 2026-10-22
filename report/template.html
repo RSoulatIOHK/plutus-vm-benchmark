@@ -940,7 +940,9 @@ document.getElementById('toolchain').innerHTML = sortedPenalized.concat(experime
 }).join('');
 
 // Filters
-const tableVMs = presentVMs.concat(experimentalVMs);
+// Fastest first: the order of the geometric-mean bars (experimental VMs at their place, too); a VM
+// without a geometric mean goes last.
+const tableVMs = barVMs.concat(presentVMs.concat(experimentalVMs).filter(vm => !barVMs.includes(vm)));
 let activeVMs = new Set(tableVMs);
 const filtersEl = document.getElementById('filters');
 tableVMs.forEach(vm => {
