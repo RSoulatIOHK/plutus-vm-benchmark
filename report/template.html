@@ -605,7 +605,6 @@
   }
   /* Phones: one column of cards, a wrapping header, less page padding. */
   @media (max-width: 560px) {
-    html { font-size: 17px; }
     .page { padding: 1.1rem 0.9rem 0.8rem; }
     .header { flex-wrap: wrap; gap: 0.75rem; }
     .header-brand { align-items: flex-start; gap: 0.7rem; min-width: 0; }
@@ -735,7 +734,7 @@ const REPORT = {{REPORT_JSON}};
 // One fixed colour per VM, the same in every run (the colour follows the VM, never its rank): the
 // 8 slots of the validated dark categorical palette (dataviz validate_palette.js on #09090f and
 // #111119: CVD ΔE >= 8.4, normal-vision ΔE >= 19.3, all >= 3:1). plutus-core is the reference and
-// takes the neutral grey; the experimental Scalus JIT is a light neutral, drawn dashed / hatched.
+// takes the neutral grey; the experimental Scalus JIT is a receding mid neutral, dashed / hatched.
 const VM_META = {
   'uplc-turbo':     { label: 'uplc-turbo AST', lang: 'Rust',        runtime: 'AST walker',     engine: 'AST walker',                   color: '#199e70', compiler: 'rustc 1.94' },
   'plutigo':        { label: 'Plutigo',        lang: 'Go',          runtime: 'CEK',            engine: 'CEK interpreter',              color: '#e66767', compiler: 'Go 1.26' },
@@ -743,7 +742,7 @@ const VM_META = {
   'blaze-v8':       { label: 'blaze-plutus',   lang: 'TypeScript',  runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: '#008300', compiler: 'Node.js 22' },
   'haskell':        { label: 'plutus-core',    lang: 'Haskell',     runtime: 'GHC',            engine: 'CEK interpreter',              color: '#8484a2', compiler: 'GHC 9.6.4' },
   'scalus-cek':     { label: 'Scalus CEK',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'CEK interpreter',              color: '#3987e5', compiler: 'GraalVM JDK 25 / Scala 3' },
-  'scalus-jit':     { label: 'Scalus JIT',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'UPLC → JVM bytecode JIT',      color: '#d0d0e0', compiler: 'GraalVM JDK 25 / Scala 3' },
+  'scalus-jit':     { label: 'Scalus JIT',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'UPLC → JVM bytecode JIT',      color: '#a0a0bc', compiler: 'GraalVM JDK 25 / Scala 3' },
   'scalus-js':      { label: 'Scalus.js CEK',  lang: 'Scala.js',    runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: '#d95926', compiler: 'scalus npm / Node.js 22' },
   'aiken':          { label: 'Aiken uplc',     lang: 'Rust',        runtime: 'native',         engine: 'CEK interpreter',              color: '#d55181', compiler: 'rustc 1.94' },
   'aiken-wasm':     { label: 'Aiken uplc WASM', lang: 'Rust → WASM', runtime: 'Node (V8)',     engine: 'CEK interpreter',              color: '#c98500', compiler: '@lucid-evolution/uplc npm / Node.js 22' },
