@@ -800,6 +800,11 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
                 env_badge += f" &middot; {value}"
             elif key == "os":
                 env_badge += f" &middot; {value}"
+            elif key == "lanes":
+                # "lanes: 3 (lane0 2,3,10,11; ...)": more than one lane ran VMs at the same time.
+                n = value.split(" ", 1)[0]
+                if n.isdigit() and int(n) > 1:
+                    env_badge += f" &middot; {n} parallel lanes"
         date = os.path.basename(run_dir)
         env_badge += f" &middot; {date}"
     else:

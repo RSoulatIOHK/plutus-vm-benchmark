@@ -168,10 +168,12 @@ Decisions D13 to D17 of the
 Host and noise measures ([`scripts/run-images.sh`](scripts/run-images.sh),
 [`nix/runner.nix`](nix/runner.nix)):
 
-- **Image pulls first**: all images are pulled before the first VM runs. No pull overlaps a timing.
-- **CPU set**: on a Linux host every container runs on CPUs 1 to N-1 (`--cpuset-cpus`). CPU 0
-  stays free for the host (Docker, SSH, interrupts). On Docker Desktop (macOS) there is no CPU set:
-  the containers run in a Linux VM, and its CPU 0 is not the host's.
+- **Image pulls first**: all images are pulled, up to 4 at a time, before the first VM runs. No
+  pull overlaps a timing.
+- **CPU set**: on a Linux host every container runs on every CPU except the physical core of
+  CPU 0 (`--cpuset-cpus`). That core stays free for the host (Docker, SSH, interrupts). On Docker
+  Desktop (macOS) there is no CPU set: the containers run in a Linux VM, and its CPU 0 is not the
+  host's.
 - **No network**: every container runs with `--network none`.
 - **Quiet host**: the bench server disables the logrotate and fstrim timers. Nix GC, Nix store
   optimisation and Docker auto-prune are off. Transparent huge pages are pinned to `madvise`.
@@ -187,8 +189,15 @@ Host and noise measures ([`scripts/run-images.sh`](scripts/run-images.sh),
 The monthly run uses a Hetzner Cloud dedicated-vCPU server, type `ccx33` (the default of
 `run.yml`): AMD EPYC, 8 dedicated vCPUs, 32 GB RAM. A new server is created for each run. NixOS is
 installed on it from [`nix/runner.nix`](nix/runner.nix), with the CPU governor set to
-`performance` (a KVM guest has no cpufreq driver, so this has no effect there). The server runs
-one VM at a time and is deleted after the run. `environment.txt` records the CPU, cores, memory
+`performance` (a KVM guest has no cpufreq driver, so this has no effect there). The published run
+uses one VM at a time. The server is deleted after the run.
+
+A test run can use lanes (`LANES=n`, the `lanes` input of `run.yml`). The host keeps the core of
+CPU 0. The other physical cores split into n lanes of whole cores, and up to n VMs run at once,
+each on its own lane. Haskell and the drift probe still run alone, on lane 0. VMs on other lanes
+share the memory bus and the last-level cache, so a run with lanes is a partial run and is never
+published. `environment.txt` records the lanes, for example
+`lanes: 3 (lane0 2,3; lane1 4,5; lane2 6,7)`. `environment.txt` records the CPU, cores, memory
 and the noise data of each run (see [Fairness rules](#fairness-rules)).
 
 ## Unified Output

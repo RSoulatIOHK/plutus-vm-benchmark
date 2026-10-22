@@ -10,7 +10,7 @@
 #   IMAGE_PREFIX   image name prefix                 (default ghcr.io/lantr-io/pvb-)
 #   IMAGE_TAG      tag to run                        (default latest; auto = scripts/images.sh tag <vm>,
 #                  the exact image of the checked-out files)
-#   PULL=1         docker pull each image first      (default 0: use local images)
+#   PULL=1         docker pull each image first, up to 4 at a time (default 0: use local images)
 #   BENCH_SCRIPTS  extended regex, full match against the script name (default: every script)
 #   BENCH_LOOPS    comma list of d3, eval, check          (default d3,eval,check)
 #   BENCH_TIMING   normal | quick                         (default normal)
@@ -20,14 +20,25 @@
 #                  except CPU 0 and its SMT siblings, so the host keeps one whole physical core;
 #                  none on other hosts, for example Docker Desktop, where CPU 0 belongs to the
 #                  Docker VM, not to the host). none = no CPU set
+#   LANES          number of parallel lanes (default 1: one VM at a time). See "Lanes" below
+#   BENCH_TRACE    1 = the JIT rows log warm-up slices into <vm>-warmup.csv (default 0)
 #   DRIFT          1 = drift probe (default), 0 = off. See "Drift probe" below
 #   PVB_PROGRESS   progress file, one line per stage (default <results-dir>/progress.txt)
-# The four BENCH_ switches are passed to the images (docs/IMAGE_CONTRACT.md). A run of a subset of
+# The BENCH_ switches are passed to the images (docs/IMAGE_CONTRACT.md). A run of a subset of
 # the scripts writes their names to scripts.txt; the gate then compares only those.
 #
 # Order: with PULL=1 every image is pulled before the first VM runs, so a pull never overlaps a
 # timing. Haskell runs first (the reference and the drift probe); the other VMs follow in the
 # given order. Containers run with --network none.
+#
+# Lanes: LANES=n (n > 1) splits the physical cores, except the core of CPU 0 (kept for the host),
+# into n lanes of the same number of whole cores. A lane has every SMT thread of its cores. Cores
+# that do not divide evenly stay idle. Haskell runs first and alone, on lane 0, while the other
+# lanes idle. Then each free lane takes the next VM, so up to n containers run at once, each with
+# --cpuset-cpus of its lane. The drift probe runs at the end, alone, on lane 0. LANES > 1 needs a
+# Linux host with the CPU topology in sysfs, CPUSET=auto and bash >= 5.1.
+#   scripts/run-images.sh --lanes <n>   prints the lane layout of this host and exits
+# PVB_SYSFS_CPU (default /sys/devices/system/cpu) is the topology root; tests set it to a fake tree.
 #
 # Drift probe: when haskell is in the list and the d3 loop runs, haskell runs once more at the
 # end, d3 loop only, on 5 evenly spaced scripts of the selection. Its times go to
@@ -50,11 +61,87 @@ BENCH_QUICK="${BENCH_QUICK:-0}"
 BENCH_SCRIPTS="${BENCH_SCRIPTS:-}"
 BENCH_LOOPS="${BENCH_LOOPS:-d3,eval,check}"
 BENCH_TIMING="${BENCH_TIMING:-normal}"
+BENCH_TRACE="${BENCH_TRACE:-0}"
 [[ "$BENCH_QUICK" == 1 ]] && BENCH_TIMING=quick
 DATA_DIR="${DATA_DIR:-$REPO_ROOT/data}"
 PYTHON_IMAGE="python:3.12-slim"
 
-[[ $# -ge 1 ]] || { echo "usage: $0 <results-dir> [vm ...]" >&2; exit 1; }
+die() { echo "ERROR: $*" >&2; exit 2; }
+
+# --- CPU topology and lanes ---------------------------------------------------------------
+# Expand a Linux CPU list such as "0-3,8" into one CPU number per line.
+expand_cpus() {
+    local part
+    for part in ${1//,/ }; do
+        if [[ "$part" == *-* ]]; then seq "${part%-*}" "${part#*-}"; else echo "$part"; fi
+    done
+}
+SYSFS_CPU="${PVB_SYSFS_CPU:-/sys/devices/system/cpu}"
+# The physical cores, one line each: the CPUs of the core (its SMT threads) as a sorted comma list.
+# The cores are in the order of their first CPU.
+physical_cores() {
+    local c
+    for c in $(expand_cpus "$(cat "$SYSFS_CPU/online")"); do
+        expand_cpus "$(cat "$SYSFS_CPU/cpu$c/topology/thread_siblings_list")" | sort -n | paste -sd, -
+    done | sort -t, -k1,1n -u
+}
+# split_lanes <n>: the cores on stdin (physical_cores) without the core of CPU 0, split into n lanes
+# of the same number of whole cores. Prints n lines (the CPUs of each lane, sorted) and then a line
+# "idle <CPUs>" (or "idle -") for the cores left over. Exits 3 when there are fewer cores than lanes.
+split_lanes() {
+    awk -v n="$1" -F, '
+        { host = 0; for (i = 1; i <= NF; i++) if ($i == "0") host = 1
+          if (!host) core[m++] = $0 }
+        END {
+            per = int(m / n)
+            if (per < 1) { printf "%d physical cores besides the host core\n", m > "/dev/stderr"; exit 3 }
+            for (l = 0; l < n; l++) {
+                s = ""; for (k = 0; k < per; k++) s = s (k ? "," : "") core[l * per + k]; print s }
+            s = ""; for (k = n * per; k < m; k++) s = s (s == "" ? "" : ",") core[k]
+            print "idle " (s == "" ? "-" : s)
+        }' | while read -r line; do
+            # Sort the CPUs of each lane: "1,5,2,6" -> "1,2,5,6".
+            if [[ "$line" == idle* ]]; then echo "idle $(echo "${line#idle }" | tr "," "\n" | sort -n | paste -sd, -)"; continue; fi
+            echo "$line" | tr ',' '\n' | sort -n | paste -sd, -
+        done
+}
+# lane_layout <n>: sets LANE_CPUS (one CPU list per lane) and LANE_IDLE, or dies with the reason.
+lane_layout() {
+    local out rc=0
+    if [[ -z "${PVB_SYSFS_CPU:-}" && "$(uname -s)" != Linux ]]; then
+        die "LANES=$1 needs a Linux host with the CPU topology in sysfs; this is $(uname -s) (for example Docker Desktop). Use LANES=1"
+    fi
+    [[ -r "$SYSFS_CPU/online" && -r "$SYSFS_CPU/cpu0/topology/thread_siblings_list" ]] \
+        || die "LANES=$1 needs the CPU topology in $SYSFS_CPU (online, cpuN/topology/thread_siblings_list)"
+    out=$(physical_cores | split_lanes "$1" 2>&1) || rc=$?
+    if [[ $rc -ne 0 ]]; then
+        die "LANES=$1 needs at least $1 physical cores besides the core of CPU 0; this host has ${out%% *}"
+    fi
+    LANE_CPUS=()
+    while read -r line; do
+        if [[ "$line" == idle* ]]; then LANE_IDLE="${line#idle }"; else LANE_CPUS+=("$line"); fi
+    done <<< "$out"
+}
+# "lane0 1,5; lane1 2,6; idle 3,7"
+lane_summary() {
+    local l s=""
+    for l in "${!LANE_CPUS[@]}"; do s="$s${s:+; }lane$l ${LANE_CPUS[$l]}"; done
+    [[ "${LANE_IDLE:--}" == - ]] || s="$s; idle cores ${LANE_IDLE}"
+    echo "$s"
+}
+
+LANES="${LANES:-1}"
+[[ "$LANES" =~ ^[1-9][0-9]*$ ]] || die "LANES=$LANES: expected a whole number >= 1"
+if [[ "${1:-}" == --lanes ]]; then
+    n="${2:-$LANES}"
+    [[ "$n" =~ ^[1-9][0-9]*$ ]] || die "--lanes $n: expected a whole number >= 1"
+    lane_layout "$n"
+    echo "physical cores: $(physical_cores | paste -sd' ' -)"
+    echo "lanes: $n ($(lane_summary))"
+    exit 0
+fi
+
+[[ $# -ge 1 ]] || { echo "usage: $0 <results-dir> [vm ...] | $0 --lanes <n>" >&2; exit 1; }
 mkdir -p "$1"
 RUN_DIR="$(cd "$1" && pwd)"
 shift
@@ -73,12 +160,12 @@ DRIFT="${DRIFT:-1}"
 DRIFT_N=5
 
 # --- switches: the same checks as image-entry.sh, before any image runs ------------------
-die() { echo "ERROR: $*" >&2; exit 2; }
 case "$BENCH_TIMING" in normal | quick) ;; *) die "BENCH_TIMING=$BENCH_TIMING: expected normal or quick" ;; esac
 [[ -n "${BENCH_LOOPS//[ ,]/}" ]] || die "BENCH_LOOPS is empty (expected a comma list of d3, eval, check)"
 for loop in ${BENCH_LOOPS//,/ }; do
     case "$loop" in d3 | eval | check) ;; *) die "BENCH_LOOPS=$BENCH_LOOPS: unknown loop '$loop'" ;; esac
 done
+case "$BENCH_TRACE" in 0 | 1) ;; *) die "BENCH_TRACE=$BENCH_TRACE: expected 0 or 1" ;; esac
 has_loop() { [[ ",${BENCH_LOOPS// /}," == *",$1,"* ]]; }
 
 # The selected scripts (image-entry.sh selects the same ones inside each image).
@@ -130,16 +217,16 @@ sysfs_choice() {
 # share a core with host work through CPU 0's sibling. On Docker Desktop the containers run in a
 # Linux VM whose CPU 0 is not the host's, so the CPU set would protect nothing.
 
-# Expand a Linux CPU list such as "0-3,8" into one CPU number per line.
-expand_cpus() {
-    local part
-    for part in ${1//,/ }; do
-        if [[ "$part" == *-* ]]; then seq "${part%-*}" "${part#*-}"; else echo "$part"; fi
-    done
-}
 
 CPUSET="${CPUSET:-auto}"
-if [[ "$CPUSET" == auto ]]; then
+if [[ "$LANES" -gt 1 ]]; then
+    # Each lane has its own CPU set (see "Lanes" at the top); the containers get it per run.
+    [[ "$CPUSET" == auto ]] || die "LANES=$LANES needs CPUSET=auto (CPUSET=$CPUSET)"
+    [[ $((BASH_VERSINFO[0] * 100 + BASH_VERSINFO[1])) -ge 501 ]] \
+        || die "LANES=$LANES needs bash >= 5.1 (wait -n -p); this is $BASH_VERSION"
+    lane_layout "$LANES"
+    CPUSET=lanes
+elif [[ "$CPUSET" == auto ]]; then
     CPUSET=none
     sys=/sys/devices/system/cpu
     if [[ "$(uname -s)" == Linux && -r $sys/online && -r $sys/cpu0/topology/thread_siblings_list ]]; then
@@ -154,7 +241,14 @@ if [[ "$CPUSET" == auto ]]; then
     fi
 fi
 DOCKER_FLAGS=(--rm --cap-add SYS_NICE --network none)
-[[ "$CPUSET" == none ]] || DOCKER_FLAGS+=(--cpuset-cpus "$CPUSET")
+if [[ "$LANES" -eq 1 ]]; then
+    # One lane: the CPU set is in DOCKER_FLAGS, and run_image adds none.
+    [[ "$CPUSET" == none ]] || DOCKER_FLAGS+=(--cpuset-cpus "$CPUSET")
+    LANE_CPUS=("")
+    LANE_LINE="lanes: 1 (lane0 $CPUSET)"
+else
+    LANE_LINE="lanes: $LANES ($(lane_summary))"
+fi
 
 # --- environment.txt: hardware, software, noise, images ----------------------------------
 # Keys cpu, cores and memory feed the report's header badge; keep the other keys distinct.
@@ -207,6 +301,8 @@ RUN_TICKS_START=$(cpu_ticks)
     echo "docker cpus: $(docker info --format '{{.NCPU}}' 2>/dev/null || echo unknown)"
     echo "docker memory: $(( $(docker info --format '{{.MemTotal}}' 2>/dev/null || echo 0) / 1048576 )) MiB"
     echo "docker run flags: ${DOCKER_FLAGS[*]}"
+    echo "$LANE_LINE"
+    [[ "$LANES" -eq 1 ]] || echo "parallel: yes (up to $LANES VMs at once; haskell and the drift probe run alone on lane0)"
     [[ "$CPUSET" != none ]] || echo "docker cpuset: none ($(uname -s) host)"
     echo "harness: ${PVB_HARNESS:-$(git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null || echo unknown)}"
     echo "vm order: $VMS"
@@ -214,6 +310,7 @@ RUN_TICKS_START=$(cpu_ticks)
     echo "bench_scripts: ${BENCH_SCRIPTS:-<all>} ($(echo "$SELECTED" | wc -l | tr -d ' ') of $(echo "$ALL_SCRIPTS" | wc -l | tr -d ' ') scripts)"
     echo "bench_loops: $BENCH_LOOPS"
     echo "bench_timing: $BENCH_TIMING"
+    echo "bench_trace: $BENCH_TRACE"
 } > "$RUN_DIR/environment.txt"
 cat "$RUN_DIR/environment.txt"
 # The pins of this run, so a page re-rendered later (publish-page.yml) shows the versions that ran.
@@ -225,71 +322,169 @@ image_of() {
     echo "${IMAGE_PREFIX}$1:${tag}"
 }
 
+# A temp dir for the pull markers and the output of parallel runs.
+WORK=$(mktemp -d "${TMPDIR:-/tmp}/pvb-run.XXXXXX")
+trap 'rm -rf "$WORK"' EXIT
+
 # --- pull every image first: no pull overlaps a timing -----------------------------------
+# Up to 4 pulls at a time. A pull that fails twice leaves a marker; that VM counts as failed.
 FAILED=""
 PULL_FAILED=" "
+pull_one() {
+    local image
+    image=$(image_of "$1")
+    echo "pull ${1}: ${image}"
+    if ! docker pull -q "$image" && ! docker pull -q "$image"; then
+        echo "FAIL: ${1}: cannot pull ${image}"
+        : > "$WORK/pull-failed-$1"
+    fi
+}
 if [[ "$PULL" == 1 ]]; then
+    n=0
     for vm in $VMS; do
-        image=$(image_of "$vm")
-        echo "pull ${vm}: ${image}"
-        if ! docker pull -q "$image" && ! docker pull -q "$image"; then
-            echo "FAIL: ${vm}: cannot pull ${image}"
-            PULL_FAILED="$PULL_FAILED$vm "
-        fi
+        pull_one "$vm" &
+        n=$((n + 1))
+        if [[ $((n % 4)) -eq 0 ]]; then wait; fi
+    done
+    wait
+    for vm in $VMS; do
+        if [[ -e "$WORK/pull-failed-$vm" ]]; then PULL_FAILED="$PULL_FAILED$vm "; fi
     done
 fi
 
-# run_image <image> <results dir> <BENCH_SCRIPTS> <BENCH_LOOPS> <BENCH_QUICK>
+# run_image <image> <results dir> <BENCH_SCRIPTS> <BENCH_LOOPS> <BENCH_QUICK> <BENCH_TRACE> <cpuset>
+# An empty cpuset adds no --cpuset-cpus: with one lane the CPU set is in DOCKER_FLAGS.
 run_image() {
-    local cmd=(docker run "${DOCKER_FLAGS[@]}"
+    local cpus=()
+    [[ -z "$7" ]] || cpus=(--cpuset-cpus "$7")
+    local cmd=(docker run "${DOCKER_FLAGS[@]}" ${cpus[@]+"${cpus[@]}"}
         -e BENCH_QUICK="$5" -e BENCH_SCRIPTS="$3" -e BENCH_LOOPS="$4" -e BENCH_TIMING="$BENCH_TIMING"
-        -v "$DATA_DIR:/bench/data:ro" -v "$2:/results" "$1")
+        -e BENCH_TRACE="$6" -v "$DATA_DIR:/bench/data:ro" -v "$2:/results" "$1")
     echo "${cmd[*]}"
     "${cmd[@]}"
 }
 
 # --- progress file ----------------------------------------------------------------------
 # One line per stage, so a watcher (run-remote.sh status) can show "blaze-v8 3/9 running".
+# With LANES > 1 each VM line ends with its lane, for example "blaze-v8 3/9 running lane1".
 PROGRESS="${PVB_PROGRESS:-$RUN_DIR/progress.txt}"
 N_VMS=$(echo "$VMS" | wc -w | tr -d ' ')
 RUN_START=$(date +%s)
 progress() { echo "$(date -u +%H:%M) $*" >> "$PROGRESS"; }
+# The lane suffix of the progress lines: empty with one lane.
+lane_tag() { [[ "$LANES" -eq 1 ]] || echo " lane$1"; }
 
 # --- run each VM ------------------------------------------------------------------------
-i=0
-for vm in $VMS; do
-    i=$((i + 1))
-    image=$(image_of "$vm")
+# vm_begin <vm>: prints the header and records the image; returns 1 when its pull failed.
+vm_begin() {
+    local image digest
+    image=$(image_of "$1")
     echo ""
     echo "---------------------------------------------"
-    echo " ${vm}: ${image}"
+    echo " ${1}: ${image}"
     echo "---------------------------------------------"
-
-    if [[ "$PULL_FAILED" == *" $vm "* ]]; then
-        FAILED="$FAILED $vm"
-        echo "image ${vm}: ${image} (pull failed)" >> "$RUN_DIR/environment.txt"
-        continue
+    if [[ "$PULL_FAILED" == *" $1 "* ]]; then
+        FAILED="$FAILED $1"
+        echo "image ${1}: ${image} (pull failed)" >> "$RUN_DIR/environment.txt"
+        return 1
     fi
     digest=$(docker image inspect --format '{{if .RepoDigests}}{{index .RepoDigests 0}}{{else}}{{.Id}}{{end}}' "$image" 2>/dev/null || echo missing)
-    echo "image ${vm}: ${image} ${digest}" >> "$RUN_DIR/environment.txt"
-
+    echo "image ${1}: ${image} ${digest}" >> "$RUN_DIR/environment.txt"
+}
+# vm_end <vm> <i> <lane> <rc> <start> <load before> <ticks before>: result, progress, noise line.
+# Load average and steal time are for the whole host, so with LANES > 1 they include the VMs that
+# ran at the same time.
+vm_end() {
+    local secs=$(( $(date +%s) - $5 ))
+    if [[ $4 -eq 0 ]]; then
+        echo "OK: ${1} in ${secs} s"
+        progress "$1 $2/$N_VMS ok in $(( secs / 60 )) min$(lane_tag "$3")"
+    else
+        echo "FAIL: ${1} exited with $4 after ${secs} s"
+        progress "$1 $2/$N_VMS FAILED (exit $4) after $(( secs / 60 )) min$(lane_tag "$3")"
+        FAILED="$FAILED $1"
+    fi
+    echo "noise ${1}: load avg before $6, steal during run $(steal_between "$7" "$(cpu_ticks)")$(lane_tag "$3")" \
+        >> "$RUN_DIR/environment.txt"
+}
+# run_vm <vm> <i> <lane>: one VM in the foreground, on the CPUs of the lane.
+run_vm() {
+    local load_before ticks_before start rc=0
+    vm_begin "$1" || return 0
     load_before=$(load_avg)
     ticks_before=$(cpu_ticks)
     start=$(date +%s)
-    progress "$vm $i/$N_VMS running"
-    rc=0
-    run_image "$image" "$RUN_DIR" "$BENCH_SCRIPTS" "$BENCH_LOOPS" "$BENCH_QUICK" || rc=$?
-    if [[ $rc -eq 0 ]]; then
-        echo "OK: ${vm} in $(( $(date +%s) - start )) s"
-        progress "$vm $i/$N_VMS ok in $(( ($(date +%s) - start) / 60 )) min"
-    else
-        echo "FAIL: ${vm} exited with $rc after $(( $(date +%s) - start )) s"
-        progress "$vm $i/$N_VMS FAILED (exit $rc) after $(( ($(date +%s) - start) / 60 )) min"
-        FAILED="$FAILED $vm"
-    fi
-    echo "noise ${vm}: load avg before $load_before, steal during run $(steal_between "$ticks_before" "$(cpu_ticks)")" \
-        >> "$RUN_DIR/environment.txt"
-done
+    progress "$1 $2/$N_VMS running$(lane_tag "$3")"
+    run_image "$(image_of "$1")" "$RUN_DIR" "$BENCH_SCRIPTS" "$BENCH_LOOPS" "$BENCH_QUICK" "$BENCH_TRACE" \
+        "${LANE_CPUS[$3]}" || rc=$?
+    vm_end "$1" "$2" "$3" "$rc" "$start" "$load_before" "$ticks_before"
+}
+
+i=0
+if [[ "$LANES" -eq 1 ]]; then
+    for vm in $VMS; do
+        i=$((i + 1))
+        run_vm "$vm" "$i" 0
+    done
+else
+    QUEUE=()
+    for vm in $VMS; do
+        if [[ "$vm" == haskell ]]; then
+            # The reference runs first and alone, on lane 0: the other lanes idle.
+            i=$((i + 1))
+            run_vm haskell "$i" 0
+        else
+            QUEUE+=("$vm")
+        fi
+    done
+    # A work queue: each free lane takes the next VM. Every record (environment.txt, FAILED,
+    # progress) is written here in the main shell, when a container starts or ends. The output of
+    # a container goes to a file and is printed when it ends, so run.log does not interleave.
+    declare -A JOB_VM JOB_I JOB_LANE JOB_START JOB_LOAD JOB_TICKS
+    FREE_LANES=()
+    for l in "${!LANE_CPUS[@]}"; do FREE_LANES+=("$l"); done
+    next=0
+    running=0
+    while [[ $next -lt ${#QUEUE[@]} || $running -gt 0 ]]; do
+        while [[ $next -lt ${#QUEUE[@]} && ${#FREE_LANES[@]} -gt 0 ]]; do
+            vm=${QUEUE[$next]}
+            next=$((next + 1))
+            i=$((i + 1))
+            vm_begin "$vm" || continue
+            lane=${FREE_LANES[0]}
+            FREE_LANES=("${FREE_LANES[@]:1}")
+            load_before=$(load_avg)
+            ticks_before=$(cpu_ticks)
+            progress "$vm $i/$N_VMS running$(lane_tag "$lane")"
+            echo "started on lane$lane (CPUs ${LANE_CPUS[$lane]}); output follows when it ends"
+            run_image "$(image_of "$vm")" "$RUN_DIR" "$BENCH_SCRIPTS" "$BENCH_LOOPS" "$BENCH_QUICK" \
+                "$BENCH_TRACE" "${LANE_CPUS[$lane]}" > "$WORK/$vm.log" 2>&1 &
+            pid=$!
+            JOB_VM[$pid]=$vm
+            JOB_I[$pid]=$i
+            JOB_LANE[$pid]=$lane
+            JOB_START[$pid]=$(date +%s)
+            JOB_LOAD[$pid]=$load_before
+            JOB_TICKS[$pid]=$ticks_before
+            running=$((running + 1))
+        done
+        [[ $running -gt 0 ]] || break
+        # set -e: a container that fails must not end the script, so take wait's status here.
+        rc=0
+        pid=""
+        wait -n -p pid || rc=$?
+        [[ -n "$pid" ]] || die "wait -n returned no job (exit $rc)"
+        vm=${JOB_VM[$pid]}
+        running=$((running - 1))
+        FREE_LANES+=("${JOB_LANE[$pid]}")
+        echo ""
+        echo "---------------------------------------------"
+        echo " ${vm} (lane${JOB_LANE[$pid]}): output"
+        echo "---------------------------------------------"
+        cat "$WORK/$vm.log"
+        vm_end "$vm" "${JOB_I[$pid]}" "${JOB_LANE[$pid]}" "$rc" "${JOB_START[$pid]}" "${JOB_LOAD[$pid]}" "${JOB_TICKS[$pid]}"
+    done
+fi
 
 # --- drift probe: haskell again at the end, on a fixed subset -----------------------------
 # The subset is DRIFT_N evenly spaced scripts of the selection, so the full run always uses the
@@ -309,9 +504,11 @@ if [[ "$DRIFT" == 1 ]] && has_loop d3 && [[ " $VMS " == *" haskell "* ]]; then
         echo "---------------------------------------------"
         mkdir -p "$RUN_DIR/drift"
         rm -f "$RUN_DIR/haskell-drift.csv"
-        progress "drift probe (haskell) running"
+        progress "drift probe (haskell) running$(lane_tag 0)"
         rc=0
-        run_image "$(image_of haskell)" "$RUN_DIR/drift" "$(echo "$DRIFT_SCRIPTS" | paste -sd'|' -)" d3 0 || rc=$?
+        # Alone, on lane 0. No warm-up trace: drift/ holds only the drift timing.
+        run_image "$(image_of haskell)" "$RUN_DIR/drift" "$(echo "$DRIFT_SCRIPTS" | paste -sd'|' -)" d3 0 0 \
+            "${LANE_CPUS[0]}" || rc=$?
         if [[ $rc -eq 0 && -s "$RUN_DIR/drift/haskell.csv" ]]; then
             cp "$RUN_DIR/drift/haskell.csv" "$RUN_DIR/haskell-drift.csv"
         else

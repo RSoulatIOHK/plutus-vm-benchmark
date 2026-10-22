@@ -110,3 +110,35 @@ column.
 Without the `check` loop there is no gate and no `gate.json`; the report shows every VM as "not
 checked". Without the `d3` loop `unified.csv` has only its header, and the report shows the
 eval-only column.
+
+### Host switches of `run-images.sh`
+
+These switches change how the host runs the images. The images do not see them, except
+`BENCH_TRACE`.
+
+| Variable | Values | Default |
+|---|---|---|
+| `LANES` | Number of parallel lanes. See below | `1` |
+| `BENCH_TRACE` | `1`: the JIT rows log warm-up slices into `<vm>-warmup.csv`. Passed to the image | `0` |
+| `PULL` | `1`: pull every image first, up to 4 at a time, before any VM runs | `0` |
+
+`LANES=1` runs one VM at a time. All VMs use the same CPU set: every CPU except the core of CPU 0.
+
+`LANES=n` (n > 1) runs up to n VMs at once:
+
+- The host keeps the whole physical core of CPU 0. The other physical cores split into n lanes
+  with the same number of whole cores. A lane has every SMT thread of its cores. Cores that do not
+  divide evenly stay idle.
+- Haskell runs first and alone, on lane 0. The other lanes idle. Haskell is the reference and the
+  base of the drift probe.
+- Then each free lane takes the next VM. Each container gets `--cpuset-cpus` of its lane.
+- The drift probe runs at the end, alone, on lane 0.
+- `environment.txt` records the layout, for example `lanes: 3 (lane0 2,3; lane1 4,5; lane2 6,7)`,
+  and `parallel: yes`. The page header shows "3 parallel lanes".
+- Load average and steal time are for the whole host. With lanes, they include the VMs that ran
+  at the same time.
+- It needs a Linux host with the CPU topology in sysfs, `CPUSET=auto` and bash 5.1 or newer. On
+  Docker Desktop (macOS) `LANES` > 1 is an error.
+- `scripts/run-images.sh --lanes <n>` prints the lane layout of the host and exits.
+
+A run with `LANES` > 1 or `BENCH_TRACE=1` is a partial run: the `run` workflow never publishes it.
