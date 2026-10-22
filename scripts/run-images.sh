@@ -21,6 +21,7 @@
 #                  none on other hosts, for example Docker Desktop, where CPU 0 belongs to the
 #                  Docker VM, not to the host). none = no CPU set
 #   DRIFT          1 = drift probe (default), 0 = off. See "Drift probe" below
+#   PVB_PROGRESS   progress file, one line per stage (default <results-dir>/progress.txt)
 # The four BENCH_ switches are passed to the images (docs/IMAGE_CONTRACT.md). A run of a subset of
 # the scripts writes their names to scripts.txt; the gate then compares only those.
 #
@@ -245,8 +246,17 @@ run_image() {
     "${cmd[@]}"
 }
 
+# --- progress file ----------------------------------------------------------------------
+# One line per stage, so a watcher (run-remote.sh status) can show "blaze-v8 3/9 running".
+PROGRESS="${PVB_PROGRESS:-$RUN_DIR/progress.txt}"
+N_VMS=$(echo "$VMS" | wc -w | tr -d ' ')
+RUN_START=$(date +%s)
+progress() { echo "$(date -u +%H:%M) $*" >> "$PROGRESS"; }
+
 # --- run each VM ------------------------------------------------------------------------
+i=0
 for vm in $VMS; do
+    i=$((i + 1))
     image=$(image_of "$vm")
     echo ""
     echo "---------------------------------------------"
@@ -264,12 +274,15 @@ for vm in $VMS; do
     load_before=$(load_avg)
     ticks_before=$(cpu_ticks)
     start=$(date +%s)
+    progress "$vm $i/$N_VMS running"
     rc=0
     run_image "$image" "$RUN_DIR" "$BENCH_SCRIPTS" "$BENCH_LOOPS" "$BENCH_QUICK" || rc=$?
     if [[ $rc -eq 0 ]]; then
         echo "OK: ${vm} in $(( $(date +%s) - start )) s"
+        progress "$vm $i/$N_VMS ok in $(( ($(date +%s) - start) / 60 )) min"
     else
         echo "FAIL: ${vm} exited with $rc after $(( $(date +%s) - start )) s"
+        progress "$vm $i/$N_VMS FAILED (exit $rc) after $(( ($(date +%s) - start) / 60 )) min"
         FAILED="$FAILED $vm"
     fi
     echo "noise ${vm}: load avg before $load_before, steal during run $(steal_between "$ticks_before" "$(cpu_ticks)")" \
@@ -294,6 +307,7 @@ if [[ "$DRIFT" == 1 ]] && has_loop d3 && [[ " $VMS " == *" haskell "* ]]; then
         echo "---------------------------------------------"
         mkdir -p "$RUN_DIR/drift"
         rm -f "$RUN_DIR/haskell-drift.csv"
+        progress "drift probe (haskell) running"
         rc=0
         run_image "$(image_of haskell)" "$RUN_DIR/drift" "$(echo "$DRIFT_SCRIPTS" | paste -sd'|' -)" d3 0 || rc=$?
         if [[ $rc -eq 0 && -s "$RUN_DIR/drift/haskell.csv" ]]; then
@@ -305,6 +319,8 @@ if [[ "$DRIFT" == 1 ]] && has_loop d3 && [[ " $VMS " == *" haskell "* ]]; then
 fi
 echo "steal during the whole run: $(steal_between "$RUN_TICKS_START" "$(cpu_ticks)")" >> "$RUN_DIR/environment.txt"
 echo "load avg at end: $(load_avg)" >> "$RUN_DIR/environment.txt"
+
+progress "VMs done after $(( ($(date +%s) - RUN_START) / 60 )) min; building unified.csv, gate, report"
 
 # --- unified.csv, gate, report ----------------------------------------------------------
 echo ""

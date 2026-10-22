@@ -34,10 +34,11 @@ case "$CMD" in
     SCRIPTS_Q=$(printf %q "${BENCH_SCRIPTS:-}")
     LOOPS_Q=$(printf %q "${BENCH_LOOPS:-d3,eval,check}")
     TIMING_Q=$(printf %q "${BENCH_TIMING:-normal}")
-    "${SSH[@]}" "rm -f $DONE && systemd-run --unit=pvb-bench --collect \
+    "${SSH[@]}" "rm -f $DONE /root/progress.txt && : > /root/progress.txt && systemd-run --unit=pvb-bench --collect \
       --working-directory=/root/repo \
       --setenv=PATH=/run/current-system/sw/bin \
       --setenv=PULL=1 --setenv=IMAGE_TAG=auto \
+      --setenv=PVB_PROGRESS=/root/progress.txt \
       --setenv=BENCH_QUICK=${BENCH_QUICK:-0} \
       --setenv=BENCH_SCRIPTS=$SCRIPTS_Q \
       --setenv=BENCH_LOOPS=$LOOPS_Q \
@@ -47,14 +48,18 @@ case "$CMD" in
     echo "started run $NAME on $IP"
     ;;
   status)
-    "${SSH[@]}" "if [ -f $DONE ]; then echo done:\$(cat $DONE); else echo running; fi; tail -n 3 /root/run.log >&2 || true"
+    # stdout: the state the wait job acts on. stderr (shown in the job log): the last 2 progress
+    # lines, or the end of run.log before the first VM starts.
+    "${SSH[@]}" "if [ -f $DONE ]; then echo done:\$(cat $DONE); else echo running; fi; \
+      if [ -s /root/progress.txt ]; then tail -n 2 /root/progress.txt; else tail -n 3 /root/run.log; fi >&2 || true"
     ;;
   collect)
     NAME="${3:?results name missing}"
     mkdir -p "$REPO_ROOT/results"
-    "${SSH[@]}" "tar c -C /root/repo results/$NAME -C /root run.log" \
+    "${SSH[@]}" "tar c -C /root/repo results/$NAME -C /root run.log progress.txt" \
       | tar x -C "$REPO_ROOT"
     mv "$REPO_ROOT/run.log" "$REPO_ROOT/results/$NAME/run.log"
+    mv "$REPO_ROOT/progress.txt" "$REPO_ROOT/results/$NAME/progress.txt"
     echo "collected results/$NAME"
     ;;
   *)
