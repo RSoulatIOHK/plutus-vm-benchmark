@@ -70,6 +70,10 @@ if [[ ${#LOOPS[@]} -gt 0 ]]; then
     # budget per operation.
     if loop d3; then parse_loop d3 "$RUN_DIR/$VM.csv"; fi
     if loop eval; then parse_loop eval "$RUN_DIR/$VM-eval.csv"; fi
+    # BENCH_TRACE=1: the warm-up in 1 s slices -> $VM-warmup.csv
+    if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
+        python3 /bench/parsers/parse_warmup.py "$VM" "$RAW" > "$RUN_DIR/$VM-warmup.csv" || true
+    fi
 fi
 
 if loop check; then run_check || echo "WARNING: $VM check failed" >&2; fi

@@ -146,6 +146,11 @@ the flags that JMH gives a fork: the JVM flags of the row, compiler blackholes a
 hints ([`scripts/run-scalus-cek.sh`](scripts/run-scalus-cek.sh)). The log shows
 `# Blackhole mode: compiler`, as in a fork.
 
+Trace mode (`BENCH_TRACE=1`, [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md)) shows how long
+the JIT rows need to warm up. The 20 s warm-up runs as 20 slices of 1 s (JMH `-wi 20 -w 1s`), and
+the time per operation of each slice goes to `<vm>-warmup.csv`. The measured iterations stay the
+same.
+
 The JS rows share one timing loop. A round runs operations back to back for a fixed time and
 scores elapsed / ops, as JMH `avgt` does. scalus-js and aiken-wasm run it with plain `node`: the
 harness is plain JavaScript, and the VM is an npm package that Node.js loads natively. The blaze

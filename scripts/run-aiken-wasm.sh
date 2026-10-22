@@ -52,4 +52,8 @@ if loop d3 || loop eval; then
     if loop d3; then cp "$TIMING_CSV" "$RUN_DIR/$VM.csv"; fi
     if loop eval; then cp "$TIMING_CSV" "$RUN_DIR/$VM-eval.csv"; fi
     rm -f "$TIMING_CSV"
+    # BENCH_TRACE=1: the warm-up in 1 s slices -> $VM-warmup.csv
+    if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
+        python3 /bench/parsers/parse_warmup.py "$VM" "$RAW" > "$RUN_DIR/$VM-warmup.csv" || true
+    fi
 fi

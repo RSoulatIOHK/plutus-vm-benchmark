@@ -22,10 +22,19 @@ echo "Scalus CEK (Scala / JVM / JMH)"
 # 5 s each, so the CSV has a standard deviation over the iteration means. BENCH_TIMING=quick
 # shortens warm-up and measurement to one 1 s iteration each.
 WARMUP=20s
+WARMUP_ITERATIONS=1
 MEASURE=5s
 ITERATIONS=3
+# BENCH_TRACE=1: the same 20 s of warm-up as 20 iterations of 1 s (-wi 20 -w 1s), so the log has
+# a score per second; parse_warmup.py writes them to $VM-warmup.csv. The measured iterations stay
+# the same.
+if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
+    WARMUP=1s
+    WARMUP_ITERATIONS=20
+fi
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
     WARMUP=1s
+    WARMUP_ITERATIONS=1
     MEASURE=1s
     ITERATIONS=1
 fi
@@ -89,7 +98,7 @@ if [[ -n "$PATTERN" ]]; then
         ( echo "--- ${f%.flat}: process $BASHPID"
           exec /opt/jdk-25/bin/java -Xss64m -Xmx4g $JVM_FLAGS -XX:+AlwaysPreTouch -Xms$HEAP $FORK_FLAGS \
               -cp "$CP" org.openjdk.jmh.Main \
-              -i "$ITERATIONS" -wi 1 -w "$WARMUP" -r "$MEASURE" -f 0 -t 1 \
+              -i "$ITERATIONS" -wi "$WARMUP_ITERATIONS" -w "$WARMUP" -r "$MEASURE" -f 0 -t 1 \
               -rf json -rff "$jsons/${f%.flat}.json" -p "file=$f" "$PATTERN" ) \
             2>&1 | tee -a "$RAW" || true
     done
@@ -117,6 +126,11 @@ fi
 if loop eval; then
     python3 /bench/parsers/parse_jmh.py "$RUN_DIR/$VM-jmh.json" "$VM" --eval > "$RUN_DIR/$VM-eval.csv" || true
     python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM-eval.csv" "$DATA_DIR" "$VM" "$RAW"
+fi
+
+# BENCH_TRACE=1: the warm-up scores, one per second -> $VM-warmup.csv
+if [[ "${BENCH_TRACE:-0}" == 1 ]] && { loop d3 || loop eval; }; then
+    python3 /bench/parsers/parse_warmup.py "$VM" "$RUN_DIR/$VM-raw.log" > "$RUN_DIR/$VM-warmup.csv" || true
 fi
 
 # Check (spec D4): one evaluation per script, same code and parameters -> $VM-check.csv

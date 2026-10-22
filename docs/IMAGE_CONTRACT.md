@@ -34,15 +34,16 @@ docker run --rm --cap-add SYS_NICE \
 
 ### Switches
 
-Three environment variables select a subset. `image-entry.sh` checks them and exits 2 on a bad
-value; `scripts/run-images.sh` and the `run` workflow pass them through and record them in
-`environment.txt`.
+Three environment variables select a subset, and a fourth turns on the warm-up trace.
+`image-entry.sh` checks them and exits 2 on a bad value; `scripts/run-images.sh` and the `run`
+workflow pass them through and record them in `environment.txt`.
 
 | Variable | Values | Default |
 |---|---|---|
 | `BENCH_SCRIPTS` | Extended regex, full match against the script name, e.g. `auction_.*\|uniswap-1`. No match is an error | empty = every script |
 | `BENCH_LOOPS` | Comma list of `d3` (`<vm>.csv`), `eval` (`<vm>-eval.csv`), `check` (`<vm>-check.csv`) | `d3,eval,check` |
 | `BENCH_TIMING` | `normal`, or `quick`: short warm-up and measurement (for smoke tests) | `normal` |
+| `BENCH_TRACE` | `0`, or `1`: the JIT rows also write `<vm>-warmup.csv` (see below) | `0` |
 
 `BENCH_QUICK=1` is a shortcut: `BENCH_TIMING=quick` and, when `BENCH_SCRIPTS` is empty, the first 5
 scripts (C sort order).
@@ -78,6 +79,7 @@ How the image applies them:
 | `<vm>-raw.log` | Raw tool output of the timed loops (both loops, one process per script), for debugging |
 | `<vm>-eval.csv` | Eval-only timing, same schema as `<vm>.csv`: evaluation of a program decoded once outside the timed loop. Shown as a second column next to the D3 time |
 | `<vm>-compile.csv` | Only for VMs that compile before they run (Scalus JIT): `vm,script,compile_ns` |
+| `<vm>-warmup.csv` | Only with `BENCH_TRACE=1`, for the JIT rows (scalus-cek, scalus-jit, blaze-v8, blaze-jsc, scalus-js, aiken-wasm): `vm,script,loop,second,ns_per_op`, the warm-up in slices of 1 s |
 
 ## What the timed loops do (spec D3, D11)
 
@@ -99,6 +101,11 @@ restricting budget).
 - Warm-up: JMH VMs use one 20 s warm-up iteration (`-wi 1 -w 20s`); the staged Scalus JIT needs
   about 20 s. Then three 5 s measurement iterations (`-i 3 -r 5s`). Other frameworks keep their own
   warm-up rules.
+
+- Trace mode (`BENCH_TRACE=1`): a JIT row runs its warm-up as slices of 1 s with the same total
+  time, and writes the score of each slice to `<vm>-warmup.csv`. JMH uses `-wi 20 -w 1s` in place
+  of `-wi 1 -w 20s`; the JS harnesses run their round function 20 times for 1 s. The measured
+  iterations do not change. It shows how long each VM needs to reach a steady state.
 
 The check is one evaluation per script with the same parameters. The gate (`check/`) compares
 `<vm>-check.csv` with the Haskell reference.

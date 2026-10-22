@@ -15,6 +15,10 @@
 // its time is up and scores elapsed / ops, as JMH avgt does. The run script sets the times
 // ($PVB_WARMUP_MS, $PVB_ROUND_MS, $PVB_ROUNDS). tinybench cannot give a mean per round.
 //
+// BENCH_TRACE=1: the warm-up runs as rounds of 1 s with the same total time (as JMH -wi 20 -w 1s),
+// and the harness prints them after the warm-up as "PVB_WARMUP {json}" (parsers/parse_warmup.py ->
+// <vm>-warmup.csv). The measured rounds do not change.
+//
 // Output: one line per round, then per loop "PVB_RESULT {json}" with the loop and its rounds, for
 // parsers/parse_vitest.py. A loop whose first evaluation fails prints "EVAL_FAIL: <name>" and is
 // not timed.
@@ -32,6 +36,8 @@ const loops = (process.env.PVB_LOOPS ?? "").split(",").filter((l) => l !== "");
 const warmupMs = Number(process.env.PVB_WARMUP_MS);
 const roundMs = Number(process.env.PVB_ROUND_MS);
 const rounds = Number(process.env.PVB_ROUNDS);
+// BENCH_TRACE=1 (scripts/image-entry.sh): run and log the warm-up in 1 s slices.
+const trace = process.env.BENCH_TRACE === "1";
 
 // Keeps the result of every operation reachable, so the engine cannot drop the work (JMH's
 // Blackhole).
@@ -55,6 +61,16 @@ function round(op: () => unknown, ms: number): Round {
 
 function show(label: string, r: Round): string {
   return `${label}: ${(r.ns / 1e9).toFixed(2)} s, ${r.ops} ops, ${(r.ns / r.ops).toFixed(0)} ns/op`;
+}
+
+/**
+ * Trace mode: the warm-up as rounds of 1 s (the last one shorter if ms is not a whole number of
+ * seconds), as JMH's -wi 20 -w 1s. The same round() as the measured rounds, so it is warm too.
+ */
+function warmupSlices(op: () => unknown, ms: number): Round[] {
+  const slices: Round[] = [];
+  for (let left = ms; left > 0; left -= 1000) slices.push(round(op, Math.min(1000, left)));
+  return slices;
 }
 
 type Program = ReturnType<typeof decodeFlatDeBruijn>;
@@ -103,7 +119,15 @@ test(
       if (!op) continue;
 
       const tag = `${loop} ${name} pid ${process.pid}`;
-      const warmup = round(op, warmupMs);
+      let warmup: Round;
+      if (trace) {
+        const slices = warmupSlices(op, warmupMs);
+        warmup = { ops: slices.reduce((n, sl) => n + sl.ops, 0), ns: slices.reduce((n, sl) => n + sl.ns, 0) };
+        slices.forEach((sl, i) => console.log(show(`${tag} warm-up second ${i + 1}`, sl)));
+        console.log(`PVB_WARMUP ${JSON.stringify({ script: name, loop, slices })}`);
+      } else {
+        warmup = round(op, warmupMs);
+      }
       console.log(show(`${tag} warm-up`, warmup));
       const measured: Round[] = [];
       for (let i = 1; i <= rounds; i++) {

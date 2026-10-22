@@ -13,6 +13,10 @@
 // node_modules that node loads natively, so vitest was only a launcher. Same engine (node, V8),
 // same loop; the loop runs in the main thread instead of a vitest worker process.
 //
+// BENCH_TRACE=1: the warm-up runs as rounds of 1 s with the same total time (as JMH -wi 20 -w 1s),
+// and the harness prints them after the warm-up as "PVB_WARMUP {json}" (parsers/parse_warmup.py ->
+// <vm>-warmup.csv). The measured rounds do not change.
+//
 // Output: one line per round, then "PVB_RESULT {json}" with the rounds, for parsers/parse_vitest.py.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -22,6 +26,8 @@ const name = process.env.PVB_SCRIPT;
 const warmupMs = Number(process.env.PVB_WARMUP_MS);
 const roundMs = Number(process.env.PVB_ROUND_MS);
 const rounds = Number(process.env.PVB_ROUNDS);
+// BENCH_TRACE=1 (scripts/image-entry.sh): run and log the warm-up in 1 s slices.
+const trace = process.env.BENCH_TRACE === "1";
 
 // Keeps the result of every evaluation reachable, so the engine cannot drop the work (JMH's
 // Blackhole).
@@ -45,6 +51,16 @@ function show(label, r) {
   return `${label}: ${(r.ns / 1e9).toFixed(2)} s, ${r.ops} ops, ${(r.ns / r.ops).toFixed(0)} ns/op`;
 }
 
+/**
+ * Trace mode: the warm-up as rounds of 1 s (the last one shorter if ms is not a whole number of
+ * seconds), as JMH's -wi 20 -w 1s. The same round() as the measured rounds, so it is warm too.
+ */
+function warmupSlices(op, ms) {
+  const slices = [];
+  for (let left = ms; left > 0; left -= 1000) slices.push(round(op, Math.min(1000, left)));
+  return slices;
+}
+
 if (!name || !(rounds >= 1)) {
   throw new Error("set PVB_SCRIPT, PVB_WARMUP_MS, PVB_ROUND_MS, PVB_ROUNDS");
 }
@@ -52,7 +68,15 @@ const flat = new Uint8Array(readFileSync(join(DATA_DIR, `${name}.flat`)));
 const op = () => evaluate(flat);
 
 const tag = `d3 ${name} pid ${process.pid}`;
-const warmup = round(op, warmupMs);
+let warmup;
+if (trace) {
+  const slices = warmupSlices(op, warmupMs);
+  warmup = { ops: slices.reduce((n, sl) => n + sl.ops, 0), ns: slices.reduce((n, sl) => n + sl.ns, 0) };
+  slices.forEach((sl, i) => console.log(show(`${tag} warm-up second ${i + 1}`, sl)));
+  console.log(`PVB_WARMUP ${JSON.stringify({ script: name, loop: "d3", slices })}`);
+} else {
+  warmup = round(op, warmupMs);
+}
 console.log(show(`${tag} warm-up`, warmup));
 const measured = [];
 for (let i = 1; i <= rounds; i++) {

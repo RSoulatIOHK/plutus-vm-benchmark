@@ -42,4 +42,8 @@ if loop d3; then
     done
     python3 /bench/parsers/parse_vitest.py "$VM" "$RAW" > "$RUN_DIR/$VM.csv"
     python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM.csv" "$DATA_DIR" "$VM" "$RAW"
+    # BENCH_TRACE=1: the warm-up in 1 s slices -> $VM-warmup.csv
+    if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
+        python3 /bench/parsers/parse_warmup.py "$VM" "$RAW" > "$RUN_DIR/$VM-warmup.csv" || true
+    fi
 fi
