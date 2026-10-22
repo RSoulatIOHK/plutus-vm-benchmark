@@ -165,8 +165,9 @@ code; one engine keeps the JS rows comparable.
 
 - **Same data**: all VMs decode the same 89 `.flat` files.
 - **Same parameters**: PlutusV3, protocol version 11, the mainnet cost model, costing on.
-- **Same machine, one VM at a time**: each VM runs in its own Docker image on the same server, one
-  after the other, so VMs do not compete for CPU.
+- **Same machine, own cores**: each VM runs in its own Docker image on the same server. The full
+  run uses 3 lanes: up to 3 VMs run at once, each on its own whole cores. Haskell runs alone. See
+  [Hardware](#hardware).
 - **Pinned versions**: `.env` pins each VM; `environment.txt` of each run records the image digests.
 - **Same results**: the correctness gate proves that each published VM did the same work.
 
@@ -211,19 +212,43 @@ Host and noise measures ([`scripts/run-images.sh`](scripts/run-images.sh),
 
 ## Hardware
 
-The monthly run uses a Hetzner Cloud dedicated-vCPU server, type `ccx33` (the default of
-`run.yml`): AMD EPYC, 8 dedicated vCPUs, 32 GB RAM. A new server is created for each run. NixOS is
-installed on it from [`nix/runner.nix`](nix/runner.nix), with the CPU governor set to
-`performance` (a KVM guest has no cpufreq driver, so this has no effect there). The published run
-uses one VM at a time. The server is deleted after the run.
+The monthly run uses a Hetzner Cloud dedicated-vCPU server, type `ccx43` (the default of
+`run.yml`): AMD EPYC, 16 dedicated vCPUs (8 cores), 64 GB RAM. A new server is created for each
+run. NixOS is installed on it from [`nix/runner.nix`](nix/runner.nix), with the CPU governor set to
+`performance` (a KVM guest has no cpufreq driver, so this has no effect there). The server is
+deleted after the run.
 
-A test run can use lanes (`LANES=n`, the `lanes` input of `run.yml`). The host keeps the core of
-CPU 0. The other physical cores split into n lanes of whole cores, and up to n VMs run at once,
-each on its own lane. Haskell and the drift probe still run alone, on lane 0. VMs on other lanes
-share the memory bus and the last-level cache, so a run with lanes is a partial run and is never
-published. `environment.txt` records the lanes, for example
-`lanes: 3 (lane0 2,3; lane1 4,5; lane2 6,7)`. `environment.txt` records the CPU, cores, memory
-and the noise data of each run (see [Fairness rules](#fairness-rules)).
+**Lanes.** The full run uses 3 lanes (`LANES=3`, the `lanes` input of `run.yml`). The host keeps the
+core of CPU 0. The other physical cores split into 3 lanes of whole cores, and up to 3 VMs run at
+once, each on its own lane. Haskell and the drift probe run alone, on lane 0. VMs on other lanes
+share the memory bus and the last-level cache. We measured this on one ccx43: with 3 lanes the
+geometric mean of each VM moved by -2.4 % to +0.9 % against one lane, within the noise. Only the
+experimental Scalus JIT moved by +7 %. On 5 scripts the run time went from 31 to 12 min, so the
+89 scripts take about 3.6 h instead of about 11 h. A run with one lane (a `ccx33` with `lanes` 1,
+for example) is also a full run. Any other lane count, or a comma list (an A/B test), is a partial
+run. `environment.txt` records the lanes, for example `lanes: 3 (lane0 2,3; lane1 4,5; lane2 6,7)`,
+and the CPU, cores, memory and the noise data of each run (see [Fairness rules](#fairness-rules)).
+
+**Server qualification.** Servers of one type are not equal. One ccx43 ran every VM 2.1x slower
+than another ccx43, with the same CPU model and 0 % steal. Two good ccx33 servers agreed within
+0.3 % on Haskell. So each run first checks its server. It times the Haskell image on 3 scripts
+(`auction_1-1`, `coop-6`, `uniswap-1`; d3 loop, normal timing, the same docker flags and CPU set as
+the run). It compares the geometric mean with the reference of the server type in
+[`check/reference/host-reference.json`](check/reference/host-reference.json). A server more than
+15 % slower than the reference is deleted, and a new one is created. After 3 slow servers the run
+fails. A faster server passes. A server type without a reference skips the check, with a warning.
+`environment.txt` records the result in the line `server qualification:`, for example
+`pass, ratio 0.982, attempt 2 of 3, fsn1; rejected: nbg1 203.0.113.7 ratio 2.099; ...`. The job
+summary shows every attempt.
+
+The reference depends on the Haskell harness and its pins. When they change, refresh it from the
+`haskell.csv` of a full run on a server that passed:
+
+```bash
+python3 scripts/hetzner/qualify.py reference results/<run>/haskell.csv ccx43 \
+  --harness <sha> --measured <date> > /tmp/host-reference.json
+mv /tmp/host-reference.json check/reference/host-reference.json
+```
 
 ## Unified Output
 
@@ -279,5 +304,6 @@ For the most consistent results, use a dedicated machine with no other workloads
 
 The monthly run is [`.github/workflows/run.yml`](.github/workflows/run.yml). It creates the server,
 runs [`scripts/run-images.sh`](scripts/run-images.sh) on it with the published images, and commits
-the results. A maintainer can start it by hand with a subset of VMs, scripts and loops; such a
-partial run is never published.
+the results. Before the benchmark it checks the server (see
+[Server qualification](#hardware)). A maintainer can start it by hand with a subset of VMs, scripts
+and loops; such a partial run is never published.

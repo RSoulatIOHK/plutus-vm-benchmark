@@ -153,4 +153,9 @@ These switches change how the host runs the images. The images do not see them, 
   Docker Desktop (macOS) `LANES` > 1 is an error.
 - `scripts/run-images.sh --lanes <n>` prints the lane layout of the host and exits.
 
-A run with `LANES` > 1 or `BENCH_TRACE=1` is a partial run: the `run` workflow never publishes it.
+The `run` workflow uses `LANES=3` for the full run (spec D19). A run with `BENCH_TRACE=1`, or with a
+lane count other than 1 and 3, is a partial run: the `run` workflow never publishes it.
+
+`PVB_QUALIFY` (set by the `run` workflow) is the result of the server qualification. The host
+writes it to `environment.txt` as the line `server qualification: <result>`. See METHODOLOGY.md,
+Hardware.
