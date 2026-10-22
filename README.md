@@ -85,7 +85,7 @@ What changed:
 
 | Image | VM | Language | Benchmark framework | Project | Pinned release |
 |---|---|---|---|---|---|
-| `haskell` | plutus-core | Haskell | Criterion | [IntersectMBO/plutus](https://github.com/IntersectMBO/plutus) | [1.63.0.0](https://github.com/IntersectMBO/plutus/releases/tag/1.63.0.0) |
+| `haskell` | plutus-core | Haskell | Criterion | [IntersectMBO/plutus](https://github.com/IntersectMBO/plutus) | [1.70.0.0](https://github.com/IntersectMBO/plutus/releases/tag/1.70.0.0) |
 | `scalus-cek` | Scalus CEK | Scala / GraalVM 25 | JMH | [scalus3/scalus](https://github.com/scalus3/scalus) | [v1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |
 | `scalus-jit` | Scalus JIT (UPLC → JVM bytecode), [experimental](#experimental), not ranked | Scala / GraalVM 25 | JMH | [scalus3/scalus](https://github.com/scalus3/scalus) | [v1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |
 | `scalus-js` | Scalus.js | Scala.js / Node.js | Vitest bench | [scalus3/scalus](https://github.com/scalus3/scalus) | npm `scalus` [1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |

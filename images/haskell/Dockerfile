@@ -1,7 +1,7 @@
 # plutus-core, the Haskell reference evaluator (GHC / Criterion). docs/IMAGE_CONTRACT.md.
 #
 # Builds images/haskell/pvb-bench against plutus-core and plutus-ledger-api at HASKELL_SHA
-# (release 1.63.0.0, the plutus version of the production cardano-node). pvb-bench times flat
+# (release 1.70.0.0, the plutus-core version of the latest cardano-node release, 11.1.3). pvb-bench times flat
 # decode + CEK evaluation with the mainnet PlutusV3 cost model at protocol version 11 (spec D3)
 # and writes the check (spec D4) with the code of check/reference/gate-ref.
 
