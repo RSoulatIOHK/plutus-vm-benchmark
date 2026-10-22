@@ -23,7 +23,7 @@ version 11, so that the 11 UPLC 1.1.0 scripts still run.
 Usage: gate-ref COSTMODEL_JSON FLAT_DIR [variant-c] -}
 module Main (main) where
 
-import Control.Monad (forM, unless)
+import Control.Monad (forM, forM_, unless)
 import Control.Monad.Except (runExcept)
 import Control.Monad.Writer.Strict (runWriterT)
 import Data.Aeson qualified as Aeson
