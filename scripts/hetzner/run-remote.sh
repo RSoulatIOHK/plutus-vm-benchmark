@@ -41,6 +41,7 @@ case "$CMD" in
       --setenv=PATH=/run/current-system/sw/bin \
       --setenv=PULL=1 --setenv=IMAGE_TAG=auto \
       --setenv=PVB_PROGRESS=/root/progress.txt \
+      --setenv=PVB_CONFINE_HOST=1 \
       --setenv=BENCH_QUICK=${BENCH_QUICK:-0} \
       --setenv=BENCH_SCRIPTS=$SCRIPTS_Q \
       --setenv=BENCH_LOOPS=$LOOPS_Q \

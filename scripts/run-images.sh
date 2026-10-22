@@ -252,6 +252,23 @@ else
     LANE_LINE="lanes: $LANES ($(lane_summary))"
 fi
 
+# --- host CPUs: keep host services off the benchmark CPUs ---------------------------------
+# --cpuset-cpus keeps a container ON its CPUs, but does not keep other processes OFF them. With
+# PVB_CONFINE_HOST=1 (set by run-remote.sh on the throwaway bench server only, never on a dev box)
+# the host's systemd slices (system.slice: dockerd, sshd, journald; user.slice; init.scope) get
+# AllowedCPUs = the core of CPU 0 plus the idle cores of the lane split. The containers live in
+# bench.slice (Docker's cgroup-parent, nix/runner.nix), so this does not touch them. --runtime:
+# gone after a reboot.
+HOST_CPUS=""
+if [[ "${PVB_CONFINE_HOST:-0}" == 1 && "$CPUSET" != none && -r "$SYSFS_CPU/cpu0/topology/thread_siblings_list" ]]; then
+    HOST_CPUS=$(expand_cpus "$(cat "$SYSFS_CPU/cpu0/topology/thread_siblings_list")" | paste -sd, -)
+    [[ "$LANES" -gt 1 && "${LANE_IDLE:--}" != - ]] && HOST_CPUS="$HOST_CPUS,$LANE_IDLE"
+    for unit in system.slice user.slice init.scope; do
+        systemctl set-property --runtime "$unit" AllowedCPUs="$HOST_CPUS" \
+            || die "cannot confine $unit to CPUs $HOST_CPUS"
+    done
+fi
+
 # --- environment.txt: hardware, software, noise, images ----------------------------------
 # Keys cpu, cores and memory feed the report's header badge; keep the other keys distinct.
 RUN_TICKS_START=$(cpu_ticks)
@@ -313,6 +330,7 @@ RUN_TICKS_START=$(cpu_ticks)
     echo "bench_loops: $BENCH_LOOPS"
     echo "bench_timing: $BENCH_TIMING"
     echo "bench_trace: $BENCH_TRACE"
+    echo "host cpus: ${HOST_CPUS:-not confined}"
 } > "$RUN_DIR/environment.txt"
 cat "$RUN_DIR/environment.txt"
 # The pins of this run, so a page re-rendered later (publish-page.yml) shows the versions that ran.

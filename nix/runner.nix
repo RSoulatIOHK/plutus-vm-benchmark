@@ -86,6 +86,10 @@ in
 
   # Rootful Docker: the benchmark compose file needs cap_add SYS_NICE.
   virtualisation.docker.enable = true;
+  # Benchmark containers live in their own slice, so run-images.sh can confine the host's slices
+  # (system.slice, user.slice) to the host CPUs without touching the containers' CPU sets.
+  virtualisation.docker.daemon.settings.cgroup-parent = "bench.slice";
+  systemd.slices.bench.sliceConfig = { };
 
   # A constant clock speed makes runs comparable. On a VM without cpufreq this does nothing.
   powerManagement.cpuFreqGovernor = "performance";
