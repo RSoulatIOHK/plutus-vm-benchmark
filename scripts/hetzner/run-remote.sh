@@ -8,8 +8,8 @@
 # `start` copies the checked-out files (git archive HEAD) to the server and starts
 # scripts/run-images.sh there as a detached systemd unit, so the run outlives the SSH session
 # and the 6 h limit of a GitHub-hosted job. `collect` copies results/<name> and
-# the run log back into this checkout. BENCH_SCRIPTS, BENCH_LOOPS, BENCH_TIMING and BENCH_QUICK are
-# passed through (scripts/run-images.sh).
+# the run log back into this checkout. BENCH_SCRIPTS, BENCH_LOOPS, BENCH_TIMING, BENCH_QUICK,
+# BENCH_TRACE and LANES are passed through (scripts/run-images.sh).
 set -euo pipefail
 
 CMD="${1:?usage: run-remote.sh start|status|collect <run-id> ...}"
@@ -34,6 +34,8 @@ case "$CMD" in
     SCRIPTS_Q=$(printf %q "${BENCH_SCRIPTS:-}")
     LOOPS_Q=$(printf %q "${BENCH_LOOPS:-d3,eval,check}")
     TIMING_Q=$(printf %q "${BENCH_TIMING:-normal}")
+    TRACE_Q=$(printf %q "${BENCH_TRACE:-0}")
+    LANES_Q=$(printf %q "${LANES:-1}")
     "${SSH[@]}" "rm -f $DONE /root/progress.txt && : > /root/progress.txt && systemd-run --unit=pvb-bench --collect \
       --working-directory=/root/repo \
       --setenv=PATH=/run/current-system/sw/bin \
@@ -43,6 +45,8 @@ case "$CMD" in
       --setenv=BENCH_SCRIPTS=$SCRIPTS_Q \
       --setenv=BENCH_LOOPS=$LOOPS_Q \
       --setenv=BENCH_TIMING=$TIMING_Q \
+      --setenv=BENCH_TRACE=$TRACE_Q \
+      --setenv=LANES=$LANES_Q \
       --setenv=PVB_HARNESS=$(git -C "$REPO_ROOT" rev-parse HEAD) \
       /run/current-system/sw/bin/bash -c 'scripts/run-images.sh results/$NAME $VMS > /root/run.log 2>&1; echo \$? > $DONE'"
     echo "started run $NAME on $IP"

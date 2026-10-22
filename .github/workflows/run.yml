@@ -1,7 +1,7 @@
 # The benchmark run: creates a bench server on Hetzner, runs every VM image on it, gates the
 # results, commits results/<date> and publishes the report on GitHub Pages, and deletes the server.
-# A manual run can take a subset (VMs, scripts, loops, quick timing): that is a partial run,
-# results/partial-<date>T<time>, never committed or published.
+# A manual run can take a subset (VMs, scripts, loops, quick timing), a warm-up trace or more than
+# one lane: that is a partial run, results/partial-<date>T<time>, never committed or published.
 #
 # A GitHub-hosted job lasts at most 6 h and a full run takes about 11 h, so the run is detached on
 # the server (scripts/hetzner/run-remote.sh) and up to three wait jobs poll it (17 h). The server
@@ -28,6 +28,16 @@ on:
         type: choice
         options: [normal, quick]
         default: normal
+      trace:
+        description: Log the warm-up slices of the JIT rows into <vm>-warmup.csv (a partial run)
+        type: boolean
+        default: false
+      lanes:
+        description: >-
+          Parallel lanes: run up to this many VMs at once, each on its own whole cores
+          (1 = one VM at a time; more than 1 is a partial run)
+        type: number
+        default: 1
       server_type:
         description: Hetzner server type (keep it fixed for comparable history)
         default: ccx33
@@ -38,7 +48,8 @@ on:
       publish:
         description: >-
           Commit results/<date> and deploy the page (otherwise the results are only an artifact).
-          Only a full run publishes (all VMs, scripts and loops, normal timing); a partial run never does
+          Only a full run publishes (all VMs, scripts and loops, normal timing, no trace, one lane);
+          a partial run never does
         type: boolean
         default: false
 
@@ -69,6 +80,8 @@ jobs:
       BENCH_SCRIPTS: ${{ inputs.scripts || '' }}
       BENCH_LOOPS: ${{ inputs.loops || 'd3,eval,check' }}
       BENCH_TIMING: ${{ inputs.timing || 'normal' }}
+      BENCH_TRACE: ${{ inputs.trace && '1' || '0' }}
+      LANES: ${{ inputs.lanes || 1 }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -79,6 +92,8 @@ jobs:
           FORCE: ${{ inputs.force || false }}
           EVENT: ${{ github.event_name }}
           VMS: ${{ inputs.vms }}
+          # The raw input: LANES (job env) turns an empty or 0 input into 1.
+          LANES_INPUT: ${{ inputs.lanes }}
         run: |
           # Skip a scheduled run when only results/ and the published page (and its sitemap and
           # link-preview image) changed since the last results commit.
@@ -97,6 +112,9 @@ jobs:
             case "$loop" in d3 | eval | check) ;; *) echo "::error::unknown loop '$loop' in '$BENCH_LOOPS'"; exit 1 ;; esac
           done
           [[ -n "$loops" ]] || { echo "::error::loops is empty"; exit 1; }
+          for n in "$LANES" ${LANES_INPUT:+"$LANES_INPUT"}; do
+            [[ "$n" =~ ^[1-9][0-9]*$ ]] || { echo "::error::lanes $n: expected a whole number >= 1"; exit 1; }
+          done
           all_vms=$(scripts/images.sh list | sort -u | paste -sd' ' -)
           for vm in $VMS; do
             echo "$all_vms" | tr ' ' '\n' | grep -qx -- "$vm" || { echo "::error::unknown VM '$vm'"; exit 1; }
@@ -111,9 +129,11 @@ jobs:
             [[ $matched -gt 0 ]] || { echo "::error::scripts '$BENCH_SCRIPTS' matches no script"; exit 1; }
             echo "scripts: $matched match '$BENCH_SCRIPTS'"
           fi
-          # Full run: every VM, every script, every loop, normal timing. Anything else is partial.
+          # Full run: every VM, every script, every loop, normal timing, no trace, one lane. Anything
+          # else is partial.
           partial=true
-          if [[ "$vms" == "$all_vms" && -z "$BENCH_SCRIPTS" && "$loops" == check,d3,eval && "$BENCH_TIMING" == normal ]]; then
+          if [[ "$vms" == "$all_vms" && -z "$BENCH_SCRIPTS" && "$loops" == check,d3,eval && "$BENCH_TIMING" == normal \
+            && "$BENCH_TRACE" == 0 && "$LANES" == 1 ]]; then
             partial=false
           fi
           if [[ "$partial" == true ]]; then
