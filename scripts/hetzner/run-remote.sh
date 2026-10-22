@@ -9,7 +9,8 @@
 # scripts/run-images.sh there as a detached systemd unit, so the run outlives the SSH session
 # and the 6 h limit of a GitHub-hosted job. `collect` copies results/<name> and
 # the run log back into this checkout. BENCH_SCRIPTS, BENCH_LOOPS, BENCH_TIMING, BENCH_QUICK,
-# BENCH_TRACE and LANES are passed through (scripts/run-images.sh).
+# BENCH_TRACE, LANES and PVB_QUALIFY (the server qualification line of up-qualified.sh, written
+# to environment.txt) are passed through (scripts/run-images.sh).
 set -euo pipefail
 
 CMD="${1:?usage: run-remote.sh start|status|collect <run-id> ...}"
@@ -36,6 +37,7 @@ case "$CMD" in
     TIMING_Q=$(printf %q "${BENCH_TIMING:-normal}")
     TRACE_Q=$(printf %q "${BENCH_TRACE:-0}")
     LANES_Q=$(printf %q "${LANES:-1}")
+    QUALIFY_Q=$(printf %q "${PVB_QUALIFY:-}")
     # LANES as a comma list (1,3): run the same VMs once per value on this server, into
     # results/<name>/lanes<N>, so lane effects are measured without a server-to-server difference.
     if [[ "${LANES:-1}" == *,* ]]; then
@@ -56,6 +58,7 @@ case "$CMD" in
       --setenv=BENCH_TIMING=$TIMING_Q \
       --setenv=BENCH_TRACE=$TRACE_Q \
       --setenv=LANES=$LANES_Q \
+      --setenv=PVB_QUALIFY=$QUALIFY_Q \
       --setenv=PVB_HARNESS=$(git -C "$REPO_ROOT" rev-parse HEAD) \
       /run/current-system/sw/bin/bash -c '$RUN_CMD'"
     echo "started run $NAME on $IP"

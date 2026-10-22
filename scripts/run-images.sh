@@ -331,6 +331,7 @@ RUN_TICKS_START=$(cpu_ticks)
     echo "bench_timing: $BENCH_TIMING"
     echo "bench_trace: $BENCH_TRACE"
     echo "host cpus: ${HOST_CPUS:-not confined}"
+    [[ -z "${PVB_QUALIFY:-}" ]] || echo "server qualification: $PVB_QUALIFY"
 } > "$RUN_DIR/environment.txt"
 cat "$RUN_DIR/environment.txt"
 # The pins of this run, so a page re-rendered later (publish-page.yml) shows the versions that ran.

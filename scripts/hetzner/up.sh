@@ -8,7 +8,7 @@
 set -euo pipefail
 
 RUN_ID="${1:?usage: up.sh <run-id>}"
-SERVER_TYPE="${BENCH_SERVER_TYPE:-ccx33}"
+SERVER_TYPE="${BENCH_SERVER_TYPE:-ccx43}"
 LOCATIONS="${BENCH_LOCATIONS:-nbg1 fsn1 hel1}"
 STATE="${BENCH_STATE:-${TMPDIR:-/tmp}/bench-hetzner}/$RUN_ID"
 NAME="bench-$RUN_ID"
@@ -70,6 +70,7 @@ if [ -z "$created" ]; then
   exit 1
 fi
 echo "created $NAME ($SERVER_TYPE) in $created" >&2
+echo "$created" > "$STATE/location"
 
 IP="$(hcloud server ip "$NAME")"
 echo "$IP" > "$STATE/ip"

@@ -1,9 +1,12 @@
-# The benchmark run: creates a bench server on Hetzner, runs every VM image on it, gates the
-# results, commits results/<date> and publishes the report on GitHub Pages, and deletes the server.
-# A manual run can take a subset (VMs, scripts, loops, quick timing), a warm-up trace or more than
-# one lane: that is a partial run, results/partial-<date>T<time>, never committed or published.
+# The benchmark run: creates a bench server on Hetzner, checks that the server is not slow (server
+# qualification, scripts/hetzner/up-qualified.sh), runs every VM image on it, gates the results,
+# commits results/<date> and publishes the report on GitHub Pages, and deletes the server.
+# A full run uses a ccx43 and 3 lanes (spec D19). A manual run can take a subset (VMs, scripts,
+# loops, quick timing), a warm-up trace, or a lane count other than 1 and 3: that is a partial run,
+# results/partial-<date>T<time>, never committed or published.
 #
-# A GitHub-hosted job lasts at most 6 h and a full run takes about 11 h, so the run is detached on
+# A GitHub-hosted job lasts at most 6 h. A full run takes about 4 h on a ccx43 with 3 lanes and
+# about 11 h on a ccx33 with one lane, so the run is detached on
 # the server (scripts/hetzner/run-remote.sh) and up to three wait jobs poll it (17 h). The server
 # deletes itself 20 h after boot if every job here dies (nix/runner.nix); sweep.yml is the last guard.
 name: run
@@ -35,13 +38,17 @@ on:
       lanes:
         description: >-
           Parallel lanes: run up to this many VMs at once, each on its own whole cores
-          (1 = one VM at a time; more than 1 is a partial run). A comma list such as 1,3 runs
-          the same VMs once per value on the same server (A/B test), into results/<run>/lanes<N>
+          (1 = one VM at a time; 1 and 3 can be a full run, any other value is a partial run).
+          A comma list such as 1,3 runs the same VMs once per value on the same server (A/B test),
+          into results/<run>/lanes<N>; it is always a partial run
         type: string
-        default: "1"
+        default: "3"
       server_type:
-        description: Hetzner server type (keep it fixed for comparable history)
-        default: ccx33
+        description: >-
+          Hetzner server type (keep it fixed for comparable history). The server must pass the
+          qualification against check/reference/host-reference.json; a type without a reference
+          skips it. A ccx43 has 16 dedicated vCPUs: the Hetzner project limit must allow it
+        default: ccx43
       force:
         description: Run even if nothing changed since the last run
         type: boolean
@@ -53,7 +60,7 @@ on:
       publish:
         description: >-
           Commit results/<date> and deploy the page (otherwise the results are only an artifact).
-          Only a full run publishes (all VMs, scripts and loops, normal timing, no trace, one lane);
+          Only a full run publishes (all VMs, scripts and loops, normal timing, no trace, 1 or 3 lanes);
           a partial run never does
         type: boolean
         default: false
@@ -73,7 +80,8 @@ jobs:
   start:
     runs-on: ubuntu-latest
     environment: bench-run
-    timeout-minutes: 60
+    # Up to 3 servers (server qualification), each about 15 min to install and 5 min to qualify.
+    timeout-minutes: 120
     outputs:
       run_id: ${{ steps.plan.outputs.run_id }}
       name: ${{ steps.plan.outputs.name }}
@@ -82,13 +90,15 @@ jobs:
       ip: ${{ steps.up.outputs.ip }}
     env:
       HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
-      BENCH_SERVER_TYPE: ${{ inputs.server_type || 'ccx33' }}
+      BENCH_SERVER_TYPE: ${{ inputs.server_type || 'ccx43' }}
       # A scheduled run has no inputs: every switch takes its full-run default.
       BENCH_SCRIPTS: ${{ inputs.scripts || '' }}
       BENCH_LOOPS: ${{ inputs.loops || 'd3,eval,check' }}
       BENCH_TIMING: ${{ inputs.timing || 'normal' }}
       BENCH_TRACE: ${{ inputs.trace && '1' || '0' }}
-      LANES: ${{ inputs.lanes || '1' }}
+      # The lane count of a full run (spec D19). A scheduled run has no inputs and takes it.
+      LANES_DEFAULT: "3"
+      LANES: ${{ inputs.lanes || '3' }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -99,7 +109,7 @@ jobs:
           FORCE: ${{ inputs.force || false }}
           EVENT: ${{ github.event_name }}
           VMS: ${{ inputs.vms }}
-          # The raw input: LANES (job env) turns an empty or 0 input into 1.
+          # The raw input: LANES (job env) turns an empty input into LANES_DEFAULT.
           LANES_INPUT: ${{ inputs.lanes }}
         run: |
           # Skip a scheduled run when only results/ and the published page (and its sitemap and
@@ -136,11 +146,11 @@ jobs:
             [[ $matched -gt 0 ]] || { echo "::error::scripts '$BENCH_SCRIPTS' matches no script"; exit 1; }
             echo "scripts: $matched match '$BENCH_SCRIPTS'"
           fi
-          # Full run: every VM, every script, every loop, normal timing, no trace, one lane. Anything
-          # else is partial.
+          # Full run: every VM, every script, every loop, normal timing, no trace, and 1 lane or the
+          # default lane count (3). A comma list (A/B test) and anything else is partial.
           partial=true
           if [[ "$vms" == "$all_vms" && -z "$BENCH_SCRIPTS" && "$loops" == check,d3,eval && "$BENCH_TIMING" == normal \
-            && "$BENCH_TRACE" == 0 && "$LANES" == 1 ]]; then
+            && "$BENCH_TRACE" == 0 && ( "$LANES" == 1 || "$LANES" == "$LANES_DEFAULT" ) ]]; then
             partial=false
           fi
           if [[ "$partial" == true ]]; then
@@ -178,7 +188,10 @@ jobs:
       - uses: cachix/install-nix-action@v31
         if: steps.plan.outputs.skip != 'true'
 
-      - name: Create server and install NixOS
+      # Server qualification (spec D18): time the Haskell image on 3 scripts and compare with
+      # check/reference/host-reference.json. A server more than 15 % slower is deleted and a new
+      # one is created, up to 3 servers; then the run fails.
+      - name: Create server, install NixOS, qualify it
         id: up
         if: steps.plan.outputs.skip != 'true'
         env:
@@ -189,8 +202,21 @@ jobs:
           key="$BENCH_STATE/$RUN_ID/id_ed25519"
           (umask 077 && printf '%s\n' "$SSH_KEY" > "$key")
           ssh-keygen -y -f "$key" > "$key.pub"
-          nix shell nixpkgs#hcloud nixpkgs#jq --command scripts/hetzner/up.sh "$RUN_ID"
+          nix shell nixpkgs#hcloud nixpkgs#jq --command scripts/hetzner/up-qualified.sh "$RUN_ID"
           echo "ip=$(cat "$BENCH_STATE/$RUN_ID/ip")" >> "$GITHUB_OUTPUT"
+
+      - name: Server qualification summary
+        if: always() && steps.plan.outputs.run_id != ''
+        env:
+          RUN_ID: ${{ steps.plan.outputs.run_id }}
+        run: |
+          state="$BENCH_STATE/$RUN_ID"
+          [[ -f "$state/qualify-summary.md" ]] || exit 0
+          {
+            cat "$state/qualify-summary.md"
+            echo ""
+            echo "Result: $(cat "$state/qualify.txt" 2>/dev/null || echo 'none (a step failed)')"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Start the run
         if: steps.plan.outputs.skip != 'true'
@@ -198,8 +224,10 @@ jobs:
           RUN_ID: ${{ steps.plan.outputs.run_id }}
           NAME: ${{ steps.plan.outputs.name }}
           VMS: ${{ inputs.vms }}
-        # VMS is a space-separated list: split it on purpose.
+        # VMS is a space-separated list: split it on purpose. PVB_QUALIFY goes to environment.txt.
         run: |
+          PVB_QUALIFY="$(cat "$BENCH_STATE/$RUN_ID/qualify.txt" 2>/dev/null || true)"
+          export PVB_QUALIFY
           # shellcheck disable=SC2086
           scripts/hetzner/run-remote.sh start "$RUN_ID" "$NAME" $VMS
 
