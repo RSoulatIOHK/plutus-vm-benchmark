@@ -408,12 +408,12 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
 
     if history["runs"]:
         lines.append("")
-        lines.append("### History (geometric mean / Haskell's, same run)")
+        lines.append("### History (speed relative to Haskell plutus-core, same run; higher is faster)")
         lines.append("")
         lines.append("| VM | " + " | ".join(history["runs"]) + " |")
         lines.append("|---|" + "---|" * len(history["runs"]))
         for vm, values in history["series"].items():
-            cells = [f"{v:.2f}x" if v is not None else "-" for v in values]
+            cells = [speed_text(v) if v is not None else "-" for v in values]
             lines.append(f"| {VM_LABELS.get(vm, vm)} | " + " | ".join(cells) + " |")
 
     # Count scripts per VM
@@ -494,6 +494,16 @@ def check_label(gate: dict | None, vm: str) -> str:
 
 
 REPO_URL = "https://github.com/lantr-io/plutus-vm-benchmark"
+
+
+def speed_text(ratio):
+    """Time ratio VM / Haskell as speed text: 0.25 -> '4.0x faster', 2.5 -> '2.5x slower'."""
+    if ratio <= 0:
+        return "-"
+    if abs(ratio - 1) < 0.01:
+        return "1x (Haskell)"
+    s = 1 / ratio
+    return f"{s:.1f}x faster" if s > 1 else f"{ratio:.1f}x slower"
 
 
 def harness_commit(env_info):

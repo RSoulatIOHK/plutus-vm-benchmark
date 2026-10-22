@@ -623,8 +623,8 @@
   </div>
 
   <div class="section" id="history-section" style="display:none">
-    <div class="section-title">History <em>geometric mean divided by Haskell's, same run</em></div>
-    <div class="note" style="margin-bottom:0.7rem">Below 1&times; is faster than Haskell plutus-core. The ratio uses the scripts where both the VM and Haskell have a timing. Comparing ratios, not absolute times, removes most of the hardware and run-to-run drift.</div>
+    <div class="section-title">History <em>speed relative to Haskell plutus-core, same run &ndash; higher is faster</em></div>
+    <div class="note" style="margin-bottom:0.7rem">Each point is Haskell's geometric mean time divided by the VM's, from the same run: 2&times; faster means the VM needs half of Haskell's time. The dashed line is Haskell. The ratio uses the scripts where both the VM and Haskell have a timing. Comparing ratios, not absolute times, removes most of the hardware and run-to-run drift. Log scale.</div>
     <div class="history-chart" id="history-chart"></div>
     <div class="history-legend" id="history-legend"></div>
     <div class="history-tip" id="history-tip"></div>
@@ -984,12 +984,20 @@ if (hiddenVMs.length) {
   }).join('');
 }
 
-// History: ratio to Haskell per run, log scale, inline SVG
+// History: speed relative to Haskell per run (Haskell's time / the VM's time, so higher is faster),
+// log scale, inline SVG. REPORT.history holds the time ratio (VM / Haskell); invert it here.
 (function renderHistory() {
-  const h = REPORT.history, runs = h.runs, vms = Object.keys(h.series).filter(vm => vm !== 'haskell');
+  const raw = REPORT.history, runs = raw.runs;
+  const h = { series: Object.fromEntries(Object.entries(raw.series)
+    .map(([vm, vs]) => [vm, vs.map(v => v > 0 ? 1 / v : null)])) };
+  const vms = Object.keys(h.series).filter(vm => vm !== 'haskell');
   if (!runs.length || !vms.length) return;
+  // 2.4 -> "2.4× faster", 0.25 -> "4.0× slower", 1 -> "Haskell"
+  const fmtSpeed = s => Math.abs(Math.log10(s)) < 0.004 ? '1× (Haskell)'
+    : s > 1 ? (s < 10 ? s.toFixed(1) : s.toFixed(0)) + '× faster'
+    : (1 / s < 10 ? (1 / s).toFixed(1) : (1 / s).toFixed(0)) + '× slower';
   document.getElementById('history-section').style.display = '';
-  const W = 900, H = 320, L = 48, R = 150, T = 14, B = 34;
+  const W = 900, H = 320, L = 78, R = 170, T = 14, B = 34;
   const vals = vms.flatMap(vm => h.series[vm]).filter(v => v > 0).concat([1]);
   const lo = Math.log10(Math.min(...vals)) - 0.1, hi = Math.log10(Math.max(...vals)) + 0.1;
   const x = i => runs.length === 1 ? L + (W - L - R) / 2 : L + i * (W - L - R) / (runs.length - 1);
@@ -1000,7 +1008,7 @@ if (hiddenVMs.length) {
     const v = k * Math.pow(10, d), lv = Math.log10(v);
     if (lv < lo || lv > hi) return;
     svg += `<line class="${v === 1 ? 'base' : 'grid'}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/>`;
-    svg += `<text class="axis-label" x="${L - 6}" y="${y(v) + 3}" text-anchor="end">${v >= 1 ? v : v.toFixed(-d)}×</text>`;
+    svg += `<text class="axis-label" x="${L - 6}" y="${y(v) + 3}" text-anchor="end">${v === 1 ? 'Haskell' : v > 1 ? v + '× faster' : Math.round(1 / v) + '× slower'}</text>`;
   });
   runs.forEach((r, i) => { svg += `<text class="axis-label" x="${x(i)}" y="${H - B + 16}" text-anchor="middle">${r}</text>`; });
   // Lines, markers, end labels (identity is never color alone)
@@ -1012,7 +1020,7 @@ if (hiddenVMs.length) {
     svg += `<path d="${path}" fill="none" stroke="${m.color}" stroke-width="2" stroke-linejoin="round"/>`;
     pts.forEach((v, i) => { if (v > 0) svg += `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="${m.color}" stroke="var(--bg)" stroke-width="2"/>`; });
     const last = pts.map((v, i) => [v, i]).filter(p => p[0] > 0).pop();
-    if (last) labels.push({ y: y(last[0]), x: x(last[1]), text: m.label + ' ' + last[0].toFixed(2) + '×' });
+    if (last) labels.push({ y: y(last[0]), x: x(last[1]), text: m.label + ' ' + fmtSpeed(last[0]) });
   });
   // Keep end labels 12 px apart
   labels.sort((a, b) => a.y - b.y).forEach((l, i, a) => { if (i && l.y - a[i - 1].y < 12) l.y = a[i - 1].y + 12; });
@@ -1023,7 +1031,7 @@ if (hiddenVMs.length) {
     svg += `<rect data-run="${i}" x="${x(i) - w / 2}" y="${T}" width="${w}" height="${H - T - B}" fill="transparent"/>`;
   });
   const host = document.getElementById('history-chart');
-  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Geometric mean divided by Haskell's, per run">${svg}</svg>`;
+  host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Speed relative to Haskell per run, higher is faster">${svg}</svg>`;
   document.getElementById('history-legend').innerHTML = vms.map(vm => {
     const m = VM_META[vm] || { label: vm, color: '#9494b0' };
     return `<span><span class="sw" style="background:${m.color}"></span>${m.label}</span>`;
@@ -1032,8 +1040,8 @@ if (hiddenVMs.length) {
   host.querySelectorAll('rect[data-run]').forEach(rect => {
     rect.addEventListener('mousemove', e => {
       const i = +rect.dataset.run;
-      const lines = vms.filter(vm => h.series[vm][i] > 0).sort((a, b) => h.series[a][i] - h.series[b][i])
-        .map(vm => (VM_META[vm] ? VM_META[vm].label : vm) + ': ' + h.series[vm][i].toFixed(2) + '×');
+      const lines = vms.filter(vm => h.series[vm][i] > 0).sort((a, b) => h.series[b][i] - h.series[a][i])
+        .map(vm => (VM_META[vm] ? VM_META[vm].label : vm) + ': ' + fmtSpeed(h.series[vm][i]));
       tip.innerHTML = '<strong>' + runs[i] + '</strong><br>' + lines.join('<br>');
       tip.style.display = 'block'; tip.style.left = (e.clientX + 14) + 'px'; tip.style.top = (e.clientY + 14) + 'px';
     });
