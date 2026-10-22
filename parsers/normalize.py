@@ -6,7 +6,8 @@ VM needs no change here. Other CSVs in the dir (<vm>-check.csv, <vm>-compile.csv
 Criterion CSVs, unified.csv itself) have a different header or name and are skipped.
 <vm>-eval.csv (eval-only timing) has the timing schema but is not a D3 timing: it is skipped here
 and read by report/generate_report.py. <vm>-drift.csv (the drift probe of scripts/run-images.sh)
-has the timing schema too and is skipped as well.
+has the timing schema too and is skipped as well. <vm>-warmup.csv (BENCH_TRACE=1: the warm-up in
+1 s slices) has its own schema and is skipped by name too.
 
 Drift probe: when haskell-drift.csv and haskell.csv exist, drift() compares the scripts they share
 and writes drift.json. The ratio is the geometric mean of end / start over the scripts with a
@@ -29,7 +30,7 @@ def normalize(run_dir: str) -> None:
 
     for vm_file in sorted(os.listdir(run_dir)):
         path = os.path.join(run_dir, vm_file)
-        if (vm_file == "unified.csv" or vm_file.endswith(("-eval.csv", "-drift.csv"))
+        if (vm_file == "unified.csv" or vm_file.endswith(("-eval.csv", "-drift.csv", "-warmup.csv"))
                 or not vm_file.endswith(".csv") or not os.path.isfile(path)):
             continue
 

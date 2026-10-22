@@ -2,10 +2,10 @@
 
 The Scalus CEK machine compiled with Scala.js, as published on npm as
 [`scalus`](https://www.npmjs.com/package/scalus). It runs on Node.js 22 (V8), the same Node major
-and the same timing loop under vitest (`VITEST_VERSION` in `.env`) as the `blaze-v8` harness. The image follows
+and the same timing loop as the `blaze-v8` harness, run by plain `node`. The image follows
 `docs/IMAGE_CONTRACT.md`.
 
-Pins in `.env`: `SCALUS_JS_VERSION` (the npm version) and `VITEST_VERSION`.
+Pin in `.env`: `SCALUS_JS_VERSION` (the npm version).
 
 ```bash
 scripts/images.sh build scalus-js
@@ -32,11 +32,11 @@ downstream npm user pays this too. Measured on an M-series Mac in Docker: about 
 
 ## Timing
 
-`time.test.mjs` uses the JMH shape of the JVM rows (`-wi 1 -w 20s -i 3 -r 5s`): one 20 s warm-up
+`time.mjs` uses the JMH shape of the JVM rows (`-wi 1 -w 20s -i 3 -r 5s`): one 20 s warm-up
 round, then 3 measured rounds of 5 s. A round calls `evaluateScript` back to back until its time
 is up; its score is elapsed time / calls, as in JMH `avgt`. The CSV has the mean of the 3 round
 scores and their median, min, max and standard deviation; `iterations` is the number of rounds.
-`run-scalus-js.sh` starts a new vitest process for each script, so no JIT profile or GC state
+`run-scalus-js.sh` starts a new node process for each script, so no JIT profile or GC state
 carries over from another script. `BENCH_TIMING=quick`: 0.5 s warm-up, one 0.5 s round.
 
 ## The check and CIP-117

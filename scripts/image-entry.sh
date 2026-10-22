@@ -12,7 +12,10 @@
 #   BENCH_TIMING   normal | quick                           (default normal)
 #   BENCH_QUICK=1  shortcut: BENCH_TIMING=quick and, when BENCH_SCRIPTS is empty, the first 5
 #                  scripts (C sort order)
-# The run script gets the selected scripts in $BENCH_DATA_DIR, and BENCH_LOOPS and BENCH_TIMING.
+#   BENCH_TRACE    0 | 1: 1 = the JIT rows also log their warm-up in 1 s slices to
+#                  <vm>-warmup.csv (default 0)
+# The run script gets the selected scripts in $BENCH_DATA_DIR, and BENCH_LOOPS, BENCH_TIMING and
+# BENCH_TRACE.
 # A run script declares the loops it has in a header line "# pvb-loops: d3 eval check".
 #
 # Exit code: 2 on bad switches or no matching script. Else 0 when every requested loop the VM has
@@ -38,11 +41,16 @@ BENCH_QUICK="${BENCH_QUICK:-0}"
 BENCH_SCRIPTS="${BENCH_SCRIPTS:-}"
 BENCH_LOOPS="${BENCH_LOOPS:-d3,eval,check}"
 BENCH_TIMING="${BENCH_TIMING:-normal}"
+BENCH_TRACE="${BENCH_TRACE:-0}"
 [[ "$BENCH_QUICK" == 1 ]] && BENCH_TIMING=quick
 
 case "$BENCH_TIMING" in
     normal | quick) ;;
     *) echo "ERROR: BENCH_TIMING=$BENCH_TIMING: expected normal or quick" >&2; exit 2 ;;
+esac
+case "$BENCH_TRACE" in
+    0 | 1) ;;
+    *) echo "ERROR: BENCH_TRACE=$BENCH_TRACE: expected 0 or 1" >&2; exit 2 ;;
 esac
 
 LOOPS=()
@@ -83,9 +91,9 @@ else
 fi
 SELECTED=$(names "$BENCH_DATA_DIR")
 echo "scripts ($(echo "$SELECTED" | wc -l | tr -d ' ')): $(echo "$SELECTED" | paste -sd' ' -)"
-echo "loops: $BENCH_LOOPS, timing: $BENCH_TIMING"
+echo "loops: $BENCH_LOOPS, timing: $BENCH_TIMING, trace: $BENCH_TRACE"
 unset BENCH_QUICK
-export BENCH_DATA_DIR BENCH_LOOPS BENCH_TIMING
+export BENCH_DATA_DIR BENCH_LOOPS BENCH_TIMING BENCH_TRACE
 
 # --- the loops this VM has --------------------------------------------------------------
 HAS=$(sed -n 's/^# pvb-loops:[[:space:]]*//p' "$RUN_SCRIPT" | head -1)

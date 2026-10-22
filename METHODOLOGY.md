@@ -31,7 +31,8 @@ From [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md):
 
 A second loop (`<vm>-eval.csv`) evaluates a program that was decoded once before timing. The page
 shows it next to the D3 time. Decoding is a large share of the D3 time for some VMs, so this
-column shows the speed of the evaluator alone. The ranking uses the D3 time.
+column shows the speed of the evaluator alone. The ranking uses the D3 time. The eval-only loop runs in the
+same process as the D3 loop of the script, after it (see [Fairness rules](#fairness-rules), D14).
 
 ### Compiled VMs
 
@@ -126,18 +127,39 @@ and the runner is `scripts/run-<vm>.sh`.
 
 | VM | Framework | Warm-up and measurement (normal timing) |
 |---|---|---|
-| haskell | Criterion | Criterion's warm-up; at least 20 s per script (`timeLimit = 20`) |
-| scalus-cek, scalus-jit | JMH | One 20 s warm-up iteration, three 5 s measurement iterations, 1 fork (`-wi 1 -w 20s -i 3 -r 5s -f 1`) |
+| haskell | Criterion | Criterion's warm-up; about 5 s per script, Criterion's default (`timeLimit = 5`) |
+| scalus-cek, scalus-jit | JMH | One 20 s warm-up iteration, three 5 s measurement iterations (`-wi 1 -w 20s -i 3 -r 5s`). scalus-jit: 1 fork per script (`-f 1`). scalus-cek: one JVM per script runs both loops (`-f 0`, see below) |
 | aiken | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
-| uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 10 s measurement |
+| uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
-| blaze-v8, blaze-jsc | Vitest bench | 20 s warm-up, three 5 s measurements |
-| aiken-wasm | Vitest bench | 20 s warm-up, three 5 s measurements (a JIT runtime, V8) |
-| scalus-js | Vitest bench | 20 s warm-up, three 5 s measurements (the same Vitest version as blaze-v8) |
+| blaze-v8 | Own loop (JMH shape), launched by Vitest | 20 s warm-up, three 5 s measurements |
+| aiken-wasm | Own loop (JMH shape), plain Node.js | 20 s warm-up, three 5 s measurements (a JIT runtime, V8) |
+| scalus-js | Own loop (JMH shape), plain Node.js | 20 s warm-up, three 5 s measurements (the same loop as blaze-v8) |
 
-The JIT runtimes (JVM, V8, JSC) all get 20 s of warm-up, because the staged Scalus JIT needs about
+The JIT runtimes (JVM, V8) all get 20 s of warm-up, because the staged Scalus JIT needs about
 20 s to warm up. See [Fairness rules](#fairness-rules). `BENCH_TIMING=quick` shortens every
 warm-up and measurement, for smoke tests only.
+
+JMH forks one JVM per benchmark method and script, and it cannot run two methods in one fork. So
+scalus-cek runs JMH without a fork (`-f 0`) in one JVM per script, with both methods. That JVM has
+the flags that JMH gives a fork: the JVM flags of the row, compiler blackholes and JMH's compiler
+hints ([`scripts/run-scalus-cek.sh`](scripts/run-scalus-cek.sh)). The log shows
+`# Blackhole mode: compiler`, as in a fork.
+
+Trace mode (`BENCH_TRACE=1`, [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md)) shows how long
+the JIT rows need to warm up. The 20 s warm-up runs as 20 slices of 1 s (JMH `-wi 20 -w 1s`), and
+the time per operation of each slice goes to `<vm>-warmup.csv`. The measured iterations stay the
+same.
+
+The JS rows share one timing loop. A round runs operations back to back for a fixed time and
+scores elapsed / ops, as JMH `avgt` does. scalus-js and aiken-wasm run it with plain `node`: the
+harness is plain JavaScript, and the VM is an npm package that Node.js loads natively. The blaze
+row runs it under Vitest. blaze has no built package in the image, so Vitest loads its TypeScript
+sources (`src/cek`, `src/flat`) and transforms them. A bundle would give a different module shape
+than the one blaze has been timed with so far.
+
+There is no JSC row: every JS row runs on Node 22 (V8), the common runtime for Cardano off-chain
+code; one engine keeps the JS rows comparable.
 
 ## Fairness Rules
 
@@ -151,11 +173,14 @@ warm-up and measurement, for smoke tests only.
 Decisions D13 to D17 of the
 [design](docs/superpowers/specs/2026-10-21-lantr-vm-benchmark-design.md#0-decisions):
 
-- **Warm-up (D13)**: the JIT runtimes (JVM, V8, JSC) get a 20 s warm-up and three 5 s
+- **Warm-up (D13)**: the JIT runtimes (JVM, V8) get a 20 s warm-up and three 5 s
   measurements. The ahead-of-time compiled VMs (Rust, Go, GHC) keep the defaults of their
   framework, with at least 5 s of measurement.
 - **Process model (D14)**: every VM runs each script in a fresh process. No JIT profile, heap or
-  allocator state carries over from one script to the next.
+  allocator state carries over from one script to the next. The process runs both timed loops of
+  its script: the D3 loop first, then the eval-only loop. Each loop has its own warm-up and
+  measurement with the rules above. So the D3 time is measured as in a process of its own, and
+  the eval-only time comes from a process that has already run the D3 loop.
 - **Compiled VMs (D15)**: the Scalus JIT row has a "decode and compile excluded" badge. Its timed
   loop runs the compiled script; the decode and the compile happen once per script, before timing.
 - **Runtime settings (D16)**: each VM runs with the settings that its project documents for
@@ -226,7 +251,7 @@ run. The ratio is less sensitive to hardware changes and to drift between runs t
   - Criterion (haskell): `stddev_ns` is Criterion's standard deviation. `min_ns` and `max_ns` are the
     bounds of the bootstrap confidence interval of the mean. `iterations` is the number of samples
     when the run has Criterion's `--json` report, else 0 (the CSV and the log do not have it).
-- **JIT warm-up**: the JVM, V8 and JSC compile hot code at run time. Their frameworks warm up first,
+- **JIT warm-up**: the JVM and V8 compile hot code at run time. Their frameworks warm up first,
   but the execution model differs from ahead-of-time compiled VMs.
 - **Cost model rebuilt per iteration**: some public APIs do not let a harness keep the cost model
   or machine parameters across evaluations. uplc-turbo builds its default cost model in every

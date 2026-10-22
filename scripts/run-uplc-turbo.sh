@@ -17,7 +17,7 @@ echo "uplc-turbo AST (Rust / Criterion)"
 
 # The bench binary is our harness (images/uplc-turbo/use_cases.rs): PlutusV3, protocol version 11,
 # counting mode. Two Criterion loops with the same settings: flat decode + eval per iteration
-# (uplc-turbo.csv) and, with PVB_EVAL_ONLY=1, eval of a program decoded once (uplc-turbo-eval.csv).
+# (uplc-turbo.csv) and eval of a program decoded once (uplc-turbo-eval.csv).
 export PVB_COSTMODEL=/tmp/uplc-turbo-costmodel.txt
 python3 -c "
 import json, sys
@@ -54,39 +54,31 @@ run_check() {
     echo "Wrote $RUN_DIR/uplc-turbo-check.csv"
 }
 
-# One Criterion loop: time_loop <csv> <raw log> <criterion copy dir> [VAR=value ...]
-#
-# One process per script (spec D14), so no allocator state carries from one script to the next.
-# The process gets a data dir with only its script, because the harness evaluates every file of
-# its data dir once before timing; the Criterion filter (--exact <name>) selects it too.
-time_loop() {
-    local csv="$1" raw="$2" copy="$3"
-    shift 3
+# The timed loops. One process per script (spec D14), so no allocator state carries from one
+# script to the next. The process runs the requested loops of its script, d3 first, then eval
+# (PVB_LOOPS, images/uplc-turbo/use_cases.rs). It gets a data dir with only its script, because the
+# harness evaluates every file of its data dir once before timing; so it defines only that
+# script's benchmarks. Criterion writes the d3 loop to target/criterion/<name>/ and the eval loop
+# to target/criterion/eval/<name>/.
+RAW="$RUN_DIR/uplc-turbo-raw.log"
+LOOPS=()
+if loop d3; then LOOPS+=(d3); fi
+if loop eval; then LOOPS+=(eval); fi
 
-    # Clear previous criterion output to avoid stale results
-    rm -rf target/criterion
-    : > "$raw"
-
-    local work flat name
-    work=$(mktemp -d /tmp/uplc-turbo-one.XXXXXX)
-    for flat in "$DATA_DIR"/*.flat; do
-        name=$(basename "$flat" .flat)
-        mkdir -p "$work/$name"
-        ln -sf "$flat" "$work/$name/"
-        # $BASHPID is the pid of the subshell, which exec turns into the benchmark process.
-        ( echo "--- $name: process $BASHPID"
-          exec env "$@" PVB_DATA_DIR="$work/$name" UPLC_BENCH_MODE=ast "$BENCH_BIN" \
-              --bench --noplot "${TIMING[@]}" --exact "$name" ) 2>&1 | tee -a "$raw" || true
-    done
-    rm -rf "$work"
+# parse_loop <loop> <csv> <criterion copy dir>: the Criterion results of one loop -> <csv>, a -1
+# row for each failed script.
+parse_loop() {
+    local csv="$2" copy="$3" src=target/criterion
+    [[ "$1" == eval ]] && src=target/criterion/eval
 
     # Collect failed scripts
     local failed
-    failed=$(grep "^EVAL_FAIL:" "$raw" | sed 's/EVAL_FAIL: //' | sort -u || true)
+    failed=$(grep "^EVAL_FAIL:" "$RAW" | sed 's/EVAL_FAIL: //' | sort -u || true)
 
     # Copy Criterion JSON output (remove old copy first to avoid cp -r nesting)
     rm -rf "$copy"
-    cp -r target/criterion "$copy" 2>/dev/null || true
+    cp -r "$src" "$copy" 2>/dev/null || true
+    # The d3 copy holds the eval dir too; parse_criterion.py skips it (no estimates of its own).
 
     # Parse criterion output, filtering out scripts that failed evaluation
     python3 /bench/parsers/parse_criterion.py "$copy" > "$csv.raw" || true
@@ -111,15 +103,26 @@ PY
     rm -f "$csv.raw"
 
     # Fill in -1 for any scripts that were given but produced no result
-    python3 /bench/parsers/fill_failures.py "$csv" "$DATA_DIR" uplc-turbo "$raw"
+    python3 /bench/parsers/fill_failures.py "$csv" "$DATA_DIR" uplc-turbo "$RAW" --loop "$1"
 }
 
-if loop d3; then
-    time_loop "$RUN_DIR/uplc-turbo.csv" "$RUN_DIR/uplc-turbo-raw.log" "$RUN_DIR/criterion-output-ast"
-fi
-if loop eval; then
-    time_loop "$RUN_DIR/uplc-turbo-eval.csv" "$RUN_DIR/uplc-turbo-eval-raw.log" \
-        "$RUN_DIR/criterion-output-eval" PVB_EVAL_ONLY=1
+if [[ ${#LOOPS[@]} -gt 0 ]]; then
+    # Clear previous criterion output to avoid stale results
+    rm -rf target/criterion
+    : > "$RAW"
+    work=$(mktemp -d /tmp/uplc-turbo-one.XXXXXX)
+    for flat in "$DATA_DIR"/*.flat; do
+        name=$(basename "$flat" .flat)
+        mkdir -p "$work/$name"
+        ln -sf "$flat" "$work/$name/"
+        # $BASHPID is the pid of the subshell, which exec turns into the benchmark process.
+        ( echo "--- $name: process $BASHPID"
+          exec env PVB_LOOPS="$(IFS=,; echo "${LOOPS[*]}")" PVB_DATA_DIR="$work/$name" \
+              UPLC_BENCH_MODE=ast "$BENCH_BIN" --bench --noplot "${TIMING[@]}" ) 2>&1 | tee -a "$RAW" || true
+    done
+    rm -rf "$work"
+    if loop d3; then parse_loop d3 "$RUN_DIR/uplc-turbo.csv" "$RUN_DIR/criterion-output-ast"; fi
+    if loop eval; then parse_loop eval "$RUN_DIR/uplc-turbo-eval.csv" "$RUN_DIR/criterion-output-eval"; fi
 fi
 
 if loop check; then run_check || echo "WARNING: uplc-turbo check failed" >&2; fi

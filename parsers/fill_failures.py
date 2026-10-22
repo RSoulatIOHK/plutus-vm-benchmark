@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fill in -1 rows for scripts that a VM failed or produced no results for.
 
-Usage: fill_failures.py <vm-csv> <data-dir> <vm-name> [raw-log]
+Usage: fill_failures.py <vm-csv> <data-dir> <vm-name> [raw-log] [--loop d3|eval]
 
 Compares the scripts in <data-dir> (*.flat files) against the results in <vm-csv>.
 Any script present in the data dir but missing from the CSV is appended as a
@@ -11,6 +11,12 @@ If a raw log file is provided, it is scanned for common error signals
 mentioning script names. Scripts that appear in error contexts have their
 results overridden to -1, even if the benchmark framework reported a
 valid-looking timing.
+
+--loop: the raw log of a process that runs both timed loops (d3, then eval). The harness prints
+"PVB_LOOP <loop> <script>" when a loop starts, and the run script prints "--- <script>: process
+<pid>" before each process. With --loop d3, the lines of an eval section are skipped (and the
+other way round): an error in the eval loop does not fail the d3 row. Lines before the first
+marker of a process (setup, the first evaluation) count for both loops.
 """
 
 import csv
@@ -31,7 +37,7 @@ ERROR_PATTERNS = [
     # Rust (uplc-turbo)
     r"^EVAL_FAIL:",
     r"thread '.*' panicked",
-    # Node.js / Bun (blaze)
+    # Node.js (blaze, scalus-js, aiken-wasm)
     r"^TypeError:",
     r"^RangeError:",
     r"^ReferenceError:",
@@ -51,18 +57,25 @@ SCRIPT_CONTEXT_PATTERNS = [
     r"# Parameters:.*file\s*=\s*(\S+?)(?:\.flat)?\)",
     # uplc-turbo: "EVAL_FAIL: script-name"
     r"^EVAL_FAIL:\s+(\S+)",
+    # The header line of a run script before each process: "--- script-name: process 123"
+    r"^--- (\S+): process \d+",
     # Generic: script name appears on the error line itself
 ]
 
 CONTEXT_RE = re.compile("|".join(SCRIPT_CONTEXT_PATTERNS), re.MULTILINE)
 
+# Start of a timed loop inside one process, and the start of a new process (see --loop).
+LOOP_RE = re.compile(r"PVB_LOOP (d3|eval)\b")
+PROCESS_RE = re.compile(r"^--- \S+: process \d+")
 
-def scan_log_for_failures(log_path: str, script_names: set[str]) -> set[str]:
+
+def scan_log_for_failures(log_path: str, script_names: set[str], loop: str | None = None) -> set[str]:
     """Scan a raw log for error signals and associate them with script names.
 
     Uses a "most recent context" approach: scans lines sequentially, tracking
     which script is currently being benchmarked. When an error line is found,
-    the current script (if any) is marked as failed.
+    the current script (if any) is marked as failed. With loop set, the lines of
+    the other loop's sections are skipped.
     """
     if not os.path.isfile(log_path):
         return set()
@@ -72,8 +85,17 @@ def scan_log_for_failures(log_path: str, script_names: set[str]) -> set[str]:
 
     failed = set()
     current_script = None
+    section = None  # the loop of the current section; None = common to both loops
 
     for line in lines:
+        if loop:
+            if PROCESS_RE.search(line):
+                section = None
+            elif m := LOOP_RE.search(line):
+                section = m.group(1)
+            if section is not None and section != loop:
+                continue
+
         # Check if this line establishes a script context
         m = CONTEXT_RE.search(line)
         if m:
@@ -98,7 +120,8 @@ def scan_log_for_failures(log_path: str, script_names: set[str]) -> set[str]:
 
 
 def fill_failures(
-    csv_path: str, data_dir: str, vm_name: str, log_path: str | None = None
+    csv_path: str, data_dir: str, vm_name: str, log_path: str | None = None,
+    loop: str | None = None,
 ) -> None:
     # Get all expected scripts from data dir
     expected = set()
@@ -121,7 +144,7 @@ def fill_failures(
     # Scan log for error signals if provided
     log_failures = set()
     if log_path:
-        log_failures = scan_log_for_failures(log_path, expected)
+        log_failures = scan_log_for_failures(log_path, expected, loop)
         # Override any existing results for scripts that appeared in error context
         errored_with_results = log_failures & present
         if errored_with_results:
@@ -157,11 +180,17 @@ def fill_failures(
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 4:
+    args = sys.argv[1:]
+    loop = None
+    if "--loop" in args:
+        i = args.index("--loop")
+        loop = args[i + 1] if i + 1 < len(args) else ""
+        del args[i:i + 2]
+    if len(args) < 3 or loop not in (None, "d3", "eval"):
         print(
-            f"Usage: {sys.argv[0]} <vm-csv> <data-dir> <vm-name> [raw-log]",
+            f"Usage: {sys.argv[0]} <vm-csv> <data-dir> <vm-name> [raw-log] [--loop d3|eval]",
             file=sys.stderr,
         )
         sys.exit(1)
-    log = sys.argv[4] if len(sys.argv) > 4 else None
-    fill_failures(sys.argv[1], sys.argv[2], sys.argv[3], log)
+    log = args[3] if len(args) > 3 else None
+    fill_failures(args[0], args[1], args[2], log, loop)

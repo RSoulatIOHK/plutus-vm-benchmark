@@ -25,8 +25,8 @@ if loop check; then
     DATA_DIR="$DATA_DIR" aiken-check > "$RUN_DIR/$VM-check.csv" 2> >(tee -a "$RAW" >&2)
 fi
 
-# Timing, twice with the same Criterion settings: flat decode + eval per iteration (aiken.csv, the
-# D3 ranking), then eval of a program decoded once before timing (PVB_EVAL_ONLY=1, aiken-eval.csv).
+# Timing, two loops with the same Criterion settings: flat decode + eval per iteration (aiken.csv,
+# the D3 ranking), then eval of a program decoded once before timing (aiken-eval.csv).
 # A crash of the bench binary must not kill the run: missing scripts become -1 rows below.
 #
 # Criterion settings (spec D13), the same as scripts/run-uplc-turbo.sh: Criterion.rs 0.7.0 with
@@ -38,31 +38,23 @@ fi
 echo "Criterion options: ${TIMING[*]} --noplot" | tee -a "$RAW"
 
 # One process per script (spec D14), so no allocator state carries from one script to the next.
-# The process gets a data dir with only its script, because aiken-bench evaluates every file of
-# its data dir once before timing; the Criterion filter (--exact <name>) selects it too.
-#
-#   time_loop <csv> <raw log> [VAR=value ...]
-time_loop() {
-    local csv="$1" raw="$2"
-    shift 2
-    rm -rf "$CRITERION_HOME"
-    local work flat name
-    work=$(mktemp -d /tmp/aiken-one.XXXXXX)
-    for flat in "$DATA_DIR"/*.flat; do
-        name=$(basename "$flat" .flat)
-        mkdir -p "$work/$name"
-        ln -sf "$flat" "$work/$name/"
-        # $BASHPID is the pid of the subshell, which exec turns into the benchmark process.
-        ( echo "--- $name: process $BASHPID"
-          exec env "$@" DATA_DIR="$work/$name" aiken-bench --bench --noplot "${TIMING[@]}" --exact "$name" ) \
-            2>&1 | tee -a "$raw" || true
-    done
-    rm -rf "$work"
+# The process runs the requested loops of its script, d3 first, then eval (PVB_LOOPS,
+# images/aiken/bench/src/bench.rs). It gets a data dir with only its script, because aiken-bench
+# evaluates every file of its data dir once before timing; so it defines only that script's
+# benchmarks. Criterion writes the d3 loop to $CRITERION_HOME/<name>/ and the eval loop to
+# $CRITERION_HOME/eval/<name>/.
+LOOPS=()
+if loop d3; then LOOPS+=(d3); fi
+if loop eval; then LOOPS+=(eval); fi
 
+# parse_loop <loop> <csv>: the Criterion results of one loop -> <csv>, a -1 row for each failed script.
+parse_loop() {
+    local dir="$CRITERION_HOME" csv="$2"
+    [[ "$1" == eval ]] && dir="$CRITERION_HOME/eval"
     local failed
-    failed=$(grep '^EVAL_FAIL:' "$raw" | sed 's/^EVAL_FAIL: //; s/ .*//' | sort -u || true)
+    failed=$(grep '^EVAL_FAIL:' "$RAW" | sed 's/^EVAL_FAIL: //; s/ .*//' | sort -u || true)
 
-    python3 /bench/parsers/parse_criterion.py "$CRITERION_HOME" "$VM" > "$csv.tmp"
+    python3 /bench/parsers/parse_criterion.py "$dir" "$VM" > "$csv.tmp"
     FAILED="$failed" python3 - "$csv.tmp" "$csv" "$VM" <<'PY'
 import os, sys
 src, dst, vm = sys.argv[1:4]
@@ -78,13 +70,22 @@ with open(dst, "w") as out:
         out.write(f"{vm},{s},-1,-1,-1,-1,-1,0\n")
 PY
     rm -f "$csv.tmp"
-    python3 /bench/parsers/fill_failures.py "$csv" "$DATA_DIR" "$VM" "$raw"
+    python3 /bench/parsers/fill_failures.py "$csv" "$DATA_DIR" "$VM" "$RAW" --loop "$1"
 }
 
-if loop d3; then
-    time_loop "$RUN_DIR/$VM.csv" "$RAW"
-fi
-if loop eval; then
-    : > "$RUN_DIR/$VM-eval-raw.log"
-    time_loop "$RUN_DIR/$VM-eval.csv" "$RUN_DIR/$VM-eval-raw.log" PVB_EVAL_ONLY=1
+if [[ ${#LOOPS[@]} -gt 0 ]]; then
+    rm -rf "$CRITERION_HOME"
+    work=$(mktemp -d /tmp/aiken-one.XXXXXX)
+    for flat in "$DATA_DIR"/*.flat; do
+        name=$(basename "$flat" .flat)
+        mkdir -p "$work/$name"
+        ln -sf "$flat" "$work/$name/"
+        # $BASHPID is the pid of the subshell, which exec turns into the benchmark process.
+        ( echo "--- $name: process $BASHPID"
+          exec env PVB_LOOPS="$(IFS=,; echo "${LOOPS[*]}")" DATA_DIR="$work/$name" \
+              aiken-bench --bench --noplot "${TIMING[@]}" ) 2>&1 | tee -a "$RAW" || true
+    done
+    rm -rf "$work"
+    if loop d3; then parse_loop d3 "$RUN_DIR/$VM.csv"; fi
+    if loop eval; then parse_loop eval "$RUN_DIR/$VM-eval.csv"; fi
 fi

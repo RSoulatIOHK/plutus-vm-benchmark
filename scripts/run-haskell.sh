@@ -28,9 +28,9 @@ echo "plutus-core (Haskell / GHC / Criterion)"
 # Running the literal node set needs -threaded in pvb-bench.cabal and a rebuild.
 RTS=(+RTS -T -I0 -A16m --disable-delayed-os-memory-return -RTS)
 
-# Each script runs for at least 20 s per loop (Criterion's warm-up, then -L 20: the time limit of
-# plutus-benchmark:validation, set in Main.hs). Two loops: flat decode + evaluation (haskell.csv,
-# spec D3) and evaluation of a program decoded once (haskell-eval.csv).
+# Each script runs for about 5 s per loop (Criterion's warm-up, then its default time limit of 5 s,
+# set in Main.hs; spec D13). Two loops: flat decode + evaluation (Criterion group d3, haskell.csv,
+# spec D3) and evaluation of a program decoded once (group eval, haskell-eval.csv).
 TIMING=()
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
     TIMING=(-L 1)
@@ -41,20 +41,22 @@ if loop check; then
     "$BENCH_DIR/bin/pvb-bench" check "$COST_MODEL" "$DATA_DIR" "${RTS[@]}" > "$RUN_DIR/haskell-check.csv"
 fi
 
-# One Criterion loop: time_loop <pvb-bench command> <output name>. A failed script gets a -1 row.
-#
-# One process per script (spec D14), so no heap or GC state carries from one script to the next.
-# The process gets a data dir with only its script, because pvb-bench evaluates every file of its
-# data dir once before timing; the Criterion name filter (--match glob <name>) selects it too.
-# Criterion appends every process's results to one CSV; each process writes its own JSON report.
-time_loop() {
-    local raw="$RUN_DIR/$2-raw.log" criterion="$RUN_DIR/$2-criterion.csv" reports="$RUN_DIR/$2-criterion"
+# The timed loops. One process per script (spec D14), so no heap or GC state carries from one
+# script to the next. The process runs the requested loops of its script, d3 first, then eval
+# (Main.hs). It gets a data dir with only its script, because pvb-bench evaluates every file of its
+# data dir once before timing; the Criterion name filter (--match glob <group>/<name>) selects the
+# loops. Criterion appends every process's results to one CSV; each process writes its own JSON
+# report. A failed script gets a -1 row.
+time_loops() {
+    local raw="$RUN_DIR/haskell-raw.log" criterion="$RUN_DIR/haskell-criterion.csv" reports="$RUN_DIR/haskell-criterion"
     # Clean any leftover from aborted runs (Criterion appends, causing duplicate headers)
     rm -rf "$criterion" "$reports"
     mkdir -p "$reports"
     : > "$raw"
     echo "RTS options: ${RTS[*]}" | tee -a "$raw"
-    local work flat name
+    local work flat name loops=()
+    if loop d3; then loops+=(d3); fi
+    if loop eval; then loops+=(eval); fi
     work=$(mktemp -d /tmp/haskell-one.XXXXXX)
     for flat in "$DATA_DIR"/*.flat; do
         name=$(basename "$flat" .flat)
@@ -62,16 +64,19 @@ time_loop() {
         ln -sf "$flat" "$work/$name/"
         # $BASHPID is the pid of the subshell, which exec turns into the benchmark process.
         ( echo "--- $name: process $BASHPID"
-          exec "$BENCH_DIR/bin/pvb-bench" "$1" "$COST_MODEL" "$work/$name" \
+          exec "$BENCH_DIR/bin/pvb-bench" bench "$COST_MODEL" "$work/$name" \
               --csv "$criterion" --json "$reports/$name.json" ${TIMING[@]+"${TIMING[@]}"} \
-              --match glob "$name" "${RTS[@]}" ) 2>&1 | tee -a "$raw" || true
+              --match glob "${loops[@]/%//$name}" "${RTS[@]}" ) 2>&1 | tee -a "$raw" || true
     done
     rm -rf "$work"
-    python3 /bench/parsers/parse_criterion_hs.py "$criterion" "$reports"/*.json > "$RUN_DIR/$2.csv" || true
-    python3 /bench/parsers/fill_failures.py "$RUN_DIR/$2.csv" "$DATA_DIR" haskell "$raw"
+    local l out
+    for l in "${loops[@]}"; do
+        out="$RUN_DIR/haskell.csv"
+        [[ "$l" == eval ]] && out="$RUN_DIR/haskell-eval.csv"
+        python3 /bench/parsers/parse_criterion_hs.py --group "$l" "$criterion" "$reports"/*.json > "$out" || true
+        python3 /bench/parsers/fill_failures.py "$out" "$DATA_DIR" haskell "$raw" --loop "$l"
+    done
 }
 
-# D3: flat decode + evaluation per iteration.
-if loop d3; then time_loop bench haskell; fi
-# Eval only, same Criterion settings.
-if loop eval; then time_loop bench-eval haskell-eval; fi
+# D3: flat decode + evaluation per iteration. Eval only: same Criterion settings.
+if loop d3 || loop eval; then time_loops; fi

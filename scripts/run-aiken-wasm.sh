@@ -29,10 +29,11 @@ if loop check; then
 fi
 
 # Timing (spec D3, D13): the JMH shape of the JVM rows, one 20 s warm-up round and 3 measured rounds
-# of 5 s (time.test.mjs). BENCH_TIMING=quick: 0.5 s warm-up, one 0.5 s round.
-# A new vitest process per script (spec D14), so no JIT profile, GC state or decode cache carries
-# over from another script. The "Benchmarking <name>" line ties a crash in the log to its script
-# (fill_failures.py); a script without a PVB_RESULT line gets -1. A crash must not kill the run.
+# of 5 s (time.mjs). BENCH_TIMING=quick: 0.5 s warm-up, one 0.5 s round.
+# A new node process per script (spec D14), so no JIT profile, GC state or decode cache carries
+# over from another script. The "--- <name>: process <pid>" line ties a crash in the log to its
+# script (fill_failures.py); a script without a PVB_RESULT line gets -1. A crash must not kill the
+# run.
 export PVB_WARMUP_MS=20000 PVB_ROUND_MS=5000 PVB_ROUNDS=3
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
     export PVB_WARMUP_MS=500 PVB_ROUND_MS=500 PVB_ROUNDS=1
@@ -40,8 +41,9 @@ fi
 if loop d3 || loop eval; then
     for f in $(cd "$DATA_DIR" && ls -- *.flat | LC_ALL=C sort); do
         name="${f%.flat}"
-        echo "Benchmarking $name" | tee -a "$RAW"
-        DATA_DIR="$DATA_DIR" PVB_SCRIPT="$name" npx vitest run time.test 2>&1 | tee -a "$RAW" || true
+        # $BASHPID is the pid of the subshell, which exec turns into the node process.
+        ( echo "--- $name: process $BASHPID"
+          DATA_DIR="$DATA_DIR" PVB_SCRIPT="$name" exec node time.mjs ) 2>&1 | tee -a "$RAW" || true
     done
     TIMING_CSV="$RUN_DIR/$VM-timing.tmp"
     python3 /bench/parsers/parse_vitest.py "$VM" "$RAW" > "$TIMING_CSV"
@@ -50,4 +52,8 @@ if loop d3 || loop eval; then
     if loop d3; then cp "$TIMING_CSV" "$RUN_DIR/$VM.csv"; fi
     if loop eval; then cp "$TIMING_CSV" "$RUN_DIR/$VM-eval.csv"; fi
     rm -f "$TIMING_CSV"
+    # BENCH_TRACE=1: the warm-up in 1 s slices -> $VM-warmup.csv
+    if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
+        python3 /bench/parsers/parse_warmup.py "$VM" "$RAW" > "$RUN_DIR/$VM-warmup.csv" || true
+    fi
 fi

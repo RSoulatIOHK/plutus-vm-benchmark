@@ -1,7 +1,7 @@
 # check=skip=InvalidDefaultArgInFrom
-# blaze-plutus, CEK interpreter (TypeScript, timed under vitest). docs/IMAGE_CONTRACT.md.
-# One build, two VMs: the build arg VM picks the engine of the default command.
-# pvb-vms: blaze-v8 blaze-jsc
+# blaze-plutus, CEK interpreter (TypeScript, timed under vitest on Node.js / V8). docs/IMAGE_CONTRACT.md.
+# The VM is named after its engine; the directory keeps the package name.
+# pvb-vms: blaze-v8
 
 ARG BUN_VERSION
 
@@ -20,9 +20,11 @@ RUN git clone "$BLAZE_REPO" /src \
     && cd /src && git checkout "$BLAZE_SHA"
 
 WORKDIR /src
+# blaze is a bun workspace (bun.lock), so bun installs it. Bun is a build tool only: the runtime
+# stage has no bun, the benchmark runs on Node.js.
 RUN bun install
-# Every JS row times under the same vitest (.env VITEST_VERSION). blaze's lockfile picks its own;
-# stop the build when it differs, so a blaze bump cannot change the timing tool silently.
+# The timing runs under the vitest of .env (VITEST_VERSION). blaze's lockfile picks its own; stop
+# the build when it differs, so a blaze bump cannot change the timing tool silently.
 # bun installs packages isolated (no root node_modules/vitest), so ask bun from the package that
 # runs the benchmark.
 RUN v=$(cd packages/blaze-plutus && bun -e 'console.log(require("vitest/package.json").version)') \
@@ -46,8 +48,6 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Bun (JavaScriptCore) from the build image, so build and run use the same Bun version.
-COPY --from=build /usr/local/bin/bun /usr/local/bin/bun
 COPY --from=build /src /bench/blaze-plutus
 
 # Our harness (pvb-time.test.ts: timing, one script per process; pvb-check.test.ts) and the mainnet
@@ -58,10 +58,8 @@ COPY check/reference/mainnet-plutusv3-costmodel.json /bench/mainnet-plutusv3-cos
 COPY images/blaze/plutusv3-param-names.txt /bench/plutusv3-param-names.txt
 
 COPY parsers/ /bench/parsers/
-COPY scripts/image-entry.sh scripts/run-blaze-v8.sh scripts/run-blaze-jsc.sh /bench/scripts/
+COPY scripts/image-entry.sh scripts/run-blaze-v8.sh /bench/scripts/
 
-# Last, so both VMs share every layer above.
-ARG VM
-ENV PVB_VM=${VM}
+ENV PVB_VM=blaze-v8
 WORKDIR /bench
 ENTRYPOINT ["bash", "/bench/scripts/image-entry.sh"]

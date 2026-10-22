@@ -4,7 +4,6 @@
   "type": "module",
   "description": "Plutus VM benchmark harness for the Aiken uplc CEK machine compiled to WASM, from the @lucid-evolution/uplc npm package (Node)",
   "dependencies": {
-    "@lucid-evolution/uplc": "0.4.0",
-    "vitest": "4.1.10"
+    "@lucid-evolution/uplc": "0.4.0"
   }
 }

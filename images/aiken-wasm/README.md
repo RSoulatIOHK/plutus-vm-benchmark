@@ -3,10 +3,10 @@
 Aiken's UPLC evaluator compiled to WASM, as published on npm as
 [`@lucid-evolution/uplc`](https://www.npmjs.com/package/@lucid-evolution/uplc) (the package Lucid
 Evolution evaluates scripts with). The image uses the package as it is: no own WASM build
-(spec D17). It runs on Node.js 22 (V8), with the same timing loop under vitest as the `scalus-js`
+(spec D17). It runs on Node.js 22 (V8), with the same timing loop as the `scalus-js`
 and `blaze-v8` harnesses. The image follows `docs/IMAGE_CONTRACT.md`.
 
-Pins in `.env`: `LUCID_UPLC_VERSION` (the npm version) and `VITEST_VERSION`.
+Pin in `.env`: `LUCID_UPLC_VERSION` (the npm version).
 
 ```bash
 scripts/images.sh build aiken-wasm
@@ -50,12 +50,12 @@ The report ranks the row, with the badge "decode cached (by the library)". This 
 "decode and compile excluded" badge of the Scalus JIT: the time does not include the decode. It
 is also what a Lucid user gets when one script is evaluated again and again.
 
-`run-aiken-wasm.sh` starts a new vitest process per script, so the cache of one script never
+`run-aiken-wasm.sh` starts a new node process per script, so the cache of one script never
 serves another.
 
 ## Timing
 
-`time.test.mjs` is the loop of `images/scalus-js/time.test.mjs`: the JMH shape of the JVM rows
+`time.mjs` is the loop of `images/scalus-js/time.mjs`: the JMH shape of the JVM rows
 (`-wi 1 -w 20s -i 3 -r 5s`). One 20 s warm-up round, then 3 measured rounds of 5 s. A round calls
 `eval_program_raw` back to back until its time is up; its score is elapsed time / calls, as in JMH
 `avgt`. `BENCH_TIMING=quick`: 0.5 s warm-up, one 0.5 s round.

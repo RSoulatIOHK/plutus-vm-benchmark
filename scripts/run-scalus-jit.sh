@@ -24,10 +24,19 @@ echo "Scalus JIT (Scala / JVM / JMH)"
 # 5 s each, so the CSV has a standard deviation over the iteration means. BENCH_TIMING=quick
 # shortens warm-up and measurement to one 1 s iteration each.
 WARMUP=20s
+WARMUP_ITERATIONS=1
 MEASURE=5s
 ITERATIONS=3
+# BENCH_TRACE=1: the same 20 s of warm-up as 20 iterations of 1 s (-wi 20 -w 1s), so the log has
+# a score per second; parse_warmup.py writes them to $VM-warmup.csv. The measured iterations stay
+# the same.
+if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
+    WARMUP=1s
+    WARMUP_ITERATIONS=20
+fi
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
     WARMUP=1s
+    WARMUP_ITERATIONS=1
     MEASURE=1s
     ITERATIONS=1
     # The check compiles every selected script: one compile each instead of the median of 3.
@@ -52,7 +61,7 @@ cd "$BENCH_DIR"
 : > "$RUN_DIR/$VM-raw.log"
 if loop d3 || loop eval; then
     java -Xss64m -Xmx4g -cp "$CP" org.openjdk.jmh.Main \
-        -i "$ITERATIONS" -wi 1 -w "$WARMUP" -r "$MEASURE" -f 1 -t 1 \
+        -i "$ITERATIONS" -wi "$WARMUP_ITERATIONS" -w "$WARMUP" -r "$MEASURE" -f 1 -t 1 \
         -jvm /opt/jdk-25/bin/java \
         -jvmArgsAppend "$JVM_FLAGS -XX:+AlwaysPreTouch -Xms$HEAP" \
         -rf json -rff "$RUN_DIR/$VM-jmh.json" -p "file=$FILE_LIST" 'pvb.scalus.JITBenchmark' \
@@ -67,6 +76,11 @@ if loop d3 || loop eval; then
     if loop d3; then cp "$TIMING_CSV" "$RUN_DIR/$VM.csv"; fi
     if loop eval; then cp "$TIMING_CSV" "$RUN_DIR/$VM-eval.csv"; fi
     rm -f "$TIMING_CSV"
+fi
+
+# BENCH_TRACE=1: the warm-up scores, one per second -> $VM-warmup.csv
+if [[ "${BENCH_TRACE:-0}" == 1 ]] && { loop d3 || loop eval; }; then
+    python3 /bench/parsers/parse_warmup.py "$VM" "$RUN_DIR/$VM-raw.log" > "$RUN_DIR/$VM-warmup.csv" || true
 fi
 
 # Check (spec D4): one evaluation per script, same code and parameters -> $VM-check.csv,
