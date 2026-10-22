@@ -132,11 +132,11 @@ and the runner is `scripts/run-<vm>.sh`.
 | aiken | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
-| blaze-v8, blaze-jsc | Own loop (JMH shape), launched by Vitest | 20 s warm-up, three 5 s measurements |
+| blaze-v8 | Own loop (JMH shape), launched by Vitest | 20 s warm-up, three 5 s measurements |
 | aiken-wasm | Own loop (JMH shape), plain Node.js | 20 s warm-up, three 5 s measurements (a JIT runtime, V8) |
 | scalus-js | Own loop (JMH shape), plain Node.js | 20 s warm-up, three 5 s measurements (the same loop as blaze-v8) |
 
-The JIT runtimes (JVM, V8, JSC) all get 20 s of warm-up, because the staged Scalus JIT needs about
+The JIT runtimes (JVM, V8) all get 20 s of warm-up, because the staged Scalus JIT needs about
 20 s to warm up. See [Fairness rules](#fairness-rules). `BENCH_TIMING=quick` shortens every
 warm-up and measurement, for smoke tests only.
 
@@ -154,10 +154,12 @@ same.
 The JS rows share one timing loop. A round runs operations back to back for a fixed time and
 scores elapsed / ops, as JMH `avgt` does. scalus-js and aiken-wasm run it with plain `node`: the
 harness is plain JavaScript, and the VM is an npm package that Node.js loads natively. The blaze
-rows run it under Vitest. blaze has no built package in the image, so Vitest loads its TypeScript
-sources (`src/cek`, `src/flat`) and transforms them. A bundle or Bun's own TypeScript loader
-would give a different module shape, and V8 and JSC would then not run the same transformed
-code.
+row runs it under Vitest. blaze has no built package in the image, so Vitest loads its TypeScript
+sources (`src/cek`, `src/flat`) and transforms them. A bundle would give a different module shape
+than the one blaze has been timed with so far.
+
+There is no JSC row: every JS row runs on Node 22 (V8), the common runtime for Cardano off-chain
+code; one engine keeps the JS rows comparable.
 
 ## Fairness Rules
 
@@ -171,7 +173,7 @@ code.
 Decisions D13 to D17 of the
 [design](docs/superpowers/specs/2026-10-21-lantr-vm-benchmark-design.md#0-decisions):
 
-- **Warm-up (D13)**: the JIT runtimes (JVM, V8, JSC) get a 20 s warm-up and three 5 s
+- **Warm-up (D13)**: the JIT runtimes (JVM, V8) get a 20 s warm-up and three 5 s
   measurements. The ahead-of-time compiled VMs (Rust, Go, GHC) keep the defaults of their
   framework, with at least 5 s of measurement.
 - **Process model (D14)**: every VM runs each script in a fresh process. No JIT profile, heap or
@@ -240,7 +242,7 @@ run. The ratio is less sensitive to hardware changes and to drift between runs t
   - Criterion (haskell): `stddev_ns` is Criterion's standard deviation. `min_ns` and `max_ns` are the
     bounds of the bootstrap confidence interval of the mean. `iterations` is the number of samples
     when the run has Criterion's `--json` report, else 0 (the CSV and the log do not have it).
-- **JIT warm-up**: the JVM, V8 and JSC compile hot code at run time. Their frameworks warm up first,
+- **JIT warm-up**: the JVM and V8 compile hot code at run time. Their frameworks warm up first,
   but the execution model differs from ahead-of-time compiled VMs.
 - **Cost model rebuilt per iteration**: some public APIs do not let a harness keep the cost model
   or machine parameters across evaluations. uplc-turbo builds its default cost model in every

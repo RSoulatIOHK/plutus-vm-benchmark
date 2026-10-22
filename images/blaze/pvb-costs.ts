@@ -158,8 +158,7 @@ export function harnessCosts(): Record<DefaultFunction, BuiltinCostModel> {
   );
   assertMachineCosts(params);
   const { costs, unused, missing } = mainnetBuiltinCosts(params);
-  const bun = (process.versions as Record<string, string | undefined>).bun;
-  console.log(`engine: ${bun ? `bun ${bun} (JavaScriptCore)` : `node ${process.versions.node} (V8)`}`);
+  console.log(`engine: node ${process.versions.node} (V8)`);
   console.log(
     `cost model: ${params.size} mainnet parameters; ${unused.length} not used by blaze's table, ` +
       `${missing.length} table fields without a mainnet parameter (blaze default kept)`,

@@ -1,7 +1,7 @@
-// plutus-vm-benchmark timing for blaze (V8 via node, JSC via bun). Copied into
+// plutus-vm-benchmark timing for blaze (V8 via node). Copied into
 // packages/blaze-plutus/bench/ (images/blaze/Dockerfile). docs/IMAGE_CONTRACT.md, spec D3.
 //
-// One script per process: scripts/run-blaze-*.sh starts vitest once per script ($PVB_SCRIPT), so no
+// One script per process: scripts/run-blaze-v8.sh starts vitest once per script ($PVB_SCRIPT), so no
 // JIT profile or GC state carries over from another script. The process runs the loops of
 // $PVB_LOOPS (comma list) in this order, each with its own warm-up and rounds:
 //   d3    flat decode + evaluation                                         -> <vm>.csv

@@ -37,7 +37,7 @@ ERROR_PATTERNS = [
     # Rust (uplc-turbo)
     r"^EVAL_FAIL:",
     r"thread '.*' panicked",
-    # Node.js / Bun (blaze)
+    # Node.js (blaze, scalus-js, aiken-wasm)
     r"^TypeError:",
     r"^RangeError:",
     r"^ReferenceError:",

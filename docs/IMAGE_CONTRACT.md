@@ -15,7 +15,8 @@ them one at a time. This file is the interface between an image and the rest of 
   An unchanged VM keeps its tag, so CI does not rebuild it.
 - Variants of one build share a Dockerfile: `images/<family>/Dockerfile` with a header line
   `# pvb-vms: <vm> <vm>...` and an `ARG VM` that sets the default command. Each variant is still its
-  own image. Today: `images/scalus/` (`scalus-cek`, `scalus-jit`), `images/blaze/` (`blaze-v8`, `blaze-jsc`).
+  own image. Today: `images/scalus/` (`scalus-cek`, `scalus-jit`). `images/blaze/` serves one VM,
+  `blaze-v8`, named after its engine by the header line `# pvb-vms: blaze-v8`.
 - Default command: `ENTRYPOINT ["bash", "/bench/scripts/image-entry.sh"]` with `ENV PVB_VM=<vm>`. The
   entry script prepares the data, runs `scripts/run-<vm>.sh /results` and sets the exit code.
 - Build locally: `scripts/images.sh build <vm>`. Run several: `scripts/run-images.sh <results-dir> [vm ...]`.
@@ -79,7 +80,7 @@ How the image applies them:
 | `<vm>-raw.log` | Raw tool output of the timed loops (both loops, one process per script), for debugging |
 | `<vm>-eval.csv` | Eval-only timing, same schema as `<vm>.csv`: evaluation of a program decoded once outside the timed loop. Shown as a second column next to the D3 time |
 | `<vm>-compile.csv` | Only for VMs that compile before they run (Scalus JIT): `vm,script,compile_ns` |
-| `<vm>-warmup.csv` | Only with `BENCH_TRACE=1`, for the JIT rows (scalus-cek, scalus-jit, blaze-v8, blaze-jsc, scalus-js, aiken-wasm): `vm,script,loop,second,ns_per_op`, the warm-up in slices of 1 s |
+| `<vm>-warmup.csv` | Only with `BENCH_TRACE=1`, for the JIT rows (scalus-cek, scalus-jit, blaze-v8, scalus-js, aiken-wasm): `vm,script,loop,second,ns_per_op`, the warm-up in slices of 1 s |
 
 ## What the timed loops do (spec D3, D11)
 
