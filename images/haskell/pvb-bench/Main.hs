@@ -23,7 +23,7 @@ the one of check/reference/gate-ref, so the check gives the reference numbers.
 -}
 module Main (main) where
 
-import Control.Monad (unless)
+import Control.Monad (forM_, unless)
 import Control.Monad.Except (runExcept)
 import Control.Monad.Writer.Strict (runWriterT)
 import Criterion.Main (Benchmark, bench, defaultConfig, defaultMainWith, env, whnf)
@@ -68,9 +68,17 @@ mainnetContext path = do
   case runExcept (runWriterT (V3.mkEvaluationContext params)) of
     Left e -> fail ("mkEvaluationContext: " ++ show e)
     Right (ctx, warns) -> do
-      -- A wrong parameter count means the array does not fit this plutus version: stop.
-      unless (null warns) $
-        fail ("cost model parameter count (expected, actual): " ++ show [(Common.cmExpected w, Common.cmActual w) | w <- warns])
+      -- As the node: fewer parameters than this plutus version knows is accepted, and plutus fills
+      -- the missing ones with maxBound (PlutusLedgerApi.Common.ParamName, CMTooFewParamsWarn). The
+      -- mainnet array (350) is shorter than plutus 1.70's (361): the 11 extra parameters belong to
+      -- builtins none of the scripts call. More parameters than plutus knows means the array is newer
+      -- than this plutus version: stop.
+      let tooMany = [(Common.cmExpected w, Common.cmActual w) | w <- warns, Common.cmActual w > Common.cmExpected w]
+      unless (null tooMany) $
+        fail ("cost model has more parameters than this plutus version (expected, actual): " ++ show tooMany)
+      forM_ warns $ \w -> hPutStrLn stderr
+        ("note: cost model has " ++ show (Common.cmActual w) ++ " of " ++ show (Common.cmExpected w)
+          ++ " parameters; plutus fills the missing ones with maxBound, as on the node")
       pure ctx
 
 -- | Flat decode, then give every variable a fake name (the term type evaluateTerm takes).
