@@ -32,9 +32,11 @@ from __future__ import annotations
 import base64
 import csv
 import glob
+import html
 import json
 import math
 import os
+import re
 import sys
 from collections import defaultdict
 
@@ -99,6 +101,209 @@ VM_LABELS = {
     "aiken": "Aiken uplc CEK (Rust)",
     "aiken-wasm": "Aiken uplc CEK (Rust → WASM / Node V8)",
 }
+
+
+# What each VM is, for the "VMs in this benchmark" list: implementation language, runtime and
+# execution model. The model uses the page's words (template.html engineCode).
+VM_FACTS = {
+    "haskell": {"lang": "Haskell", "runtime": "GHC", "model": "Interpreter (CEK)"},
+    "scalus-jit": {"lang": "Scala", "runtime": "GraalVM", "model": "JIT compiler (UPLC → JVM bytecode)"},
+    "scalus-cek": {"lang": "Scala", "runtime": "GraalVM", "model": "Interpreter (CEK)"},
+    "scalus-js": {"lang": "Scala.js", "runtime": "Node (V8)", "model": "Interpreter (CEK)"},
+    "aiken": {"lang": "Rust", "runtime": "native", "model": "Interpreter (CEK)"},
+    "aiken-wasm": {"lang": "Rust → WASM", "runtime": "Node (V8)", "model": "Interpreter (CEK)"},
+    "uplc-turbo": {"lang": "Rust", "runtime": "native", "model": "Interpreter (AST walker)"},
+    "plutigo": {"lang": "Go", "runtime": "native", "model": "Interpreter (CEK)"},
+    "blaze-jsc": {"lang": "TypeScript", "runtime": "Bun (JSC)", "model": "Interpreter (CEK)"},
+    "blaze-v8": {"lang": "TypeScript", "runtime": "Node (V8)", "model": "Interpreter (CEK)"},
+}
+
+# Where each VM comes from. The pinned version is read from .env at the repo root (env: the .env
+# key, pattern: a regex whose group 1 is the release tag, matched on "<value> # <comment>"); version
+# and tag are the fallback when .env has no match. release: the release page of the tag ({tag}).
+# used_by: (name, url) of a node or SDK that ships the VM.
+_SCALUS_REPO = "https://github.com/scalus3/scalus"
+_BLAZE_REPO = "https://github.com/butaneprotocol/blaze-cardano"
+VM_SOURCES = {
+    "haskell": {
+        "repo": "https://github.com/IntersectMBO/plutus", "home": "https://plutus.cardano.intersectmbo.org",
+        "env": "HASKELL_SHA", "pattern": r"release (\d+(?:\.\d+)+)", "tag": "1.70.0.0",
+        "release": "https://github.com/IntersectMBO/plutus/releases/tag/{tag}",
+        "used_by": ("cardano-node", "https://github.com/IntersectMBO/cardano-node")},
+    "scalus-jit": {
+        "repo": _SCALUS_REPO, "home": "https://scalus.org",
+        "env": "SCALUS_SHA", "pattern": r"#\s*(v\d+(?:\.\d+)+)", "tag": "v1.4.0",
+        "release": _SCALUS_REPO + "/releases/tag/{tag}"},
+    "scalus-cek": {
+        "repo": _SCALUS_REPO, "home": "https://scalus.org",
+        "env": "SCALUS_VERSION", "pattern": r"^(\d+(?:\.\d+)+)", "tag": "1.4.0", "version": "v{tag}",
+        "release": _SCALUS_REPO + "/releases/tag/v{tag}"},
+    "scalus-js": {
+        "repo": _SCALUS_REPO, "home": "https://scalus.org",
+        "env": "SCALUS_JS_VERSION", "pattern": r"^(\d+(?:\.\d+)+)", "tag": "1.4.0", "version": "scalus {tag} (npm)",
+        "release": _SCALUS_REPO + "/releases/tag/v{tag}"},
+    "aiken": {
+        "repo": "https://github.com/aiken-lang/aiken", "home": "https://aiken-lang.org",
+        "env": "AIKEN_SHA", "pattern": r"#\s*(v\d+(?:\.\d+)+)", "tag": "v1.1.24",
+        "release": "https://github.com/aiken-lang/aiken/releases/tag/{tag}"},
+    "aiken-wasm": {
+        "repo": "https://github.com/Anastasia-Labs/lucid-evolution",
+        "home": "https://anastasia-labs.github.io/lucid-evolution/",
+        "env": "LUCID_UPLC_VERSION", "pattern": r"^(\d+(?:\.\d+)+)", "tag": "0.4.0",
+        "version": "@lucid-evolution/uplc {tag}",
+        "release": "https://github.com/Anastasia-Labs/lucid-evolution/releases/tag/@lucid-evolution/uplc@{tag}"},
+    "uplc-turbo": {
+        "repo": "https://github.com/pragma-org/uplc", "home": None,
+        "env": "UPLC_TURBO_SHA", "pattern": r"#\s*(amaru-uplc-v\d+(?:\.\d+)+)", "tag": "amaru-uplc-v0.4.0",
+        "release": "https://github.com/pragma-org/uplc/releases/tag/{tag}",
+        "used_by": ("Amaru", "https://github.com/pragma-org/amaru")},
+    "plutigo": {
+        "repo": "https://github.com/blinklabs-io/plutigo", "home": None,
+        "env": "PLUTIGO_SHA", "pattern": r"#\s*(v\d+(?:\.\d+)+)", "tag": "v0.1.10",
+        "release": "https://github.com/blinklabs-io/plutigo/releases/tag/{tag}",
+        "used_by": ("Dingo", "https://github.com/blinklabs-io/dingo")},
+    "blaze-jsc": {
+        "repo": _BLAZE_REPO, "home": "https://blaze.butane.dev",
+        "env": "BLAZE_SHA", "pattern": r"@blaze-cardano/plutus (\d+(?:\.\d+)+)", "tag": "0.1.1",
+        "version": "@blaze-cardano/plutus {tag}",
+        "release": _BLAZE_REPO + "/releases/tag/@blaze-cardano/plutus@{tag}"},
+    "blaze-v8": {
+        "repo": _BLAZE_REPO, "home": "https://blaze.butane.dev",
+        "env": "BLAZE_SHA", "pattern": r"@blaze-cardano/plutus (\d+(?:\.\d+)+)", "tag": "0.1.1",
+        "version": "@blaze-cardano/plutus {tag}",
+        "release": _BLAZE_REPO + "/releases/tag/@blaze-cardano/plutus@{tag}"},
+}
+
+
+def read_env(path: str) -> dict[str, str]:
+    """{KEY: "<value> # <comment>"} of a .env file; {} if it is missing."""
+    out: dict[str, str] = {}
+    if not os.path.isfile(path):
+        return out
+    with open(path) as f:
+        for line in f:
+            key, sep, rest = line.strip().partition("=")
+            if sep and key and not key.startswith("#"):
+                out[key.strip()] = rest.strip()
+    return out
+
+
+def vm_links(env: dict[str, str]) -> dict[str, dict]:
+    """{vm: {repo, home, release, version, used_by}} for every VM in VM_SOURCES. The tag comes from
+    the .env pin when its pattern matches, else from VM_SOURCES."""
+    out = {}
+    for vm, s in VM_SOURCES.items():
+        m = re.search(s["pattern"], env.get(s["env"], ""))
+        tag = m.group(1) if m else s["tag"]
+        used_by = s.get("used_by")
+        out[vm] = {
+            "repo": s["repo"],
+            "home": s["home"],
+            "release": s["release"].format(tag=tag),
+            "version": s.get("version", "{tag}").format(tag=tag),
+            "used_by": {"name": used_by[0], "url": used_by[1]} if used_by else None,
+        }
+    return out
+
+
+def load_vm_links() -> dict[str, dict]:
+    """vm_links of the .env at the repo root (the pins of the checkout, not of the run)."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    return vm_links(read_env(os.path.join(root, ".env")))
+
+
+def vm_anchor(vm: str) -> str:
+    """The id of a VM's row in "VMs in this benchmark"."""
+    return "vm-" + re.sub(r"[^a-z0-9-]", "-", vm.lower())
+
+
+def md_links_to_html(text: str) -> str:
+    """Escaped text with markdown links [text](https://...) as links (as noteLine in the page)."""
+    return re.sub(r"\[([^\]]+)\]\((https:[^)\s]+)\)",
+                  r'<a href="\2" target="_blank" rel="noopener">\1</a>', html.escape(text, quote=False))
+
+
+def vm_list_badges(vm: str, gate: dict | None, hidden: dict[str, str], compile_ns) -> list[tuple[str, str, str]]:
+    """[(css class, text, title)] of a VM in the VM list."""
+    out = []
+    if vm in hidden:
+        out.append(("failed", "failed check", hidden[vm]))
+    elif gate is not None and gate["vms"].get(vm, {}).get("verdict") == "badge":
+        out.append(("outdated", "outdated cost model",
+                    "The VM cannot load the mainnet cost model; its ExUnits equal Haskell with the model the VM ships"))
+    if vm in EXPERIMENTAL:
+        out.append(("exp", "experimental", EXPERIMENTAL[vm]))
+    if vm in VM_BADGES:
+        out.append(("timing", VM_BADGES[vm]["text"], VM_BADGES[vm]["title"]))
+    if vm in compile_ns:
+        out.append(("compile", COMPILE_BADGE, "Each script is decoded and compiled once, before the timed loop"))
+    return out
+
+
+def vm_list_order(data, scripts, present_vms, experimental, hidden) -> list[str]:
+    """Ranked VMs fastest first (the penalised geometric mean, as the page's bars), then the
+    experimental ones, then the ones that failed the check."""
+    geo = compute_geo_means(data, scripts, present_vms)
+    ranked = sorted(present_vms, key=lambda vm: (geo.get(vm) or float("inf"), vm))
+    failed = sorted(hidden, key=lambda v: (VM_ORDER.index(v) if v in VM_ORDER else 99, v))
+    return ranked + list(experimental) + failed
+
+
+def _ext(url: str, text: str) -> str:
+    return f'<a href="{html.escape(url)}" target="_blank" rel="noopener">{html.escape(text)}</a>'
+
+
+def _short(url: str) -> str:
+    """https://github.com/a/b -> a/b; https://x.org/ -> x.org"""
+    u = url.split("://", 1)[-1].rstrip("/")
+    return u[len("github.com/"):] if u.startswith("github.com/") else u
+
+
+def vm_list_html(order: list[str], links: dict[str, dict], gate, hidden, compile_ns) -> str:
+    """The rows of "VMs in this benchmark" (static HTML, one row per VM, id vm-<key>)."""
+    rows = []
+    for vm in order:
+        facts = VM_FACTS.get(vm, {"lang": "", "runtime": "", "model": ""})
+        link = links.get(vm)
+        name = html.escape(VM_LABELS.get(vm, vm))
+        meta = " · ".join(html.escape(x) for x in (facts["lang"], facts["runtime"], facts["model"]) if x)
+        cells = []
+        if link:
+            cells.append(f'<span class="vml-k">version</span> {_ext(link["release"], link["version"])}')
+            cells.append(f'<span class="vml-k">source</span> {_ext(link["repo"], _short(link["repo"]))}')
+            if link["home"]:
+                cells.append(f'<span class="vml-k">home</span> {_ext(link["home"], _short(link["home"]))}')
+            if link["used_by"]:
+                cells.append(f'<span class="vml-k">used by</span> {_ext(link["used_by"]["url"], link["used_by"]["name"])}')
+        badges = "".join(f'<span class="vm-badge {c}" title="{html.escape(t)}">{html.escape(x)}</span>'
+                         for c, x, t in vm_list_badges(vm, gate, hidden, compile_ns))
+        note = f'<div class="vml-note">{md_links_to_html(VM_NOTES[vm])}</div>' if vm in VM_NOTES else ""
+        cls = " failed" if vm in hidden else " exp" if vm in EXPERIMENTAL else ""
+        rows.append(
+            f'<div class="vml-row{cls}" id="{vm_anchor(vm)}">'
+            f'<div class="vml-name"><span class="vml-title">{name}</span><span class="vml-meta">{meta}</span>'
+            + (f'<span class="vm-badges">{badges}</span>' if badges else "")
+            + f'</div><div class="vml-links">{"".join(f"<span>{c}</span>" for c in cells)}{note}</div></div>')
+    return "\n".join(rows)
+
+
+def vm_list_markdown(order: list[str], links: dict[str, dict], gate, hidden, compile_ns) -> list[str]:
+    """The VM list of report.md: a markdown table with links."""
+    lines = ["## VMs in this benchmark", "",
+             "| VM | Language | Runtime | Execution model | Version | Source | Home | Used by | Badges | Note |",
+             "|---|---|---|---|---|---|---|---|---|---|"]
+    for vm in order:
+        facts = VM_FACTS.get(vm, {"lang": "", "runtime": "", "model": ""})
+        link = links.get(vm)
+        version = f'[{link["version"]}]({link["release"]})' if link else "-"
+        repo = f'[{_short(link["repo"])}]({link["repo"]})' if link else "-"
+        home = f'[{_short(link["home"])}]({link["home"]})' if link and link["home"] else "-"
+        used_by = f'[{link["used_by"]["name"]}]({link["used_by"]["url"]})' if link and link["used_by"] else "-"
+        badges = ", ".join(x for _, x, _ in vm_list_badges(vm, gate, hidden, compile_ns)) or "-"
+        note = VM_NOTES.get(vm, "-").replace("|", "\\|")
+        lines.append(f'| {VM_LABELS.get(vm, vm)} | {facts["lang"]} | {facts["runtime"]} | {facts["model"]} | '
+                     f'{version} | {repo} | {home} | {used_by} | {badges} | {note} |')
+    return lines
 
 
 def fmt_ns(ns: int) -> str:
@@ -468,6 +673,10 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
         lines.append(row)
 
     lines.append("")
+    links = load_vm_links()
+    lines.extend(vm_list_markdown(vm_list_order(data, scripts, present_vms, experimental, hidden), links,
+                                  gate, hidden, compile_ns))
+    lines.append("")
     lines.append("---")
     harness = harness_commit(env_info)
     if harness:
@@ -535,6 +744,9 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
 
     # Only the shown VMs: a hidden VM must not be a competitor in the penalty rule either.
     shown = set(present_vms) | set(experimental)
+    links = load_vm_links()
+    vm_list = vm_list_html(vm_list_order(data, scripts, present_vms, experimental, hidden), links, gate,
+                           hidden, compile_ns)
     with open(os.path.join(run_dir, "unified.csv")) as f:
         lines = f.read().strip().split("\n")
     csv_data = "\n".join([lines[0]] + [l for l in lines[1:] if l.split(",", 1)[0] in shown])
@@ -555,6 +767,8 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
         "drift": drift_text(drift),
         "drift_percent": drift["percent"] if drift else None,
         "run": os.path.basename(os.path.abspath(run_dir)),
+        # {vm: {repo, home, release, version, used_by}}; the page links VM names to #vm-<key>.
+        "links": {vm: l for vm, l in links.items() if vm in shown or vm in hidden},
     }
     # Safe inside <script>: no "</" can close the element.
     report_json = json.dumps(report, ensure_ascii=False).replace("</", "<\\/")
@@ -588,6 +802,7 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
 
     html = (template.replace("{{CSV_DATA}}", csv_data).replace("{{ENV_BADGE}}", env_badge)
             .replace("{{HARNESS_LINK}}", harness_link)
+            .replace("{{VM_LIST}}", vm_list)
             .replace("{{REPORT_JSON}}", report_json))
 
     docs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs")

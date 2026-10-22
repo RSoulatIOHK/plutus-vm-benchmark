@@ -700,6 +700,37 @@
     <div class="toolchain" id="toolchain"></div>
   </div>
 
+  <style>
+    /* VM names link to their row in "VMs in this benchmark". Body styles: the <head> belongs to the SEO work. */
+    a.vm-link { color: inherit; text-decoration: none; }
+    a.vm-link:hover, a.vm-link:focus-visible { text-decoration: underline; text-decoration-color: var(--text-muted); text-underline-offset: 3px; }
+    /* The VM list */
+    .vml { border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+    .vml-row { display: grid; grid-template-columns: minmax(14rem, 19rem) 1fr; gap: 0.3rem 1.2rem; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); scroll-margin-top: 1rem; }
+    .vml-row:last-child { border-bottom: 0; }
+    .vml-row:target { background: var(--surface-hover); box-shadow: inset 2px 0 0 var(--purple-bright); }
+    .vml-name { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+    .vml-title { font-size: 0.78rem; font-weight: 600; color: var(--text); }
+    .vml-row.failed .vml-title { color: var(--red); }
+    .vml-meta { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-muted); }
+    .vml-name .vm-badges { margin: 0.15rem 0 0; }
+    .vm-badge.exp { color: var(--text-secondary); border-style: dashed; }
+    .vm-badge.failed { color: var(--red); border-color: rgba(224,85,85,0.45); }
+    .vml-links { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 0.2rem 1rem; font-size: 0.68rem; color: var(--text-secondary); min-width: 0; }
+    .vml-links a { color: var(--purple-bright); text-decoration: none; overflow-wrap: anywhere; }
+    .vml-links a:hover { text-decoration: underline; }
+    .vml-k { font-family: var(--font-mono); font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-right: 0.15rem; }
+    .vml-note { flex-basis: 100%; font-size: 0.64rem; color: var(--text-muted); line-height: 1.45; }
+    @media (max-width: 640px) { .vml-row { grid-template-columns: 1fr; } }
+  </style>
+
+  <div class="section" id="vms">
+    <div class="section-title">VMs in this benchmark <em>ranked fastest first, then experimental, then failed check; pinned versions</em></div>
+    <div class="vml">
+{{VM_LIST}}
+    </div>
+  </div>
+
   <div class="section" id="method">
     <div class="section-title">Method</div>
     <div class="note" style="margin:0 0 0.6rem" id="method-disclosure"></div>
@@ -764,6 +795,9 @@ function langLine(m) { return m.lang+' \u00b7 '+m.runtime; }
 function engineClass(m) { const e=m.engine||''; if (e.includes('JIT')) return 'jit'; if (e.toLowerCase().includes('bytecode')) return 'bc'; return ''; }
 function engineCode(m) { const c = engineClass(m); return c==='jit' ? 'JIT compiler' : c==='bc' ? 'Bytecode VM' : 'Interpreter'; }
 function fullLabel(vm) { const m=VM_META[vm]; return m.label+' ('+m.runtime+')'; }
+// A VM name as a link to its row in "VMs in this benchmark" (id vm-<key>, generate_report.vm_anchor).
+function vmAnchor(vm) { return 'vm-' + vm.toLowerCase().replace(/[^a-z0-9-]/g, '-'); }
+function vmLink(vm, text) { return '<a class="vm-link" href="#' + vmAnchor(vm) + '">' + text + '</a>'; }
 
 const rows = parseCSV(CSV_DATA), data = {};
 rows.forEach(r => { if(!data[r.script]) data[r.script]={}; data[r.script][r.vm]=parseInt(r.mean_ns); });
@@ -809,7 +843,7 @@ function cardHtml(vm, rank, geo, ratio, common, extra) {
     : ratio === 1 ? '<div class="ratio">fastest in the category</div>'
     : '<div class="ratio" title="Geometric mean time divided by the fastest VM of the category">' + ratio.toFixed(2) + '× the fastest time</div>';
   return '<div class="card' + (rank === '#1' ? ' first' : '') + '">'
-    + '<div class="card-head"><div><div class="vm-name">' + m.label + '</div><div class="lang">' + langLine(m) + '</div></div><div class="rank">' + rank + '</div></div>'
+    + '<div class="card-head"><div><div class="vm-name">' + vmLink(vm, m.label) + '</div><div class="lang">' + langLine(m) + '</div></div><div class="rank">' + rank + '</div></div>'
     + '<div class="metric-label">decode + eval &middot; geo mean</div>'
     + '<div class="geo-mean">' + (geo > 0 ? fmtNs(Math.round(geo)) : '—') + '</div>' + ratioHtml
     + evalLine(vm, common)
@@ -1032,7 +1066,7 @@ document.getElementById('bar-chart').innerHTML = barVMs.map(vm => {
   const m = VM_META[vm], geo = barGeo[vm], ratio = barRatio(vm), exp = vm in EXPERIMENTAL;
   const tag = exp ? ' · experimental, not ranked' : '';
   const title = `${m.label} (${m.runtime}): ${fmtNs(Math.round(geo))}, ${ratio.toFixed(2)}× the fastest ranked VM${tag}`;
-  return `<div class="gm-row${exp ? ' exp' : ''}" title="${title}"><div class="gm-name"><span class="bar-vm">${m.label}</span><span class="bar-lang">${langLine(m)}${m.engine && m.engine !== m.runtime ? ' · ' + m.engine : ''}${tag}</span></div>`
+  return `<div class="gm-row${exp ? ' exp' : ''}" data-vm="${vm}" title="${title}"><div class="gm-name"><span class="bar-vm">${vmLink(vm, m.label)}</span><span class="bar-lang">${langLine(m)}${m.engine && m.engine !== m.runtime ? ' · ' + m.engine : ''}${tag}</span></div>`
     + `<div class="gm-track">${gridHtml}<div class="gm-bar" style="width:${axPos(ratio)}%"></div></div>`
     + `<div class="gm-time">${fmtNs(Math.round(geo))}</div><div class="gm-ratio">${ratio.toFixed(2)}×</div></div>`;
 }).join('') + `<div class="gm-row gm-axis" aria-hidden="true"><div class="gm-name"></div><div class="gm-track">${axTicks.map(v => `<span class="gm-tick" style="left:${axPos(v)}%">${fmtTick(v)}</span>`).join('')}</div><div class="gm-time"></div><div class="gm-ratio"></div></div>`;
@@ -1040,7 +1074,7 @@ document.getElementById('bar-chart').innerHTML = barVMs.map(vm => {
 // Toolchain tags
 document.getElementById('toolchain').innerHTML = sortedPenalized.concat(experimentalVMs).map(vm => {
   const m=VM_META[vm];
-  return `<div class="tc-tag"><span class="tc-dot" style="background:${m.color}"></span><span class="tc-vm">${m.label}</span><span class="tc-ver">${m.compiler}</span></div>`;
+  return `<div class="tc-tag"><span class="tc-dot" style="background:${m.color}"></span><span class="tc-vm">${vmLink(vm, m.label)}</span><span class="tc-ver">${m.compiler}</span></div>`;
 }).join('');
 
 // Filters
@@ -1063,7 +1097,7 @@ function renderTable() {
   // Two header rows: the VM spans its eval-only and decode + eval columns.
   const sub = vm => { const m = VM_META[vm]; return m.runtime + (vm in EXPERIMENTAL ? ' · experimental' : ''); };
   document.getElementById('table-head').innerHTML = '<tr><th rowspan="2" class="script-col">Script</th>'
-    + vms.map(vm => `<th class="vm-head g"${EVAL[vm] ? ' colspan="2"' : ''}>${VM_META[vm].label}<span class="th-lang">${sub(vm)}</span></th>`).join('')
+    + vms.map(vm => `<th class="vm-head g"${EVAL[vm] ? ' colspan="2"' : ''}>${vmLink(vm, VM_META[vm].label)}<span class="th-lang">${sub(vm)}</span></th>`).join('')
     + compVMs.map(vm => `<th rowspan="2" class="compile-col g">${VM_META[vm].label} compile<span class="th-lang">not in the timing</span></th>`).join('') + '</tr>'
     + '<tr class="sub-head">' + vms.map(vm => (EVAL[vm] ? '<th class="eval-col g">eval only</th><th>decode + eval</th>' : '<th class="g">decode + eval</th>')).join('') + '</tr>';
   document.getElementById('table-body').innerHTML=scripts.map(script=>{
@@ -1192,9 +1226,9 @@ if (hiddenVMs.length) {
   let lastW = host.clientWidth, timer = 0;
   window.addEventListener('resize', () => { clearTimeout(timer); timer = setTimeout(() => { if (host.clientWidth !== lastW) { lastW = host.clientWidth; draw(); } }, 150); });
 
-  document.getElementById('history-legend').innerHTML = '<span><span class="sw base-sw"></span>plutus-core (Haskell), the 1× reference</span>' + vms.map(vm => {
+  document.getElementById('history-legend').innerHTML = '<span><span class="sw base-sw"></span>' + vmLink('haskell', 'plutus-core (Haskell)') + ', the 1× reference</span>' + vms.map(vm => {
     const sw = vm in EXPERIMENTAL ? `background:repeating-linear-gradient(90deg,${colorOf(vm)} 0 4px,transparent 4px 7px)` : `background:${colorOf(vm)}`;
-    return `<span><span class="sw" style="${sw}"></span>${histLabel(vm)}</span>`;
+    return `<span><span class="sw" style="${sw}"></span>${vmLink(vm, histLabel(vm))}</span>`;
   }).join('');
 })();
 </script>
