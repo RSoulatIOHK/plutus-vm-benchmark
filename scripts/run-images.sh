@@ -208,7 +208,7 @@ RUN_TICKS_START=$(cpu_ticks)
     echo "docker memory: $(( $(docker info --format '{{.MemTotal}}' 2>/dev/null || echo 0) / 1048576 )) MiB"
     echo "docker run flags: ${DOCKER_FLAGS[*]}"
     [[ "$CPUSET" != none ]] || echo "docker cpuset: none ($(uname -s) host)"
-    echo "harness: ${PVB_HARNESS:-$(git -C "$REPO_ROOT" rev-parse --short HEAD 2>/dev/null || echo unknown)}"
+    echo "harness: ${PVB_HARNESS:-$(git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null || echo unknown)}"
     echo "vm order: $VMS"
     echo "bench_quick: $BENCH_QUICK"
     echo "bench_scripts: ${BENCH_SCRIPTS:-<all>} ($(echo "$SELECTED" | wc -l | tr -d ' ') of $(echo "$ALL_SCRIPTS" | wc -l | tr -d ' ') scripts)"

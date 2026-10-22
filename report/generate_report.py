@@ -468,6 +468,10 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
 
     lines.append("")
     lines.append("---")
+    harness = harness_commit(env_info)
+    if harness:
+        lines.append(f"Harness commit: [`{harness[:9]}`]({REPO_URL}/commit/{harness})")
+        lines.append("")
     lines.append("*Plutus VM Benchmark – maintained by [Lantr](https://lantr.io) – Alexander Nemish. "
                  "Forked from [SAIB-Inc/cardano-plutus-vm-benchmark](https://github.com/SAIB-Inc/cardano-plutus-vm-benchmark) "
                  "by SAIB Inc. and contributors. MIT License, original work © 2025 SAIB Inc., © 2026 Lantr. "
@@ -487,6 +491,19 @@ def check_label(gate: dict | None, vm: str) -> str:
         return "not checked"
     verdict = gate["vms"].get(vm, {}).get("verdict")
     return {"pass": "pass", "badge": "outdated cost model"}.get(verdict, "failed check")
+
+
+REPO_URL = "https://github.com/lantr-io/plutus-vm-benchmark"
+
+
+def harness_commit(env_info):
+    """The harness commit of the run (environment.txt "harness: <sha>"), or None."""
+    for line in (env_info or "").split("\n"):
+        key, _, value = line.strip().partition(":")
+        value = value.strip()
+        if key.lower() == "harness" and value and value != "unknown":
+            return value
+    return None
 
 
 def generate_html(run_dir: str, env_info: str, data, present_vms, experimental, gate, hidden, compile_ns,
@@ -549,7 +566,15 @@ def generate_html(run_dir: str, env_info: str, data, present_vms, experimental, 
     else:
         env_badge = os.path.basename(run_dir)
 
+    harness = harness_commit(env_info)
+    if harness:
+        harness_link = f'<a href="{REPO_URL}/commit/{harness}"><code>{harness[:9]}</code></a>'
+        env_badge += f' &middot; harness {harness_link}'
+    else:
+        harness_link = "unknown"
+
     html = (template.replace("{{CSV_DATA}}", csv_data).replace("{{ENV_BADGE}}", env_badge)
+            .replace("{{HARNESS_LINK}}", harness_link)
             .replace("{{REPORT_JSON}}", report_json))
 
     docs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs")

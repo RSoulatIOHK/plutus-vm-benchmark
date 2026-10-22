@@ -43,7 +43,7 @@ case "$CMD" in
       --setenv=BENCH_SCRIPTS=$SCRIPTS_Q \
       --setenv=BENCH_LOOPS=$LOOPS_Q \
       --setenv=BENCH_TIMING=$TIMING_Q \
-      --setenv=PVB_HARNESS=$(git -C "$REPO_ROOT" rev-parse --short HEAD) \
+      --setenv=PVB_HARNESS=$(git -C "$REPO_ROOT" rev-parse HEAD) \
       /run/current-system/sw/bin/bash -c 'scripts/run-images.sh results/$NAME $VMS > /root/run.log 2>&1; echo \$? > $DONE'"
     echo "started run $NAME on $IP"
     ;;
