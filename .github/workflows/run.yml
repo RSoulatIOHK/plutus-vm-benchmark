@@ -3,9 +3,9 @@
 # A manual run can take a subset (VMs, scripts, loops, quick timing): that is a partial run,
 # results/partial-<date>T<time>, never committed or published.
 #
-# A GitHub-hosted job lasts at most 6 h and a full run takes about as long, so the run is detached
-# on the server (scripts/hetzner/run-remote.sh) and two wait jobs poll it. The server deletes
-# itself 14 h after boot if every job here dies (nix/runner.nix); sweep.yml is the last guard.
+# A GitHub-hosted job lasts at most 6 h and a full run takes about 11 h, so the run is detached on
+# the server (scripts/hetzner/run-remote.sh) and up to three wait jobs poll it (17 h). The server
+# deletes itself 20 h after boot if every job here dies (nix/runner.nix); sweep.yml is the last guard.
 name: run
 
 on:
@@ -218,8 +218,26 @@ jobs:
           ssh_key: ${{ secrets.BENCH_SSH_KEY }}
           minutes: "345"
 
+  wait-3:
+    needs: [start, wait-2]
+    if: needs.start.result == 'success' && needs.wait-2.result == 'success' && needs.wait-2.outputs.done != 'true' && !cancelled()
+    runs-on: ubuntu-latest
+    environment: bench-run
+    timeout-minutes: 355
+    outputs:
+      done: ${{ steps.wait.outputs.done }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: wait
+        uses: ./.github/actions/wait-run
+        with:
+          run_id: ${{ needs.start.outputs.run_id }}
+          ip: ${{ needs.start.outputs.ip }}
+          ssh_key: ${{ secrets.BENCH_SSH_KEY }}
+          minutes: "345"
+
   finish:
-    needs: [start, wait-1, wait-2]
+    needs: [start, wait-1, wait-2, wait-3]
     if: always() && needs.start.outputs.skip == 'false' && needs.start.outputs.ip != ''
     runs-on: ubuntu-latest
     environment: bench-run

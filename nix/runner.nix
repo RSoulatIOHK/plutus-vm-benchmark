@@ -10,7 +10,7 @@ let
   # Deleting the server is the only thing that stops Hetzner billing; a powered-off server is
   # still billed. The workflow deletes it in an always() step, but a cancelled job skips that.
   # This timer is the backstop: it deletes the server itself after selfDestructAfter.
-  selfDestructAfter = "14h";
+  selfDestructAfter = "20h";
   tokenFile = "/var/lib/bench/hcloud-token";
 in
 {
