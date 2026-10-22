@@ -174,11 +174,12 @@ measurement. JMH cannot end a warm-up early. So the JMH rows run JMH with no war
 JVM, before the first measurement iteration
 ([`AdaptiveWarmup.scala`](images/scalus/harness/src/main/scala/pvb/scalus/AdaptiveWarmup.scala)).
 The setup calls the benchmark method itself and gives each result to JMH's Blackhole, as the
-generated JMH loop does. The first measurement iteration is not slower than the next two, so the
-change from the setup loop to JMH's loop costs nothing visible. One effect: with the old JMH
-warm-up iteration, the D3 loop of scalus-cek measured about 6 % slower than at the end of its own
-warm-up (a local test on auction_1-1 and coop-6). With the warm-up in the setup, the measurement
-matches the last warm-up slices.
+generated JMH loop does. A local test (arm64, auction_1-1 and coop-6) found two things. First,
+the first measurement iteration was not slower than the next two, so the change from the setup
+loop to JMH's loop cost nothing visible. Second, with the old JMH warm-up iteration, the D3 loop of
+scalus-cek measured about 6 % slower than at the end of its own warm-up. With the warm-up in the
+setup, the measurement matches the last warm-up slices, so the D3 time of scalus-cek is about 5
+to 8 % lower than with the old warm-up. The other rows did not move.
 
 The JMH rows keep one fresh JVM per script (D14). scalus-cek forks one JVM per method (`-f 1`):
 `bench` (D3), then `benchEval` (eval-only), each with its own warm-up. One JVM for both methods
@@ -221,7 +222,8 @@ Decisions D13 to D17 of the
   5 s of measurement.
 - **Process model (D14)**: every VM runs each script in a fresh process. No JIT profile, heap or
   allocator state carries over from one script to the next. The process runs both timed loops of
-  its script: the D3 loop first, then the eval-only loop. Each loop has its own warm-up and
+  its script: the D3 loop first, then the eval-only loop. scalus-cek is the exception: JMH forks
+  one JVM per method, so its two loops run in two fresh JVMs. Each loop has its own warm-up and
   measurement with the rules above. So the D3 time is measured as in a process of its own, and
   the eval-only time comes from a process that has already run the D3 loop.
 - **Compiled VMs (D15)**: the Scalus JIT row has a "decode and compile excluded" badge. Its timed
