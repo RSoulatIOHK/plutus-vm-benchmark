@@ -23,9 +23,10 @@ WORKDIR /src
 RUN bun install
 # Every JS row times under the same vitest (.env VITEST_VERSION). blaze's lockfile picks its own;
 # stop the build when it differs, so a blaze bump cannot change the timing tool silently.
-RUN f=$(find /src -path '*/node_modules/vitest/package.json' -not -path '*/node_modules/*/node_modules/*' | head -1) \
-    && v=$(sed -n 's/^ *"version": *"\([^"]*\)".*/\1/p' "$f" | head -1) \
-    && echo "vitest $v ($f)" \
+# bun installs packages isolated (no root node_modules/vitest), so ask bun from the package that
+# runs the benchmark.
+RUN v=$(cd packages/blaze-plutus && bun -e 'console.log(require("vitest/package.json").version)') \
+    && echo "vitest $v" \
     && if [ "$v" != "$VITEST_VERSION" ]; then \
            echo "blaze uses vitest $v, .env VITEST_VERSION is $VITEST_VERSION" >&2; exit 1; \
        fi
