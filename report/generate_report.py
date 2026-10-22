@@ -707,8 +707,9 @@ def summary_html(rows: list[dict], n_scripts: int) -> str:
             f'    <p class="summary-caption">Geometric mean of the time per script over the {n_scripts} '
             'scripts. <em>Decode + eval</em> is the ranking metric. A VM that fails or skips a script '
             'gets the slowest competitor\'s time for it. <em>Eval only</em> times a program that was '
-            'decoded before the timed loop. A dash means that the VM has no eval-only time, for '
-            'example a VM that compiles a script before it runs it. The VMs use different execution models, so compare VMs of the same model too '
+            'decoded before the timed loop. A dash means that the run has no eval-only time for the VM. '
+            'For a VM that compiles a script before it runs it, the decode + eval column already is '
+            'its eval time: neither the decode nor the compile is timed. The VMs use different execution models, so compare VMs of the same model too '
             '(<a href="#exec-model">Execution Model</a>). Experimental VMs are shown, but not ranked.</p>']
     return "\n".join(out)
 
