@@ -22,7 +22,17 @@ KEY="$STATE/id_ed25519"
 [ -f "$KEY" ] || ssh-keygen -q -t ed25519 -N "" -C "$NAME" -f "$KEY"
 SSH_OPTS=(-i "$KEY" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=10)
 
-hcloud ssh-key create --name "$NAME" --public-key-from-file "$KEY.pub" --label bench-run="$RUN_ID" >/dev/null
+# Hetzner allows each public key once per project. run.yml uses one key (BENCH_SSH_KEY) for every
+# run, so a second run in parallel finds it already registered: reuse that entry. down.sh deletes
+# only the key named after its own run, so a reused key stays for the run that registered it.
+FINGERPRINT="$(ssh-keygen -E md5 -lf "$KEY.pub" | awk '{print $2}' | sed 's/^MD5://')"
+KEY_NAME="$(hcloud ssh-key list -o json | jq -r --arg fp "$FINGERPRINT" '.[] | select(.fingerprint == $fp) | .name' | head -1)"
+if [ -z "$KEY_NAME" ]; then
+  KEY_NAME="$NAME"
+  hcloud ssh-key create --name "$KEY_NAME" --public-key-from-file "$KEY.pub" --label bench-run="$RUN_ID" >/dev/null
+else
+  echo "SSH key already registered as $KEY_NAME; using it" >&2
+fi
 
 # A location can be out of capacity for a server type (resource_unavailable). Shortages are
 # usually brief, so try every location, wait, and try again for up to ROUNDS rounds.
@@ -31,17 +41,26 @@ ROUNDS="${BENCH_CREATE_ROUNDS:-10}"
 created=""
 for round in $(seq 1 "$ROUNDS"); do
   for loc in $LOCATIONS; do
-    if hcloud server create \
+    if err=$(hcloud server create \
       --name "$NAME" \
       --type "$SERVER_TYPE" \
       --location "$loc" \
       --image ubuntu-24.04 \
-      --ssh-key "$NAME" \
+      --ssh-key "$KEY_NAME" \
       --label bench-run="$RUN_ID" \
-      --label created="$(date +%s)" >/dev/null; then
+      --label created="$(date +%s)" 2>&1 >/dev/null); then
       created="$loc"
       break 2
     fi
+    echo "$err" >&2
+    # Only a capacity shortage passes by waiting. A project limit, a bad type or a bad token does not.
+    case "$err" in
+      *resource_unavailable*) ;;
+      *resource_limit_exceeded*)
+        echo "the Hetzner project limit does not allow a $SERVER_TYPE (raise it in the Console: Limits)" >&2
+        exit 1 ;;
+      *) exit 1 ;;
+    esac
     echo "round $round: no $SERVER_TYPE in $loc" >&2
   done
   if [ "$round" -lt "$ROUNDS" ]; then sleep 60; fi
