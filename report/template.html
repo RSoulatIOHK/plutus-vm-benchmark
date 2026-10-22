@@ -26,8 +26,6 @@
     --purple: #7660e3;
     --purple-bright: #8b78ef;
     --gold: #e8b83a;
-    --silver: #a8b0c0;
-    --bronze: #c48050;
     --green: #4ade80;
     --red: #e05555;
 
@@ -132,16 +130,18 @@
     transition: border-color 0.15s;
   }
   .card:hover { border-color: var(--border-accent); }
+  .card { display: flex; flex-direction: column; }
+  .card.first { border-color: rgba(175,175,232,0.55); }
+  .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.6rem; }
   .card .rank {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.85rem;
-    font-family: var(--font-sans);
-    font-size: 1.5rem;
-    font-weight: 700;
-    opacity: 0.18;
-    letter-spacing: -0.02em;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
   }
+  .card .metric-label { font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.2rem; }
+  .card-meta { margin-top: 0.7rem; padding-top: 0.6rem; border-top: 1px solid var(--border); }
   .card .vm-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.05rem; }
   .card .lang { font-family: var(--font-mono); color: var(--text-muted); font-size: 0.62rem; margin-bottom: 0.25rem; }
   .card .engine {
@@ -255,28 +255,13 @@
     font-family: var(--font-sans);
     font-size: 1.3rem;
     font-weight: 600;
-    font-variant-numeric: tabular-nums;
     letter-spacing: -0.02em;
-    line-height: 1;
+    line-height: 1.1;
     color: var(--text);
+    white-space: nowrap;
+    margin-bottom: 0.2rem;
   }
-  .card .ratio {
-    font-family: var(--font-mono);
-    color: var(--text-muted);
-    font-size: 0.62rem;
-    font-weight: 500;
-    margin-left: 0.4rem;
-  }
-
-  .card.gold { border-color: var(--gold); }
-  .card.gold .geo-mean { color: var(--gold); }
-  .card.gold .rank { color: var(--gold); opacity: 0.2; }
-  .card.silver { border-color: var(--silver); }
-  .card.silver .geo-mean { color: var(--silver); }
-  .card.silver .rank { color: var(--silver); opacity: 0.2; }
-  .card.bronze { border-color: var(--bronze); }
-  .card.bronze .geo-mean { color: var(--bronze); }
-  .card.bronze .rank { color: var(--bronze); opacity: 0.2; }
+  .card .ratio { color: var(--text-secondary); font-size: 0.66rem; margin-bottom: 0.15rem; }
 
   /* Bar chart — labels inside bars */
   .bar-chart { display: flex; flex-direction: column; gap: 0.4rem; }
@@ -541,7 +526,9 @@
   th.compile-col, td.compile-col { color: var(--purple-bright); }
   .card .vm-note { color: var(--text-muted); font-size: 0.6rem; line-height: 1.35; margin-bottom: 0.35rem; }
   .card .vm-note a { color: var(--purple-bright); text-decoration: none; }
-  .card .eval-time { font-family: var(--font-mono); color: var(--text-secondary); font-size: 0.6rem; margin-bottom: 0.35rem; }
+  .card .eval-time { color: var(--text-secondary); font-size: 0.66rem; }
+  .card .eval-time b { color: var(--text); font-weight: 600; }
+  .card .eval-time span { color: var(--text-muted); }
   th.eval-col, td.eval-col { color: var(--text-muted); }
 
   .failed-list { border: 1px solid rgba(224,85,85,0.35); border-radius: 6px; padding: 0.55rem 0.85rem; font-size: 0.68rem; }
@@ -751,7 +738,28 @@ const EVAL = REPORT.eval || {};
 function evalLine(vm, common) {
   const e = EVAL[vm]; if (!e) return '';
   const g = geoMean(common.map(s => e[s] || 0));
-  return g > 0 ? '<div class="eval-time">eval only ' + fmtNs(Math.round(g)) + ' (geo mean, decode excluded)</div>' : '';
+  return g > 0 ? '<div class="eval-time" title="Geometric mean of the evaluation of a program decoded once before timing">eval only <b>' + fmtNs(Math.round(g)) + '</b> <span>(decode excluded)</span></div>' : '';
+}
+// A VM card: name and rank, then the headline number (decode + eval geometric mean, the ranking
+// metric) at the same height in every card, then eval only, the type, the badges and the notes.
+// rank: '#1' or 'exp'; ratio: the time / the fastest ranked VM of the category, or null.
+function cardHtml(vm, rank, geo, ratio, common, extra) {
+  const m = VM_META[vm];
+  const pass = scripts.filter(sc => data[sc]?.[vm] > 0).length;
+  const fail = scripts.filter(sc => data[sc]?.[vm] < 0).length;
+  const compatHtml = fail > 0
+    ? '<div class="compat"><span class="pass">'+pass+'</span>/<span>'+scripts.length+'</span> scripts passed · <span class="fail">'+fail+' failed</span></div>'
+    : '<div class="compat"><span class="pass">'+pass+'/'+scripts.length+'</span> scripts passed</div>';
+  const ratioHtml = ratio === null ? ''
+    : ratio === 1 ? '<div class="ratio">fastest in the category</div>'
+    : '<div class="ratio" title="Geometric mean time divided by the fastest VM of the category">' + ratio.toFixed(2) + '× the fastest time</div>';
+  return '<div class="card' + (rank === '#1' ? ' first' : '') + '">'
+    + '<div class="card-head"><div><div class="vm-name">' + m.label + '</div><div class="lang">' + langLine(m) + '</div></div><div class="rank">' + rank + '</div></div>'
+    + '<div class="metric-label">decode + eval &middot; geo mean</div>'
+    + '<div class="geo-mean">' + (geo > 0 ? fmtNs(Math.round(geo)) : '—') + '</div>' + ratioHtml
+    + evalLine(vm, common)
+    + '<div class="card-meta"><div class="engine ' + engineClass(m) + '">' + engineCode(m) + '</div>' + badges(vm) + compatHtml + compileLine(vm) + noteLine(vm) + (extra || '') + '</div>'
+    + '</div>';
 }
 // A VM note: escaped text with markdown links [text](https://...) as links.
 function noteLine(vm) {
@@ -846,14 +854,8 @@ rankingsHost.innerHTML = CATS.map(cat => {
     ? sampleSize + '/' + scripts.length + ' common scripts'
     : 'all ' + scripts.length + ' scripts compatible';
   const cards = sorted.map((vm, i) => {
-    const m=VM_META[vm], geo=means[vm], ratio=(geo/fastest).toFixed(2);
-    const cls=i===0?'gold':i===1?'silver':i===2?'bronze':'';
-    const pass=scripts.filter(sc=>data[sc]?.[vm]>0).length;
-    const fail=scripts.filter(sc=>data[sc]?.[vm]<0).length;
-    const compatHtml=fail>0
-      ? '<div class="compat"><span class="pass">'+pass+'</span>/<span>'+scripts.length+'</span> passed · <span class="fail">'+fail+' failed</span></div>'
-      : '<div class="compat"><span class="pass">'+pass+'/'+scripts.length+'</span> passed</div>';
-    return '<div class="card '+cls+'"><div class="rank">#'+(i+1)+'</div><div class="vm-name">'+m.label+'</div><div class="lang">'+langLine(m)+'</div><div class="engine '+engineClass(m)+'">'+engineCode(m)+'</div>'+badges(vm)+compatHtml+compileLine(vm)+evalLine(vm, cm.common)+noteLine(vm)+'<div class="geo-mean">'+fmtNs(Math.round(geo))+'<span class="ratio">'+ratio+'×</span></div></div>';
+    const r = means[vm] / fastest;
+    return cardHtml(vm, '#' + (i + 1), means[vm], i === 0 ? 1 : r, cm.common);
   }).join('');
   const code = cat.key === 'int' ? 'INT' : 'COMP';
   return '<section class="cat-section '+cat.key+'" data-cat="'+cat.key+'"><div class="cat-header"><span class="cat-mark">'+code+' · '+cvms.length+'</span><span class="cat-name">'+cat.label+'<em>'+sampleNote+'</em></span></div><p class="cat-blurb">'+cat.blurb+'</p><div class="summary">'+cards+'</div></section>';
@@ -981,15 +983,8 @@ renderTable();
 if (experimentalVMs.length) {
   document.getElementById('experimental-section').style.display = '';
   document.getElementById('experimental-cards').innerHTML = experimentalVMs.map(vm => {
-    const m = VM_META[vm];
-    const geo = experimentalGeo(vm);
-    const pass = scripts.filter(sc => data[sc]?.[vm] > 0).length;
-    const fail = scripts.filter(sc => data[sc]?.[vm] < 0).length;
-    const compatHtml = fail > 0
-      ? '<div class="compat"><span class="pass">'+pass+'</span>/<span>'+scripts.length+'</span> passed · <span class="fail">'+fail+' failed</span></div>'
-      : '<div class="compat"><span class="pass">'+pass+'/'+scripts.length+'</span> passed</div>';
     const reason = String(EXPERIMENTAL[vm]).replace(/&/g,'&amp;').replace(/</g,'&lt;');
-    return '<div class="card"><div class="rank">exp</div><div class="vm-name">'+m.label+'</div><div class="lang">'+langLine(m)+'</div><div class="engine '+engineClass(m)+'">'+engineCode(m)+'</div>'+badges(vm)+compatHtml+compileLine(vm)+evalLine(vm, scripts)+noteLine(vm)+'<div class="exp-reason">'+reason+'</div><div class="geo-mean">'+(geo > 0 ? fmtNs(Math.round(geo)) : '\u2014')+'</div></div>';
+    return cardHtml(vm, 'exp', experimentalGeo(vm), null, scripts, '<div class="exp-reason">' + reason + '</div>');
   }).join('');
 }
 
