@@ -577,6 +577,8 @@
   .history-chart .axis-label { fill: var(--text-muted); font-family: var(--font-mono); font-size: 11px; }
   .history-chart .axis-label.base-label { fill: var(--text-secondary); }
   .history-chart .line-label { font-family: var(--font-sans); font-size: 11px; fill: var(--text-secondary); }
+  .history-chart .line-label .chg { fill: var(--text-muted); }
+  .history-tip .tip-chg { color: var(--text-muted); }
   .history-legend { display: flex; flex-wrap: wrap; gap: 0.35rem 0.9rem; margin-top: 0.5rem; font-size: 0.64rem; color: var(--text-secondary); }
   .history-legend span.sw { display: inline-block; width: 14px; height: 2px; vertical-align: middle; margin-right: 0.35rem; }
   .history-legend span.base-sw { height: 1px; background: var(--text-secondary); }
@@ -693,7 +695,7 @@
 
   <div class="section" id="history-section" style="display:none">
     <h2 class="section-title">History <em>speed relative to Haskell plutus-core, same run &ndash; higher is faster</em></h2>
-    <div class="note" style="margin-bottom:0.7rem">Each point is Haskell's geometric mean time divided by the VM's, from the same run: 2&times; faster means the VM needs half of Haskell's time. The solid grey line is Haskell (1&times;); a dashed line is an experimental VM. The ratio uses the scripts where both the VM and Haskell have a timing. Comparing ratios, not absolute times, removes most of the hardware and run-to-run drift. Log scale.</div>
+    <div class="note" style="margin-bottom:0.7rem">Each point is Haskell's geometric mean time divided by the VM's, from the same run: 2&times; faster means the VM needs half of Haskell's time. The solid grey line is Haskell (1&times;); a dashed line is an experimental VM. The ratio uses the scripts where both the VM and Haskell have a timing. Comparing ratios, not absolute times, removes most of the hardware and run-to-run drift. Servers of the same type differ: ratios to Haskell move up to about <span class="noise-pct">5</span> % between two runs on different servers, so a change under <span class="noise-pct">5</span> % is shown as no change. The end label and the tooltip give the change against the VM's previous run. Log scale.</div>
     <div class="history-chart" id="history-chart"></div>
     <div class="history-legend" id="history-legend"></div>
     <div class="history-tip" id="history-tip"></div>
@@ -1239,6 +1241,22 @@ if (hiddenVMs.length) {
   const fmtSpeed = s => Math.abs(Math.log10(s)) < 0.004 ? '1× (Haskell)'
     : s > 1 ? (s < 10 ? s.toFixed(1) : s.toFixed(0)) + '× faster'
     : (1 / s < 10 ? (1 / s).toFixed(1) : (1 / s).toFixed(0)) + '× slower';
+  // Change of a VM's speed vs its nearest earlier run, as a fraction (0.12 = 12 % faster), or null.
+  // Under REPORT.noise_band (spec D20: servers of the same type differ by up to that) it is noise.
+  // Text, not a band or whiskers: ±5 % is only a few pixels on this log scale, inside the marker.
+  const NOISE = REPORT.noise_band;
+  document.querySelectorAll('.noise-pct').forEach(el => { el.textContent = Math.round(NOISE * 100); });
+  const changeOf = (vm, i) => {
+    const pts = h.series[vm];
+    if (!(pts[i] > 0)) return null;
+    for (let j = i - 1; j >= 0; j--) if (pts[j] > 0) return pts[i] / pts[j] - 1;
+    return null;
+  };
+  // 0.12 -> "+12 %", 0.03 -> "+3 %, within noise", -0.07 -> "−7 %"
+  const fmtChange = d => {
+    const p = Math.round(d * 100), t = (p > 0 ? '+' : p < 0 ? '−' : '') + Math.abs(p) + ' %';
+    return Math.abs(d) < NOISE ? t + ', within noise' : t;
+  };
   const colorOf = vm => (VM_META[vm] || { color: '#9494b0' }).color;
   const dashOf = vm => vm in EXPERIMENTAL ? ' stroke-dasharray="6 4"' : '';
   document.getElementById('history-section').style.display = '';
@@ -1252,7 +1270,7 @@ if (hiddenVMs.length) {
   function draw() {
     const W = Math.max(300, host.clientWidth), narrow = W < 640;
     // Room for the longest end label (~6 px per character at 11 px), at most 45 % of the width.
-    const longest = Math.max(...vms.map(vm => (histLabel(vm) + ' 10.0× faster').length));
+    const longest = Math.max(...vms.map(vm => (histLabel(vm) + ' 10.0× faster (+100 %, within noise)').length));
     const H = narrow ? 260 : 320, L = 78, R = narrow ? 40 : Math.min(W * 0.45, 32 + longest * 6), T = 14, B = 34;
     const x = i => runs.length === 1 ? L + (W - L - R) / 2 : L + i * (W - L - R) / (runs.length - 1);
     const y = v => T + (hi - Math.log10(v)) * (H - T - B) / (hi - lo);
@@ -1280,7 +1298,11 @@ if (hiddenVMs.length) {
       pts.forEach((v, i) => { if (v > 0) svg += `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="${colorOf(vm)}" stroke="var(--bg)" stroke-width="2"/>`; });
       svg += '</g>';
       const last = pts.map((v, i) => [v, i]).filter(p => p[0] > 0).pop();
-      if (last) labels.push({ vm, y0: y(last[0]), y: y(last[0]), x: x(last[1]), text: histLabel(vm) + ' ' + fmtSpeed(last[0]) });
+      if (last) {
+        const d = changeOf(vm, last[1]);
+        labels.push({ vm, y0: y(last[0]), y: y(last[0]), x: x(last[1]), text: histLabel(vm) + ' ' + fmtSpeed(last[0]),
+          chg: d === null ? '' : ' (' + fmtChange(d) + ')' });
+      }
     });
     if (!narrow) {
       // Keep end labels 13 px apart; a label moved off its line end gets a leader line.
@@ -1288,7 +1310,7 @@ if (hiddenVMs.length) {
       labels.forEach(l => {
         svg += `<g class="end-label" data-vm="${l.vm}">`;
         if (Math.abs(l.y - l.y0) > 1.5) svg += `<polyline class="leader" points="${l.x + 6},${l.y0} ${l.x + 14},${l.y0} ${l.x + 22},${l.y}"/>`;
-        svg += `<text class="line-label" x="${l.x + 26}" y="${l.y + 4}">${l.text}</text></g>`;
+        svg += `<text class="line-label" x="${l.x + 26}" y="${l.y + 4}">${l.text}<tspan class="chg">${l.chg}</tspan></text></g>`;
       });
     }
     // Hover: one column per run, the crosshair snaps to the run.
@@ -1306,7 +1328,7 @@ if (hiddenVMs.length) {
         // Value first, then the series, keyed with a short line in its colour; the highlighted VM's row is brighter.
         const on = HL.active();
         const rows = vms.filter(vm => h.series[vm][i] > 0).sort((a, b) => h.series[b][i] - h.series[a][i])
-          .map(vm => `<div class="tip-row${vm === on ? ' on' : ''}"><span class="tip-key" style="border-top:2px ${vm in EXPERIMENTAL ? 'dashed' : 'solid'} ${colorOf(vm)}"></span><b>${fmtSpeed(h.series[vm][i])}</b> <span>${histLabel(vm)}</span></div>`);
+          .map(vm => `<div class="tip-row${vm === on ? ' on' : ''}"><span class="tip-key" style="border-top:2px ${vm in EXPERIMENTAL ? 'dashed' : 'solid'} ${colorOf(vm)}"></span><b>${fmtSpeed(h.series[vm][i])}</b> <span>${histLabel(vm)}</span>${changeOf(vm, i) === null ? '' : ` <span class="tip-chg">(${fmtChange(changeOf(vm, i))})</span>`}</div>`);
         tip.innerHTML = '<div class="tip-title">' + runs[i] + '</div>' + rows.join('');
         tip.style.display = 'block';
         const tw = tip.offsetWidth;

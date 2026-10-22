@@ -94,6 +94,11 @@ EXPERIMENTAL = {
                   "downstream users yet (spec D17)",
 }
 
+# Run-to-run noise of a ratio to Haskell (spec D20): two good servers of the same type gave ratios
+# up to ~5 % apart per VM (geometric mean over the scripts). A smaller change between two runs is
+# "no change". The page gets it as REPORT.noise_band.
+NOISE_BAND = 0.05
+
 # The badge of a VM with <vm>-compile.csv (Scalus JIT): its timed loop runs the compiled script,
 # so neither the flat decode nor the compile step is in its time.
 COMPILE_BADGE = "decode and compile excluded"
@@ -627,12 +632,17 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
         lines.append("")
         lines.append("### History (speed relative to Haskell plutus-core, same run; higher is faster)")
         lines.append("")
-        lines.append("| VM | " + " | ".join(history["runs"]) + " |")
-        lines.append("|---|" + "---|" * len(history["runs"]))
+        lines.append("| VM | " + " | ".join(history["runs"]) + " | Change vs previous run |")
+        lines.append("|---|" + "---|" * (len(history["runs"]) + 1))
         for vm, values in history["series"].items():
             cells = [speed_text(v) if v is not None else "-" for v in values]
+            cells.append("reference" if vm == "haskell" else history_change_text(values))
             tag = " (experimental)" if vm in EXPERIMENTAL else ""
             lines.append(f"| {VM_LABELS.get(vm, vm)}{tag} | " + " | ".join(cells) + " |")
+        lines.append("")
+        lines.append(f"Servers of the same type differ: ratios to Haskell move up to about "
+                     f"{NOISE_BAND * 100:.0f} % between two runs on different servers, so a change under "
+                     f"{NOISE_BAND * 100:.0f} % is shown as no change.")
 
     # Count scripts per VM
     lines.append("")
@@ -718,6 +728,22 @@ def check_label(gate: dict | None, vm: str) -> str:
 REPO_URL = "https://github.com/lantr-io/plutus-vm-benchmark"
 
 
+def speed_change(prev_ratio, ratio):
+    """Change of speed between two time ratios (VM / Haskell): 0.5 -> 0.4 is +0.25 (25 % faster)."""
+    return prev_ratio / ratio - 1
+
+
+def history_change_text(values) -> str:
+    """The change of the last point vs the VM's nearest earlier point, for the history table."""
+    pts = [v for v in values if v is not None and v > 0]
+    if values[-1] is None or len(pts) < 2:
+        return "-"
+    d = speed_change(pts[-2], pts[-1])
+    if abs(d) < NOISE_BAND:
+        return f"no change (within ±{NOISE_BAND * 100:.0f} % noise)"
+    return f"{d * 100:+.0f} %"
+
+
 def speed_text(ratio):
     """Time ratio VM / Haskell as speed text: 0.25 -> '4.0x faster', 2.5 -> '2.5x slower'."""
     if ratio <= 0:
@@ -771,6 +797,7 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
         "compile": {vm: s for vm, s in compile_ns.items() if vm in shown},
         "eval": {vm: s for vm, s in eval_ns.items() if vm in shown},
         "history": history,
+        "noise_band": NOISE_BAND,
         "disclosure": DISCLOSURE.format(n=len(scripts)),
         "notes": {vm: n for vm, n in VM_NOTES.items() if vm in shown},
         "compile_badge": COMPILE_BADGE,
