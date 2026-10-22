@@ -3,7 +3,9 @@
 
 Usage: generate_report.py [--write-index] <run-dir>
 Writes <run-dir>/report.md and <run-dir>/index.html. With --write-index, also writes the same page
-to <repo>/docs/index.html, the published page: only run.yml sets it, for a published run.
+to <repo>/docs/index.html, the published page: only run.yml sets it, for a published run. Then it
+also writes docs/robots.txt, docs/sitemap.xml and docs/og.png (the link-preview image, a headless
+Chrome screenshot; without Chrome the committed og.png stays).
 
 Reads from the run dir:
 - unified.csv            timings of every VM
@@ -31,12 +33,17 @@ from __future__ import annotations
 
 import base64
 import csv
+import datetime
 import glob
 import json
 import math
 import os
+import shutil
+import subprocess
 import sys
+import tempfile
 from collections import defaultdict
+from html import escape
 
 VM_ORDER = [
     "haskell", "scalus-jit", "scalus-cek", "scalus-js",
@@ -46,6 +53,8 @@ VM_ORDER = [
 
 # The header logo in report/template.html, a file in docs/.
 LOGO = "lantr-logo-dark.png"
+# The published site: docs/index.html and its static files.
+DOCS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs")
 
 # {n}: the number of scripts of the run.
 DISCLOSURE = (
@@ -589,6 +598,10 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
     html = (template.replace("{{CSV_DATA}}", csv_data).replace("{{ENV_BADGE}}", env_badge)
             .replace("{{HARNESS_LINK}}", harness_link)
             .replace("{{REPORT_JSON}}", report_json))
+    seo = seo_parts(run_dir, data, scripts, present_vms, experimental, gate, eval_ns)
+    html = html.replace("{{SEO_HEAD}}", seo["head"])
+    for key in ("{{SEO_INTRO}}", "{{SEO_SUMMARY_SUB}}", "{{SEO_SUMMARY}}", "{{SEO_FAQ}}"):
+        html = html.replace(key, seo[key])
 
     docs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs")
     if write_index:
@@ -596,14 +609,382 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
         with open(html_path, "w") as f:
             f.write(html)
         print(f"HTML report saved to: {html_path}", file=sys.stderr)
+        write_site_files(seo["rows"], seo["date"], len(scripts))
 
     # The run dir's copy has no docs/ next to it: embed the logo.
     with open(os.path.join(docs_dir, LOGO), "rb") as f:
         logo = "data:image/png;base64," + base64.b64encode(f.read()).decode()
     html_path = os.path.join(run_dir, "index.html")
     with open(html_path, "w") as f:
-        f.write(html.replace(f'src="{LOGO}"', f'src="{logo}"'))
+        f.write(html.replace(f'src="{LOGO}"', f'src="{logo}"').replace(seo["head"], seo["head_run"]))
     print(f"HTML report saved to: {html_path}", file=sys.stderr)
+
+
+# --- Search engines and link previews --------------------------------------------------------
+# Most numbers on the page are drawn by JavaScript. The helpers below add what a crawler reads
+# without JavaScript: the <head> tags (description, canonical, Open Graph, JSON-LD), a static
+# intro, a summary table and a FAQ. With --write-index, write_site_files also writes
+# docs/robots.txt, docs/sitemap.xml and docs/og.png (the link-preview image).
+
+SITE_URL = "https://plutus-vm-bench.lantr.io/"
+RAW_URL = "https://raw.githubusercontent.com/lantr-io/plutus-vm-benchmark/main"
+PAGE_TITLE = "Plutus VM Benchmark: Cardano smart contract evaluator speed"
+# Committed static files in docs/. og.png is rewritten by write_site_files when Chrome is found.
+FAVICON = "favicon.svg"
+OG_IMAGE = "og.png"
+OG_SIZE = (1200, 630)
+KEYWORDS = [
+    "Cardano", "Plutus", "UPLC", "Untyped Plutus Core", "Plutus VM", "smart contract",
+    "CEK machine", "evaluator", "benchmark", "performance", "plutus-core", "Aiken", "Scalus",
+    "blaze-plutus", "Plutigo", "uplc-turbo",
+]
+
+
+def run_date(run_dir: str) -> str:
+    """YYYY-MM-DD of the run: the dir name (2026-03-16-0 -> 2026-03-16), else unified.csv's mtime."""
+    name = os.path.basename(os.path.abspath(run_dir))[:10]
+    try:
+        return datetime.date.fromisoformat(name).isoformat()
+    except ValueError:
+        path = os.path.join(run_dir, "unified.csv")
+        ts = os.path.getmtime(path) if os.path.isfile(path) else None
+        return (datetime.date.fromtimestamp(ts) if ts else datetime.date.today()).isoformat()
+
+
+def fmt_ns_html(ns: float) -> str:
+    """fmt_ns with the page's micro sign."""
+    return fmt_ns(int(ns)).replace(" us", " µs") if ns > 0 else "-"
+
+
+def split_label(vm: str) -> tuple[str, str]:
+    """VM_LABELS 'Scalus CEK (Scala / JVM)' -> ('Scalus CEK', 'Scala / JVM')."""
+    label = VM_LABELS.get(vm, vm)
+    if label.endswith(")") and " (" in label:
+        name, _, lang = label[:-1].rpartition(" (")
+        return name, lang
+    return label, ""
+
+
+def summary_rows(data, scripts, present_vms, experimental, gate, eval_ns) -> list[dict]:
+    """One row per shown VM: the ranked ones fastest first (geo mean with the penalty rule, as in
+    report.md and the page's overall ranking), then the experimental ones."""
+    geo = compute_geo_means(data, scripts, present_vms)
+    ranked = sorted((vm for vm in present_vms if geo.get(vm, 0) > 0), key=lambda vm: geo[vm])
+    fastest = geo[ranked[0]] if ranked else 0
+    rows = []
+    for vm in ranked + experimental:
+        exp = vm in experimental
+        g = experimental_geo_mean(data, scripts, present_vms, vm) if exp else geo[vm]
+        ev = eval_ns.get(vm)
+        name, lang = split_label(vm)
+        rows.append({
+            "vm": vm, "name": name, "lang": lang, "experimental": exp,
+            "rank": None if exp else len(rows) + 1,
+            "geo": g, "eval": geometric_mean(list(ev.values())) if ev else 0,
+            "ratio": g / fastest if (fastest > 0 and g > 0 and not exp) else None,
+            "check": check_label(gate, vm),
+        })
+    return rows
+
+
+def summary_html(rows: list[dict], n_scripts: int) -> str:
+    """The static summary table (visible text, no JavaScript needed)."""
+    out = ['    <div class="table-wrap"><table class="summary-table">',
+           '      <thead><tr><th>#</th><th class="l">VM</th><th class="l">Language / runtime</th>'
+           '<th>Decode + eval</th><th>Eval only</th><th>vs fastest</th><th class="l">Check</th></tr></thead>',
+           '      <tbody>']
+    for r in rows:
+        check_cls = {"pass": "pass", "outdated cost model": "outdated"}.get(r["check"], "")
+        rank = "–" if r["rank"] is None else str(r["rank"])
+        ratio = "not ranked" if r["experimental"] else (f"{r['ratio']:.2f}×" if r["ratio"] else "-")
+        name = escape(r["name"]) + (" (experimental)" if r["experimental"] else "")
+        tr = '<tr class="exp">' if r["experimental"] else "<tr>"
+        out.append(f'        {tr}<td>{rank}</td>'
+                   f'<td class="l vm">{name}</td><td class="l lang">{escape(r["lang"])}</td>'
+                   f'<td>{fmt_ns_html(r["geo"])}</td><td>{fmt_ns_html(r["eval"])}</td><td>{ratio}</td>'
+                   f'<td class="l {check_cls}">{escape(r["check"])}</td></tr>')
+    out += ['      </tbody>', '    </table></div>',
+            f'    <p class="summary-caption">Geometric mean of the time per script over the {n_scripts} '
+            'scripts. <em>Decode + eval</em> is the ranking metric. A VM that fails or skips a script '
+            'gets the slowest competitor\'s time for it. <em>Eval only</em> times a program that was '
+            'decoded before the timed loop. A dash means that the VM has no eval-only time, for '
+            'example a VM that compiles a script before it runs it. The VMs use different execution models, so compare VMs of the same model too '
+            '(<a href="#exec-model">Execution Model</a>). Experimental VMs are shown, but not ranked.</p>']
+    return "\n".join(out)
+
+
+def languages(rows: list[dict]) -> str:
+    """'Haskell, Scala, Rust and Go': the first word of each row's language, in row order."""
+    langs: list[str] = []
+    for r in rows:
+        first = r["lang"].replace("→", "/").split("/")[0].strip()
+        if first and first not in langs:
+            langs.append(first)
+    return ", ".join(langs[:-1]) + " and " + langs[-1] if len(langs) > 1 else "".join(langs)
+
+
+def intro_html(rows: list[dict], n_scripts: int, date: str) -> str:
+    n = len(rows)
+    langs = languages(rows)
+    return ("This benchmark compares the speed of <strong>Plutus virtual machines</strong> (UPLC "
+            "evaluators), the programs that run Cardano smart contracts. Each VM decodes and evaluates "
+            f"the same {n_scripts} Plutus scripts. A correctness gate checks every result and its "
+            "execution units (ExUnits) against plutus-core, the Haskell CEK machine of the Cardano node. "
+            f"This run of {date} has {n} evaluators" + (f", written in {escape(langs)}" if langs else "")
+            + ". The <a href=\"#method\">method</a> and the "
+            "<a href=\"https://github.com/lantr-io/plutus-vm-benchmark\">source</a> are open.")
+
+
+def faq_items(rows: list[dict], n_scripts: int, date: str) -> list[tuple[str, str]]:
+    """(question, answer HTML). The page and the FAQPage JSON-LD both use this list."""
+    ranked = [r for r in rows if not r["experimental"] and r["geo"] > 0]
+    if ranked:
+        top = ranked[0]
+        hs = next((r for r in ranked if r["vm"] == "haskell"), None)
+        fastest = (f"In the run of {date}, {escape(top['name'])} ({escape(top['lang'])}) has the lowest "
+                   f"decode + eval geometric mean of the ranked VMs: {fmt_ns_html(top['geo'])}.")
+        if hs and hs is not top:
+            fastest += (f" plutus-core, the Haskell CEK machine of the Cardano node, takes "
+                        f"{fmt_ns_html(hs['geo'])} ({hs['ratio']:.2f}× the fastest time).")
+        fastest += (" The VMs use different execution models (CEK interpreter, AST walker, JIT "
+                    "compiler), so compare VMs of the same model too. Experimental VMs are not ranked.")
+    else:
+        fastest = f"The run of {date} has no ranked VM with a decode + eval time."
+    return [
+        ("What is a Plutus VM?",
+         "A Plutus VM, or UPLC evaluator, runs Untyped Plutus Core (UPLC), the language of Cardano "
+         "smart contracts. The Cardano node uses the CEK machine of plutus-core (Haskell) to validate "
+         "scripts. Wallets, SDKs, emulators and other tools use their own evaluators to compute the "
+         "script result and its execution units (ExUnits) before they submit a transaction."),
+        ("What does this benchmark measure?",
+         f"Each VM flat-decodes and evaluates {n_scripts} Plutus scripts from the plutus-use-cases test "
+         "suite (auction, escrow, uniswap, stablecoin and others). The page shows the mean time per "
+         "script and the geometric mean over all scripts. Each VM runs in its own Docker image on the "
+         "same server type, one VM at a time. A VM is ranked only if its results and ExUnits equal "
+         "Haskell plutus-core on every script."),
+        ("Which Plutus VM is the fastest?", fastest),
+        ("Why does the ranking include the decode time?",
+         "A node decodes a script from its flat encoding before it evaluates it. For a script that the "
+         "node has not seen, both steps take time. For some VMs the decode is a large share of the "
+         "time (about 66 % for Haskell plutus-core), so the page also shows an eval-only time."),
+        ("How often is the benchmark updated?",
+         "A GitHub Actions workflow runs the full benchmark on the 1st of each month, and the "
+         "maintainers start extra runs when a VM release changes. The workflow skips a scheduled run "
+         f"when nothing changed. This page shows the run of {date}."),
+        ("How can a VM join the benchmark?",
+         "A ranked VM has a published release, a downstream user today, and passes the correctness "
+         "gate. Open a pull request that adds a Docker image for the VM. Follow "
+         "<a href=\"https://github.com/lantr-io/plutus-vm-benchmark/blob/HEAD/CONTRIBUTING.md\">"
+         "CONTRIBUTING.md</a> and the <a href=\"https://github.com/lantr-io/plutus-vm-benchmark/blob/HEAD/"
+         "docs/IMAGE_CONTRACT.md\">image contract</a>."),
+    ]
+
+
+def faq_html(items: list[tuple[str, str]]) -> str:
+    return "\n".join(['    <div class="faq">']
+                     + [f'      <div class="faq-item"><h3>{escape(q)}</h3><p>{a}</p></div>' for q, a in items]
+                     + ['    </div>'])
+
+
+def meta_description(rows: list[dict], n_scripts: int, date: str) -> str:
+    return (f"Cardano Plutus VM benchmark: {len(rows)} UPLC smart contract evaluators, decode + eval "
+            f"speed on {n_scripts} scripts, checked against the Haskell CEK machine. Run {date}.")
+
+
+def json_ld(rows, items, run_dir: str, date: str, description: str, n_scripts: int) -> str:
+    """schema.org graph: Organization, Person, WebSite, WebPage, Dataset, FAQPage."""
+    run = os.path.basename(os.path.abspath(run_dir))
+    org = {"@type": "Organization", "@id": "https://lantr.io/#organization", "name": "Lantr",
+           "url": "https://lantr.io"}
+    person = {"@type": "Person", "@id": SITE_URL + "#alexander-nemish", "name": "Alexander Nemish",
+              "affiliation": {"@id": org["@id"]}}
+    files = [("unified.csv", "text/csv", "Mean time per VM and script (decode + eval), in nanoseconds"),
+             ("gate.json", "application/json", "Correctness gate verdict per VM"),
+             ("report.md", "text/markdown", "The report of the run as Markdown tables")]
+    distribution = [{"@type": "DataDownload", "name": f, "description": d, "encodingFormat": t,
+                     "contentUrl": f"{RAW_URL}/results/{run}/{f}"}
+                    for f, t, d in files if os.path.isfile(os.path.join(run_dir, f))]
+    graph = [
+        org, person,
+        {"@type": "WebSite", "@id": SITE_URL + "#website", "url": SITE_URL, "name": "Plutus VM Benchmark",
+         "inLanguage": "en", "publisher": {"@id": org["@id"]}},
+        {"@type": "WebPage", "@id": SITE_URL + "#webpage", "url": SITE_URL, "name": PAGE_TITLE,
+         "description": description, "inLanguage": "en", "dateModified": date,
+         "isPartOf": {"@id": SITE_URL + "#website"}, "about": {"@id": SITE_URL + "#dataset"},
+         "primaryImageOfPage": {"@type": "ImageObject", "url": SITE_URL + OG_IMAGE,
+                                "width": OG_SIZE[0], "height": OG_SIZE[1]}},
+        {"@type": "Dataset", "@id": SITE_URL + "#dataset", "url": SITE_URL,
+         "name": "Plutus VM Benchmark: Cardano UPLC evaluator timings",
+         "description": (f"Timings of {len(rows)} Plutus (UPLC) virtual machines, the evaluators of "
+                         f"Cardano smart contracts, on the same {n_scripts} Plutus scripts: mean "
+                         "flat decode + evaluation time and eval-only time per script, with a correctness "
+                         "gate against the Haskell plutus-core CEK machine. Run of " + date + "."),
+         "keywords": KEYWORDS, "inLanguage": "en", "isAccessibleForFree": True,
+         "creator": [{"@id": org["@id"]}, {"@id": person["@id"]}], "publisher": {"@id": org["@id"]},
+         "license": "https://opensource.org/licenses/MIT", "dateModified": date,
+         "isBasedOn": "https://github.com/SAIB-Inc/cardano-plutus-vm-benchmark",
+         "sameAs": "https://github.com/lantr-io/plutus-vm-benchmark",
+         "measurementTechnique": "Each VM runs in its own Docker image with its native benchmark "
+                                 "framework, one VM at a time, on the same server type",
+         "variableMeasured": ["decode + eval time per script (ns)", "eval-only time per script (ns)",
+                              "correctness gate verdict"],
+         "distribution": distribution},
+        {"@type": "FAQPage", "@id": SITE_URL + "#faq", "url": SITE_URL + "#faq",
+         "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}}
+                        for q, a in items]},
+    ]
+    return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False).replace("</", "<\\/")
+
+
+def seo_head(description: str, date: str, ld: str, published: bool, favicon: str) -> str:
+    """The <head> tags after <title>. published: the page at SITE_URL (docs/index.html); else the
+    copy in results/<run>/, which is not served on the site: noindex, no canonical."""
+    og_image = f"{SITE_URL}{OG_IMAGE}?v={date}"
+    alt = "Plutus VM Benchmark: decode + eval geometric mean of the fastest ranked Plutus VMs"
+    d = escape(description)
+    lines = [
+        f'<meta name="description" content="{d}">',
+        '<meta name="robots" content="index, follow">' if published else '<meta name="robots" content="noindex">',
+    ]
+    if published:
+        lines.append(f'<link rel="canonical" href="{SITE_URL}">')
+    lines += [
+        '<meta name="author" content="Lantr, Alexander Nemish">',
+        '<meta name="theme-color" content="#09090f">',
+        f'<link rel="icon" type="image/svg+xml" href="{favicon}">',
+        '<meta property="og:type" content="website">',
+        '<meta property="og:site_name" content="Plutus VM Benchmark">',
+        '<meta property="og:locale" content="en_US">',
+        f'<meta property="og:title" content="{escape(PAGE_TITLE)}">',
+        f'<meta property="og:description" content="{d}">',
+        f'<meta property="og:url" content="{SITE_URL}">',
+        f'<meta property="og:image" content="{og_image}">',
+        f'<meta property="og:image:width" content="{OG_SIZE[0]}">',
+        f'<meta property="og:image:height" content="{OG_SIZE[1]}">',
+        f'<meta property="og:image:alt" content="{alt}">',
+        '<meta name="twitter:card" content="summary_large_image">',
+        f'<meta name="twitter:title" content="{escape(PAGE_TITLE)}">',
+        f'<meta name="twitter:description" content="{d}">',
+        f'<meta name="twitter:image" content="{og_image}">',
+        f'<meta name="twitter:image:alt" content="{alt}">',
+        f'<script type="application/ld+json">\n{ld}\n</script>',
+    ]
+    return "\n".join(lines)
+
+
+def seo_parts(run_dir, data, scripts, present_vms, experimental, gate, eval_ns) -> dict:
+    """The template placeholders, and the rows for write_site_files."""
+    date = run_date(run_dir)
+    rows = summary_rows(data, scripts, present_vms, experimental, gate, eval_ns)
+    items = faq_items(rows, len(scripts), date)
+    description = meta_description(rows, len(scripts), date)
+    ld = json_ld(rows, items, run_dir, date, description, len(scripts))
+    with open(os.path.join(DOCS_DIR, FAVICON), "rb") as f:
+        favicon_uri = "data:image/svg+xml;base64," + base64.b64encode(f.read()).decode()
+    return {
+        "date": date, "rows": rows,
+        "head": seo_head(description, date, ld, True, FAVICON),
+        "head_run": seo_head(description, date, ld, False, favicon_uri),
+        "{{SEO_INTRO}}": intro_html(rows, len(scripts), date),
+        "{{SEO_SUMMARY_SUB}}": f"all VMs, geometric mean over {len(scripts)} scripts",
+        "{{SEO_SUMMARY}}": summary_html(rows, len(scripts)),
+        "{{SEO_FAQ}}": faq_html(items),
+    }
+
+
+def og_card_html(rows: list[dict], date: str, n_scripts: int) -> str:
+    """The 1200x630 link-preview card: title and the five fastest ranked VMs. Without rows (the
+    committed bootstrap image) a plain title card. System fonts only: no network."""
+    ranked = [r for r in rows if not r["experimental"] and r["geo"] > 0][:5]
+    bars = ""
+    if ranked:
+        fastest = ranked[0]["geo"]
+        for r in ranked:
+            w = max(4.0, 100 * fastest / r["geo"])  # speed relative to the fastest: longer is faster
+            bars += (f'<div class="row"><div class="n">{escape(r["name"])}<span>{escape(r["lang"])}</span></div>'
+                     f'<div class="t"><div class="b" style="width:{w:.1f}%"></div></div>'
+                     f'<div class="v">{fmt_ns_html(r["geo"])}</div></div>')
+        sub = f"Decode + eval geometric mean, {n_scripts} scripts, run {date}. Longer bar = faster."
+    else:
+        sub = "Cardano smart contract evaluators: decode + eval time, checked against plutus-core."
+    logo = "file://" + os.path.join(DOCS_DIR, LOGO)
+    return f"""<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+* {{ margin:0; padding:0; box-sizing:border-box; }}
+html, body {{ width:{OG_SIZE[0]}px; height:{OG_SIZE[1]}px; overflow:hidden; }}
+body {{ background:#09090f; color:#e4e4ec; padding:56px 64px; display:flex; flex-direction:column;
+  font-family:-apple-system,'Segoe UI','DejaVu Sans','Liberation Sans',Helvetica,Arial,sans-serif; }}
+h1 {{ font-size:64px; font-weight:700; letter-spacing:-1px; }} h1 span {{ color:#8b78ef; }}
+.sub {{ font-size:26px; color:#9494b0; margin:10px 0 36px; }}
+.row {{ display:flex; align-items:center; gap:24px; height:62px; }}
+.n {{ width:330px; font-size:28px; font-weight:600; white-space:nowrap; overflow:hidden; }}
+.n span {{ display:block; font-size:18px; font-weight:400; color:#8484a2; }}
+.t {{ flex:1; height:26px; }} .b {{ height:100%; background:#646FFF; border-radius:4px; }}
+.v {{ width:150px; text-align:right; font-size:28px; font-variant-numeric:tabular-nums; }}
+.big {{ font-size:34px; color:#AFAFE8; line-height:1.5; margin-top:20px; }}
+.foot {{ margin-top:auto; display:flex; justify-content:space-between; align-items:center;
+  font-size:24px; color:#8484a2; }} .foot img {{ height:44px; }}
+</style></head><body>
+<h1><span>Plutus</span> VM Benchmark</h1><div class="sub">{escape(sub)}</div>
+{bars or '<div class="big">Haskell, Rust, Go, Scala and TypeScript UPLC evaluators,<br>timed on the same Plutus scripts.</div>'}
+<div class="foot"><div>plutus-vm-bench.lantr.io</div><img src="{logo}" alt=""></div>
+</body></html>"""
+
+
+def find_chrome() -> str | None:
+    for c in [os.environ.get("CHROME"), "google-chrome", "google-chrome-stable", "chromium",
+              "chromium-browser", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"]:
+        path = c and (shutil.which(c) or (c if os.path.isfile(c) else None))
+        if path:
+            return path
+    return None
+
+
+def png_size(path: str) -> tuple[int, int] | None:
+    with open(path, "rb") as f:
+        head = f.read(24)
+    if head[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    return int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")
+
+
+def write_og_image(rows: list[dict], date: str, n_scripts: int) -> None:
+    """docs/og.png from og_card_html with headless Chrome. Without Chrome (python:3.12-slim) or on
+    any failure, keep the committed docs/og.png."""
+    chrome = find_chrome()
+    if not chrome:
+        print("og.png: no Chrome found, docs/og.png not changed", file=sys.stderr)
+        return
+    with tempfile.TemporaryDirectory() as tmp:
+        card, shot = os.path.join(tmp, "og.html"), os.path.join(tmp, "og.png")
+        with open(card, "w") as f:
+            f.write(og_card_html(rows, date, n_scripts))
+        cmd = [chrome, "--headless=new", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
+               "--force-device-scale-factor=1", f"--window-size={OG_SIZE[0]},{OG_SIZE[1]}",
+               f"--screenshot={shot}", "file://" + card]
+        try:
+            subprocess.run(cmd, check=True, timeout=120, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except (OSError, subprocess.SubprocessError) as e:
+            print(f"og.png: Chrome failed ({e}), docs/og.png not changed", file=sys.stderr)
+            return
+        if not os.path.isfile(shot) or png_size(shot) != OG_SIZE:
+            print(f"og.png: unexpected screenshot {png_size(shot) if os.path.isfile(shot) else None}, "
+                  "docs/og.png not changed", file=sys.stderr)
+            return
+        shutil.copyfile(shot, os.path.join(DOCS_DIR, OG_IMAGE))
+    print(f"og.png saved to: {os.path.join(DOCS_DIR, OG_IMAGE)}", file=sys.stderr)
+
+
+def write_site_files(rows: list[dict], date: str, n_scripts: int) -> None:
+    """docs/robots.txt, docs/sitemap.xml and docs/og.png for the published site. The sitemap lists
+    the main page only: the per-run copies in results/ are not deployed (run.yml uploads docs/)."""
+    with open(os.path.join(DOCS_DIR, "robots.txt"), "w") as f:
+        f.write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}sitemap.xml\n")
+    with open(os.path.join(DOCS_DIR, "sitemap.xml"), "w") as f:
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n'
+                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+                f"  <url>\n    <loc>{SITE_URL}</loc>\n    <lastmod>{date}</lastmod>\n  </url>\n"
+                "</urlset>\n")
+    write_og_image(rows, date, n_scripts)
 
 
 def generate(run_dir: str, write_index: bool = False) -> None:
