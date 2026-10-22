@@ -10,7 +10,7 @@ Status: approved 2026-10-21.
 | D2 | Home | Standalone repo `lantr-io/plutus-vm-benchmark` (not a GitHub fork) with the full SAIB history and MIT credit. Page at `plutus-vm-bench.lantr.io` (GitHub Pages, CNAME at Namecheap). scalus.org links to it |
 | D3 | What is timed | Node-equivalent: flat decode + evaluate with the mainnet cost model and costing on |
 | D4 | Correctness gate | Result and ExUnits of every script must equal Haskell. A VM that fails is not published; the page lists it as "failed check" |
-| D5 | Compiled VMs (Scalus JIT) | Same ranking as interpreters, with a "decode and compile excluded" badge (D15) and a compile-time column |
+| D5 | Compiled VMs (Scalus JIT) | Same ranking as interpreters, with a "decode and compile excluded" badge (D15) and a compile-time column. Superseded by D17 for the Scalus JIT: it is in the Experimental section today; the badge and the compile-time column stay |
 | D6 | PR automation | Bot opens version-bump PRs (`.env` only); they auto-merge on smoke + gate pass. Code PRs need human review; their CI has no secrets |
 | D7 | Schedule | Monthly cron (skip if nothing merged since the last run) + manual button |
 | D8 | Corpus | The existing 89 `plutus_use_cases` scripts. A mainnet PlutusV3 corpus is v2, as a separate ranking |
@@ -22,24 +22,40 @@ Status: approved 2026-10-21.
 | D14 | Process model | A fresh process per script for every VM. No JIT profile, heap or allocator state carries over between scripts |
 | D15 | Scalus JIT badge | "decode and compile excluded": the timed loop runs the compiled script; the decode and the compile run once per script, before timing |
 | D16 | Runtime settings | Each VM runs with the settings its project documents for production use, else with the runtime defaults. Scalus must document its JVM flags in public |
+| D17 | Inclusion rules | A ranked row needs (1) a published release: a stable version on a package registry, or a release tag; pre-releases such as `-alpha` or `0.1.0-preNN` do not count; (2) a downstream user today; (3) a pass of the correctness gate. A library that caches the decoded program or compiles it ahead is ranked with a badge: Scalus JIT style "decode and compile excluded"; Aiken WASM "decode cached (by the library)". An unranked "Experimental" section shows rows that have a release tag and pass the gate but miss rule (2) or publish no artifact; today that is the Scalus JIT (the `scalus-uplc-jit-compiler` module is not published to Maven and has no downstream users). Aiken WASM is ranked: the published npm package `@lucid-evolution/uplc` 0.4.0 used as is, built from colll78/aiken (aiken main plus fixes) |
 
-### Line-up (rule: the VM has a downstream user today)
+### Line-up (rules: D17)
 
-9 VMs, one image each:
+10 images. 9 are ranked, 1 is experimental:
 
-| VM (image) | Language | Runtime |
-|---|---|---|
-| Haskell plutus-core (`haskell`) | Haskell | GHC |
-| Scalus CEK (`scalus-cek`) | Scala | JVM (GraalVM) |
-| Scalus JIT (`scalus-jit`) | Scala | JVM (GraalVM) |
-| Scalus.js (`scalus-js`) | Scala.js | Node (V8) |
-| Aiken (`aiken`) | Rust | native |
-| uplc-turbo, Amaru (`uplc-turbo`) | Rust | native |
-| plutigo, Dingo (`plutigo`) | Go | native |
-| blaze-plutus (`blaze-v8`) | TypeScript | Node (V8) |
-| blaze-plutus (`blaze-jsc`) | TypeScript | Bun (JSC) |
+| VM (image) | Language | Runtime | Status |
+|---|---|---|---|
+| Haskell plutus-core (`haskell`) | Haskell | GHC | Ranked |
+| Scalus CEK (`scalus-cek`) | Scala | JVM (GraalVM) | Ranked |
+| Scalus JIT (`scalus-jit`) | Scala | JVM (GraalVM) | Experimental, badge "decode and compile excluded" |
+| Scalus.js (`scalus-js`) | Scala.js | Node (V8) | Ranked |
+| Aiken (`aiken`) | Rust | native | Ranked |
+| Aiken WASM, `@lucid-evolution/uplc` 0.4.0 (`aiken-wasm`) | Rust → WASM | Node (V8) | Ranked, badge "decode cached (by the library)" |
+| uplc-turbo, Amaru (`uplc-turbo`) | Rust | native | Ranked |
+| plutigo, Dingo (`plutigo`) | Go | native | Ranked |
+| blaze-plutus (`blaze-v8`) | TypeScript | Node (V8) | Ranked |
+| blaze-plutus (`blaze-jsc`) | TypeScript | Bun (JSC) | Ranked |
 
-Dropped: Chrysalis, Plutuz, llvm-uplc. Julc removed 2026-10-21: no stable release (only 0.1.0-preNN) and no visible downstream users; it rejoins at its first stable release. OpShin uplc removed 2026-10-21: it fails the correctness gate on the 11 UPLC 1.1.0 scripts (no `case` on builtin values, a protocol version 11 feature) at its latest release 1.3.3; it rejoins when it passes the gate. Aiken WASM removed 2026-10-21: the Aiken team ships no UPLC WASM; the only released one, `@lucid-evolution/uplc`, caches decoded programs with no off switch, so it cannot run the D3 loop as published. plu-ts and Helios join if their authors send a PR.
+Dropped, each with the D17 rule that fails:
+
+- Chrysalis: rule 1. Only pre-releases: NuGet `Chrysalis.Plutus` goes up to 1.7.14-alpha; the one
+  stable version, 1.7.1, is unlisted.
+- Plutuz: rule 1. No release: no tags or releases on GitHub.
+- llvm-uplc: rule 1. No release: no tags or releases on GitHub.
+- Julc: rule 1. Only pre-releases (0.1.0-preNN).
+- OpShin uplc: rule 3. It fails the correctness gate at its latest release 1.3.3 (no `case` on
+  builtin values, a protocol version 11 feature).
+- uplc-turbo-bc: rule 1. The released `uplc-turbo` crate has no bytecode mode.
+
+Aiken WASM returned 2026-10-22. It was removed on 2026-10-21, because `@lucid-evolution/uplc`
+caches decoded programs with no off switch, so it cannot run the D3 loop as published. D17 ranks
+such a library with a badge instead. The package is a published release (npm 0.4.0) and Lucid
+Evolution uses it, so it meets the three rules. The harness uses the package as is.
 
 ## 1. Components
 
@@ -47,7 +63,7 @@ Repo `lantr-io/plutus-vm-benchmark`:
 
 | Unit | Does | Change from today |
 |---|---|---|
-| `harness/<vm>/` + `scripts/run-<vm>.sh` | One harness per VM | Add `aiken`, `scalus-js`. Remove chrysalis, plutuz, llvm-uplc |
+| `harness/<vm>/` + `scripts/run-<vm>.sh` | One harness per VM | Add `aiken`, `aiken-wasm`, `scalus-js`. Remove chrysalis, plutuz, llvm-uplc |
 | `.env` | Pins each VM to a SHA or tag | Haskell pinned to the plutus tag of the production node (today 1.63.0.0) |
 | `images/` | One Docker image per VM, pushed to GHCR | Replaces the single image: a bump rebuilds one VM only |
 | `check/` | Correctness gate: each VM writes result + ExUnits per script; the gate diffs them against Haskell | New |
@@ -127,7 +143,7 @@ Expected run time: 3–5 h for the full line-up (the 4-VM run took 1.5 h on an M
 ## 4. Testing
 
 - Gate test: feed a VM output with one wrong ExUnits value; the gate must fail. Run this in `smoke.yml`.
-- Each new harness (Aiken, Scalus.js) must pass the gate on all 89 scripts before it joins.
+- Each new harness (Aiken, Aiken WASM, Scalus.js) must pass the gate on all 89 scripts before it joins.
 - Dry run of `run.yml` with a cheap shared-vCPU server type and 3 VMs; verify the server is gone afterwards.
 - First real run: compare Haskell ratios with the M3 Max runs of 2026-10-11; flag differences above 20%.
 

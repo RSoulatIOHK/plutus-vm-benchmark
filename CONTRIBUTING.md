@@ -139,8 +139,20 @@ Requirements:
 
 ## Adding a New VM
 
-Inclusion rule: a VM joins the line-up if it has a downstream user today, for example a node,
-a wallet, an SDK or a dev tool that runs it.
+Inclusion rules (decision D17 of the
+[design](docs/superpowers/specs/2026-10-21-lantr-vm-benchmark-design.md#0-decisions)). A VM is
+ranked when it meets three rules:
+
+1. It has a published release: a stable version on a package registry, or a release tag.
+   Pre-releases, such as `-alpha` or `0.1.0-preNN` versions, do not count.
+2. It has a downstream user today, for example a node, a wallet, an SDK or a dev tool that runs it.
+3. It passes the correctness gate on all 89 scripts.
+
+A VM that caches the decoded program or compiles it ahead is ranked with a badge: "decode cached
+(by the library)" (Aiken WASM) or "decode and compile excluded" (Scalus JIT). A VM that has a
+release tag and passes the gate, but misses rule 2 or publishes no artifact, goes to the unranked
+"Experimental" section of the page. Today that is the Scalus JIT. See
+[METHODOLOGY.md](METHODOLOGY.md#inclusion-rules).
 
 1. Add `images/<vm>/Dockerfile` and the harness that calls the VM. Follow the image contract in
    [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md): the D3 loop (flat decode + evaluation), the
@@ -164,7 +176,8 @@ a wallet, an SDK or a dev tool that runs it.
 
 ## Updating VM Versions
 
-Pin release tags only, not development branches.
+Pin releases only, not development branches. Pre-releases, such as `-alpha` or `0.1.0-preNN`
+versions, do not count as releases.
 
 1. In `.env`, set the `*_SHA` of the VM to the commit of the release tag, with the tag in a trailing
    comment, for example `AIKEN_SHA=bacbeb3... # v1.1.24`. Some VMs also have a version variable,

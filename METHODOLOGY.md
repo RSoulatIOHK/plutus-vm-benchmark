@@ -38,13 +38,46 @@ column shows the speed of the evaluator alone. The ranking uses the D3 time.
 The Scalus JIT compiles a script to JVM bytecode before it runs it. It decodes and compiles each
 script once, before timing. Its timed loop evaluates the compiled script, so neither the flat
 decode nor the compile step is timed. The page shows it with a "decode and compile excluded"
-badge and a compile-time column (`<vm>-compile.csv`, the median of 3 compiles per script). The
-page shows it in the "Compiler-based VMs" category and in the overall ranking with the interpreters.
+badge and a compile-time column (`<vm>-compile.csv`, the median of 3 compiles per script). Today
+the Scalus JIT is in the unranked Experimental section (see [Inclusion rules](#inclusion-rules)).
+
+### Cached decode
+
+The published npm package `@lucid-evolution/uplc` 0.4.0 (the `aiken-wasm` row) caches the decoded
+program, and it has no switch to turn the cache off. The harness uses the package as is. After the
+first call, its timed loop does not decode the script again: it hashes the flat bytes, finds the
+decoded program in the cache and evaluates it. The same times fill its D3 and eval-only columns.
+The page ranks it with a "decode cached (by the library)" badge.
+
+## Inclusion Rules
+
+A VM is ranked when it meets three rules:
+
+1. It has a published release: a stable version on a package registry, or a release tag.
+   Pre-releases, such as `-alpha` or `0.1.0-preNN` versions, do not count.
+2. It has a downstream user today, for example a node, a wallet, an SDK or a dev tool that runs it.
+3. It passes the [correctness gate](#correctness-gate).
+
+A VM that caches the decoded program or compiles it ahead is ranked with a badge:
+
+| Badge | Meaning | Example |
+|---|---|---|
+| decode and compile excluded | The decode and the compile run once per script, before timing | Scalus JIT |
+| decode cached (by the library) | The library caches the decoded program; the harness cannot turn the cache off | Aiken WASM (`@lucid-evolution/uplc` 0.4.0) |
+
+The page shows an unranked "Experimental" section. It holds VMs that have a release tag and pass
+the gate, but miss rule 2 or publish no artifact. Today that is the Scalus JIT: the
+`scalus-uplc-jit-compiler` module is not published to Maven, and it has no downstream users.
+
+The README lists the VMs that are not included and the rule that each one fails.
 
 ## Test Data
 
-89 flat-encoded Plutus scripts from the `plutus-use-cases` test suite, in `data/plutus_use_cases/`.
-They cover:
+89 flat-encoded Plutus scripts from the
+[`plutus-use-cases`](https://github.com/input-output-hk/plutus-use-cases) test suite, in
+`data/plutus_use_cases/`. They were compiled with
+[Plinth (formerly Plutus Tx)](https://plutus.cardano.intersectmbo.org/docs/essential-concepts/plinth-and-plutus-core)
+under its old name. They cover:
 
 - Auction, Crowdfunding, Currency, Escrow
 - Futures (settle, pay-out, increase-margin)
@@ -99,6 +132,7 @@ and the runner is `scripts/run-<vm>.sh`.
 | uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 10 s measurement |
 | plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
 | blaze-v8, blaze-jsc | Vitest bench | 20 s warm-up, three 5 s measurements |
+| aiken-wasm | Vitest bench | 20 s warm-up, three 5 s measurements (a JIT runtime, V8) |
 | scalus-js | Vitest bench | 20 s warm-up, three 5 s measurements (the same Vitest version as blaze-v8) |
 
 The JIT runtimes (JVM, V8, JSC) all get 20 s of warm-up, because the staged Scalus JIT needs about
@@ -114,7 +148,7 @@ warm-up and measurement, for smoke tests only.
 - **Pinned versions**: `.env` pins each VM; `environment.txt` of each run records the image digests.
 - **Same results**: the correctness gate proves that each published VM did the same work.
 
-Decisions D13 to D16 of the
+Decisions D13 to D17 of the
 [design](docs/superpowers/specs/2026-10-21-lantr-vm-benchmark-design.md#0-decisions):
 
 - **Warm-up (D13)**: the JIT runtimes (JVM, V8, JSC) get a 20 s warm-up and three 5 s
@@ -128,6 +162,8 @@ Decisions D13 to D16 of the
   production use. A VM without such documentation runs with the defaults of its runtime. Scalus
   must document its JVM flags in public, so the flags of the Scalus rows are not settings only
   this benchmark uses.
+- **Inclusion rules (D17)**: a ranked VM has a published release, a downstream user today, and
+  passes the gate. See [Inclusion rules](#inclusion-rules).
 
 Host and noise measures ([`scripts/run-images.sh`](scripts/run-images.sh),
 [`nix/runner.nix`](nix/runner.nix)):

@@ -24,8 +24,9 @@ Library and node authors can use it to choose an evaluator.
 - **Node-equivalent timing.** Each iteration does a flat decode and an evaluation. The evaluation
   uses PlutusV3 semantics at protocol version 11, the mainnet PlutusV3 cost model, and costing on.
 - **Correctness gate.** For every script, the result and the ExUnits of a VM must equal Haskell
-  plutus-core. A VM that fails is not ranked.
-- **Released versions only.** Every VM is pinned to a release tag in `.env`.
+  [plutus-core](https://github.com/IntersectMBO/plutus). A VM that fails is not ranked.
+- **Released versions only.** Every VM is pinned to a release in `.env`. Pre-releases, such as
+  `-alpha` or `0.1.0-preNN` versions, do not count.
 - **Monthly runs on fixed hardware.** One Hetzner dedicated-vCPU server type runs every VM, one at a time.
 - **History.** Each run stays in `results/`. The page shows each VM's time relative to Haskell over time.
 
@@ -34,13 +35,23 @@ Library and node authors can use it to choose an evaluator.
 - [Cardano](https://cardano.org) is a proof-of-stake blockchain.
 - [Plutus](https://plutus.cardano.intersectmbo.org/docs/) is the smart contract platform of Cardano
   ([IntersectMBO/plutus](https://github.com/IntersectMBO/plutus)).
-- UPLC (Untyped Plutus Core) is the on-chain language. Compilers such as Plutus Tx, Aiken and Scalus emit it.
-  The node evaluates a UPLC script with a CEK machine. A cost model charges each step and each builtin
-  call in ExUnits (CPU and memory). See the
-  [Plutus Core specification](https://plutus.cardano.intersectmbo.org/resources/plutus-core-spec.pdf).
-- Many tools evaluate scripts, not only the node. Wallets and off-chain transaction builders evaluate
-  each script to estimate fees. Test frameworks and emulators evaluate scripts in every test. Indexers
-  evaluate scripts to report their costs. Alternative nodes such as [Amaru](https://github.com/pragma-org/amaru) and
+- [UPLC (Untyped Plutus Core)](https://plutus.cardano.intersectmbo.org/docs/essential-concepts/plinth-and-plutus-core)
+  is the on-chain language. Compilers such as
+  [Plinth (formerly Plutus Tx)](https://plutus.cardano.intersectmbo.org/docs/essential-concepts/plinth-and-plutus-core),
+  [Aiken](https://aiken-lang.org) and [Scalus](https://scalus.org) emit it.
+- The node ([cardano-node](https://github.com/IntersectMBO/cardano-node)) evaluates a UPLC script
+  with a CEK machine. The
+  [Plutus Core specification](https://plutus.cardano.intersectmbo.org/resources/plutus-core-spec.pdf)
+  defines the language and the CEK machine. A
+  [cost model](https://plutus.cardano.intersectmbo.org/docs/delve-deeper/cost-model) charges each
+  step and each builtin call in ExUnits (CPU and memory). The
+  [Alonzo ledger specification](https://github.com/intersectmbo/cardano-ledger/releases/latest/download/alonzo-ledger.pdf)
+  defines ExUnits and how the ledger uses the cost model.
+- Many tools evaluate scripts, not only the node. Wallets and off-chain transaction builders, such
+  as [Lucid Evolution](https://github.com/Anastasia-Labs/lucid-evolution) and
+  [Blaze](https://github.com/butaneprotocol/blaze-cardano), evaluate each script to estimate fees.
+  Test frameworks and emulators evaluate scripts in every test. Indexers evaluate scripts to report
+  their costs. Alternative nodes such as [Amaru](https://github.com/pragma-org/amaru) and
   [Dingo](https://github.com/blinklabs-io/dingo) evaluate them to validate blocks. A faster evaluator
   makes all of these faster.
 
@@ -62,8 +73,10 @@ What changed:
   them with Haskell plutus-core ([check/README.md](check/README.md)).
 - **Node-equivalent parameters.** Flat decode + evaluation with PlutusV3 semantics, protocol version 11,
   the mainnet cost model and costing on, for every VM.
-- **Curated line-up.** A VM joins if it has a downstream user today, a stable release and passes the
-  correctness gate. See [Not included](#not-included).
+- **Curated line-up.** A ranked VM has a published release, a downstream user today, and passes the
+  correctness gate. A VM that caches the decoded program or compiles it ahead is ranked with a
+  badge. An unranked [Experimental](#experimental) section shows VMs that miss the downstream-user
+  rule or publish no artifact. See [Not included](#not-included).
 - **Eval-only column.** A second timing evaluates a program decoded once before timing.
 - **Automated monthly runs.** GitHub Actions creates a Hetzner server, installs NixOS on it, runs the
   benchmark and deletes the server.
@@ -74,51 +87,71 @@ What changed:
 |---|---|---|---|---|---|
 | `haskell` | plutus-core | Haskell | Criterion | [IntersectMBO/plutus](https://github.com/IntersectMBO/plutus) | [1.63.0.0](https://github.com/IntersectMBO/plutus/releases/tag/1.63.0.0) |
 | `scalus-cek` | Scalus CEK | Scala / GraalVM 25 | JMH | [scalus3/scalus](https://github.com/scalus3/scalus) | [v1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |
-| `scalus-jit` | Scalus JIT (UPLC → JVM bytecode) | Scala / GraalVM 25 | JMH | [scalus3/scalus](https://github.com/scalus3/scalus) | [v1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |
+| `scalus-jit` | Scalus JIT (UPLC → JVM bytecode), [experimental](#experimental), not ranked | Scala / GraalVM 25 | JMH | [scalus3/scalus](https://github.com/scalus3/scalus) | [v1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |
 | `scalus-js` | Scalus.js | Scala.js / Node.js | Vitest bench | [scalus3/scalus](https://github.com/scalus3/scalus) | npm `scalus` [1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |
 | `aiken` | Aiken uplc | Rust | Criterion.rs | [aiken-lang/aiken](https://github.com/aiken-lang/aiken) | [v1.1.24](https://github.com/aiken-lang/aiken/releases/tag/v1.1.24) |
+| `aiken-wasm` | Aiken uplc as WASM (Lucid Evolution), badge "decode cached (by the library)" | Rust → WASM / Node.js | Vitest bench | [Anastasia-Labs/lucid-evolution](https://github.com/Anastasia-Labs/lucid-evolution/tree/main/packages/uplc) | npm `@lucid-evolution/uplc` [0.4.0](https://github.com/Anastasia-Labs/lucid-evolution/releases/tag/%40lucid-evolution%2Fuplc%400.4.0) |
 | `uplc-turbo` | uplc-turbo (Amaru) | Rust | Criterion.rs | [pragma-org/uplc](https://github.com/pragma-org/uplc) | [amaru-uplc-v0.4.0](https://github.com/pragma-org/uplc/releases/tag/amaru-uplc-v0.4.0) |
 | `plutigo` | Plutigo (Dingo) | Go | testing.B | [blinklabs-io/plutigo](https://github.com/blinklabs-io/plutigo) | [v0.1.10](https://github.com/blinklabs-io/plutigo/releases/tag/v0.1.10) |
 | `blaze-v8` | blaze-plutus on Node (V8) | TypeScript | Vitest bench | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) | [@blaze-cardano/plutus 0.1.1](https://github.com/butaneprotocol/blaze-cardano/releases/tag/%40blaze-cardano%2Fplutus%400.1.1) |
 | `blaze-jsc` | blaze-plutus on Bun (JSC) | TypeScript | Vitest bench | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) | [@blaze-cardano/plutus 0.1.1](https://github.com/butaneprotocol/blaze-cardano/releases/tag/%40blaze-cardano%2Fplutus%400.1.1) |
 
-That is 9 images: `scripts/images.sh list` prints them. The pins are in [`.env`](.env).
+That is 10 images: `scripts/images.sh list` prints them. The pins are in [`.env`](.env).
 
-Aiken v1.1.24 copies the CEK environment on every lambda application (quadratic in recursion
-depth). aiken main fixes it (PRs [#1451](https://github.com/aiken-lang/aiken/pull/1451),
-[#1452](https://github.com/aiken-lang/aiken/pull/1452): coop-6 92 ms -> 1.2 ms), but no release
-contains the fix yet.
+The `aiken-wasm` row times the published npm package `@lucid-evolution/uplc` 0.4.0 as is. The
+package is built from [colll78/aiken](https://github.com/colll78/aiken): aiken main after v1.1.24,
+plus fixes. The package caches the decoded program, and it has no switch to turn the cache off.
+So after the first call its timed loop does not decode again. The row has the badge "decode
+cached (by the library)".
+
+The two Aiken rows run different code. Aiken v1.1.24 (`aiken`) copies the CEK environment on every
+lambda application (quadratic in recursion depth). aiken main fixes it (PRs
+[#1451](https://github.com/aiken-lang/aiken/pull/1451),
+[#1452](https://github.com/aiken-lang/aiken/pull/1452): coop-6 92 ms -> 1.2 ms). The `aiken-wasm`
+build contains both fixes. No Aiken release contains them yet.
+
+### Experimental
+
+These rows have a release tag and pass the correctness gate, but they are not ranked. They have no
+downstream user today, or they publish no artifact.
+
+| Image | Why it is not ranked |
+|---|---|
+| `scalus-jit` | The `scalus-uplc-jit-compiler` module of Scalus v1.4.0 is not published to Maven. It has no downstream users. Its timed loop runs the compiled script: badge "decode and compile excluded". |
 
 ## Not included
 
-A VM joins the line-up when it meets three conditions:
+A VM is ranked when it meets three rules:
 
-1. It has a downstream user today.
-2. It has a stable release.
+1. It has a published release: a stable version on a package registry, or a release tag.
+   Pre-releases, such as `-alpha` or `0.1.0-preNN` versions, do not count.
+2. It has a downstream user today.
 3. It passes the correctness gate.
 
-| Project | Reason |
+A VM that caches the decoded program, or compiles it ahead, is ranked with a badge. A VM that has
+a release tag and passes the gate, but misses rule 2 or publishes no artifact, goes to
+[Experimental](#experimental).
+
+| Project | Rule that fails |
 |---|---|
-| [Chrysalis](https://github.com/SAIB-Inc/Chrysalis) | SAIB's own .NET VM. No visible downstream users. |
-| [Plutuz](https://github.com/utxo-company/plutuz) | Zig VM. No visible downstream users. |
-| [llvm-uplc](https://github.com/SeungheonOh/llvm-uplc) | Research prototype. No releases and no users. |
-| Aiken WASM | The Aiken team publishes no UPLC WASM. The only released build, `@lucid-evolution/uplc`, caches decoded programs and has no off switch. So it cannot time decode + evaluation as published. |
-| [Julc](https://github.com/bloxbean/julc) | No stable release: only `0.1.0-preNN` pre-releases. It can join at its first stable release. |
-| [OpShin uplc](https://github.com/OpShin/uplc) | Fails the correctness gate at its latest release 1.3.3. It has no `case` on builtin values, a protocol version 11 feature. |
-| uplc-turbo-bc | The released `uplc-turbo` crate has no bytecode mode. |
+| [Chrysalis](https://github.com/SAIB-Inc/Chrysalis) | Rule 1. Only pre-releases: the NuGet package `Chrysalis.Plutus` goes up to `1.7.14-alpha`. The one stable version, 1.7.1, is unlisted. |
+| [Plutuz](https://github.com/utxo-company/plutuz) | Rule 1. No release: no tags or releases on GitHub. |
+| [llvm-uplc](https://github.com/SeungheonOh/llvm-uplc) | Rule 1. No release: no tags or releases on GitHub. |
+| [Julc](https://github.com/bloxbean/julc) | Rule 1. Only pre-releases (`0.1.0-preNN`). |
+| [OpShin uplc](https://github.com/OpShin/uplc) | Rule 3. Fails the correctness gate at its latest release 1.3.3. It has no `case` on builtin values, a protocol version 11 feature. |
+| uplc-turbo-bc | Rule 1. The released `uplc-turbo` crate has no bytecode mode. |
 
 ### How a VM can join
 
-Meet the three conditions above. Then open a pull request that adds an image. Follow
+Meet the three rules above. Then open a pull request that adds an image. Follow
 [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md).
-Candidates today: plu-ts ([`@harmoniclabs/uplc`](https://github.com/HarmonicLabs/uplc)) and
-Helios ([HeliosLang/uplc](https://github.com/HeliosLang/uplc)).
 
 ## What Is Measured
 
-Each VM runs a flat decode and an evaluation of 89 Plutus scripts from the `plutus-use-cases` test
-suite (auction, escrow, uniswap, stablecoin and others). All VMs read the same `.flat` files in
-`data/plutus_use_cases/`.
+Each VM runs a flat decode and an evaluation of 89 Plutus scripts from the
+[`plutus-use-cases`](https://github.com/input-output-hk/plutus-use-cases) test suite (auction,
+escrow, uniswap, stablecoin and others). The scripts were compiled with Plinth under its old name, Plutus Tx.
+All VMs read the same `.flat` files in `data/plutus_use_cases/`.
 
 The 89 scripts are PlutusV1-era programs. Every VM evaluates them as PlutusV3 programs at protocol
 version 11. Plutus's own `validation` CEK benchmark does the same. See [METHODOLOGY.md](METHODOLOGY.md).
