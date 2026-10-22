@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Plutus VM Benchmark &ndash; maintained by Lantr</title>
+<title>Plutus VM Benchmark: Cardano smart contract evaluator speed</title>
+{{SEO_HEAD}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
   :root {
     /* Palette */
@@ -587,6 +590,24 @@
   .history-tip .tip-row b { color: var(--text); font-weight: 600; min-width: 5.5rem; }
   .history-tip .tip-key { display: inline-block; width: 12px; height: 0; }
 
+  /* Intro, summary table and FAQ: static HTML from generate_report.py, readable without JS */
+  .intro { font-size: 0.74rem; color: var(--text-secondary); line-height: 1.6; margin: -0.4rem 0 1.1rem; max-width: 92ch; }
+  .intro strong { color: var(--text); font-weight: 600; }
+  .intro a, .faq a, .summary-caption a { color: var(--purple-bright); text-decoration: underline; text-decoration-color: rgba(139,120,239,0.45); text-underline-offset: 2px; }
+  .intro a:hover, .faq a:hover, .summary-caption a:hover { text-decoration-color: currentColor; }
+  .summary-table th { border-bottom: 1px solid var(--border-accent); padding-bottom: 0.4rem; vertical-align: bottom; }
+  .summary-table .l { text-align: left; }
+  .summary-table td.l { font-family: var(--font-sans); }
+  .summary-table td.vm { font-weight: 500; }
+  .summary-table td.lang { color: var(--text-secondary); }
+  .summary-table td.pass { color: var(--green); }
+  .summary-table td.outdated { color: var(--gold); }
+  .summary-table tr.exp td { color: var(--text-muted); }
+  .summary-caption { font-size: 0.66rem; color: var(--text-secondary); margin: 0.6rem 0 0; max-width: 92ch; }
+  .faq { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 0.9rem 1.5rem; }
+  .faq h3 { font-size: 0.78rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; }
+  .faq p { font-size: 0.7rem; color: var(--text-secondary); line-height: 1.55; }
+
   /* Footer */
   footer {
     text-align: center;
@@ -617,11 +638,11 @@
 </style>
 </head>
 <body>
-<div class="page">
+<main class="page">
 
   <div class="header">
     <div class="header-brand">
-      <a href="https://lantr.io" target="_blank"><img src="lantr-logo-dark.png" alt="Lantr" class="header-logo"></a>
+      <a href="https://lantr.io" target="_blank"><img src="lantr-logo-dark.png" alt="Lantr logo" width="122" height="40" class="header-logo"></a>
       <div>
         <h1><span class="it">Plutus</span> VM Benchmark</h1>
         <p>Cross-language UPLC virtual-machine comparison &ndash; {{ENV_BADGE}}</p>
@@ -633,6 +654,8 @@
     </a>
   </div>
 
+  <p class="intro" id="intro">{{SEO_INTRO}}</p>
+
   <div class="facts" id="facts">
     <div class="fact"><div class="fact-k">Ranked on</div><div class="fact-v">decode + eval</div><div class="fact-d">Each timed iteration flat-decodes the script and evaluates it, as a node does with a script it has not seen. <em>Eval only</em> (decoded before timing) is shown beside it.</div></div>
     <div class="fact"><div class="fact-k">Scripts</div><div class="fact-v"><span class="n-scripts"></span> scripts</div><div class="fact-d" id="disclosure"></div></div>
@@ -641,7 +664,7 @@
   </div>
 
   <div class="section">
-    <div class="section-title">Ranking <em>decode + eval geometric mean, per execution model</em></div>
+    <h2 class="section-title">Ranking <em>decode + eval geometric mean, per execution model</em></h2>
     <div class="cat-filter" id="cat-filter"></div>
     <div id="rankings-by-cat"></div>
     <details class="overall-details" id="overall-details">
@@ -651,20 +674,25 @@
     </details>
   </div>
 
+  <div class="section" id="summary-table">
+    <h2 class="section-title">Summary table <em>{{SEO_SUMMARY_SUB}}</em></h2>
+{{SEO_SUMMARY}}
+  </div>
+
   <div class="section" id="failed-section" style="display:none">
-    <div class="section-title">Failed check <em>not ranked</em></div>
+    <h2 class="section-title">Failed check <em>not ranked</em></h2>
     <div class="note" style="margin-bottom:0.7rem">The result or the ExUnits of these VMs differ from Haskell plutus-core for at least one script, so their timings are not published (correctness gate, <code>check/README.md</code>).</div>
     <div class="failed-list" id="failed-list"></div>
   </div>
 
   <div class="section">
-    <div class="section-title">Geometric mean <em>decode + eval, all VMs, fastest first</em></div>
+    <h2 class="section-title">Geometric mean <em>decode + eval, all VMs, fastest first</em></h2>
     <p class="chart-caption" id="bar-caption"></p>
     <div class="bar-chart" id="bar-chart" role="img" aria-label="Geometric mean of the decode + eval time per VM, log scale"></div>
   </div>
 
   <div class="section" id="history-section" style="display:none">
-    <div class="section-title">History <em>speed relative to Haskell plutus-core, same run &ndash; higher is faster</em></div>
+    <h2 class="section-title">History <em>speed relative to Haskell plutus-core, same run &ndash; higher is faster</em></h2>
     <div class="note" style="margin-bottom:0.7rem">Each point is Haskell's geometric mean time divided by the VM's, from the same run: 2&times; faster means the VM needs half of Haskell's time. The solid grey line is Haskell (1&times;); a dashed line is an experimental VM. The ratio uses the scripts where both the VM and Haskell have a timing. Comparing ratios, not absolute times, removes most of the hardware and run-to-run drift. Log scale.</div>
     <div class="history-chart" id="history-chart"></div>
     <div class="history-legend" id="history-legend"></div>
@@ -672,7 +700,7 @@
   </div>
 
   <div class="section">
-    <div class="section-title">Per-Script Results</div>
+    <h2 class="section-title">Per-Script Results</h2>
     <div class="filter-bar" id="filters"></div>
     <p class="table-caption">Mean time per script. For each VM: <em>eval only</em> (decode excluded), then <em>decode + eval</em> (the ranking metric). <span class="fastest-key">Green</span>: the fastest ranked VM on the script, per column type; an experimental VM is never marked. The buttons hide and show VMs.</p>
     <div class="table-wrap">
@@ -684,19 +712,19 @@
   </div>
 
   <div class="section" id="experimental-section" style="display:none">
-    <div class="section-title">Experimental <em>not ranked</em></div>
+    <h2 class="section-title">Experimental <em>not ranked</em></h2>
     <div class="note" style="margin-bottom:0.7rem">These VMs are run, gated and shown with their numbers, but they are not ranked: they are not in the rankings above, not a competitor in the penalty rule, and not the 1.00&times; reference in the geometric-mean chart (where they are drawn hatched); the history chart draws them dashed, and never the fastest in the per-script table. The geometric mean uses the penalty rule against the ranked VMs.</div>
     <div class="summary" id="experimental-cards"></div>
   </div>
 
   <div class="section" id="exec-model">
-    <div class="section-title">Execution Model <em>why categories matter</em></div>
+    <h2 class="section-title">Execution Model <em>why categories matter</em></h2>
     <div class="note" style="margin-bottom:0.85rem">VMs differ in <em>how</em> they execute UPLC. A UPLC-level JIT compiler is doing fundamentally different work than a CEK interpreter, even when both happen to run on a JIT-compiled host runtime like the JVM or V8. Within-category numbers are like-for-like; cross-category numbers are not directly comparable.</div>
     <div class="engine-groups" id="engine-groups"></div>
   </div>
 
   <div class="section">
-    <div class="section-title">Toolchain</div>
+    <h2 class="section-title">Toolchain</h2>
     <div class="toolchain" id="toolchain"></div>
   </div>
 
@@ -754,12 +782,17 @@
   </div>
 
   <div class="section" id="method">
-    <div class="section-title">Method</div>
+    <h2 class="section-title">Method</h2>
     <div class="note" style="margin:0 0 0.6rem" id="method-disclosure"></div>
     <div class="note" style="margin:0 0 0.6rem">Two timings per script, eval only first. The ranking uses <em>decode + eval</em>: each iteration flat-decodes the script and evaluates it, as a node does with a script it has not seen. <em>Eval only</em> evaluates a program decoded once before timing; decoding is a large share of the time for some VMs (about 66&nbsp;% for Haskell plutus-core), so the second column shows how fast the evaluator alone is.</div>
     <div class="note" style="margin:0 0 0.6rem">Correctness gate: each VM evaluates every script once more and reports the result and the ExUnits. They must equal Haskell plutus-core; a VM that differs is not ranked (&ldquo;failed check&rdquo;). A VM whose API cannot take the mainnet cost model is ranked with an &ldquo;outdated cost model&rdquo; badge if it equals Haskell with the model the VM ships. A VM that compiles a script before it runs it (&ldquo;decode and compile excluded&rdquo;) decodes and compiles each script once, before timing; its timed loop runs the compiled script, so neither step is in its time. Its compile time is shown separately. A VM whose library caches decoded programs (&ldquo;decode cached (by the library)&rdquo;) decodes a script only on the first call, in the warm-up; its timed loop runs the cache lookup and the evaluation, so its two columns have the same numbers.</div>
     <div class="note" id="drift-note" style="margin:0 0 0.6rem;display:none"></div>
     <div class="note" style="margin:0">Flat decode + evaluation on <span class="n-scripts"></span> Plutus scripts. Each VM uses its native benchmark framework. Each VM runs in its own Docker image, one VM at a time. Geometric means within each category use only the scripts where every VM in that category produced a successful result, so all VMs in a category are compared on the same scripts.</div>
+  </div>
+
+  <div class="section" id="faq">
+    <h2 class="section-title">FAQ <em>Plutus VMs and this benchmark</em></h2>
+{{SEO_FAQ}}
   </div>
 
   <footer>
@@ -774,7 +807,7 @@
     </div>
   </footer>
 
-</div>
+</main>
 
 <script>
 const CSV_DATA = `{{CSV_DATA}}`;
