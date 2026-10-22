@@ -34,7 +34,7 @@ docker run --rm --cap-add SYS_NICE \
 
 ### Switches
 
-Three environment variables select a subset. `image-entry.sh` checks them and exits 2 on a bad
+Three environment variables select a subset, and `BENCH_TRACE` adds a warm-up trace. `image-entry.sh` checks them and exits 2 on a bad
 value; `scripts/run-images.sh` and the `run` workflow pass them through and record them in
 `environment.txt`.
 
@@ -43,6 +43,7 @@ value; `scripts/run-images.sh` and the `run` workflow pass them through and reco
 | `BENCH_SCRIPTS` | Extended regex, full match against the script name, e.g. `auction_.*\|uniswap-1`. No match is an error | empty = every script |
 | `BENCH_LOOPS` | Comma list of `d3` (`<vm>.csv`), `eval` (`<vm>-eval.csv`), `check` (`<vm>-check.csv`) | `d3,eval,check` |
 | `BENCH_TIMING` | `normal`, or `quick`: short warm-up and measurement (for smoke tests) | `normal` |
+| `BENCH_TRACE` | `1`: the JIT rows log warm-up slices into `<vm>-warmup.csv` | `0` |
 
 `BENCH_QUICK=1` is a shortcut: `BENCH_TIMING=quick` and, when `BENCH_SCRIPTS` is empty, the first 5
 scripts (C sort order).

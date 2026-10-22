@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Runs the per-VM images one at a time (docs/IMAGE_CONTRACT.md), then builds unified.csv, runs
-# the correctness gate (gate.json) and builds the report. This is what the bench server runs.
+# Runs the per-VM images (docs/IMAGE_CONTRACT.md), one at a time or in LANES parallel lanes, then
+# builds unified.csv, runs the correctness gate (gate.json) and builds the report. This is what the
+# bench server runs.
 #
 #   scripts/run-images.sh <results-dir> [vm ...]
 #
@@ -211,8 +212,9 @@ sysfs_choice() {
 }
 
 # --- docker run flags -------------------------------------------------------------------
-# --network none: no VM needs the network at run time. --cpuset-cpus: every VM gets the same CPUs,
-# and the whole physical core of CPU 0 stays for the host (dockerd, sshd, interrupts). A Hetzner
+# --network none: no VM needs the network at run time. --cpuset-cpus: with one lane every VM gets
+# the same CPUs (with LANES > 1 each VM gets the CPUs of its lane), and the whole physical core of
+# CPU 0 stays for the host (dockerd, sshd, interrupts). A Hetzner
 # ccx33 has 8 vCPUs = 4 cores x 2 SMT threads: leaving only CPU 0 would let the benchmark thread
 # share a core with host work through CPU 0's sibling. On Docker Desktop the containers run in a
 # Linux VM whose CPU 0 is not the host's, so the CPU set would protect nothing.
