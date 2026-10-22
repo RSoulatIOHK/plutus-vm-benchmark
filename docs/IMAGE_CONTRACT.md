@@ -75,7 +75,7 @@ How the image applies them:
 |---|---|
 | `<vm>.csv` | Timing, schema `vm,script,mean_ns,median_ns,min_ns,max_ns,stddev_ns,iterations`. A failed script has `-1` in every number column |
 | `<vm>-check.csv` | Correctness, schema `vm,script,status,cpu,mem`. `status` is `ok` or `error`. `cpu`/`mem` are the ExUnits the VM's own costing reports for one evaluation (empty when the VM has no costing) |
-| `<vm>-raw.log` | Raw tool output, for debugging |
+| `<vm>-raw.log` | Raw tool output of the timed loops (both loops, one process per script), for debugging |
 | `<vm>-eval.csv` | Eval-only timing, same schema as `<vm>.csv`: evaluation of a program decoded once outside the timed loop. Shown as a second column next to the D3 time |
 | `<vm>-compile.csv` | Only for VMs that compile before they run (Scalus JIT): `vm,script,compile_ns` |
 
@@ -92,6 +92,10 @@ restricting budget).
 - Built once, outside the loops (the ledger also caches its evaluation context): cost model, machine
   parameters, and a machine object if the VM's API allows reuse. Fresh in every iteration: decode
   (D3 loop only), the budget counter, and the evaluation state.
+- One process per script (spec D14) runs the requested timed loops of that script: the D3 loop
+  first, then the eval-only loop. Each loop has its own warm-up and measurement. The harness prints
+  `PVB_LOOP <loop> <script>` when a loop starts, so `parsers/fill_failures.py --loop` charges an
+  error in the log to the right loop.
 - Warm-up: JMH VMs use one 20 s warm-up iteration (`-wi 1 -w 20s`); the staged Scalus JIT needs
   about 20 s. Then three 5 s measurement iterations (`-i 3 -r 5s`). Other frameworks keep their own
   warm-up rules.

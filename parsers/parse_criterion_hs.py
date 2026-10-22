@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Parse Haskell Criterion CSV benchmark output into unified CSV.
 
-Usage: parse_criterion_hs.py <criterion-csv> [criterion-json ...]
+Usage: parse_criterion_hs.py [--group <group>] <criterion-csv> [criterion-json ...]
 
 Criterion's --csv flag produces:
   Name,Mean,MeanLB,MeanUB,Stddev,StddevLB,StddevUB
@@ -14,6 +14,10 @@ iterations is the number of Criterion samples (as for Criterion.rs in parse_crit
 and the text log do not have it: only Criterion's --json report has it (reportMeasured, one entry
 per sample). scripts/run-haskell.sh runs one process per script, so it passes one JSON report per
 script. A script without a JSON report gets iterations 0 (unknown).
+
+--group: keep only the benchmarks named "<group>/<script>". pvb-bench runs the D3 loop as group
+"d3" and the eval-only loop as group "eval" in the same process, so one CSV and one JSON report
+hold both loops; the run script parses them once per group.
 """
 
 import csv
@@ -32,18 +36,18 @@ def script_name(name: str) -> str:
 
 
 def sample_counts(json_paths: list[str]) -> dict[str, int]:
-    """Samples per script from Criterion's --json reports: ["criterion", <version>, [report]]."""
+    """Samples per benchmark name from Criterion's --json reports: ["criterion", <version>, [report]]."""
     counts: dict[str, int] = {}
     for path in json_paths:
         if not os.path.isfile(path):  # an unmatched glob, or a process that wrote no report
             continue
         with open(path) as f:
             reports = json.load(f)[2]
-        counts.update({script_name(r["reportName"]): len(r["reportMeasured"]) for r in reports})
+        counts.update({r["reportName"]: len(r["reportMeasured"]) for r in reports})
     return counts
 
 
-def parse(csv_path: str, json_paths: list[str]) -> None:
+def parse(csv_path: str, json_paths: list[str], group: str | None = None) -> None:
     samples = sample_counts(json_paths)
     # Use OrderedDict to deduplicate — last occurrence wins (handles aborted reruns)
     results: OrderedDict[str, str] = OrderedDict()
@@ -55,11 +59,13 @@ def parse(csv_path: str, json_paths: list[str]) -> None:
             # Skip the header rows of later processes (Criterion appends to the CSV)
             if name == "Name":
                 continue
+            if group is not None and not name.startswith(group + "/"):
+                continue
             script = script_name(name)
 
             mean_ns = int(float(row["Mean"]) * 1e9)
             stddev_ns = int(float(row["Stddev"]) * 1e9)
-            iterations = samples.get(script, 0)
+            iterations = samples.get(name, 0)
 
             results[script] = f"{VM_NAME},{script},{mean_ns},,,,{stddev_ns},{iterations}"
 
@@ -69,7 +75,13 @@ def parse(csv_path: str, json_paths: list[str]) -> None:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print(f"Usage: {sys.argv[0]} <criterion-csv-file> [criterion-json-file ...]", file=sys.stderr)
+    args = sys.argv[1:]
+    group = None
+    if args[:1] == ["--group"]:
+        group = args[1] if len(args) > 1 else ""
+        args = args[2:]
+    if len(args) < 1 or group == "":
+        print(f"Usage: {sys.argv[0]} [--group <group>] <criterion-csv-file> [criterion-json-file ...]",
+              file=sys.stderr)
         sys.exit(1)
-    parse(sys.argv[1], sys.argv[2:])
+    parse(args[0], args[1:], group)

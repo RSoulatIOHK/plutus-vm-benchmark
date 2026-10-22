@@ -17,7 +17,8 @@ RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
 loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 BENCH_DIR="/bench/blaze-plutus"
-vitest() { bun --bun run vitest "$@"; }
+VITEST=(bun --bun run vitest)
+vitest() { "${VITEST[@]}" "$@"; }
 
 echo "blaze-jsc (TypeScript / Bun / JavaScriptCore)"
 
@@ -43,24 +44,36 @@ run_check() {
     echo "Wrote $RUN_DIR/$VM-check.csv"
 }
 
-# One timed loop: $1 = d3 or eval, $2 = output name. A new vitest process per script (spec D14), so
-# no JIT profile or GC state carries over from another script. The "Benchmarking <name>" line ties
-# a crash in the log to its script (fill_failures.py); a script without a PVB_RESULT line gets -1.
-run_loop() {
-    local raw="$RUN_DIR/$2-raw.log" f name
-    : > "$raw"
-    for f in $(cd "$DATA_DIR" && ls -- *.flat | LC_ALL=C sort); do
-        name="${f%.flat}"
-        echo "Benchmarking $name" | tee -a "$raw"
-        PVB_LOOP="$1" PVB_SCRIPT="$name" vitest run pvb-time 2>&1 | tee -a "$raw" || true
-    done
-    python3 /bench/parsers/parse_vitest.py "$VM" "$raw" > "$RUN_DIR/$2.csv" || true
-    python3 /bench/parsers/fill_failures.py "$RUN_DIR/$2.csv" "$DATA_DIR" "$VM" "$raw"
+# The timed loops. A new vitest process per script (spec D14), so no JIT profile or GC state
+# carries over from another script. The process runs the requested loops of its script, d3 first,
+# then eval, each with its own warm-up and rounds (pvb-time.test.ts). The "--- <name>: process"
+# line ties a crash in the log to its script (fill_failures.py); a script without a PVB_RESULT line
+# for a loop gets -1 in that loop's file.
+RAW="$RUN_DIR/$VM-raw.log"
+LOOPS=()
+if loop d3; then LOOPS+=(d3); fi
+if loop eval; then LOOPS+=(eval); fi
+
+# parse_loop <loop> <csv>
+parse_loop() {
+    python3 /bench/parsers/parse_vitest.py "$VM" "$RAW" "$1" > "$2" || true
+    python3 /bench/parsers/fill_failures.py "$2" "$DATA_DIR" "$VM" "$RAW" --loop "$1"
 }
 
-# D3: flat decode + eval per operation.
-if loop d3; then run_loop d3 "$VM"; fi
-# Eval only: the program decoded once, fresh machine and budget per operation.
-if loop eval; then run_loop eval "$VM-eval"; fi
+if [[ ${#LOOPS[@]} -gt 0 ]]; then
+    : > "$RAW"
+    for f in $(cd "$DATA_DIR" && ls -- *.flat | LC_ALL=C sort); do
+        name="${f%.flat}"
+        # $BASHPID is the pid of the subshell, which exec turns into the launcher process.
+        ( echo "--- $name: process $BASHPID"
+          export PVB_LOOPS="$(IFS=,; echo "${LOOPS[*]}")" PVB_SCRIPT="$name"
+          exec "${VITEST[@]}" run pvb-time ) 2>&1 \
+            | tee -a "$RAW" || true
+    done
+    # D3: flat decode + eval per operation. Eval only: the program decoded once, fresh machine and
+    # budget per operation.
+    if loop d3; then parse_loop d3 "$RUN_DIR/$VM.csv"; fi
+    if loop eval; then parse_loop eval "$RUN_DIR/$VM-eval.csv"; fi
+fi
 
 if loop check; then run_check || echo "WARNING: $VM check failed" >&2; fi

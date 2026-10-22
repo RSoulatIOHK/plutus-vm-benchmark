@@ -12,6 +12,10 @@
 //	TestPvbCheck           one evaluation per script, writes $PVB_CHECK_OUT
 //	                       (vm,script,status,cpu,mem)
 //
+// scripts/run-plutigo.sh runs both benchmarks in one process per script; Go runs them in source
+// order, BenchmarkPvbFlatFiles first. Each prints "PVB_LOOP <d3|eval> <name>" before its timing of
+// a script starts (parsers/fill_failures.py --loop).
+//
 // Environment: PVB_DATA_DIR (the .flat files), PVB_COSTMODEL (the mainnet array, one integer per
 // line), PVB_CHECK_OUT.
 package tests
@@ -131,6 +135,7 @@ func BenchmarkPvbFlatFiles(b *testing.B) {
 			continue
 		}
 		content := s.content
+		fmt.Printf("PVB_LOOP d3 %s\n", s.name)
 		b.Run(s.name, func(b *testing.B) {
 			// One machine per script; Run restores the initial budget on every call.
 			machine := pvbMachine(ctx)
@@ -164,6 +169,7 @@ func BenchmarkPvbFlatFiles(b *testing.B) {
 func BenchmarkPvbEval(b *testing.B) {
 	ctx := pvbEvalContext(b)
 	for _, s := range pvbScripts(b) {
+		fmt.Printf("PVB_LOOP eval %s\n", s.name)
 		cpu, mem, err := pvbEvalOnce(ctx, s.content)
 		if err != nil {
 			fmt.Printf("EVAL_FAIL: %s\n  %.200s\n", s.name, err.Error())

@@ -14,14 +14,20 @@
 //
 // Modes:
 //   PVB_CHECK_OUT=<csv>  one evaluation per script, write vm,script,status,cpu,mem; no timing
-//   otherwise            Criterion timing, flat decode + eval per iteration. A script that fails
-//                        its first evaluation prints "EVAL_FAIL: <name>" and is not timed.
-//   PVB_EVAL_ONLY=1      Criterion timing of evaluation only (uplc-turbo-eval.csv): the program is
-//                        decoded once into its own arena before timing; each iteration evaluates
-//                        it into a second arena, which is reset after every iteration. The machine
-//                        and its budget are new on every call (Program::eval_version_budget).
-// Warm-up, measurement time and the script filter come from the command line
-// (scripts/run-uplc-turbo.sh, which runs one process per script).
+//   otherwise            Criterion timing of the loops in PVB_LOOPS (comma list, default d3). For
+//                        each script they run in this order:
+//                        d3    flat decode + eval per iteration (uplc-turbo.csv); benchmark
+//                              <name>, Criterion dir target/criterion/<name>/
+//                        eval  evaluation only (uplc-turbo-eval.csv): the program is decoded once
+//                              into its own arena before timing; each iteration evaluates it into
+//                              a second arena, which is reset after every iteration. The machine
+//                              and its budget are new on every call (Program::eval_version_budget).
+//                              Benchmark eval/<name>, Criterion dir target/criterion/eval/<name>/
+//                        A loop prints "PVB_LOOP <loop> <name>" before it starts
+//                        (parsers/fill_failures.py --loop). A script that fails its first
+//                        evaluation prints "EVAL_FAIL: <name>" and is not timed.
+// Warm-up and measurement time come from the command line (scripts/run-uplc-turbo.sh, which runs
+// one process per script).
 // PVB_COSTMODEL=<file>: the mainnet PlutusV3 array, one integer per line (run-uplc-turbo.sh).
 // PVB_DATA_DIR=<dir>: read the .flat files from <dir> instead of DATA_DIR (run-uplc-turbo.sh
 // passes the selected scripts, $BENCH_DATA_DIR).
@@ -119,7 +125,7 @@ fn check(out: &str) {
         .unwrap_or_else(|e| panic!("cannot write {out}: {e}"));
 }
 
-fn bench(c: &mut Criterion) {
+fn bench(c: &mut Criterion, loops: &[&str]) {
     let mut arena = Arena::from_bump(Bump::with_capacity(1_048_576));
     for (name, bytes) in scripts() {
         // A panic inside b.iter would abort the whole run: evaluate once first, skip on failure.
@@ -131,44 +137,39 @@ fn bench(c: &mut Criterion) {
             println!("  {msg}");
             continue;
         }
-        c.bench_function(&name, |b| {
-            b.iter(|| {
-                let program =
-                    flat::decode::<DeBruijn>(&arena, &bytes, PlutusVersion::V3, PROTOCOL_MAJOR)
-                        .expect("decode");
-                let result =
-                    program.eval_version_budget(&arena, PlutusVersion::V3, ExBudget::max());
-                std::hint::black_box(result.term.is_ok());
-                arena.reset();
-            })
-        });
-    }
-}
-
-fn bench_eval_only(c: &mut Criterion) {
-    let mut arena = Arena::from_bump(Bump::with_capacity(1_048_576));
-    for (name, bytes) in scripts() {
-        let first = eval_once(&arena, &bytes);
-        arena.reset();
-        if let Err((msg, _, _)) = first {
-            let msg: String = msg.chars().take(200).collect();
-            println!("EVAL_FAIL: {name}");
-            println!("  {msg}");
-            continue;
+        if loops.contains(&"d3") {
+            println!("PVB_LOOP d3 {name}");
+            c.bench_function(&name, |b| {
+                b.iter(|| {
+                    let program =
+                        flat::decode::<DeBruijn>(&arena, &bytes, PlutusVersion::V3, PROTOCOL_MAJOR)
+                            .expect("decode");
+                    let result =
+                        program.eval_version_budget(&arena, PlutusVersion::V3, ExBudget::max());
+                    std::hint::black_box(result.term.is_ok());
+                    arena.reset();
+                })
+            });
         }
-        // The decoded program lives in its own arena for the whole benchmark of this script.
-        let program_arena = Arena::from_bump(Bump::with_capacity(1_048_576));
-        let program =
-            flat::decode::<DeBruijn>(&program_arena, &bytes, PlutusVersion::V3, PROTOCOL_MAJOR)
-                .expect("decode");
-        c.bench_function(&name, |b| {
-            b.iter(|| {
-                let result = program.eval_version_budget(&arena, PlutusVersion::V3, ExBudget::max());
-                std::hint::black_box(result.term.is_ok());
-                drop(result);
-                arena.reset();
-            })
-        });
+        if loops.contains(&"eval") {
+            println!("PVB_LOOP eval {name}");
+            // The decoded program lives in its own arena for the whole benchmark of this script.
+            let program_arena = Arena::from_bump(Bump::with_capacity(1_048_576));
+            let program =
+                flat::decode::<DeBruijn>(&program_arena, &bytes, PlutusVersion::V3, PROTOCOL_MAJOR)
+                    .expect("decode");
+            let mut group = c.benchmark_group("eval");
+            group.bench_function(&name, |b| {
+                b.iter(|| {
+                    let result =
+                        program.eval_version_budget(&arena, PlutusVersion::V3, ExBudget::max());
+                    std::hint::black_box(result.term.is_ok());
+                    drop(result);
+                    arena.reset();
+                })
+            });
+            group.finish();
+        }
     }
 }
 
@@ -177,11 +178,9 @@ fn main() {
         check(&out);
         return;
     }
+    let loops = std::env::var("PVB_LOOPS").unwrap_or_else(|_| "d3".to_string());
+    let loops: Vec<&str> = loops.split(',').map(str::trim).collect();
     let mut c = Criterion::default().configure_from_args();
-    if std::env::var("PVB_EVAL_ONLY").is_ok_and(|v| v == "1") {
-        bench_eval_only(&mut c);
-    } else {
-        bench(&mut c);
-    }
+    bench(&mut c, &loops);
     c.final_summary();
 }

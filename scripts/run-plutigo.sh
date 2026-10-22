@@ -51,15 +51,24 @@ run_check() {
     echo "Wrote $RUN_DIR/plutigo-check.csv"
 }
 
-# One testing.B loop: run_bench <benchmark> <output name>. A failed script gets a -1 row.
-#
-# One process per script (spec D14), so no heap or GC state carries from one script to the next.
-# The process gets a data dir with only its script, because the benchmark evaluates every file of
-# its data dir once before timing; the sub-benchmark filter (^<name>$) selects it too.
-run_bench() {
-    local raw="$RUN_DIR/$2-raw.log"
-    : > "$raw"
-    local work flat name
+# The timed loops. One process per script (spec D14), so no heap or GC state carries from one
+# script to the next. The process runs the benchmarks of the requested loops for its script, in
+# source order: BenchmarkPvbFlatFiles (d3) first, then BenchmarkPvbEval (eval). It gets a data dir
+# with only its script, because the benchmarks evaluate every file of their data dir once before
+# timing; the sub-benchmark filter (^<name>$) selects it too. A failed script gets a -1 row.
+RAW="$RUN_DIR/plutigo-raw.log"
+BENCHES=()
+if loop d3; then BENCHES+=(BenchmarkPvbFlatFiles); fi
+if loop eval; then BENCHES+=(BenchmarkPvbEval); fi
+
+# parse_loop <loop> <benchmark> <csv>
+parse_loop() {
+    python3 /bench/parsers/parse_go_bench.py "$RAW" "$2" > "$3" || true
+    python3 /bench/parsers/fill_failures.py "$3" "$DATA_DIR" plutigo "$RAW" --loop "$1"
+}
+
+if [[ ${#BENCHES[@]} -gt 0 ]]; then
+    : > "$RAW"
     work=$(mktemp -d /tmp/plutigo-one.XXXXXX)
     for flat in "$DATA_DIR"/*.flat; do
         name=$(basename "$flat" .flat)
@@ -68,20 +77,17 @@ run_bench() {
         # $BASHPID is the pid of the subshell, which exec turns into the benchmark process.
         ( echo "--- $name: process $BASHPID"
           exec env PVB_DATA_DIR="$work/$name" ./plutigo-bench \
-              -test.bench="^$1\$/^$name\$" \
+              -test.bench="^($(IFS='|'; echo "${BENCHES[*]}"))\$/^$name\$" \
               -test.benchmem \
               -test.run='^$' \
               -test.count=1 \
-              -test.benchtime="$BENCHTIME" ) 2>&1 | tee -a "$raw" || true
+              -test.benchtime="$BENCHTIME" ) 2>&1 | tee -a "$RAW" || true
     done
     rm -rf "$work"
-    python3 /bench/parsers/parse_go_bench.py "$raw" > "$RUN_DIR/$2.csv" || true
-    python3 /bench/parsers/fill_failures.py "$RUN_DIR/$2.csv" "$DATA_DIR" plutigo "$raw"
-}
-
-# D3: flat decode + eval per iteration.
-if loop d3; then run_bench BenchmarkPvbFlatFiles plutigo; fi
-# Eval only: same testing.B settings, the program is decoded before timing.
-if loop eval; then run_bench BenchmarkPvbEval plutigo-eval; fi
+    # D3: flat decode + eval per iteration. Eval only: same testing.B settings, the program is
+    # decoded before timing.
+    if loop d3; then parse_loop d3 BenchmarkPvbFlatFiles "$RUN_DIR/plutigo.csv"; fi
+    if loop eval; then parse_loop eval BenchmarkPvbEval "$RUN_DIR/plutigo-eval.csv"; fi
+fi
 
 if loop check; then run_check || echo "WARNING: plutigo check failed" >&2; fi

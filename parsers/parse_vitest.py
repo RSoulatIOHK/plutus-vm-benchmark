@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Parse the PVB_RESULT lines of the JS timing harnesses into the timing CSV schema.
 
-Usage: parse_vitest.py <vm-name> <raw-log>
+Usage: parse_vitest.py <vm-name> <raw-log> [loop]
 
 The harnesses (images/blaze/pvb-time.test.ts, images/scalus-js/time.test.mjs) run under vitest,
 one script per process, with the JMH shape of the JVM rows: one warm-up round, then measured
@@ -14,6 +14,9 @@ The columns are computed as parsers/parse_jmh.py does over JMH iteration scores:
 mean of the round scores; median_ns, min_ns, max_ns and stddev_ns are over the round scores;
 iterations is the number of rounds. With one round (BENCH_TIMING=quick) stddev_ns is empty: one
 value has no standard deviation.
+
+With a loop (d3 or eval), only the PVB_RESULT lines of that loop: the blaze harness runs both loops
+in one process per script and prints one PVB_RESULT per loop. A line without a loop field is d3.
 """
 
 import json
@@ -29,12 +32,14 @@ ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
 RESULT_RE = re.compile(r"PVB_RESULT (\{.*\})\s*$", re.MULTILINE)
 
 
-def parse(vm: str, log_path: str) -> None:
+def parse(vm: str, log_path: str, loop: str | None = None) -> None:
     print(HEADER)
     with open(log_path, errors="replace") as f:
         content = ANSI_RE.sub("", f.read())
     for m in RESULT_RE.finditer(content):
         result = json.loads(m.group(1))
+        if loop is not None and result.get("loop", "d3") != loop:
+            continue
         scores = [r["ns"] / r["ops"] for r in result["rounds"] if r["ops"] > 0]
         if not scores:
             continue
@@ -48,7 +53,7 @@ def parse(vm: str, log_path: str) -> None:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print(f"Usage: {sys.argv[0]} <vm-name> <raw-log>", file=sys.stderr)
+    if len(sys.argv) not in (3, 4):
+        print(f"Usage: {sys.argv[0]} <vm-name> <raw-log> [loop]", file=sys.stderr)
         sys.exit(1)
-    parse(sys.argv[1], sys.argv[2])
+    parse(sys.argv[1], sys.argv[2], sys.argv[3] if len(sys.argv) == 4 else None)

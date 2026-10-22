@@ -1,18 +1,26 @@
-//! Criterion timing of every script.
+//! Criterion timing of every script, both loops in one process.
 //!
-//! Default: flat decode + eval per iteration (spec D3, `aiken.csv`).
-//! `PVB_EVAL_ONLY=1`: eval only (`aiken-eval.csv`). The program is decoded once
-//! before timing; each iteration evaluates a clone of it on a new machine with
-//! a new budget. The clone is made in Criterion's untimed setup (`iter_batched`).
+//! `PVB_LOOPS` (comma list, default `d3`) selects the loops. For each script
+//! they run in this order:
+//!
+//! - `d3`: flat decode + eval per iteration (spec D3, `aiken.csv`). One
+//!   top-level benchmark named after the script, so Criterion writes
+//!   `<CRITERION_HOME>/<script>/new/estimates.json`.
+//! - `eval`: eval only (`aiken-eval.csv`). The program is decoded once before
+//!   timing; each iteration evaluates a clone of it on a new machine with a new
+//!   budget. The clone is made in Criterion's untimed setup (`iter_batched`).
+//!   Benchmark `eval/<script>`, so Criterion writes
+//!   `<CRITERION_HOME>/eval/<script>/new/estimates.json`.
+//!
 //! In both loops the result is dropped inside the timed routine, as in the
-//! uplc-turbo harness.
+//! uplc-turbo harness. `parsers/parse_criterion.py` reads `<CRITERION_HOME>`
+//! for d3 (it skips the `eval` dir, which has no estimates of its own) and
+//! `<CRITERION_HOME>/eval` for eval.
 //!
-//! Warm-up, measurement time and the script filter come from the command line
+//! Warm-up and measurement time come from the command line
 //! (scripts/run-aiken.sh); scripts/run-aiken.sh runs one process per script.
-//!
-//! Each script is one top-level benchmark named after the script, so Criterion
-//! writes `<CRITERION_HOME>/<script>/new/estimates.json` (what
-//! `parsers/parse_criterion.py` reads). A script that fails its first
+//! A loop prints `PVB_LOOP <loop> <script>` before it starts
+//! (`parsers/fill_failures.py --loop`). A script that fails its first
 //! evaluation is printed as `EVAL_FAIL: <script>` and not timed.
 
 use aiken_bench::{data_dir, decode, decode_and_eval, eval, scripts, silence_panics};
@@ -21,7 +29,8 @@ use std::hint::black_box;
 
 fn main() {
     silence_panics();
-    let eval_only = std::env::var("PVB_EVAL_ONLY").is_ok_and(|v| v == "1");
+    let loops = std::env::var("PVB_LOOPS").unwrap_or_else(|_| "d3".to_string());
+    let loops: Vec<&str> = loops.split(',').map(str::trim).collect();
     let mut c = Criterion::default().configure_from_args();
 
     for (name, bytes) in scripts(&data_dir()) {
@@ -36,20 +45,25 @@ fn main() {
                 continue;
             }
         }
-        if eval_only {
+        if loops.contains(&"d3") {
+            println!("PVB_LOOP d3 {name}");
+            c.bench_function(&name, |b| {
+                b.iter(|| drop(black_box(decode_and_eval(black_box(&bytes)))))
+            });
+        }
+        if loops.contains(&"eval") {
+            println!("PVB_LOOP eval {name}");
             // The first evaluation succeeded, so decoding does too.
             let program = decode(&bytes).expect("decode");
-            c.bench_function(&name, |b| {
+            let mut group = c.benchmark_group("eval");
+            group.bench_function(&name, |b| {
                 b.iter_batched(
                     || program.clone(),
                     |p| drop(black_box(eval(black_box(p)))),
                     BatchSize::SmallInput,
                 )
             });
-        } else {
-            c.bench_function(&name, |b| {
-                b.iter(|| drop(black_box(decode_and_eval(black_box(&bytes)))))
-            });
+            group.finish();
         }
     }
 

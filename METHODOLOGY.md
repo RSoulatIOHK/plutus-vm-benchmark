@@ -31,7 +31,8 @@ From [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md):
 
 A second loop (`<vm>-eval.csv`) evaluates a program that was decoded once before timing. The page
 shows it next to the D3 time. Decoding is a large share of the D3 time for some VMs, so this
-column shows the speed of the evaluator alone. The ranking uses the D3 time.
+column shows the speed of the evaluator alone. The ranking uses the D3 time. The eval-only loop runs in the
+same process as the D3 loop of the script, after it (see [Fairness rules](#fairness-rules), D14).
 
 ### Compiled VMs
 
@@ -127,7 +128,7 @@ and the runner is `scripts/run-<vm>.sh`.
 | VM | Framework | Warm-up and measurement (normal timing) |
 |---|---|---|
 | haskell | Criterion | Criterion's warm-up; about 5 s per script, Criterion's default (`timeLimit = 5`) |
-| scalus-cek, scalus-jit | JMH | One 20 s warm-up iteration, three 5 s measurement iterations, 1 fork (`-wi 1 -w 20s -i 3 -r 5s -f 1`) |
+| scalus-cek, scalus-jit | JMH | One 20 s warm-up iteration, three 5 s measurement iterations (`-wi 1 -w 20s -i 3 -r 5s`). scalus-jit: 1 fork per script (`-f 1`). scalus-cek: one JVM per script runs both loops (`-f 0`, see below) |
 | aiken | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 10 s measurement |
 | plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
@@ -138,6 +139,12 @@ and the runner is `scripts/run-<vm>.sh`.
 The JIT runtimes (JVM, V8, JSC) all get 20 s of warm-up, because the staged Scalus JIT needs about
 20 s to warm up. See [Fairness rules](#fairness-rules). `BENCH_TIMING=quick` shortens every
 warm-up and measurement, for smoke tests only.
+
+JMH forks one JVM per benchmark method and script, and it cannot run two methods in one fork. So
+scalus-cek runs JMH without a fork (`-f 0`) in one JVM per script, with both methods. That JVM has
+the flags that JMH gives a fork: the JVM flags of the row, compiler blackholes and JMH's compiler
+hints ([`scripts/run-scalus-cek.sh`](scripts/run-scalus-cek.sh)). The log shows
+`# Blackhole mode: compiler`, as in a fork.
 
 ## Fairness Rules
 
@@ -155,7 +162,10 @@ Decisions D13 to D17 of the
   measurements. The ahead-of-time compiled VMs (Rust, Go, GHC) keep the defaults of their
   framework, with at least 5 s of measurement.
 - **Process model (D14)**: every VM runs each script in a fresh process. No JIT profile, heap or
-  allocator state carries over from one script to the next.
+  allocator state carries over from one script to the next. The process runs both timed loops of
+  its script: the D3 loop first, then the eval-only loop. Each loop has its own warm-up and
+  measurement with the rules above. So the D3 time is measured as in a process of its own, and
+  the eval-only time comes from a process that has already run the D3 loop.
 - **Compiled VMs (D15)**: the Scalus JIT row has a "decode and compile excluded" badge. Its timed
   loop runs the compiled script; the decode and the compile happen once per script, before timing.
 - **Runtime settings (D16)**: each VM runs with the settings that its project documents for

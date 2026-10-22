@@ -11,22 +11,25 @@ the one of check/reference/gate-ref, so the check gives the reference numbers.
   One evaluation per script. Writes @vm,script,status,cpu,mem@ on stdout.
 
 @pvb-bench bench COSTMODEL_JSON FLAT_DIR [criterion options]@
-  One Criterion benchmark per script. Each iteration decodes the flat bytes and evaluates the
-  program; reading the file is outside the timed loop. Each benchmark runs for about 5 s, Criterion's
-  default time limit (change it with -L). A script whose evaluation fails is not timed.
+  Two Criterion groups in one process, run in this order:
 
-@pvb-bench bench-eval COSTMODEL_JSON FLAT_DIR [criterion options]@
-  Eval only, with the same Criterion settings: the program is decoded (and fully forced) once
-  before timing, each iteration evaluates it. The evaluation context (machine parameters) is built
-  once, as for @bench@; 'Common.evaluateTerm' starts a new CEK machine with a new budget counter on
-  every call.
+  * @d3/<script>@ (spec D3): each iteration decodes the flat bytes and evaluates the program;
+    reading the file is outside the timed loop.
+  * @eval/<script>@: eval only, with the same Criterion settings. The program is decoded (and fully
+    forced) once before timing, each iteration evaluates it.
+
+  The evaluation context (machine parameters) is built once; 'Common.evaluateTerm' starts a new CEK
+  machine with a new budget counter on every call. Each benchmark runs for about 5 s, Criterion's
+  default time limit (change it with -L). Criterion's name filter selects the loops, for example
+  @--match glob d3/auction_1-1 eval/auction_1-1@. A loop prints @PVB_LOOP <loop> <script>@ before
+  it starts (parsers/fill_failures.py --loop). A script whose evaluation fails is not timed.
 -}
 module Main (main) where
 
 import Control.Monad (forM_, unless)
 import Control.Monad.Except (runExcept)
 import Control.Monad.Writer.Strict (runWriterT)
-import Criterion.Main (Benchmark, bench, defaultConfig, defaultMainWith, env, whnf)
+import Criterion.Main (Benchmark, bench, bgroup, defaultConfig, defaultMainWith, env, whnf)
 import Criterion.Types (Config (..))
 import Data.Aeson qualified as Aeson
 import Data.Aeson.Key qualified as Key
@@ -38,7 +41,7 @@ import Data.List (isSuffixOf, sort)
 import System.Directory (listDirectory)
 import System.Environment (getArgs, withArgs)
 import System.FilePath (dropExtension, (</>))
-import System.IO (hPutStrLn, stderr)
+import System.IO (hFlush, hPutStrLn, stderr, stdout)
 
 import PlutusCore.Evaluation.Machine.ExBudget (ExBudget (..))
 import PlutusCore.Evaluation.Machine.ExMemory (ExCPU (..), ExMemory (..))
@@ -107,7 +110,7 @@ decodeAndEvaluate ctx file bytes =
     Cek.CekReport res (Cek.CountingSt budget) _ ->
       budget `seq` isRight (Cek.cekResultToEither res)
 
-{-| The timed function of @bench-eval@: evaluate a decoded term. Forced like
+{-| The timed function of the eval group: evaluate a decoded term. Forced like
 'decodeAndEvaluate'. -}
 evaluateDecoded :: Common.EvaluationContext -> Term -> Bool
 evaluateDecoded ctx term =
@@ -132,11 +135,8 @@ check costModelPath dir = do
     files
   hPutStrLn stderr (show (length files) ++ " scripts checked")
 
--- | Which loop: flat decode + evaluation (spec D3), or evaluation of a program decoded once.
-data Loop = DecodeAndEval | EvalOnly
-
-benchmarks :: Loop -> FilePath -> FilePath -> [String] -> IO ()
-benchmarks loop costModelPath dir criterionArgs = do
+benchmarks :: FilePath -> FilePath -> [String] -> IO ()
+benchmarks costModelPath dir criterionArgs = do
   ctx <- mainnetContext costModelPath
   files <- flatFiles dir
   -- Evaluate once; a script that fails is not timed (the run script fills in a -1 row).
@@ -144,25 +144,29 @@ benchmarks loop costModelPath dir criterionArgs = do
     ok <- decodeAndEvaluate ctx file <$> BS.readFile (dir </> file)
     unless ok $ hPutStrLn stderr ("error: " ++ dropExtension file ++ ": evaluation failed, not timed")
     pure [file | ok]) $ files
-  let mkBench :: FilePath -> Benchmark
-      mkBench file = case loop of
-        DecodeAndEval ->
-          env (BS.readFile (dir </> file)) $ \ ~bytes ->
-            bench (dropExtension file) (whnf (decodeAndEvaluate ctx file) bytes)
-        -- env forces the decoded term to normal form, so no decoding is left for the loop.
-        EvalOnly ->
-          env (decode file <$> BS.readFile (dir </> file)) $ \ ~term ->
-            bench (dropExtension file) (whnf (evaluateDecoded ctx) term)
+  let -- Printed by the env action, so only for a selected benchmark, before its timing starts.
+      marker :: String -> FilePath -> IO ()
+      marker loop file = putStrLn ("PVB_LOOP " ++ loop ++ " " ++ dropExtension file) >> hFlush stdout
+      -- Flat decode + evaluation per iteration (spec D3).
+      d3 :: FilePath -> Benchmark
+      d3 file =
+        env (marker "d3" file >> BS.readFile (dir </> file)) $ \ ~bytes ->
+          bench (dropExtension file) (whnf (decodeAndEvaluate ctx file) bytes)
+      -- Eval only. env forces the decoded term to normal form, so no decoding is left for the loop.
+      evalOnly :: FilePath -> Benchmark
+      evalOnly file =
+        env (marker "eval" file >> (decode file <$> BS.readFile (dir </> file))) $ \ ~term ->
+          bench (dropExtension file) (whnf (evaluateDecoded ctx) term)
       -- Criterion's default time limit, 5 s (spec D13: the framework default, at least 5 s).
       -- plutus-benchmark:validation uses 20 s; the extra 15 s add only about 25 % more samples.
       cfg = defaultConfig {timeLimit = 5}
-  withArgs criterionArgs (defaultMainWith cfg (map mkBench timed))
+  withArgs criterionArgs $
+    defaultMainWith cfg [bgroup "d3" (map d3 timed), bgroup "eval" (map evalOnly timed)]
 
 main :: IO ()
 main = do
   args <- getArgs
   case args of
     ["check", c, d] -> check c d
-    "bench" : c : d : rest -> benchmarks DecodeAndEval c d rest
-    "bench-eval" : c : d : rest -> benchmarks EvalOnly c d rest
-    _ -> fail "usage: pvb-bench check COSTMODEL_JSON FLAT_DIR | pvb-bench bench|bench-eval COSTMODEL_JSON FLAT_DIR [criterion options]"
+    "bench" : c : d : rest -> benchmarks c d rest
+    _ -> fail "usage: pvb-bench check COSTMODEL_JSON FLAT_DIR | pvb-bench bench COSTMODEL_JSON FLAT_DIR [criterion options]"
