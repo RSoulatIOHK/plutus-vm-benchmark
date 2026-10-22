@@ -80,10 +80,11 @@ jobs:
           EVENT: ${{ github.event_name }}
           VMS: ${{ inputs.vms }}
         run: |
-          # Skip a scheduled run when only results/ and the published page changed since the
-          # last results commit.
+          # Skip a scheduled run when only results/ and the published page (and its sitemap and
+          # link-preview image) changed since the last results commit.
           last=$(git log -1 --format=%H -- results/ || true)
-          changed=$(git log --format=%h "${last:+$last..}HEAD" -- . ':!results' ':!docs/index.html' | head -1)
+          changed=$(git log --format=%h "${last:+$last..}HEAD" -- . ':!results' ':!docs/index.html' \
+            ':!docs/sitemap.xml' ':!docs/og.png' | head -1)
           if [[ "$EVENT" == schedule && "$FORCE" != true && -z "$changed" ]]; then
             echo "nothing changed since $last; skipping"
             echo "skip=true" >> "$GITHUB_OUTPUT"
@@ -271,9 +272,11 @@ jobs:
         run: |
           git config user.name "plutus-vm-bench"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          # The published page: the same report as results/$NAME/index.html, written to docs/.
+          # The published page: the same report as results/$NAME/index.html, written to docs/, with
+          # docs/robots.txt, docs/sitemap.xml and docs/og.png (the link preview, a screenshot by the
+          # runner's google-chrome; without Chrome the committed og.png stays).
           python3 report/generate_report.py --write-index "results/$NAME" > /dev/null
-          git add "results/$NAME" docs/index.html
+          git add "results/$NAME" docs/index.html docs/robots.txt docs/sitemap.xml docs/og.png
           git commit -m "results: $NAME"
           git pull --rebase origin main
           git push origin HEAD:main
