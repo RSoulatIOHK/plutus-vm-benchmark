@@ -660,7 +660,7 @@
   <div class="section">
     <div class="section-title">Method</div>
     <div class="note" style="margin:0 0 0.6rem" id="method-disclosure"></div>
-    <div class="note" style="margin:0 0 0.6rem">Two timings per script. The ranking uses <em>decode + eval</em>: each iteration flat-decodes the script and evaluates it, as a node does with a script it has not seen. <em>Eval only</em> evaluates a program decoded once before timing; decoding is a large share of the time for some VMs (about 66&nbsp;% for Haskell plutus-core), so the second column shows how fast the evaluator alone is.</div>
+    <div class="note" style="margin:0 0 0.6rem">Two timings per script, eval only first. The ranking uses <em>decode + eval</em>: each iteration flat-decodes the script and evaluates it, as a node does with a script it has not seen. <em>Eval only</em> evaluates a program decoded once before timing; decoding is a large share of the time for some VMs (about 66&nbsp;% for Haskell plutus-core), so the second column shows how fast the evaluator alone is.</div>
     <div class="note" style="margin:0 0 0.6rem">Correctness gate: each VM evaluates every script once more and reports the result and the ExUnits. They must equal Haskell plutus-core; a VM that differs is not ranked (&ldquo;failed check&rdquo;). A VM whose API cannot take the mainnet cost model is ranked with an &ldquo;outdated cost model&rdquo; badge if it equals Haskell with the model the VM ships. A VM that compiles a script before it runs it (&ldquo;decode and compile excluded&rdquo;) decodes and compiles each script once, before timing; its timed loop runs the compiled script, so neither step is in its time. Its compile time is shown separately. A VM whose library caches decoded programs (&ldquo;decode cached (by the library)&rdquo;) decodes a script only on the first call, in the warm-up; its timed loop runs the cache lookup and the evaluation, so its two columns have the same numbers.</div>
     <div class="note" id="drift-note" style="margin:0 0 0.6rem;display:none"></div>
     <div class="note" style="margin:0">Flat decode + evaluation on 89 Plutus scripts. Each VM uses its native benchmark framework. Each VM runs in its own Docker image, one VM at a time. Geometric means within each category use only the scripts where every VM in that category produced a successful result, so all VMs in a category are compared on the same scripts.</div>
@@ -935,15 +935,18 @@ tableVMs.forEach(vm => {
 function renderTable() {
   const vms=tableVMs.filter(vm=>activeVMs.has(vm));
   const compVMs=vms.filter(vm=>REPORT.compile[vm]);
-  // Each VM's decode + eval column, followed by its eval-only column if it has one.
-  document.getElementById('table-head').innerHTML='<tr><th>Script</th>'+vms.map(vm=>{const m=VM_META[vm];return`<th>${m.label}<span class="th-lang">${langLine(m)}${vm in EXPERIMENTAL?' \u00b7 experimental':''}</span></th>`+(EVAL[vm]?`<th class="eval-col">${m.label} eval only<span class="th-lang">decode excluded</span></th>`:'');}).join('')
+  // Each VM's eval-only column (if it has one) first, then its decode + eval column.
+  document.getElementById('table-head').innerHTML='<tr><th>Script</th>'+vms.map(vm=>{const m=VM_META[vm];return(EVAL[vm]?`<th class="eval-col">${m.label} eval only<span class="th-lang">decode excluded</span></th>`:'')+`<th>${m.label}<span class="th-lang">${langLine(m)} \u00b7 decode + eval${vm in EXPERIMENTAL?' \u00b7 experimental':''}</span></th>`;}).join('')
     +compVMs.map(vm=>`<th class="compile-col">${VM_META[vm].label} compile<span class="th-lang">not in the timing</span></th>`).join('')+'</tr>';
   document.getElementById('table-body').innerHTML=scripts.map(script=>{
     const times={}; let min=Infinity;
     // The fastest is taken over the ranked VMs only.
     vms.forEach(vm=>{const t=data[script]?.[vm]||0;times[vm]=t;if(t>0&&t<min&&!(vm in EXPERIMENTAL))min=t;});
-    const evalCell=vm=>{if(!EVAL[vm])return'';const e=EVAL[vm][script];return e>0?`<td class="eval-col">${fmtNs(e)}</td>`:'<td class="missing">\u2014</td>';};
-    return'<tr><td>'+script+'</td>'+vms.map(vm=>{const t=times[vm];if(t===undefined||t===0)return'<td class="missing">\u2014</td>'+evalCell(vm);if(t<0)return'<td class="failed">FAIL</td>'+evalCell(vm);return`<td${t===min&&!(vm in EXPERIMENTAL)&&vms.filter(v=>times[v]>0&&!(v in EXPERIMENTAL)).length>1?' class="fastest"':''}>${fmtNs(t)}</td>`+evalCell(vm);}).join('')
+    // The fastest eval-only time, also over the ranked VMs only.
+    const evalVMs=vms.filter(vm=>EVAL[vm]&&EVAL[vm][script]>0&&!(vm in EXPERIMENTAL));
+    const minEval=Math.min(...evalVMs.map(vm=>EVAL[vm][script]));
+    const evalCell=vm=>{if(!EVAL[vm])return'';const e=EVAL[vm][script];if(!(e>0))return'<td class="missing">\u2014</td>';const best=e===minEval&&!(vm in EXPERIMENTAL)&&evalVMs.length>1;return`<td class="eval-col${best?' fastest':''}">${fmtNs(e)}</td>`;};
+    return'<tr><td>'+script+'</td>'+vms.map(vm=>{const t=times[vm];if(t===undefined||t===0)return evalCell(vm)+'<td class="missing">\u2014</td>';if(t<0)return evalCell(vm)+'<td class="failed">FAIL</td>';return evalCell(vm)+`<td${t===min&&!(vm in EXPERIMENTAL)&&vms.filter(v=>times[v]>0&&!(v in EXPERIMENTAL)).length>1?' class="fastest"':''}>${fmtNs(t)}</td>`;}).join('')
       +compVMs.map(vm=>{const c=REPORT.compile[vm][script];return c?`<td class="compile-col">${fmtNs(c)}</td>`:'<td class="missing">\u2014</td>';}).join('')+'</tr>';
   }).join('');
 }
