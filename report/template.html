@@ -290,22 +290,24 @@
     .gm-axis .gm-name, .gm-axis .gm-time, .gm-axis .gm-ratio { display: none; }
   }
 
-  /* Table */
+  /* Table: two header rows (VM, then eval only / decode + eval), a sticky script column, a
+     divider between VMs. */
   .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
-  table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.72rem; }
   th {
     background: var(--surface);
-    position: sticky;
-    top: 0;
     font-weight: 600;
     text-align: right;
-    padding: 0.5rem 0.65rem;
-    border-bottom: 1px solid var(--border);
+    padding: 0.45rem 0.65rem 0.2rem;
     white-space: nowrap;
     color: var(--text);
   }
-  th:first-child { text-align: left; }
-  th .th-lang { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 0.58rem; color: var(--text-muted); margin-top: 0.15rem; }
+  th.vm-head { text-align: center; border-bottom: 1px solid var(--border); }
+  tr.sub-head th { font-family: var(--font-mono); font-weight: 500; font-size: 0.6rem; color: var(--text-secondary); padding: 0.3rem 0.65rem 0.4rem; border-bottom: 1px solid var(--border-accent); }
+  tr.sub-head th.eval-col { color: var(--text-muted); }
+  th.script-col { text-align: left; vertical-align: bottom; border-bottom: 1px solid var(--border-accent); }
+  th.compile-col { vertical-align: bottom; border-bottom: 1px solid var(--border-accent); }
+  th .th-lang { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 0.58rem; color: var(--text-muted); margin-top: 0.1rem; }
   td {
     padding: 0.35rem 0.65rem;
     border-bottom: 1px solid var(--border);
@@ -313,13 +315,20 @@
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
-    color: var(--text-secondary);
+    color: var(--text);
   }
-  td:first-child { text-align: left; font-family: var(--font-sans); font-weight: 500; color: var(--text); font-size: 0.74rem; }
+  tbody tr:last-child td { border-bottom: 0; }
+  .g { border-left: 1px solid var(--border-accent); }
+  .script-col { position: sticky; left: 0; z-index: 1; background: var(--surface); text-align: left; box-shadow: 1px 0 0 var(--border-accent); }
+  td.script-col { font-family: var(--font-sans); font-weight: 500; color: var(--text); font-size: 0.72rem; }
   tr:hover td { background: var(--surface-hover); }
+  td.eval-col { color: var(--text-secondary); }
   td.fastest { color: var(--green); font-weight: 600; }
-  td.missing { color: var(--text-muted); opacity: 0.4; }
-  td.failed { color: var(--red); font-weight: 500; font-size: 0.62rem; opacity: 0.75; }
+  td.missing { color: var(--text-muted); }
+  td.failed { color: var(--red); font-weight: 500; font-size: 0.62rem; }
+  .table-caption { font-size: 0.66rem; color: var(--text-secondary); margin: 0 0 0.6rem; }
+  .table-caption em { font-style: normal; color: var(--text); font-weight: 500; }
+  .table-caption .fastest-key { color: var(--green); font-weight: 600; font-family: var(--font-mono); }
 
   /* Toolchain */
   .toolchain {
@@ -523,13 +532,12 @@
   .vm-badge.timing { color: var(--text-secondary); border-color: rgba(91,155,213,0.55); }
   .card .exp-reason { color: var(--text-muted); font-size: 0.6rem; line-height: 1.35; margin-bottom: 0.35rem; font-style: italic; }
   .card .compile-time { font-family: var(--font-mono); color: var(--text-muted); font-size: 0.6rem; margin-bottom: 0.35rem; }
-  th.compile-col, td.compile-col { color: var(--purple-bright); }
+  td.compile-col { color: var(--purple-bright); }
   .card .vm-note { color: var(--text-muted); font-size: 0.6rem; line-height: 1.35; margin-bottom: 0.35rem; }
   .card .vm-note a { color: var(--purple-bright); text-decoration: none; }
   .card .eval-time { color: var(--text-secondary); font-size: 0.66rem; }
   .card .eval-time b { color: var(--text); font-weight: 600; }
   .card .eval-time span { color: var(--text-muted); }
-  th.eval-col, td.eval-col { color: var(--text-muted); }
 
   .failed-list { border: 1px solid rgba(224,85,85,0.35); border-radius: 6px; padding: 0.55rem 0.85rem; font-size: 0.68rem; }
   .failed-list .fl-row { display: flex; gap: 0.7rem; padding: 0.15rem 0; }
@@ -634,6 +642,7 @@
   <div class="section">
     <div class="section-title">Per-Script Results</div>
     <div class="filter-bar" id="filters"></div>
+    <p class="table-caption">Mean time per script. For each VM: <em>eval only</em> (decode excluded), then <em>decode + eval</em> (the ranking metric). <span class="fastest-key">Green</span>: the fastest ranked VM on the script, per column type; an experimental VM is never marked. The buttons hide and show VMs.</p>
     <div class="table-wrap">
       <table>
         <thead id="table-head"></thead>
@@ -986,8 +995,12 @@ function renderTable() {
   const vms=tableVMs.filter(vm=>activeVMs.has(vm));
   const compVMs=vms.filter(vm=>REPORT.compile[vm]);
   // Each VM's eval-only column (if it has one) first, then its decode + eval column.
-  document.getElementById('table-head').innerHTML='<tr><th>Script</th>'+vms.map(vm=>{const m=VM_META[vm];return(EVAL[vm]?`<th class="eval-col">${m.label} eval only<span class="th-lang">decode excluded</span></th>`:'')+`<th>${m.label}<span class="th-lang">${langLine(m)} \u00b7 decode + eval${vm in EXPERIMENTAL?' \u00b7 experimental':''}</span></th>`;}).join('')
-    +compVMs.map(vm=>`<th class="compile-col">${VM_META[vm].label} compile<span class="th-lang">not in the timing</span></th>`).join('')+'</tr>';
+  // Two header rows: the VM spans its eval-only and decode + eval columns.
+  const sub = vm => { const m = VM_META[vm]; return m.runtime + (vm in EXPERIMENTAL ? ' · experimental' : ''); };
+  document.getElementById('table-head').innerHTML = '<tr><th rowspan="2" class="script-col">Script</th>'
+    + vms.map(vm => `<th class="vm-head g"${EVAL[vm] ? ' colspan="2"' : ''}>${VM_META[vm].label}<span class="th-lang">${sub(vm)}</span></th>`).join('')
+    + compVMs.map(vm => `<th rowspan="2" class="compile-col g">${VM_META[vm].label} compile<span class="th-lang">not in the timing</span></th>`).join('') + '</tr>'
+    + '<tr class="sub-head">' + vms.map(vm => (EVAL[vm] ? '<th class="eval-col g">eval only</th><th>decode + eval</th>' : '<th class="g">decode + eval</th>')).join('') + '</tr>';
   document.getElementById('table-body').innerHTML=scripts.map(script=>{
     const times={}; let min=Infinity;
     // The fastest is taken over the ranked VMs only.
@@ -995,9 +1008,10 @@ function renderTable() {
     // The fastest eval-only time, also over the ranked VMs only.
     const evalVMs=vms.filter(vm=>EVAL[vm]&&EVAL[vm][script]>0&&!(vm in EXPERIMENTAL));
     const minEval=Math.min(...evalVMs.map(vm=>EVAL[vm][script]));
-    const evalCell=vm=>{if(!EVAL[vm])return'';const e=EVAL[vm][script];if(!(e>0))return'<td class="missing">\u2014</td>';const best=e===minEval&&!(vm in EXPERIMENTAL)&&evalVMs.length>1;return`<td class="eval-col${best?' fastest':''}">${fmtNs(e)}</td>`;};
-    return'<tr><td>'+script+'</td>'+vms.map(vm=>{const t=times[vm];if(t===undefined||t===0)return evalCell(vm)+'<td class="missing">\u2014</td>';if(t<0)return evalCell(vm)+'<td class="failed">FAIL</td>';return evalCell(vm)+`<td${t===min&&!(vm in EXPERIMENTAL)&&vms.filter(v=>times[v]>0&&!(v in EXPERIMENTAL)).length>1?' class="fastest"':''}>${fmtNs(t)}</td>`;}).join('')
-      +compVMs.map(vm=>{const c=REPORT.compile[vm][script];return c?`<td class="compile-col">${fmtNs(c)}</td>`:'<td class="missing">\u2014</td>';}).join('')+'</tr>';
+    const evalCell=vm=>{if(!EVAL[vm])return'';const e=EVAL[vm][script];if(!(e>0))return'<td class="missing g">\u2014</td>';const best=e===minEval&&!(vm in EXPERIMENTAL)&&evalVMs.length>1;return`<td class="eval-col g${best?' fastest':''}">${fmtNs(e)}</td>`;};
+    const g=vm=>EVAL[vm]?'':' g';
+    return'<tr><td class="script-col">'+script+'</td>'+vms.map(vm=>{const t=times[vm];if(t===undefined||t===0)return evalCell(vm)+'<td class="missing'+g(vm)+'">\u2014</td>';if(t<0)return evalCell(vm)+'<td class="failed'+g(vm)+'">FAIL</td>';return evalCell(vm)+`<td class="d3${g(vm)}${t===min&&!(vm in EXPERIMENTAL)&&vms.filter(v=>times[v]>0&&!(v in EXPERIMENTAL)).length>1?' fastest':''}">${fmtNs(t)}</td>`;}).join('')
+      +compVMs.map(vm=>{const c=REPORT.compile[vm][script];return c?`<td class="compile-col g">${fmtNs(c)}</td>`:'<td class="missing g">\u2014</td>';}).join('')+'</tr>';
   }).join('');
 }
 renderTable();
