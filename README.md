@@ -95,7 +95,6 @@ What changed:
 | `uplc-turbo` | uplc-turbo (Amaru) | Rust | Criterion.rs | [pragma-org/uplc](https://github.com/pragma-org/uplc) | [amaru-uplc-v0.4.0](https://github.com/pragma-org/uplc/releases/tag/amaru-uplc-v0.4.0) |
 | `plutigo` | Plutigo (Dingo) | Go | testing.B | [blinklabs-io/plutigo](https://github.com/blinklabs-io/plutigo) | [v0.1.10](https://github.com/blinklabs-io/plutigo/releases/tag/v0.1.10) |
 | `blaze-v8` | blaze-plutus on Node (V8) | TypeScript | Vitest bench | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) | [@blaze-cardano/plutus 0.1.1](https://github.com/butaneprotocol/blaze-cardano/releases/tag/%40blaze-cardano%2Fplutus%400.1.1) |
-| `blaze-jsc` | blaze-plutus on Bun (JSC) | TypeScript | Vitest bench | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) | [@blaze-cardano/plutus 0.1.1](https://github.com/butaneprotocol/blaze-cardano/releases/tag/%40blaze-cardano%2Fplutus%400.1.1) |
 
 That is 10 images: `scripts/images.sh list` prints them. The pins are in [`.env`](.env).
 

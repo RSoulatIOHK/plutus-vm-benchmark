@@ -12,7 +12,7 @@ Read `README.md`, `METHODOLOGY.md` and `docs/IMAGE_CONTRACT.md` first.
 
 - `.env` – pins of every VM (release SHA or tag) and toolchain versions.
 - `images/<vm>/Dockerfile` – one image per VM. `images/scalus` (`scalus-cek`, `scalus-jit`) and
-  `images/blaze` (`blaze-v8`, `blaze-jsc`) serve two VMs each (header `# pvb-vms:`).
+  `images/scalus` (`scalus-cek`, `scalus-jit`) serves two VMs (header `# pvb-vms:`).
 - `scripts/run-<vm>.sh` – per-VM runner, the default command of its image.
 - `scripts/image-entry.sh` – entry point of every image: switches, data selection, exit code.
 - `scripts/images.sh` – `list`, `tag`, `build` the images.

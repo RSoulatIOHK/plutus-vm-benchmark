@@ -18,8 +18,8 @@ Status: approved 2026-10-21.
 | D10 | Older cost model | Where a VM API accepts a cost model, the harness passes the mainnet PlutusV3 model and D4 applies. Otherwise the row is published with an "outdated cost model" badge; the gate then requires ExUnits equal to Haskell under that VM's own semantics variant and model. Wrong results still hide the row |
 | D11 | Gate parameters | PlutusV3, protocol version 11 (variant E), mainnet cost model, counting mode. CIP-117 unit-result rule not applied (78 PlutusV1-era scripts return a non-unit term) . The 89 scripts are PlutusV1-era; they are evaluated as PlutusV3 programs, like Plutus's own `validation` CEK benchmark (plutus-benchmark BenchCek.hs), and the page says so. Owner chose this over node-exact PlutusV1 rules (variant D), which would push the Scalus JIT to its CEK fallback |
 | D12 | Pins | Release tags for every VM (Aiken v1.1.24, Scalus v1.4.0, plutus 1.70.0.0). Haskell follows the plutus-core version of the latest cardano-node release (today node 11.1.3 = plutus-core 1.70.0.0); the bump bot reads it from the node release notes. |
-| D13 | Warm-up and measurement | JIT runtimes (JVM, V8, JSC): 20 s warm-up and three 5 s measurements. AOT runtimes (Rust, Go, GHC): the defaults of their benchmark framework, with at least 5 s of measurement |
-| D14 | Process model | A fresh process per script for every VM. No JIT profile, heap or allocator state carries over between scripts |
+| D13 | Warm-up and measurement | JIT runtimes (JVM, V8): 20 s warm-up and three 5 s measurements. AOT runtimes (Rust, Go, GHC): the defaults of their benchmark framework, with at least 5 s of measurement |
+| D14 | Process model | A fresh process per script for every VM. No JIT profile, heap or allocator state carries over between scripts. The d3 and eval loops of a script share that process (d3 first, each loop with its own warm-up and measurement), except JMH, which forks a JVM per loop |
 | D15 | Scalus JIT badge | "decode and compile excluded": the timed loop runs the compiled script; the decode and the compile run once per script, before timing |
 | D16 | Runtime settings | Each VM runs with the settings its project documents for production use, else with the runtime defaults. Scalus must document its JVM flags in public |
 | D17 | Inclusion rules | A ranked row needs (1) a published release: a stable version on a package registry, or a release tag; pre-releases such as `-alpha` or `0.1.0-preNN` do not count; (2) a downstream user today; (3) a pass of the correctness gate. A library that caches the decoded program or compiles it ahead is ranked with a badge: Scalus JIT style "decode and compile excluded"; Aiken WASM "decode cached (by the library)". An unranked "Experimental" section shows rows that have a release tag and pass the gate but miss rule (2) or publish no artifact; today that is the Scalus JIT (the `scalus-uplc-jit-compiler` module is not published to Maven and has no downstream users). Aiken WASM is ranked: the published npm package `@lucid-evolution/uplc` 0.4.0 used as is, built from colll78/aiken (aiken main plus fixes) |
@@ -39,7 +39,6 @@ Status: approved 2026-10-21.
 | uplc-turbo, Amaru (`uplc-turbo`) | Rust | native | Ranked |
 | plutigo, Dingo (`plutigo`) | Go | native | Ranked |
 | blaze-plutus (`blaze-v8`) | TypeScript | Node (V8) | Ranked |
-| blaze-plutus (`blaze-jsc`) | TypeScript | Bun (JSC) | Ranked |
 
 Dropped, each with the D17 rule that fails:
 
@@ -51,6 +50,9 @@ Dropped, each with the D17 rule that fails:
 - OpShin uplc: rule 3. It fails the correctness gate at its latest release 1.3.3 (no `case` on
   builtin values, a protocol version 11 feature).
 - uplc-turbo-bc: rule 1. The released `uplc-turbo` crate has no bytecode mode.
+- blaze-jsc (blaze on Bun / JavaScriptCore), removed 2026-10-22: not a separate evaluator. Every JS
+  row runs on Node 22 (V8), the common runtime for Cardano off-chain code; one engine keeps the JS
+  rows comparable. The row also cost about 1.8 h per run.
 
 Aiken WASM returned 2026-10-22. It was removed on 2026-10-21, because `@lucid-evolution/uplc`
 caches decoded programs with no off switch, so it cannot run the D3 loop as published. D17 ranks

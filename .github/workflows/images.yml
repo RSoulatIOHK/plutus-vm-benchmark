@@ -138,6 +138,6 @@ jobs:
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
-          # VMs that share a Dockerfile (scalus-cek/scalus-jit, blaze-v8/blaze-jsc) share a cache scope.
+          # VMs that share a Dockerfile (scalus-cek/scalus-jit) share a cache scope.
           cache-from: type=gha,scope=${{ matrix.cache }}
           cache-to: type=gha,mode=max,scope=${{ matrix.cache }}
