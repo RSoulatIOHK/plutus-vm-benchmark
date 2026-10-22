@@ -10,9 +10,10 @@
 
 # Plutus VM Benchmark
 
-Reproducible, cross-language benchmark of Plutus (UPLC) virtual machine implementations.
+Reproducible, cross-language benchmark of Plutus (UPLC) virtual machines, the evaluators that run
+Cardano smart contracts.
 
-Results: [plutus-vm-bench.lantr.io](https://plutus-vm-bench.lantr.io)
+Results: [Plutus VM Benchmark at plutus-vm-bench.lantr.io](https://plutus-vm-bench.lantr.io)
 
 ## Aim
 
