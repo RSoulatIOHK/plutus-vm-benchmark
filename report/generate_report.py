@@ -800,7 +800,7 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
     else:
         harness_link = "unknown"
 
-    html = (template.replace("{{CSV_DATA}}", csv_data).replace("{{ENV_BADGE}}", env_badge)
+    page = (template.replace("{{CSV_DATA}}", csv_data).replace("{{ENV_BADGE}}", env_badge)
             .replace("{{HARNESS_LINK}}", harness_link)
             .replace("{{VM_LIST}}", vm_list)
             .replace("{{REPORT_JSON}}", report_json))
@@ -809,7 +809,7 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
     if write_index:
         html_path = os.path.join(docs_dir, "index.html")
         with open(html_path, "w") as f:
-            f.write(html)
+            f.write(page)
         print(f"HTML report saved to: {html_path}", file=sys.stderr)
 
     # The run dir's copy has no docs/ next to it: embed the logo.
@@ -817,7 +817,7 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
         logo = "data:image/png;base64," + base64.b64encode(f.read()).decode()
     html_path = os.path.join(run_dir, "index.html")
     with open(html_path, "w") as f:
-        f.write(html.replace(f'src="{LOGO}"', f'src="{logo}"'))
+        f.write(page.replace(f'src="{LOGO}"', f'src="{logo}"'))
     print(f"HTML report saved to: {html_path}", file=sys.stderr)
 
 
