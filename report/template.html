@@ -668,7 +668,7 @@
     <div class="note" style="margin:0 0 0.6rem">Two timings per script, eval only first. The ranking uses <em>decode + eval</em>: each iteration flat-decodes the script and evaluates it, as a node does with a script it has not seen. <em>Eval only</em> evaluates a program decoded once before timing; decoding is a large share of the time for some VMs (about 66&nbsp;% for Haskell plutus-core), so the second column shows how fast the evaluator alone is.</div>
     <div class="note" style="margin:0 0 0.6rem">Correctness gate: each VM evaluates every script once more and reports the result and the ExUnits. They must equal Haskell plutus-core; a VM that differs is not ranked (&ldquo;failed check&rdquo;). A VM whose API cannot take the mainnet cost model is ranked with an &ldquo;outdated cost model&rdquo; badge if it equals Haskell with the model the VM ships. A VM that compiles a script before it runs it (&ldquo;decode and compile excluded&rdquo;) decodes and compiles each script once, before timing; its timed loop runs the compiled script, so neither step is in its time. Its compile time is shown separately. A VM whose library caches decoded programs (&ldquo;decode cached (by the library)&rdquo;) decodes a script only on the first call, in the warm-up; its timed loop runs the cache lookup and the evaluation, so its two columns have the same numbers.</div>
     <div class="note" id="drift-note" style="margin:0 0 0.6rem;display:none"></div>
-    <div class="note" style="margin:0">Flat decode + evaluation on 89 Plutus scripts. Each VM uses its native benchmark framework. Each VM runs in its own Docker image, one VM at a time. Geometric means within each category use only the scripts where every VM in that category produced a successful result, so all VMs in a category are compared on the same scripts.</div>
+    <div class="note" style="margin:0">Flat decode + evaluation on <span class="n-scripts"></span> Plutus scripts. Each VM uses its native benchmark framework. Each VM runs in its own Docker image, one VM at a time. Geometric means within each category use only the scripts where every VM in that category produced a successful result, so all VMs in a category are compared on the same scripts.</div>
   </div>
 
   <footer>
@@ -792,6 +792,7 @@ function compileLine(vm) {
 const disclosureHtml = REPORT.disclosure.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/`([^`]+)`/g, '<code>$1</code>');
 document.getElementById('disclosure').innerHTML = disclosureHtml;
 document.getElementById('method-disclosure').innerHTML = disclosureHtml;
+document.querySelectorAll('.n-scripts').forEach(e => { e.textContent = scripts.length; });
 if (REPORT.drift) { const d = document.getElementById('drift-note'); d.textContent = REPORT.drift; d.style.display = ''; }
 // Raw geo means (only scripts where ALL VMs have a positive result)
 const commonScripts = scripts.filter(s => presentVMs.every(vm => (data[s]?.[vm] || 0) > 0));
