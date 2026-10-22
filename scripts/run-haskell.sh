@@ -28,8 +28,8 @@ echo "plutus-core (Haskell / GHC / Criterion)"
 # Running the literal node set needs -threaded in pvb-bench.cabal and a rebuild.
 RTS=(+RTS -T -I0 -A16m --disable-delayed-os-memory-return -RTS)
 
-# Each script runs for at least 20 s per loop (Criterion's warm-up, then -L 20: the time limit of
-# plutus-benchmark:validation, set in Main.hs). Two loops: flat decode + evaluation (haskell.csv,
+# Each script runs for about 5 s per loop (Criterion's warm-up, then its default time limit of 5 s,
+# set in Main.hs; spec D13). Two loops: flat decode + evaluation (haskell.csv,
 # spec D3) and evaluation of a program decoded once (haskell-eval.csv).
 TIMING=()
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then

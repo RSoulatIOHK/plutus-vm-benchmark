@@ -126,7 +126,7 @@ and the runner is `scripts/run-<vm>.sh`.
 
 | VM | Framework | Warm-up and measurement (normal timing) |
 |---|---|---|
-| haskell | Criterion | Criterion's warm-up; at least 20 s per script (`timeLimit = 20`) |
+| haskell | Criterion | Criterion's warm-up; about 5 s per script, Criterion's default (`timeLimit = 5`) |
 | scalus-cek, scalus-jit | JMH | One 20 s warm-up iteration, three 5 s measurement iterations, 1 fork (`-wi 1 -w 20s -i 3 -r 5s -f 1`) |
 | aiken | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 10 s measurement |

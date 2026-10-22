@@ -12,8 +12,8 @@ the one of check/reference/gate-ref, so the check gives the reference numbers.
 
 @pvb-bench bench COSTMODEL_JSON FLAT_DIR [criterion options]@
   One Criterion benchmark per script. Each iteration decodes the flat bytes and evaluates the
-  program; reading the file is outside the timed loop. Each benchmark runs for at least 20 s, as in
-  plutus-benchmark:validation (change it with -L). A script whose evaluation fails is not timed.
+  program; reading the file is outside the timed loop. Each benchmark runs for about 5 s, Criterion's
+  default time limit (change it with -L). A script whose evaluation fails is not timed.
 
 @pvb-bench bench-eval COSTMODEL_JSON FLAT_DIR [criterion options]@
   Eval only, with the same Criterion settings: the program is decoded (and fully forced) once
@@ -153,8 +153,9 @@ benchmarks loop costModelPath dir criterionArgs = do
         EvalOnly ->
           env (decode file <$> BS.readFile (dir </> file)) $ \ ~term ->
             bench (dropExtension file) (whnf (evaluateDecoded ctx) term)
-      -- Same time limit as plutus-benchmark:validation, without its HTML report.
-      cfg = defaultConfig {timeLimit = 20}
+      -- Criterion's default time limit, 5 s (spec D13: the framework default, at least 5 s).
+      -- plutus-benchmark:validation uses 20 s; the extra 15 s add only about 25 % more samples.
+      cfg = defaultConfig {timeLimit = 5}
   withArgs criterionArgs (defaultMainWith cfg (map mkBench timed))
 
 main :: IO ()
