@@ -35,9 +35,10 @@ on:
       lanes:
         description: >-
           Parallel lanes: run up to this many VMs at once, each on its own whole cores
-          (1 = one VM at a time; more than 1 is a partial run)
-        type: number
-        default: 1
+          (1 = one VM at a time; more than 1 is a partial run). A comma list such as 1,3 runs
+          the same VMs once per value on the same server (A/B test), into results/<run>/lanes<N>
+        type: string
+        default: "1"
       server_type:
         description: Hetzner server type (keep it fixed for comparable history)
         default: ccx33
@@ -87,7 +88,7 @@ jobs:
       BENCH_LOOPS: ${{ inputs.loops || 'd3,eval,check' }}
       BENCH_TIMING: ${{ inputs.timing || 'normal' }}
       BENCH_TRACE: ${{ inputs.trace && '1' || '0' }}
-      LANES: ${{ inputs.lanes || 1 }}
+      LANES: ${{ inputs.lanes || '1' }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -118,8 +119,8 @@ jobs:
             case "$loop" in d3 | eval | check) ;; *) echo "::error::unknown loop '$loop' in '$BENCH_LOOPS'"; exit 1 ;; esac
           done
           [[ -n "$loops" ]] || { echo "::error::loops is empty"; exit 1; }
-          for n in "$LANES" ${LANES_INPUT:+"$LANES_INPUT"}; do
-            [[ "$n" =~ ^[1-9][0-9]*$ ]] || { echo "::error::lanes $n: expected a whole number >= 1"; exit 1; }
+          for n in ${LANES//,/ }; do
+            [[ "$n" =~ ^[1-9][0-9]*$ ]] || { echo "::error::lanes '$LANES_INPUT': expected whole numbers >= 1, comma separated"; exit 1; }
           done
           all_vms=$(scripts/images.sh list | sort -u | paste -sd' ' -)
           for vm in $VMS; do

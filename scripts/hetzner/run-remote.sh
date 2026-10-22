@@ -36,6 +36,14 @@ case "$CMD" in
     TIMING_Q=$(printf %q "${BENCH_TIMING:-normal}")
     TRACE_Q=$(printf %q "${BENCH_TRACE:-0}")
     LANES_Q=$(printf %q "${LANES:-1}")
+    # LANES as a comma list (1,3): run the same VMs once per value on this server, into
+    # results/<name>/lanes<N>, so lane effects are measured without a server-to-server difference.
+    if [[ "${LANES:-1}" == *,* ]]; then
+      RUN_CMD="rc=0; for l in ${LANES//,/ }; do LANES=\$l scripts/run-images.sh results/$NAME/lanes\$l $VMS >> /root/run.log 2>&1 || rc=\$?; done; echo \$rc > $DONE"
+      LANES_Q=1
+    else
+      RUN_CMD="scripts/run-images.sh results/$NAME $VMS > /root/run.log 2>&1; echo \$? > $DONE"
+    fi
     "${SSH[@]}" "rm -f $DONE /root/progress.txt && : > /root/progress.txt && systemd-run --unit=pvb-bench --collect \
       --working-directory=/root/repo \
       --setenv=PATH=/run/current-system/sw/bin \
@@ -49,7 +57,7 @@ case "$CMD" in
       --setenv=BENCH_TRACE=$TRACE_Q \
       --setenv=LANES=$LANES_Q \
       --setenv=PVB_HARNESS=$(git -C "$REPO_ROOT" rev-parse HEAD) \
-      /run/current-system/sw/bin/bash -c 'scripts/run-images.sh results/$NAME $VMS > /root/run.log 2>&1; echo \$? > $DONE'"
+      /run/current-system/sw/bin/bash -c '$RUN_CMD'"
     echo "started run $NAME on $IP"
     ;;
   status)

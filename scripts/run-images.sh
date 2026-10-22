@@ -277,7 +277,7 @@ RUN_TICKS_START=$(cpu_ticks)
     echo "kernel: $(uname -sr)"
     if [[ -r /proc/cpuinfo ]]; then
         echo "cpu: $(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | xargs)"
-        echo "cores: $(nproc)"
+        echo "cores: $(getconf _NPROCESSORS_ONLN)"
         echo "memory: $(free -h | awk '/Mem:/ {print $2}')"
         flags=" $(grep -m1 '^flags' /proc/cpuinfo | cut -d: -f2 || true) "
         isa=""
