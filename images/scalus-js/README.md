@@ -2,7 +2,7 @@
 
 The Scalus CEK machine compiled with Scala.js, as published on npm as
 [`scalus`](https://www.npmjs.com/package/scalus). It runs on Node.js 22 (V8), the same Node major
-and the same timing loop under vitest 4.0.18 as the `blaze-v8` harness. The image follows
+and the same timing loop under vitest (`VITEST_VERSION` in `.env`) as the `blaze-v8` harness. The image follows
 `docs/IMAGE_CONTRACT.md`.
 
 Pins in `.env`: `SCALUS_JS_VERSION` (the npm version) and `VITEST_VERSION`.
