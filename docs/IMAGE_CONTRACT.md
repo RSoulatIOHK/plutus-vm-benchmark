@@ -80,7 +80,8 @@ How the image applies them:
 | `<vm>-raw.log` | Raw tool output of the timed loops (both loops, one process per script), for debugging |
 | `<vm>-eval.csv` | Eval-only timing, same schema as `<vm>.csv`: evaluation of a program decoded once outside the timed loop. Shown as a second column next to the D3 time |
 | `<vm>-compile.csv` | Only for VMs that compile before they run (Scalus JIT): `vm,script,compile_ns` |
-| `<vm>-warmup.csv` | Only with `BENCH_TRACE=1`, for the JIT rows (scalus-cek, scalus-jit, blaze-v8, scalus-js, aiken-wasm): `vm,script,loop,second,ns_per_op`, the warm-up in slices of 1 s |
+| `<vm>-warmup-used.csv` | Only for the JIT rows (scalus-cek, scalus-jit, blaze-v8, scalus-js, aiken-wasm), when a timed loop runs: `vm,script,loop,seconds,capped`. One row per script and loop: the length of the warm-up in seconds (one decimal), and `capped` = `1` when the warm-up stopped at the 30 s cap, `0` when it stopped because the time was steady. A VM with one timed loop (scalus-jit, aiken-wasm, scalus-js) writes `loop` = `d3` |
+| `<vm>-warmup.csv` | Only with `BENCH_TRACE=1`, for the JIT rows: `vm,script,loop,second,ns_per_op`, the warm-up in slices of 1 s |
 
 ## What the timed loops do (spec D3, D11)
 
@@ -99,14 +100,28 @@ restricting budget).
   first, then the eval-only loop. Each loop has its own warm-up and measurement. The harness prints
   `PVB_LOOP <loop> <script>` when a loop starts, so `parsers/fill_failures.py --loop` charges an
   error in the log to the right loop.
-- Warm-up: JMH VMs use one 20 s warm-up iteration (`-wi 1 -w 20s`); the staged Scalus JIT needs
-  about 20 s. Then three 5 s measurement iterations (`-i 3 -r 5s`). Other frameworks keep their own
-  warm-up rules.
+- Warm-up of the JIT rows (scalus-cek, scalus-jit, blaze-v8, scalus-js, aiken-wasm): one adaptive
+  rule for all of them (METHODOLOGY.md, D13).
+  - The harness runs the timed operation in slices of 1 s.
+  - After each slice, it stops when at least 5 s have passed and the last 5 slices are all within
+    ±3 % of their median.
+  - It stops at 30 s at the latest (the cap).
+  - Then three 5 s measurement rounds (`-i 3 -r 5s` in JMH).
+- The JS harnesses run the rule in their timing loop, with the same round function as the
+  measurement. JMH cannot end a warm-up early. So JMH runs with no warm-up iterations (`-wi 0`),
+  and the benchmark runs the rule in its `@Setup(Level.Trial)`, in the forked JVM
+  (`images/scalus/harness`, `AdaptiveWarmup.scala`). The setup calls the benchmark method itself
+  and gives each result to JMH's Blackhole.
+- The run script sets `PVB_WARMUP_MS`: `adaptive`, or a number of milliseconds for one fixed
+  warm-up slice (`BENCH_TIMING=quick`: 0.5 s for the JS rows, 1 s for the JMH rows).
+- After the warm-up of a script and loop, the harness prints one line
+  `PVB_WARMUP {"script", "loop", "slices": [{"ops", "ns"}, ...], "capped"}`.
+  `parsers/parse_warmup.py --used` writes `<vm>-warmup-used.csv` from these lines.
+- The ahead-of-time compiled VMs keep the warm-up rules of their framework.
 
-- Trace mode (`BENCH_TRACE=1`): a JIT row runs its warm-up as slices of 1 s with the same total
-  time, and writes the score of each slice to `<vm>-warmup.csv`. JMH uses `-wi 20 -w 1s` in place
-  of `-wi 1 -w 20s`; the JS harnesses run their round function 20 times for 1 s. The measured
-  iterations do not change. It shows how long each VM needs to reach a steady state.
+- Trace mode (`BENCH_TRACE=1`): the JIT rows also write the time per operation of each warm-up
+  slice to `<vm>-warmup.csv` (`parsers/parse_warmup.py`). The warm-up and the measured rounds do
+  not change. It shows how each VM reaches its steady state.
 
 The check is one evaluation per script with the same parameters. The gate (`check/`) compares
 `<vm>-check.csv` with the Haskell reference.

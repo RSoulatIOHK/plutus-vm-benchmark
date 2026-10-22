@@ -128,28 +128,69 @@ and the runner is `scripts/run-<vm>.sh`.
 | VM | Framework | Warm-up and measurement (normal timing) |
 |---|---|---|
 | haskell | Criterion | Criterion's warm-up; about 5 s per script, Criterion's default (`timeLimit = 5`) |
-| scalus-cek, scalus-jit | JMH | One 20 s warm-up iteration, three 5 s measurement iterations (`-wi 1 -w 20s -i 3 -r 5s`). scalus-jit: 1 fork per script (`-f 1`). scalus-cek: one JVM per script runs both loops (`-f 0`, see below) |
+| scalus-cek, scalus-jit | JMH | Adaptive warm-up (5 to 30 s, see below) in the benchmark setup, then three 5 s measurement iterations (`-wi 0 -i 3 -r 5s`). One fork per method and script (`-f 1`) |
 | aiken | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
-| blaze-v8 | Own loop (JMH shape), launched by Vitest | 20 s warm-up, three 5 s measurements |
-| aiken-wasm | Own loop (JMH shape), plain Node.js | 20 s warm-up, three 5 s measurements (a JIT runtime, V8) |
-| scalus-js | Own loop (JMH shape), plain Node.js | 20 s warm-up, three 5 s measurements (the same loop as blaze-v8) |
+| blaze-v8 | Own loop (JMH shape), launched by Vitest | Adaptive warm-up (5 to 30 s), three 5 s measurements |
+| aiken-wasm | Own loop (JMH shape), plain Node.js | Adaptive warm-up (5 to 30 s), three 5 s measurements (a JIT runtime, V8) |
+| scalus-js | Own loop (JMH shape), plain Node.js | Adaptive warm-up (5 to 30 s), three 5 s measurements (the same loop as blaze-v8) |
 
-The JIT runtimes (JVM, V8) all get 20 s of warm-up, because the staged Scalus JIT needs about
-20 s to warm up. See [Fairness rules](#fairness-rules). `BENCH_TIMING=quick` shortens every
-warm-up and measurement, for smoke tests only.
+### Adaptive warm-up of the JIT rows
 
-JMH forks one JVM per benchmark method and script, and it cannot run two methods in one fork. So
-scalus-cek runs JMH without a fork (`-f 0`) in one JVM per script, with both methods. That JVM has
-the flags that JMH gives a fork: the JVM flags of the row, compiler blackholes and JMH's compiler
-hints ([`scripts/run-scalus-cek.sh`](scripts/run-scalus-cek.sh)). The log shows
-`# Blackhole mode: compiler`, as in a fork.
+The JIT runtimes (JVM, V8) compile hot code while it runs, so they must warm up before the
+measurement. All five JIT rows (scalus-cek, scalus-jit, blaze-v8, scalus-js, aiken-wasm) use one
+rule:
 
-Trace mode (`BENCH_TRACE=1`, [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md)) shows how long
-the JIT rows need to warm up. The 20 s warm-up runs as 20 slices of 1 s (JMH `-wi 20 -w 1s`), and
-the time per operation of each slice goes to `<vm>-warmup.csv`. The measured iterations stay the
-same.
+1. Run the timed operation in slices of 1 s.
+2. After each slice, stop when at least 5 s have passed and the last 5 slices are all within
+   ±3 % of their median.
+3. Stop at 30 s at the latest (the cap), steady or not.
+4. Then measure three rounds of 5 s, as before.
+
+Each script and loop gets its own warm-up. `<vm>-warmup-used.csv` records its length and if it
+hit the cap ([docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md)).
+
+Why: the measurement must start in the steady state of each engine. A fixed warm-up cannot do
+that for all of them. A trace run on the bench server (Hetzner ccx33, 1 s slices of a 20 s
+warm-up) found the second from which every later slice stays within ±3 % of the median of the
+last 5 slices:
+
+| Row | Steady by second (median of the scripts) | 90th percentile |
+|---|---|---|
+| blaze-v8 | 2 | 8 |
+| aiken-wasm | 7 | 13 |
+| scalus-cek | 7 | 17 |
+| scalus-js | 16 | more than 20 (3 of 10 scripts never) |
+| scalus-jit | more than 20 (most scripts never) | more than 20 |
+
+So a fixed 20 s was too short for some rows and longer than needed for others. The 5 s minimum
+gives the window of 5 slices. The 30 s cap limits the run time. A capped warm-up is not steady by
+the rule: the report can show it.
+
+How: the JS harnesses run the rule in their timing loop, with the same round function as the
+measurement. JMH cannot end a warm-up early. So the JMH rows run JMH with no warm-up iterations
+(`-wi 0`), and the benchmark runs the rule in its setup (`@Setup(Level.Trial)`), in the forked
+JVM, before the first measurement iteration
+([`AdaptiveWarmup.scala`](images/scalus/harness/src/main/scala/pvb/scalus/AdaptiveWarmup.scala)).
+The setup calls the benchmark method itself and gives each result to JMH's Blackhole, as the
+generated JMH loop does. The first measurement iteration is not slower than the next two, so the
+change from the setup loop to JMH's loop costs nothing visible. One effect: with the old JMH
+warm-up iteration, the D3 loop of scalus-cek measured about 6 % slower than at the end of its own
+warm-up (a local test on auction_1-1 and coop-6). With the warm-up in the setup, the measurement
+matches the last warm-up slices.
+
+The JMH rows keep one fresh JVM per script (D14). scalus-cek forks one JVM per method (`-f 1`):
+`bench` (D3), then `benchEval` (eval-only), each with its own warm-up. One JVM for both methods
+(`-f 0`) made the D3 time 3 to 6 % faster on some scripts, so the fork stays
+([`scripts/run-scalus-cek.sh`](scripts/run-scalus-cek.sh)).
+
+`BENCH_TIMING=quick` replaces the adaptive warm-up with one fixed short slice (0.5 s for the JS
+rows, 1 s for the JMH rows) and shortens the measurement, for smoke tests only.
+
+Trace mode (`BENCH_TRACE=1`, [docs/IMAGE_CONTRACT.md](docs/IMAGE_CONTRACT.md)) also writes the
+time per operation of each warm-up slice to `<vm>-warmup.csv`. The warm-up and the measurement
+do not change.
 
 The JS rows share one timing loop. A round runs operations back to back for a fixed time and
 scores elapsed / ops, as JMH `avgt` does. scalus-js and aiken-wasm run it with plain `node`: the
@@ -173,9 +214,11 @@ code; one engine keeps the JS rows comparable.
 Decisions D13 to D17 of the
 [design](docs/superpowers/specs/2026-10-21-lantr-vm-benchmark-design.md#0-decisions):
 
-- **Warm-up (D13)**: the JIT runtimes (JVM, V8) get a 20 s warm-up and three 5 s
-  measurements. The ahead-of-time compiled VMs (Rust, Go, GHC) keep the defaults of their
-  framework, with at least 5 s of measurement.
+- **Warm-up (D13)**: the JIT runtimes (JVM, V8) get the adaptive warm-up (1 s slices, stop when
+  the last 5 are within ±3 % of their median after at least 5 s, 30 s at most) and three 5 s
+  measurements. See [Adaptive warm-up of the JIT rows](#adaptive-warm-up-of-the-jit-rows). The
+  ahead-of-time compiled VMs (Rust, Go, GHC) keep the defaults of their framework, with at least
+  5 s of measurement.
 - **Process model (D14)**: every VM runs each script in a fresh process. No JIT profile, heap or
   allocator state carries over from one script to the next. The process runs both timed loops of
   its script: the D3 loop first, then the eval-only loop. Each loop has its own warm-up and
