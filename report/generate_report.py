@@ -18,6 +18,9 @@ Reads from the run dir:
                          only" column next to the D3 time and its geometric mean. Not for a VM
                          with <vm>-compile.csv: its D3 time already is the eval time. The ranking
                          stays on the D3 time
+A VM in EXPERIMENTAL that passes the gate is shown in its own "Experimental" section with its
+numbers, but it is not ranked: not in the summary ranking, not a competitor in the penalty rule,
+not in "vs fastest", the per-script fastest or the history chart.
 - drift.json             the drift probe (parsers/normalize.py): Haskell at the end of the run
                          vs the start, shown as a note
 - ../<date>/             earlier runs next to this one, for the history chart: each VM's geometric
@@ -37,7 +40,7 @@ from collections import defaultdict
 
 VM_ORDER = [
     "haskell", "scalus-jit", "scalus-cek", "scalus-js",
-    "aiken", "uplc-turbo",
+    "aiken", "aiken-wasm", "uplc-turbo",
     "plutigo", "blaze-jsc", "blaze-v8",
 ]
 
@@ -57,6 +60,26 @@ VM_NOTES = {
              "[#1451](https://github.com/aiken-lang/aiken/pull/1451), "
              "[#1452](https://github.com/aiken-lang/aiken/pull/1452): coop-6 92 ms -> 1.2 ms), "
              "but no release contains the fix yet.",
+    "aiken-wasm": "Built from [colll78/aiken](https://github.com/colll78/aiken) (aiken main plus "
+                  "fixes), which includes the CEK fixes that v1.1.24 lacks.",
+}
+
+# Badges for the way a VM is timed, besides the gate and compile badges: {vm: {text, title}}. The
+# title explains the badge (HTML tooltip, a note in report.md).
+VM_BADGES = {
+    # images/aiken-wasm/README.md
+    "aiken-wasm": {
+        "text": "decode cached (by the library)",
+        "title": "The library caches the decoded program by a hash of the flat bytes. After the first "
+                 "call (in the warm-up), the timed loop runs hash + evaluation, without the decode. "
+                 "Its eval-only time is the same loop.",
+    },
+}
+
+# VMs that are run, gated and shown with their numbers, but not ranked (spec D17): {vm: reason}.
+EXPERIMENTAL = {
+    "scalus-jit": "not ranked: the JIT module is not published as a release artifact and has no "
+                  "downstream users yet (spec D17)",
 }
 
 # The badge of a VM with <vm>-compile.csv (Scalus JIT): its timed loop runs the compiled script,
@@ -73,6 +96,7 @@ VM_LABELS = {
     "scalus-jit": "Scalus UPLC→JVM JIT (Scala / JVM)",
     "scalus-js": "Scalus CEK (Scala.js / Node V8)",
     "aiken": "Aiken uplc CEK (Rust)",
+    "aiken-wasm": "Aiken uplc CEK (Rust → WASM / Node V8)",
 }
 
 
@@ -208,7 +232,7 @@ def load_history(run_dir: str) -> dict:
     """Ratio to Haskell per VM for every run next to run_dir that has gate.json (new format).
 
     A run counts only if Haskell passed its gate there; a VM that failed the gate in a run has no
-    point for that run.
+    point for that run. An EXPERIMENTAL VM has no line, in any run.
     """
     parent = os.path.dirname(os.path.abspath(run_dir))
     runs: list[str] = []
@@ -229,6 +253,7 @@ def load_history(run_dir: str) -> dict:
             continue
         idx = len(runs)
         runs.append(d)
+        shown = [vm for vm in shown if vm not in EXPERIMENTAL]
         for vm in shown:
             r = ratio_to_haskell(data, vm)
             if r is not None:
@@ -271,10 +296,21 @@ def compute_geo_means(data, scripts, present_vms):
     return geo_means
 
 
-def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, hidden, compile_ns,
-                      eval_ns, history, drift) -> None:
-    """Generate report.md."""
+def experimental_geo_mean(data, scripts, ranked: list[str], vm: str) -> float:
+    """Geometric mean of an EXPERIMENTAL VM, with the penalty rule against the ranked VMs only."""
+    return compute_geo_means(data, scripts, ranked + [vm])[vm]
+
+
+def badge_text(vm: str) -> str:
+    """The VM_BADGES text in parentheses, or ''."""
+    return f" ({VM_BADGES[vm]['text']})" if vm in VM_BADGES else ""
+
+
+def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, env_info, gate, hidden,
+                      compile_ns, eval_ns, history, drift) -> None:
+    """Generate report.md. present_vms are the ranked VMs; experimental the shown, unranked ones."""
     geo_means = compute_geo_means(data, scripts, present_vms)
+    all_vms = present_vms + experimental
 
     fastest_geo = min(geo_means.values()) if geo_means else 1
 
@@ -308,6 +344,9 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
     if eval_ns:
         lines.append("*Geo Mean: flat decode + evaluation (the ranking). Eval only: evaluation of a "
                      "program decoded before the timed loop, geometric mean over its scripts.*")
+    for vm in all_vms:
+        if vm in VM_BADGES:
+            lines.append(f"*{VM_LABELS.get(vm, vm)}, \"{VM_BADGES[vm]['text']}\": {VM_BADGES[vm]['title']}*")
     lines.append("")
     lines.append("| VM | Language | Geo Mean | vs Fastest | Eval only | Compile | Check |")
     lines.append("|---|---|---|---|---|---|---|")
@@ -323,8 +362,30 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
         ev = eval_ns.get(vm)
         eval_cell = fmt_ns(int(geometric_mean(list(ev.values())))) if ev else "-"
         geo_cell, ratio_cell = (fmt_ns(int(geo)), f"{ratio:.2f}x") if geo > 0 else ("-", "-")
-        lines.append(f"| **{label}** | {lang} | {geo_cell} | {ratio_cell} | {eval_cell} | "
+        lines.append(f"| **{label}**{badge_text(vm)} | {lang} | {geo_cell} | {ratio_cell} | {eval_cell} | "
                      f"{comp_cell} | {check_label(gate, vm)} |")
+
+    if experimental:
+        lines.append("")
+        lines.append("### Experimental")
+        lines.append("")
+        lines.append("Run, gated and shown, but not ranked: not in the table above, not a competitor "
+                     "in the penalty rule, not in the history. Geo Mean uses the penalty rule against "
+                     "the ranked VMs.")
+        lines.append("")
+        lines.append("| VM | Language | Geo Mean | Eval only | Compile | Check | Reason |")
+        lines.append("|---|---|---|---|---|---|---|")
+        for vm in experimental:
+            label = VM_LABELS.get(vm, vm)
+            lang = label.split("(")[-1].rstrip(")") if "(" in label else ""
+            geo = experimental_geo_mean(data, scripts, present_vms, vm)
+            comp = compile_ns.get(vm)
+            comp_cell = f"{fmt_ns(int(geometric_mean(list(comp.values()))))} ({COMPILE_BADGE})" if comp else "-"
+            ev = eval_ns.get(vm)
+            eval_cell = fmt_ns(int(geometric_mean(list(ev.values())))) if ev else "-"
+            geo_cell = fmt_ns(int(geo)) if geo > 0 else "-"
+            lines.append(f"| **{label}**{badge_text(vm)} | {lang} | {geo_cell} | {eval_cell} | {comp_cell} | "
+                         f"{check_label(gate, vm)} | {EXPERIMENTAL[vm]} |")
 
     if hidden:
         lines.append("")
@@ -337,7 +398,7 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
         for vm in sorted(hidden, key=lambda v: (VM_ORDER.index(v) if v in VM_ORDER else 99, v)):
             lines.append(f"| {VM_LABELS.get(vm, vm)} | {hidden[vm]} |")
 
-    notes = [vm for vm in sorted_vms if vm in VM_NOTES]
+    notes = [vm for vm in sorted_vms + experimental if vm in VM_NOTES]
     if notes:
         lines.append("")
         lines.append("### Notes")
@@ -361,28 +422,32 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
     lines.append("")
     lines.append("| VM | Passed | Failed | Missing | Total |")
     lines.append("|---|---|---|---|---|")
-    for vm in sorted_vms:
+    for vm in sorted_vms + experimental:
         success = sum(1 for s in scripts if data[s].get(vm, 0) > 0)
         fail = sum(1 for s in scripts if data[s].get(vm, 0) < 0)
         missing = len(scripts) - success - fail
-        lines.append(f"| {VM_LABELS.get(vm, vm)} | {success} | {fail} | {missing} | {len(scripts)} |")
+        tag = " (experimental)" if vm in EXPERIMENTAL else ""
+        lines.append(f"| {VM_LABELS.get(vm, vm)}{tag} | {success} | {fail} | {missing} | {len(scripts)} |")
 
     lines.append("")
 
     lines.append("## Per-Script Results")
     lines.append("")
-    # Each VM's D3 column, followed by its eval-only column if it has <vm>-eval.csv.
-    columns = [c for vm in present_vms for c in ([(vm, False), (vm, True)] if vm in eval_ns else [(vm, False)])]
+    # Each VM's D3 column, followed by its eval-only column if it has <vm>-eval.csv. The experimental
+    # VMs come last and are never the bold fastest.
+    columns = [c for vm in all_vms for c in ([(vm, False), (vm, True)] if vm in eval_ns else [(vm, False)])]
     header = "| Script |" + "|".join(
-        f" {VM_LABELS.get(vm, vm)}{' (eval only)' if ev else ''} " for vm, ev in columns) + "|"
+        f" {VM_LABELS.get(vm, vm)}{' (experimental)' if vm in EXPERIMENTAL else ''}"
+        f"{' (eval only)' if ev else ''} " for vm, ev in columns) + "|"
     separator = "|---|" + "|".join("---" for _ in columns) + "|"
     lines.append(header)
     lines.append(separator)
 
     for script in scripts:
         row = f"| {script} |"
-        script_times = {vm: data[script].get(vm, 0) for vm in present_vms}
-        fastest = min((t for t in script_times.values() if t > 0), default=0)
+        script_times = {vm: data[script].get(vm, 0) for vm in all_vms}
+        ranked_times = [script_times[vm] for vm in present_vms if script_times[vm] > 0]
+        fastest = min(ranked_times, default=0)
 
         for vm, ev in columns:
             if ev:
@@ -392,7 +457,7 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, env_info, gate, 
             t = script_times[vm]
             if t > 0:
                 cell = fmt_ns(t)
-                if t == fastest and len([v for v in script_times.values() if v > 0]) > 1:
+                if vm not in EXPERIMENTAL and t == fastest and len(ranked_times) > 1:
                     cell = f"**{cell}**"
                 row += f" {cell} |"
             elif t < 0:
@@ -424,9 +489,10 @@ def check_label(gate: dict | None, vm: str) -> str:
     return {"pass": "pass", "badge": "outdated cost model"}.get(verdict, "failed check")
 
 
-def generate_html(run_dir: str, env_info: str, data, present_vms, gate, hidden, compile_ns,
+def generate_html(run_dir: str, env_info: str, data, present_vms, experimental, gate, hidden, compile_ns,
                   eval_ns, history, drift, write_index: bool) -> None:
-    """Generate <run_dir>/index.html from template + the timings of the shown VMs.
+    """Generate <run_dir>/index.html from template + the timings of the shown VMs (ranked and
+    experimental; the page leaves the experimental ones out of the ranking).
 
     With write_index, also <repo>/docs/index.html, the published page (run.yml sets it).
     """
@@ -440,7 +506,7 @@ def generate_html(run_dir: str, env_info: str, data, present_vms, gate, hidden, 
         template = f.read()
 
     # Only the shown VMs: a hidden VM must not be a competitor in the penalty rule either.
-    shown = set(present_vms)
+    shown = set(present_vms) | set(experimental)
     with open(os.path.join(run_dir, "unified.csv")) as f:
         lines = f.read().strip().split("\n")
     csv_data = "\n".join([lines[0]] + [l for l in lines[1:] if l.split(",", 1)[0] in shown])
@@ -456,6 +522,8 @@ def generate_html(run_dir: str, env_info: str, data, present_vms, gate, hidden, 
         "disclosure": DISCLOSURE,
         "notes": {vm: n for vm, n in VM_NOTES.items() if vm in shown},
         "compile_badge": COMPILE_BADGE,
+        "badges": {vm: b for vm, b in VM_BADGES.items() if vm in shown},
+        "experimental": {vm: EXPERIMENTAL[vm] for vm in experimental},
         "drift": drift_text(drift),
     }
     # Safe inside <script>: no "</" can close the element.
@@ -509,22 +577,25 @@ def generate(run_dir: str, write_index: bool = False) -> None:
     all_vms = [vm for vm in VM_ORDER if vm in found] + sorted(found - set(VM_ORDER))
     scripts = sorted(set(scripts) | {s for v in eval_all.values() for s in v})
     gate = load_gate(run_dir)
-    present_vms, hidden = gate_split(gate, all_vms)
+    shown_vms, hidden = gate_split(gate, all_vms)
     for s in scripts:
         for vm in hidden:
             data[s].pop(vm, None)
-    compile_ns = {vm: v for vm, v in load_compile(run_dir).items() if vm in present_vms}
+    # The gate first: an experimental VM that fails it is listed as "failed check".
+    present_vms = [vm for vm in shown_vms if vm not in EXPERIMENTAL]
+    experimental = [vm for vm in shown_vms if vm in EXPERIMENTAL]
+    compile_ns = {vm: v for vm, v in load_compile(run_dir).items() if vm in shown_vms}
     # A compiling VM's D3 time already is its eval time: no second column for it (unless the run
     # had no d3 loop).
     has_d3 = {vm for s in scripts for vm in data[s]}
     eval_ns = {vm: v for vm, v in eval_all.items()
-               if vm in present_vms and not (vm in compile_ns and vm in has_d3)}
+               if vm in shown_vms and not (vm in compile_ns and vm in has_d3)}
     history = load_history(run_dir)
     drift = load_drift(run_dir)
-    generate_markdown(run_dir, data, scripts, present_vms, env_info, gate, hidden, compile_ns, eval_ns,
-                      history, drift)
-    generate_html(run_dir, env_info, data, present_vms, gate, hidden, compile_ns, eval_ns, history,
-                  drift, write_index)
+    generate_markdown(run_dir, data, scripts, present_vms, experimental, env_info, gate, hidden,
+                      compile_ns, eval_ns, history, drift)
+    generate_html(run_dir, env_info, data, present_vms, experimental, gate, hidden, compile_ns,
+                  eval_ns, history, drift, write_index)
 
 
 if __name__ == "__main__":
