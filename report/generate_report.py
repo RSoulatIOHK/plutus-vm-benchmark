@@ -232,7 +232,7 @@ def load_history(run_dir: str) -> dict:
     """Ratio to Haskell per VM for every run next to run_dir that has gate.json (new format).
 
     A run counts only if Haskell passed its gate there; a VM that failed the gate in a run has no
-    point for that run. An EXPERIMENTAL VM has no line, in any run.
+    point for that run. An EXPERIMENTAL VM has a line too; the page draws it dashed and marks it.
     """
     parent = os.path.dirname(os.path.abspath(run_dir))
     runs: list[str] = []
@@ -253,7 +253,6 @@ def load_history(run_dir: str) -> dict:
             continue
         idx = len(runs)
         runs.append(d)
-        shown = [vm for vm in shown if vm not in EXPERIMENTAL]
         for vm in shown:
             r = ratio_to_haskell(data, vm)
             if r is not None:
@@ -414,7 +413,8 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
         lines.append("|---|" + "---|" * len(history["runs"]))
         for vm, values in history["series"].items():
             cells = [speed_text(v) if v is not None else "-" for v in values]
-            lines.append(f"| {VM_LABELS.get(vm, vm)} | " + " | ".join(cells) + " |")
+            tag = " (experimental)" if vm in EXPERIMENTAL else ""
+            lines.append(f"| {VM_LABELS.get(vm, vm)}{tag} | " + " | ".join(cells) + " |")
 
     # Count scripts per VM
     lines.append("")

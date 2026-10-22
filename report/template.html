@@ -612,7 +612,7 @@
 
   <div class="section" id="experimental-section" style="display:none">
     <div class="section-title">Experimental <em>not ranked</em></div>
-    <div class="note" style="margin-bottom:0.7rem">These VMs are run, gated and shown with their numbers, but they are not ranked: they are not in the rankings above, not a competitor in the penalty rule, not in the history chart, not the 1.00&times; reference in the geometric-mean chart (where they are drawn hatched), and never the fastest in the per-script table. The geometric mean uses the penalty rule against the ranked VMs.</div>
+    <div class="note" style="margin-bottom:0.7rem">These VMs are run, gated and shown with their numbers, but they are not ranked: they are not in the rankings above, not a competitor in the penalty rule, and not the 1.00&times; reference in the geometric-mean chart (where they are drawn hatched); the history chart draws them dashed, and never the fastest in the per-script table. The geometric mean uses the penalty rule against the ranked VMs.</div>
     <div class="summary" id="experimental-cards"></div>
   </div>
 
@@ -1008,12 +1008,15 @@ if (hiddenVMs.length) {
     .map(([vm, vs]) => [vm, vs.map(v => v > 0 ? 1 / v : null)])) };
   const vms = Object.keys(h.series).filter(vm => vm !== 'haskell');
   if (!runs.length || !vms.length) return;
+  // Label with the runtime, so the two blaze-plutus lines (V8, JSC) can be told apart.
+  const histLabel = vm => { const m = VM_META[vm] || { label: vm, runtime: '' };
+    return m.label + (m.runtime ? ' \u00b7 ' + m.runtime : '') + (vm in EXPERIMENTAL ? ' (experimental)' : ''); };
   // 2.4 -> "2.4× faster", 0.25 -> "4.0× slower", 1 -> "Haskell"
   const fmtSpeed = s => Math.abs(Math.log10(s)) < 0.004 ? '1× (Haskell)'
     : s > 1 ? (s < 10 ? s.toFixed(1) : s.toFixed(0)) + '× faster'
     : (1 / s < 10 ? (1 / s).toFixed(1) : (1 / s).toFixed(0)) + '× slower';
   document.getElementById('history-section').style.display = '';
-  const W = 900, H = 320, L = 78, R = 170, T = 14, B = 34;
+  const W = 960, H = 320, L = 78, R = 250, T = 14, B = 34;
   const vals = vms.flatMap(vm => h.series[vm]).filter(v => v > 0).concat([1]);
   const lo = Math.log10(Math.min(...vals)) - 0.1, hi = Math.log10(Math.max(...vals)) + 0.1;
   const x = i => runs.length === 1 ? L + (W - L - R) / 2 : L + i * (W - L - R) / (runs.length - 1);
@@ -1033,10 +1036,11 @@ if (hiddenVMs.length) {
     const m = VM_META[vm] || { label: vm, color: '#9494b0' }, pts = h.series[vm];
     let path = '', pen = false;
     pts.forEach((v, i) => { if (v > 0) { path += (pen ? 'L' : 'M') + x(i) + ' ' + y(v); pen = true; } else pen = false; });
-    svg += `<path d="${path}" fill="none" stroke="${m.color}" stroke-width="2" stroke-linejoin="round"/>`;
+    const dash = vm in EXPERIMENTAL ? ' stroke-dasharray="6 4"' : '';
+    svg += `<path d="${path}" fill="none" stroke="${m.color}" stroke-width="2" stroke-linejoin="round"${dash}/>`;
     pts.forEach((v, i) => { if (v > 0) svg += `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="${m.color}" stroke="var(--bg)" stroke-width="2"/>`; });
     const last = pts.map((v, i) => [v, i]).filter(p => p[0] > 0).pop();
-    if (last) labels.push({ y: y(last[0]), x: x(last[1]), text: m.label + ' ' + fmtSpeed(last[0]) });
+    if (last) labels.push({ y: y(last[0]), x: x(last[1]), text: histLabel(vm) + ' ' + fmtSpeed(last[0]) });
   });
   // Keep end labels 12 px apart
   labels.sort((a, b) => a.y - b.y).forEach((l, i, a) => { if (i && l.y - a[i - 1].y < 12) l.y = a[i - 1].y + 12; });
@@ -1050,14 +1054,15 @@ if (hiddenVMs.length) {
   host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Speed relative to Haskell per run, higher is faster">${svg}</svg>`;
   document.getElementById('history-legend').innerHTML = vms.map(vm => {
     const m = VM_META[vm] || { label: vm, color: '#9494b0' };
-    return `<span><span class="sw" style="background:${m.color}"></span>${m.label}</span>`;
+    const sw = vm in EXPERIMENTAL ? `background:repeating-linear-gradient(90deg,${m.color} 0 4px,transparent 4px 7px)` : `background:${m.color}`;
+    return `<span><span class="sw" style="${sw}"></span>${histLabel(vm)}</span>`;
   }).join('');
   const tip = document.getElementById('history-tip');
   host.querySelectorAll('rect[data-run]').forEach(rect => {
     rect.addEventListener('mousemove', e => {
       const i = +rect.dataset.run;
       const lines = vms.filter(vm => h.series[vm][i] > 0).sort((a, b) => h.series[b][i] - h.series[a][i])
-        .map(vm => (VM_META[vm] ? VM_META[vm].label : vm) + ': ' + fmtSpeed(h.series[vm][i]));
+        .map(vm => histLabel(vm) + ': ' + fmtSpeed(h.series[vm][i]));
       tip.innerHTML = '<strong>' + runs[i] + '</strong><br>' + lines.join('<br>');
       tip.style.display = 'block'; tip.style.left = (e.clientX + 14) + 'px'; tip.style.top = (e.clientY + 14) + 'px';
     });
