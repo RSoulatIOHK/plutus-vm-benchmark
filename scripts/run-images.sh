@@ -151,12 +151,22 @@ DATA_DIR="$(cd "$DATA_DIR" && pwd)"
 VMS=$(echo "$*" | tr ',' ' ')
 [[ -n "${VMS// /}" ]] || VMS=$("$REPO_ROOT/scripts/images.sh" list)
 VMS=$(echo "$VMS" | tr '\n' ' ')
-# Haskell first: it is the reference, and the drift probe compares the end of the run with it.
-if [[ " $VMS " == *" haskell "* ]]; then
-    rest=""
-    for vm in $VMS; do [[ "$vm" == haskell ]] || rest="$rest $vm"; done
-    VMS="haskell$rest"
+# Order: Haskell first (the reference; the drift probe compares the end of the run with it), then
+# the longest VMs first, so with lanes the long ones do not start last and keep one lane busy
+# alone at the end. The minutes come from the progress.txt of the latest full run in results/
+# ("<vm> k/N ok in M min"); a VM without a time keeps its place after the timed ones.
+progress_files=("$REPO_ROOT"/results/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*/progress.txt)
+last_progress=""
+[[ -f "${progress_files[0]}" ]] && last_progress=$(printf '%s\n' "${progress_files[@]}" | LC_ALL=C sort | tail -1)
+rest=""
+for vm in $VMS; do [[ "$vm" == haskell ]] || rest="$rest $vm"; done
+if [[ -n "$last_progress" ]]; then
+    rest=$(for vm in $rest; do
+        mins=$(sed -n "s/^.* $vm [0-9]*\/[0-9]* ok in \([0-9]*\) min.*/\1/p" "$last_progress" | tail -1)
+        echo "${mins:--1} $vm"
+    done | sort -s -k1,1nr | awk '{print $2}' | paste -sd' ' -)
 fi
+if [[ " $VMS " == *" haskell "* ]]; then VMS="haskell ${rest# }"; else VMS="${rest# }"; fi
 DRIFT="${DRIFT:-1}"
 DRIFT_N=5
 
