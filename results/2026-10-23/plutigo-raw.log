@@ -1,0 +1,890 @@
+--- auction_1-1: process 123
+PVB_LOOP d3 auction_1-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/auction_1-1-4         	   45834	    130899 ns/op	     354 B/op	      13 allocs/op
+PVB_LOOP eval auction_1-1
+BenchmarkPvbEval/auction_1-1-4              	   77005	     78379 ns/op	      46 B/op	       2 allocs/op
+PASS
+--- auction_1-2: process 134
+PVB_LOOP d3 auction_1-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/auction_1-2-4         	   12914	    461849 ns/op	    1481 B/op	      61 allocs/op
+PVB_LOOP eval auction_1-2
+BenchmarkPvbEval/auction_1-2-4              	   18368	    325384 ns/op	     871 B/op	      28 allocs/op
+PASS
+--- auction_1-3: process 145
+PVB_LOOP d3 auction_1-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/auction_1-3-4         	   13030	    456909 ns/op	     719 B/op	      34 allocs/op
+PVB_LOOP eval auction_1-3
+BenchmarkPvbEval/auction_1-3-4              	   19144	    317437 ns/op	     169 B/op	       2 allocs/op
+PASS
+--- auction_1-4: process 156
+PVB_LOOP d3 auction_1-4
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/auction_1-4-4         	   39208	    153616 ns/op	     489 B/op	      15 allocs/op
+PVB_LOOP eval auction_1-4
+BenchmarkPvbEval/auction_1-4-4              	   60624	     96974 ns/op	      51 B/op	       2 allocs/op
+PASS
+--- auction_2-1: process 167
+PVB_LOOP d3 auction_2-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/auction_2-1-4         	   45048	    131948 ns/op	     354 B/op	      13 allocs/op
+PVB_LOOP eval auction_2-1
+BenchmarkPvbEval/auction_2-1-4              	   76269	     76806 ns/op	      46 B/op	       2 allocs/op
+PASS
+--- auction_2-2: process 178
+PVB_LOOP d3 auction_2-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/auction_2-2-4         	   12886	    463810 ns/op	    1482 B/op	      61 allocs/op
+PVB_LOOP eval auction_2-2
+BenchmarkPvbEval/auction_2-2-4              	   18448	    322850 ns/op	     870 B/op	      28 allocs/op
+PASS
+--- auction_2-3: process 189
+PVB_LOOP d3 auction_2-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/auction_2-3-4         	   10000	    561389 ns/op	    1790 B/op	      62 allocs/op
+PVB_LOOP eval auction_2-3
+BenchmarkPvbEval/auction_2-3-4              	   14049	    429591 ns/op	    1042 B/op	      28 allocs/op
+PASS
+--- auction_2-4: process 200
+PVB_LOOP d3 auction_2-4
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/auction_2-4-4         	   13267	    452378 ns/op	     715 B/op	      34 allocs/op
+PVB_LOOP eval auction_2-4
+BenchmarkPvbEval/auction_2-4-4              	   19078	    316561 ns/op	     170 B/op	       2 allocs/op
+PASS
+--- auction_2-5: process 211
+PVB_LOOP d3 auction_2-5
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/auction_2-5-4         	   39511	    152614 ns/op	     489 B/op	      15 allocs/op
+PVB_LOOP eval auction_2-5
+BenchmarkPvbEval/auction_2-5-4              	   62560	     98284 ns/op	      51 B/op	       2 allocs/op
+PASS
+--- coop-1: process 222
+PVB_LOOP d3 coop-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/coop-1-4         	   41154	    147308 ns/op	    2436 B/op	      53 allocs/op
+PVB_LOOP eval coop-1
+BenchmarkPvbEval/coop-1-4              	   54421	    109418 ns/op	      27 B/op	       1 allocs/op
+PASS
+--- coop-2: process 233
+PVB_LOOP d3 coop-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/coop-2-4         	   10000	    562859 ns/op	   36672 B/op	     405 allocs/op
+PVB_LOOP eval coop-2
+BenchmarkPvbEval/coop-2-4              	   14850	    389916 ns/op	   11814 B/op	     303 allocs/op
+PASS
+--- coop-3: process 245
+PVB_LOOP d3 coop-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/coop-3-4         	    4138	   1448129 ns/op	   36633 B/op	      99 allocs/op
+PVB_LOOP eval coop-3
+BenchmarkPvbEval/coop-3-4              	    4328	   1368324 ns/op	   21152 B/op	       2 allocs/op
+PASS
+--- coop-4: process 256
+PVB_LOOP d3 coop-4
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/coop-4-4         	    9416	    627924 ns/op	   23073 B/op	     236 allocs/op
+PVB_LOOP eval coop-4
+BenchmarkPvbEval/coop-4-4              	   12594	    477344 ns/op	    3098 B/op	     122 allocs/op
+PASS
+--- coop-5: process 268
+PVB_LOOP d3 coop-5
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/coop-5-4         	   19648	    303085 ns/op	    7719 B/op	      84 allocs/op
+PVB_LOOP eval coop-5
+BenchmarkPvbEval/coop-5-4              	   31276	    189884 ns/op	      49 B/op	       1 allocs/op
+PASS
+--- coop-6: process 279
+PVB_LOOP d3 coop-6
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/coop-6-4         	   11612	    507646 ns/op	   34491 B/op	     395 allocs/op
+PVB_LOOP eval coop-6
+BenchmarkPvbEval/coop-6-4              	   16602	    363244 ns/op	   11798 B/op	     303 allocs/op
+PASS
+--- coop-7: process 291
+PVB_LOOP d3 coop-7
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/coop-7-4         	   29712	    202727 ns/op	    7634 B/op	      76 allocs/op
+PVB_LOOP eval coop-7
+BenchmarkPvbEval/coop-7-4              	   40945	    146051 ns/op	      32 B/op	       1 allocs/op
+PASS
+--- crowdfunding-success-1: process 303
+PVB_LOOP d3 crowdfunding-success-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/crowdfunding-success-1-4         	   39193	    153509 ns/op	     352 B/op	       8 allocs/op
+PVB_LOOP eval crowdfunding-success-1
+BenchmarkPvbEval/crowdfunding-success-1-4              	   69170	     88460 ns/op	      50 B/op	       2 allocs/op
+PASS
+--- crowdfunding-success-2: process 314
+PVB_LOOP d3 crowdfunding-success-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/crowdfunding-success-2-4         	   38989	    153627 ns/op	     352 B/op	       8 allocs/op
+PVB_LOOP eval crowdfunding-success-2
+BenchmarkPvbEval/crowdfunding-success-2-4              	   69196	     86823 ns/op	      50 B/op	       2 allocs/op
+PASS
+--- crowdfunding-success-3: process 325
+PVB_LOOP d3 crowdfunding-success-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/crowdfunding-success-3-4         	   38260	    153873 ns/op	     353 B/op	       8 allocs/op
+PVB_LOOP eval crowdfunding-success-3
+BenchmarkPvbEval/crowdfunding-success-3-4              	   70206	     86629 ns/op	      49 B/op	       2 allocs/op
+PASS
+--- currency-1: process 336
+PVB_LOOP d3 currency-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/currency-1-4         	   31818	    186239 ns/op	     193 B/op	      10 allocs/op
+PVB_LOOP eval currency-1
+BenchmarkPvbEval/currency-1-4              	   48639	    123277 ns/op	      65 B/op	       2 allocs/op
+PASS
+--- escrow-redeem_1-1: process 347
+PVB_LOOP d3 escrow-redeem_1-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/escrow-redeem_1-1-4         	   23974	    249487 ns/op	     486 B/op	      14 allocs/op
+PVB_LOOP eval escrow-redeem_1-1
+BenchmarkPvbEval/escrow-redeem_1-1-4              	   37803	    159421 ns/op	      73 B/op	       2 allocs/op
+PASS
+--- escrow-redeem_1-2: process 358
+PVB_LOOP d3 escrow-redeem_1-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/escrow-redeem_1-2-4         	   24127	    248624 ns/op	     485 B/op	      14 allocs/op
+PVB_LOOP eval escrow-redeem_1-2
+BenchmarkPvbEval/escrow-redeem_1-2-4              	   37623	    160381 ns/op	      73 B/op	       2 allocs/op
+PASS
+--- escrow-redeem_2-1: process 369
+PVB_LOOP d3 escrow-redeem_2-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/escrow-redeem_2-1-4         	   21571	    277559 ns/op	     564 B/op	      15 allocs/op
+PVB_LOOP eval escrow-redeem_2-1
+BenchmarkPvbEval/escrow-redeem_2-1-4              	   31290	    190658 ns/op	      85 B/op	       2 allocs/op
+PASS
+--- escrow-redeem_2-2: process 380
+PVB_LOOP d3 escrow-redeem_2-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/escrow-redeem_2-2-4         	   21253	    279829 ns/op	     565 B/op	      15 allocs/op
+PVB_LOOP eval escrow-redeem_2-2
+BenchmarkPvbEval/escrow-redeem_2-2-4              	   31270	    191598 ns/op	      85 B/op	       2 allocs/op
+PASS
+--- escrow-redeem_2-3: process 391
+PVB_LOOP d3 escrow-redeem_2-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/escrow-redeem_2-3-4         	   21592	    277059 ns/op	     563 B/op	      15 allocs/op
+PVB_LOOP eval escrow-redeem_2-3
+BenchmarkPvbEval/escrow-redeem_2-3-4              	   31617	    189044 ns/op	      85 B/op	       2 allocs/op
+PASS
+--- escrow-refund-1: process 402
+PVB_LOOP d3 escrow-refund-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/escrow-refund-1-4         	   39657	    156993 ns/op	     249 B/op	      11 allocs/op
+PVB_LOOP eval escrow-refund-1
+BenchmarkPvbEval/escrow-refund-1-4              	   91053	     67328 ns/op	      45 B/op	       2 allocs/op
+PASS
+--- future-increase-margin-1: process 414
+PVB_LOOP d3 future-increase-margin-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-increase-margin-1-4         	   31365	    187117 ns/op	     193 B/op	      10 allocs/op
+PVB_LOOP eval future-increase-margin-1
+BenchmarkPvbEval/future-increase-margin-1-4              	   50102	    120978 ns/op	      65 B/op	       2 allocs/op
+PASS
+--- future-increase-margin-2: process 425
+PVB_LOOP d3 future-increase-margin-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-increase-margin-2-4         	   17118	    350780 ns/op	     891 B/op	      19 allocs/op
+PVB_LOOP eval future-increase-margin-2
+BenchmarkPvbEval/future-increase-margin-2-4              	   22934	    259570 ns/op	     140 B/op	       2 allocs/op
+PASS
+--- future-increase-margin-3: process 436
+PVB_LOOP d3 future-increase-margin-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-increase-margin-3-4         	   16977	    351450 ns/op	     893 B/op	      19 allocs/op
+PVB_LOOP eval future-increase-margin-3
+BenchmarkPvbEval/future-increase-margin-3-4              	   23150	    255883 ns/op	     139 B/op	       2 allocs/op
+PASS
+--- future-increase-margin-4: process 447
+PVB_LOOP d3 future-increase-margin-4
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-increase-margin-4-4         	   14428	    413870 ns/op	    3608 B/op	     135 allocs/op
+PVB_LOOP eval future-increase-margin-4
+BenchmarkPvbEval/future-increase-margin-4-4              	   23070	    256340 ns/op	    3314 B/op	     106 allocs/op
+PASS
+--- future-increase-margin-5: process 458
+PVB_LOOP d3 future-increase-margin-5
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-increase-margin-5-4         	   10000	    565626 ns/op	    2703 B/op	     107 allocs/op
+PVB_LOOP eval future-increase-margin-5
+BenchmarkPvbEval/future-increase-margin-5-4              	   14773	    405964 ns/op	    2179 B/op	      75 allocs/op
+PASS
+--- future-pay-out-1: process 469
+PVB_LOOP d3 future-pay-out-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-pay-out-1-4         	   32488	    185352 ns/op	     192 B/op	      10 allocs/op
+PVB_LOOP eval future-pay-out-1
+BenchmarkPvbEval/future-pay-out-1-4              	   49573	    121949 ns/op	      65 B/op	       2 allocs/op
+PASS
+--- future-pay-out-2: process 479
+PVB_LOOP d3 future-pay-out-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-pay-out-2-4         	   17209	    348070 ns/op	     891 B/op	      19 allocs/op
+PVB_LOOP eval future-pay-out-2
+BenchmarkPvbEval/future-pay-out-2-4              	   23227	    256629 ns/op	     139 B/op	       2 allocs/op
+PASS
+--- future-pay-out-3: process 490
+PVB_LOOP d3 future-pay-out-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-pay-out-3-4         	   17318	    347503 ns/op	     890 B/op	      19 allocs/op
+PVB_LOOP eval future-pay-out-3
+BenchmarkPvbEval/future-pay-out-3-4              	   23590	    255092 ns/op	     138 B/op	       2 allocs/op
+PASS
+--- future-pay-out-4: process 501
+PVB_LOOP d3 future-pay-out-4
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-pay-out-4-4         	   10604	    563499 ns/op	    2686 B/op	     107 allocs/op
+PVB_LOOP eval future-pay-out-4
+BenchmarkPvbEval/future-pay-out-4-4              	   14492	    415138 ns/op	    2183 B/op	      75 allocs/op
+PASS
+--- future-settle-early-1: process 512
+PVB_LOOP d3 future-settle-early-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-settle-early-1-4         	   32119	    184475 ns/op	     192 B/op	      10 allocs/op
+PVB_LOOP eval future-settle-early-1
+BenchmarkPvbEval/future-settle-early-1-4              	   50038	    119905 ns/op	      65 B/op	       2 allocs/op
+PASS
+--- future-settle-early-2: process 522
+PVB_LOOP d3 future-settle-early-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-settle-early-2-4         	   17374	    345995 ns/op	     889 B/op	      19 allocs/op
+PVB_LOOP eval future-settle-early-2
+BenchmarkPvbEval/future-settle-early-2-4              	   22929	    257346 ns/op	     140 B/op	       2 allocs/op
+PASS
+--- future-settle-early-3: process 533
+PVB_LOOP d3 future-settle-early-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-settle-early-3-4         	   17278	    347402 ns/op	     890 B/op	      19 allocs/op
+PVB_LOOP eval future-settle-early-3
+BenchmarkPvbEval/future-settle-early-3-4              	   22425	    266172 ns/op	     143 B/op	       2 allocs/op
+PASS
+--- future-settle-early-4: process 544
+PVB_LOOP d3 future-settle-early-4
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/future-settle-early-4-4         	   12368	    475244 ns/op	    2052 B/op	      87 allocs/op
+PVB_LOOP eval future-settle-early-4
+BenchmarkPvbEval/future-settle-early-4-4              	   20439	    288295 ns/op	    1607 B/op	      56 allocs/op
+PASS
+--- game-sm-success_1-1: process 555
+PVB_LOOP d3 game-sm-success_1-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/game-sm-success_1-1-4         	   17995	    330494 ns/op	    1480 B/op	      62 allocs/op
+PVB_LOOP eval game-sm-success_1-1
+BenchmarkPvbEval/game-sm-success_1-1-4              	   31364	    187536 ns/op	     904 B/op	      29 allocs/op
+PASS
+--- game-sm-success_1-2: process 566
+PVB_LOOP d3 game-sm-success_1-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/game-sm-success_1-2-4         	   45348	    131492 ns/op	     472 B/op	      10 allocs/op
+PVB_LOOP eval game-sm-success_1-2
+BenchmarkPvbEval/game-sm-success_1-2-4              	   68802	     84654 ns/op	      47 B/op	       2 allocs/op
+PASS
+--- game-sm-success_1-3: process 577
+PVB_LOOP d3 game-sm-success_1-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/game-sm-success_1-3-4         	   13188	    456428 ns/op	    1922 B/op	      70 allocs/op
+PVB_LOOP eval game-sm-success_1-3
+BenchmarkPvbEval/game-sm-success_1-3-4              	   19098	    316646 ns/op	    1121 B/op	      34 allocs/op
+PASS
+--- game-sm-success_1-4: process 588
+PVB_LOOP d3 game-sm-success_1-4
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/game-sm-success_1-4-4         	   41347	    146281 ns/op	     606 B/op	      12 allocs/op
+PVB_LOOP eval game-sm-success_1-4
+BenchmarkPvbEval/game-sm-success_1-4-4              	   61146	     97842 ns/op	      51 B/op	       2 allocs/op
+PASS
+--- game-sm-success_2-1: process 599
+PVB_LOOP d3 game-sm-success_2-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/game-sm-success_2-1-4         	   18687	    319738 ns/op	    1476 B/op	      62 allocs/op
+PVB_LOOP eval game-sm-success_2-1
+BenchmarkPvbEval/game-sm-success_2-1-4              	   31503	    188604 ns/op	     904 B/op	      29 allocs/op
+PASS
+--- game-sm-success_2-2: process 610
+PVB_LOOP d3 game-sm-success_2-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/game-sm-success_2-2-4         	   45363	    132075 ns/op	     472 B/op	      10 allocs/op
+PVB_LOOP eval game-sm-success_2-2
+BenchmarkPvbEval/game-sm-success_2-2-4              	   71785	     85836 ns/op	      46 B/op	       2 allocs/op
+PASS
+--- game-sm-success_2-3: process 621
+PVB_LOOP d3 game-sm-success_2-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/game-sm-success_2-3-4         	   12928	    464122 ns/op	    1926 B/op	      70 allocs/op
+PVB_LOOP eval game-sm-success_2-3
+BenchmarkPvbEval/game-sm-success_2-3-4              	   18332	    327408 ns/op	    1126 B/op	      34 allocs/op
+PASS
+--- game-sm-success_2-4: process 632
+PVB_LOOP d3 game-sm-success_2-4
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/game-sm-success_2-4-4         	   41024	    145748 ns/op	     606 B/op	      12 allocs/op
+PVB_LOOP eval game-sm-success_2-4
+BenchmarkPvbEval/game-sm-success_2-4-4              	   58518	    100921 ns/op	      51 B/op	       2 allocs/op
+PASS
+--- game-sm-success_2-5: process 643
+PVB_LOOP d3 game-sm-success_2-5
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/game-sm-success_2-5-4         	   13191	    453733 ns/op	    1922 B/op	      70 allocs/op
+PVB_LOOP eval game-sm-success_2-5
+BenchmarkPvbEval/game-sm-success_2-5-4              	   18808	    319639 ns/op	    1123 B/op	      34 allocs/op
+PASS
+--- game-sm-success_2-6: process 654
+PVB_LOOP d3 game-sm-success_2-6
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/game-sm-success_2-6-4         	   39842	    148887 ns/op	     607 B/op	      12 allocs/op
+PVB_LOOP eval game-sm-success_2-6
+BenchmarkPvbEval/game-sm-success_2-6-4              	   58208	    102524 ns/op	      51 B/op	       2 allocs/op
+PASS
+--- guardrail-sorted-large: process 665
+PVB_LOOP d3 guardrail-sorted-large
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/guardrail-sorted-large-4         	   10000	    762742 ns/op	   88436 B/op	    1006 allocs/op
+PVB_LOOP eval guardrail-sorted-large
+BenchmarkPvbEval/guardrail-sorted-large-4              	   27126	    219662 ns/op	     113 B/op	       1 allocs/op
+PASS
+--- guardrail-sorted-small: process 677
+PVB_LOOP d3 guardrail-sorted-small
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/guardrail-sorted-small-4         	   85174	     69595 ns/op	     311 B/op	       4 allocs/op
+PVB_LOOP eval guardrail-sorted-small
+BenchmarkPvbEval/guardrail-sorted-small-4              	  158518	     36893 ns/op	      18 B/op	       1 allocs/op
+PASS
+--- guardrail-unsorted-large: process 688
+PVB_LOOP d3 guardrail-unsorted-large
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/guardrail-unsorted-large-4         	    8766	    772423 ns/op	   88500 B/op	    1006 allocs/op
+PVB_LOOP eval guardrail-unsorted-large
+BenchmarkPvbEval/guardrail-unsorted-large-4              	   19213	    309955 ns/op	     164 B/op	       1 allocs/op
+PASS
+--- guardrail-unsorted-small: process 700
+PVB_LOOP d3 guardrail-unsorted-small
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/guardrail-unsorted-small-4         	   90193	     67449 ns/op	     310 B/op	       4 allocs/op
+PVB_LOOP eval guardrail-unsorted-small
+BenchmarkPvbEval/guardrail-unsorted-small-4              	  169706	     35195 ns/op	      18 B/op	       1 allocs/op
+PASS
+--- multisig-sm-01: process 711
+PVB_LOOP d3 multisig-sm-01
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/multisig-sm-01-4         	   17264	    346297 ns/op	    2678 B/op	     107 allocs/op
+PVB_LOOP eval multisig-sm-01
+BenchmarkPvbEval/multisig-sm-01-4              	   30182	    202161 ns/op	    2351 B/op	      78 allocs/op
+PASS
+--- multisig-sm-02: process 722
+PVB_LOOP d3 multisig-sm-02
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/multisig-sm-02-4         	   17538	    340399 ns/op	    2893 B/op	     112 allocs/op
+PVB_LOOP eval multisig-sm-02
+BenchmarkPvbEval/multisig-sm-02-4              	   31569	    192416 ns/op	    2504 B/op	      82 allocs/op
+PASS
+--- multisig-sm-03: process 733
+PVB_LOOP d3 multisig-sm-03
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/multisig-sm-03-4         	   17218	    345673 ns/op	    3070 B/op	     117 allocs/op
+PVB_LOOP eval multisig-sm-03
+BenchmarkPvbEval/multisig-sm-03-4              	   30952	    195606 ns/op	    2617 B/op	      86 allocs/op
+PASS
+--- multisig-sm-04: process 744
+PVB_LOOP d3 multisig-sm-04
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/multisig-sm-04-4         	   17364	    346725 ns/op	    3493 B/op	     120 allocs/op
+PVB_LOOP eval multisig-sm-04
+BenchmarkPvbEval/multisig-sm-04-4              	   30085	    197787 ns/op	    2974 B/op	      88 allocs/op
+PASS
+--- multisig-sm-05: process 755
+PVB_LOOP d3 multisig-sm-05
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/multisig-sm-05-4         	   14008	    426864 ns/op	     869 B/op	      41 allocs/op
+PVB_LOOP eval multisig-sm-05
+BenchmarkPvbEval/multisig-sm-05-4              	   21238	    282702 ns/op	     385 B/op	      10 allocs/op
+PASS
+--- multisig-sm-06: process 766
+PVB_LOOP d3 multisig-sm-06
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/multisig-sm-06-4         	   17488	    343998 ns/op	    2677 B/op	     107 allocs/op
+PVB_LOOP eval multisig-sm-06
+BenchmarkPvbEval/multisig-sm-06-4              	   30309	    197879 ns/op	    2350 B/op	      78 allocs/op
+PASS
+--- multisig-sm-07: process 777
+PVB_LOOP d3 multisig-sm-07
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/multisig-sm-07-4         	   17341	    344006 ns/op	    2894 B/op	     112 allocs/op
+PVB_LOOP eval multisig-sm-07
+BenchmarkPvbEval/multisig-sm-07-4              	   30315	    197995 ns/op	    2506 B/op	      82 allocs/op
+PASS
+--- multisig-sm-08: process 788
+PVB_LOOP d3 multisig-sm-08
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/multisig-sm-08-4         	   17230	    346310 ns/op	    3070 B/op	     117 allocs/op
+PVB_LOOP eval multisig-sm-08
+BenchmarkPvbEval/multisig-sm-08-4              	   28903	    201070 ns/op	    2620 B/op	      86 allocs/op
+PASS
+--- multisig-sm-09: process 799
+PVB_LOOP d3 multisig-sm-09
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/multisig-sm-09-4         	   17132	    351950 ns/op	    3495 B/op	     120 allocs/op
+PVB_LOOP eval multisig-sm-09
+BenchmarkPvbEval/multisig-sm-09-4              	   29980	    200050 ns/op	    2975 B/op	      88 allocs/op
+PASS
+--- multisig-sm-10: process 810
+PVB_LOOP d3 multisig-sm-10
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/multisig-sm-10-4         	   13980	    428022 ns/op	     869 B/op	      41 allocs/op
+PVB_LOOP eval multisig-sm-10
+BenchmarkPvbEval/multisig-sm-10-4              	   21373	    279887 ns/op	     385 B/op	      10 allocs/op
+PASS
+--- ping-pong-1: process 821
+PVB_LOOP d3 ping-pong-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/ping-pong-1-4         	   21075	    282838 ns/op	     554 B/op	      38 allocs/op
+PVB_LOOP eval ping-pong-1
+BenchmarkPvbEval/ping-pong-1-4              	   38449	    156120 ns/op	     305 B/op	      10 allocs/op
+PASS
+--- ping-pong-2: process 832
+PVB_LOOP d3 ping-pong-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/ping-pong-2-4         	   21506	    279203 ns/op	     553 B/op	      38 allocs/op
+PVB_LOOP eval ping-pong-2
+BenchmarkPvbEval/ping-pong-2-4              	   38035	    155285 ns/op	     305 B/op	      10 allocs/op
+PASS
+--- ping-pong_2-1: process 843
+PVB_LOOP d3 ping-pong_2-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/ping-pong_2-1-4         	   27885	    214895 ns/op	     220 B/op	      29 allocs/op
+PVB_LOOP eval ping-pong_2-1
+BenchmarkPvbEval/ping-pong_2-1-4              	   67402	     90879 ns/op	      50 B/op	       2 allocs/op
+PASS
+--- prism-1: process 854
+PVB_LOOP d3 prism-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/prism-1-4         	   52959	    113554 ns/op	     214 B/op	       6 allocs/op
+PVB_LOOP eval prism-1
+BenchmarkPvbEval/prism-1-4              	   82804	     71307 ns/op	      45 B/op	       2 allocs/op
+PASS
+--- prism-2: process 866
+PVB_LOOP d3 prism-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/prism-2-4         	   18264	    327257 ns/op	     952 B/op	      44 allocs/op
+PVB_LOOP eval prism-2
+BenchmarkPvbEval/prism-2-4              	   31340	    193103 ns/op	     313 B/op	      10 allocs/op
+PASS
+--- prism-3: process 877
+PVB_LOOP d3 prism-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/prism-3-4         	   24945	    240445 ns/op	     644 B/op	      12 allocs/op
+PVB_LOOP eval prism-3
+BenchmarkPvbEval/prism-3-4              	   34405	    173180 ns/op	      76 B/op	       2 allocs/op
+PASS
+--- pubkey-1: process 888
+PVB_LOOP d3 pubkey-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/pubkey-1-4         	   56205	    104728 ns/op	     149 B/op	       5 allocs/op
+PVB_LOOP eval pubkey-1
+BenchmarkPvbEval/pubkey-1-4              	  101518	     59022 ns/op	      44 B/op	       2 allocs/op
+PASS
+--- stablecoin_1-1: process 899
+PVB_LOOP d3 stablecoin_1-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/stablecoin_1-1-4         	    8402	    637858 ns/op	    4129 B/op	     138 allocs/op
+PVB_LOOP eval stablecoin_1-1
+BenchmarkPvbEval/stablecoin_1-1-4              	   14152	    422994 ns/op	    3298 B/op	     100 allocs/op
+PASS
+--- stablecoin_1-2: process 910
+PVB_LOOP d3 stablecoin_1-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/stablecoin_1-2-4         	   46170	    129633 ns/op	     472 B/op	      10 allocs/op
+PVB_LOOP eval stablecoin_1-2
+BenchmarkPvbEval/stablecoin_1-2-4              	   71578	     83148 ns/op	      46 B/op	       2 allocs/op
+PASS
+--- stablecoin_1-3: process 921
+PVB_LOOP d3 stablecoin_1-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/stablecoin_1-3-4         	    8383	    716668 ns/op	    4153 B/op	     138 allocs/op
+PVB_LOOP eval stablecoin_1-3
+BenchmarkPvbEval/stablecoin_1-3-4              	   11680	    508371 ns/op	    3352 B/op	     100 allocs/op
+PASS
+--- stablecoin_1-4: process 932
+PVB_LOOP d3 stablecoin_1-4
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/stablecoin_1-4-4         	   43647	    135250 ns/op	     537 B/op	      11 allocs/op
+PVB_LOOP eval stablecoin_1-4
+BenchmarkPvbEval/stablecoin_1-4-4              	   69528	     88324 ns/op	      47 B/op	       2 allocs/op
+PASS
+--- stablecoin_1-5: process 943
+PVB_LOOP d3 stablecoin_1-5
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/stablecoin_1-5-4         	    6548	    876111 ns/op	    4730 B/op	     141 allocs/op
+PVB_LOOP eval stablecoin_1-5
+BenchmarkPvbEval/stablecoin_1-5-4              	    8858	    660813 ns/op	    3634 B/op	     100 allocs/op
+PASS
+--- stablecoin_1-6: process 954
+PVB_LOOP d3 stablecoin_1-6
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/stablecoin_1-6-4         	   38592	    156037 ns/op	     736 B/op	      14 allocs/op
+PVB_LOOP eval stablecoin_1-6
+BenchmarkPvbEval/stablecoin_1-6-4              	   56121	    108067 ns/op	      52 B/op	       2 allocs/op
+PASS
+--- stablecoin_2-1: process 965
+PVB_LOOP d3 stablecoin_2-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/stablecoin_2-1-4         	    9510	    632073 ns/op	    4089 B/op	     138 allocs/op
+PVB_LOOP eval stablecoin_2-1
+BenchmarkPvbEval/stablecoin_2-1-4              	   14058	    429131 ns/op	    3299 B/op	     100 allocs/op
+PASS
+--- stablecoin_2-2: process 976
+PVB_LOOP d3 stablecoin_2-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/stablecoin_2-2-4         	   46711	    128643 ns/op	     471 B/op	      10 allocs/op
+PVB_LOOP eval stablecoin_2-2
+BenchmarkPvbEval/stablecoin_2-2-4              	   70882	     83483 ns/op	      46 B/op	       2 allocs/op
+PASS
+--- stablecoin_2-3: process 987
+PVB_LOOP d3 stablecoin_2-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/stablecoin_2-3-4         	    8337	    713723 ns/op	    4155 B/op	     138 allocs/op
+PVB_LOOP eval stablecoin_2-3
+BenchmarkPvbEval/stablecoin_2-3-4              	   11752	    508292 ns/op	    3350 B/op	     100 allocs/op
+PASS
+--- stablecoin_2-4: process 998
+PVB_LOOP d3 stablecoin_2-4
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/stablecoin_2-4-4         	   44929	    134695 ns/op	     536 B/op	      11 allocs/op
+PVB_LOOP eval stablecoin_2-4
+BenchmarkPvbEval/stablecoin_2-4-4              	   66668	     89552 ns/op	      47 B/op	       2 allocs/op
+PASS
+--- token-account-1: process 1009
+PVB_LOOP d3 token-account-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/token-account-1-4         	   39367	    152788 ns/op	     170 B/op	      10 allocs/op
+PVB_LOOP eval token-account-1
+BenchmarkPvbEval/token-account-1-4              	   65230	     88172 ns/op	      50 B/op	       2 allocs/op
+PASS
+--- token-account-2: process 1020
+PVB_LOOP d3 token-account-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/token-account-2-4         	   27585	    219048 ns/op	     447 B/op	       9 allocs/op
+PVB_LOOP eval token-account-2
+BenchmarkPvbEval/token-account-2-4              	   37406	    162282 ns/op	      74 B/op	       2 allocs/op
+PASS
+--- uniswap-1: process 1031
+PVB_LOOP d3 uniswap-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/uniswap-1-4         	   21955	    272039 ns/op	     195 B/op	       9 allocs/op
+PVB_LOOP eval uniswap-1
+BenchmarkPvbEval/uniswap-1-4              	   29180	    207154 ns/op	     117 B/op	       2 allocs/op
+PASS
+--- uniswap-2: process 1042
+PVB_LOOP d3 uniswap-2
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/uniswap-2-4         	   35838	    167299 ns/op	     240 B/op	      11 allocs/op
+PVB_LOOP eval uniswap-2
+BenchmarkPvbEval/uniswap-2-4              	   59676	    102573 ns/op	      53 B/op	       2 allocs/op
+PASS
+--- uniswap-3: process 1052
+PVB_LOOP d3 uniswap-3
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/uniswap-3-4         	    5248	   1058213 ns/op	   13610 B/op	     329 allocs/op
+PVB_LOOP eval uniswap-3
+BenchmarkPvbEval/uniswap-3-4              	    6614	    907353 ns/op	    9872 B/op	     268 allocs/op
+PASS
+--- uniswap-4: process 1064
+PVB_LOOP d3 uniswap-4
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/uniswap-4-4         	   30454	    198451 ns/op	    1122 B/op	      23 allocs/op
+PVB_LOOP eval uniswap-4
+BenchmarkPvbEval/uniswap-4-4              	   42766	    144851 ns/op	      60 B/op	       2 allocs/op
+PASS
+--- uniswap-5: process 1075
+PVB_LOOP d3 uniswap-5
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/uniswap-5-4         	    7857	    741350 ns/op	    5656 B/op	     139 allocs/op
+PVB_LOOP eval uniswap-5
+BenchmarkPvbEval/uniswap-5-4              	   10000	    552449 ns/op	    3361 B/op	      82 allocs/op
+PASS
+--- uniswap-6: process 1086
+PVB_LOOP d3 uniswap-6
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/uniswap-6-4         	   31554	    191679 ns/op	     992 B/op	      21 allocs/op
+PVB_LOOP eval uniswap-6
+BenchmarkPvbEval/uniswap-6-4              	   43382	    136606 ns/op	      59 B/op	       2 allocs/op
+PASS
+--- vesting-1: process 1097
+PVB_LOOP d3 vesting-1
+goos: linux
+goarch: amd64
+pkg: github.com/blinklabs-io/plutigo/tests
+cpu: AMD EPYC-Milan Processor
+BenchmarkPvbFlatFiles/vesting-1-4         	   23370	    255145 ns/op	     268 B/op	       7 allocs/op
+PVB_LOOP eval vesting-1
+BenchmarkPvbEval/vesting-1-4              	   36498	    166054 ns/op	      75 B/op	       2 allocs/op
+PASS

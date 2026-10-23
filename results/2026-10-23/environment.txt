@@ -1,0 +1,49 @@
+date: 2026-10-23T10:28:22+00:00
+kernel: Linux 6.18.57
+cpu: AMD EPYC-Milan Processor
+cores: 16
+memory: 61Gi
+cpu flags (selected): hypervisor sse4_2 avx avx2 bmi2 fma sha_ni
+topology: Model name AMD EPYC-Milan Processor; Thread(s) per core 2; Core(s) per socket 8; Socket(s) 1; Hypervisor vendor KVM; Virtualization type full; NUMA node(s) 1
+lscpu mhz: n/a
+cpufreq: none (no cpufreq driver, for example a KVM guest)
+thp: enabled madvise, defrag madvise
+kernel cmdline: BOOT_IMAGE=(hd0,gpt2)//kernels/ipabfanvi3crlh1zf18ss5fzh6lk1glg-linux-6.18.57-bzImage init=/nix/store/1nhkfsbcc9qy7g29vp49w4kxybwmiap0-nixos-system-bench-runner-26.05.20261020.cd4ea8d/init transparent_hugepage=madvise root=fstab loglevel=4 lsm=landlock,yama,bpf
+timers: bench-selfdestruct.timer systemd-tmpfiles-clean.timer
+load avg at start: 0.28 0.09 0.03
+docker: 29.9.1 (linux/amd64)
+docker cpus: 16
+docker memory: 62786 MiB
+docker run flags: --rm --cap-add SYS_NICE --network none
+lanes: 3 (lane0 2,3,4,5; lane1 6,7,8,9; lane2 10,11,12,13; idle cores 14,15)
+parallel: yes (up to 3 VMs at once; haskell and the drift probe run alone on lane0)
+harness: 0529b3ac142270732bbd1849860f2a4322dd6d9a
+vm order: haskell aiken aiken-wasm blaze-v8 plutigo scalus-cek scalus-jit scalus-js uplc-turbo
+bench_quick: 0
+bench_scripts: <all> (89 of 89 scripts)
+bench_loops: d3,eval,check
+bench_timing: normal
+bench_trace: 0
+host cpus: 0,1,14,15
+server qualification: pass, ratio 1.073, attempt 1 of 3, nbg1; rejected: none; haskell geo ratio 1.073 <= 1.15 vs ccx43 reference (harness b0d8a22, 2026-10-22): auction_1-1 1.02, coop-6 1.10, uniswap-1 1.10
+image haskell: ghcr.io/lantr-io/pvb-haskell:7b78360d2cdd ghcr.io/lantr-io/pvb-haskell@sha256:f1239cfa64f02a5b33434ef1277660fe3d47a2e83a078403c017e7f26ce33610
+noise haskell: load avg before 1.70 0.57 0.20, steal during run 0.00 % (0 of 1473674 ticks) lane0
+image aiken: ghcr.io/lantr-io/pvb-aiken:553af555815c ghcr.io/lantr-io/pvb-aiken@sha256:b1328c3825f56f452b1f7de6b156b45729d56979ab8afb122e9223fad02a5660
+image aiken-wasm: ghcr.io/lantr-io/pvb-aiken-wasm:0438949b9439 ghcr.io/lantr-io/pvb-aiken-wasm@sha256:e799dbcfb01ae2ae7a583388d1c32e5654c8a4bcae0411f1a1024325d481ca0a
+image blaze-v8: ghcr.io/lantr-io/pvb-blaze-v8:98c2ab4a64bc ghcr.io/lantr-io/pvb-blaze-v8@sha256:083fc21b0e42c4e9b526b9feebf83d14909519b141adbe2132ea9b819fb8046c
+noise aiken: load avg before 1.00 1.00 0.74, steal during run 0.00 % (0 of 2988027 ticks) lane0
+image plutigo: ghcr.io/lantr-io/pvb-plutigo:0135f9baacb4 ghcr.io/lantr-io/pvb-plutigo@sha256:aefe3292c5e2fde945273a5dee7e71f006cfcef45cf8aaf65e3b92f87ef00e0d
+noise aiken-wasm: load avg before 1.00 1.00 0.74, steal during run 0.00 % (0 of 3015448 ticks) lane1
+image scalus-cek: ghcr.io/lantr-io/pvb-scalus-cek:e0632b1f04b6 ghcr.io/lantr-io/pvb-scalus-cek@sha256:423ebf22eb8446258c86d5518f2ef9e9791304395674677c3c2734b7b32fe2a4
+noise plutigo: load avg before 3.22 3.19 2.91, steal during run 0.00 % (0 of 1707344 ticks) lane0
+image scalus-jit: ghcr.io/lantr-io/pvb-scalus-jit:277188e34d2f ghcr.io/lantr-io/pvb-scalus-jit@sha256:ebe43dda94aa7a2e93ae75d805715d83065b1e5dcc9fe7fbe59865e6ec5c43ba
+noise blaze-v8: load avg before 1.16 1.03 0.75, steal during run 0.00 % (0 of 6831090 ticks) lane2
+image scalus-js: ghcr.io/lantr-io/pvb-scalus-js:c98417becc85 ghcr.io/lantr-io/pvb-scalus-js@sha256:91aa00c16b40070fb0efa11861249e518f4470920806962f99cbdb35f539e6b8
+noise scalus-js: load avg before 3.28 3.45 3.40, steal during run 0.00 % (0 of 4817430 ticks) lane2
+image uplc-turbo: ghcr.io/lantr-io/pvb-uplc-turbo:4f5f499a7ef9 ghcr.io/lantr-io/pvb-uplc-turbo@sha256:494e43756cca00c1160f0eefdf9836e12bb092dfbe9a714cecbd2c073246882d
+noise scalus-jit: load avg before 3.20 3.18 3.08, steal during run 0.00 % (0 of 9002651 ticks) lane0
+noise uplc-turbo: load avg before 4.04 3.85 3.78, steal during run 0.00 % (0 of 3025942 ticks) lane2
+noise scalus-cek: load avg before 3.16 3.18 2.91, steal during run 0.00 % (0 of 13356070 ticks) lane1
+steal during the whole run: 0.00 % (0 of 17975466 ticks)
+load avg at end: 1.10 1.17 1.66
+drift (haskell, end vs start): +0.6 % over 5 scripts

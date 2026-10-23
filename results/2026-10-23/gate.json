@@ -1,0 +1,105 @@
+{
+  "reference": "/repo/check/reference/haskell-check.csv",
+  "ok": true,
+  "vms": {
+    "aiken": {
+      "verdict": "pass",
+      "no_costing": false,
+      "scripts": 89,
+      "matching": 89,
+      "mismatches": [],
+      "extra_scripts": [],
+      "mode": "strict",
+      "reference": "strict",
+      "reason": "status, cpu and mem equal the strict reference"
+    },
+    "aiken-wasm": {
+      "verdict": "pass",
+      "no_costing": false,
+      "scripts": 89,
+      "matching": 89,
+      "mismatches": [],
+      "extra_scripts": [],
+      "mode": "strict",
+      "reference": "strict",
+      "reason": "status, cpu and mem equal the strict reference"
+    },
+    "blaze-v8": {
+      "verdict": "pass",
+      "no_costing": false,
+      "scripts": 89,
+      "matching": 89,
+      "mismatches": [],
+      "extra_scripts": [],
+      "mode": "strict",
+      "reference": "strict",
+      "reason": "status, cpu and mem equal the strict reference"
+    },
+    "haskell": {
+      "verdict": "pass",
+      "no_costing": false,
+      "scripts": 89,
+      "matching": 89,
+      "mismatches": [],
+      "extra_scripts": [],
+      "mode": "strict",
+      "reference": "strict",
+      "reason": "status, cpu and mem equal the strict reference"
+    },
+    "plutigo": {
+      "verdict": "pass",
+      "no_costing": false,
+      "scripts": 89,
+      "matching": 89,
+      "mismatches": [],
+      "extra_scripts": [],
+      "mode": "strict",
+      "reference": "strict",
+      "reason": "status, cpu and mem equal the strict reference"
+    },
+    "scalus-cek": {
+      "verdict": "pass",
+      "no_costing": false,
+      "scripts": 89,
+      "matching": 89,
+      "mismatches": [],
+      "extra_scripts": [],
+      "mode": "strict",
+      "reference": "strict",
+      "reason": "status, cpu and mem equal the strict reference"
+    },
+    "scalus-jit": {
+      "verdict": "pass",
+      "no_costing": false,
+      "scripts": 89,
+      "matching": 89,
+      "mismatches": [],
+      "extra_scripts": [],
+      "mode": "strict",
+      "reference": "strict",
+      "reason": "status, cpu and mem equal the strict reference"
+    },
+    "scalus-js": {
+      "verdict": "pass",
+      "no_costing": false,
+      "scripts": 89,
+      "matching": 89,
+      "mismatches": [],
+      "extra_scripts": [],
+      "mode": "strict",
+      "reference": "strict",
+      "reason": "status, cpu and mem equal the strict reference"
+    },
+    "uplc-turbo": {
+      "verdict": "pass",
+      "no_costing": false,
+      "scripts": 89,
+      "matching": 89,
+      "mismatches": [],
+      "extra_scripts": [],
+      "mode": "strict",
+      "reference": "strict",
+      "reason": "status, cpu and mem equal the strict reference"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+10:29 haskell 1/9 running lane0
+10:44 haskell 1/9 ok in 15 min lane0
+10:44 aiken 2/9 running lane0
+10:44 aiken-wasm 3/9 running lane1
+10:44 blaze-v8 4/9 running lane2
+11:15 aiken 2/9 ok in 31 min lane0
+11:15 plutigo 5/9 running lane0
+11:16 aiken-wasm 3/9 ok in 31 min lane1
+11:16 scalus-cek 6/9 running lane1
+11:33 plutigo 5/9 ok in 17 min lane0
+11:33 scalus-jit 7/9 running lane0
+11:55 blaze-v8 4/9 ok in 71 min lane2
+11:55 scalus-js 8/9 running lane2
+12:46 scalus-js 8/9 ok in 50 min lane2
+12:46 uplc-turbo 9/9 running lane2
+13:07 scalus-jit 7/9 ok in 93 min lane0
+13:17 uplc-turbo 9/9 ok in 31 min lane2
+13:35 scalus-cek 6/9 ok in 139 min lane1
+13:35 drift probe (haskell) running lane0
+13:35 VMs done after 186 min; building unified.csv, gate, report

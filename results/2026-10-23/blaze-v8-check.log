@@ -1,0 +1,17 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/bench/blaze-plutus/packages/blaze-plutus[39m
+
+[90mstdout[2m | bench/pvb-check.test.ts[2m > [22m[2mpvb check
+[22m[39mengine: node 22.23.4 (V8)
+cost model: 350 mainnet parameters; 3 not used by blaze's table, 7 table fields without a mainnet parameter (blaze default kept)
+  not used: valueContains-cpu-arguments-model-arguments-intercept valueContains-cpu-arguments-model-arguments-slope1 valueContains-cpu-arguments-model-arguments-slope2
+  missing: valueContains-cpu-arguments-{model-arguments-minimum} (const_above_diagonal.minimum) valueContains-cpu-arguments-{model-arguments-c00} (const_above_diagonal.coeff00) valueContains-cpu-arguments-{model-arguments-c10} (const_above_diagonal.coeff10) valueContains-cpu-arguments-{model-arguments-c01} (const_above_diagonal.coeff01) valueContains-cpu-arguments-{model-arguments-c20} (const_above_diagonal.coeff20) valueContains-cpu-arguments-{model-arguments-c11} (const_above_diagonal.coeff11) valueContains-cpu-arguments-{model-arguments-c02} (const_above_diagonal.coeff02)
+
+ [32m✓[39m bench/pvb-check.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 450[2mms[22m[39m
+   [33m[2m✓[22m[39m pvb check [33m 447[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 11:55:50
+[2m   Duration [22m 970ms[2m (transform 262ms, setup 0ms, import 397ms, tests 450ms, environment 0ms)[22m
+

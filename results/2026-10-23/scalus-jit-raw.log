@@ -1,0 +1,2537 @@
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_1-1.flat)
+
+# Run progress: 0.00% complete, ETA 01:06:45
+# Fork: 1 of 1
+# Warmup Iteration   1: 46.954 us/op
+Iteration   1: 38.623 us/op
+Iteration   2: 37.654 us/op
+Iteration   3: 37.452 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  37.910 ±(99.9%) 11.417 us/op [Average]
+  (min, avg, max) = (37.452, 37.910, 38.623), stdev = 0.626
+  CI (99.9%): [26.493, 49.327] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_1-2.flat)
+
+# Run progress: 1.12% complete, ETA 01:17:21
+# Fork: 1 of 1
+# Warmup Iteration   1: 517.835 us/op
+Iteration   1: 252.525 us/op
+Iteration   2: 256.989 us/op
+Iteration   3: 256.701 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  255.405 ±(99.9%) 45.577 us/op [Average]
+  (min, avg, max) = (252.525, 255.405, 256.989), stdev = 2.498
+  CI (99.9%): [209.828, 300.982] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_1-3.flat)
+
+# Run progress: 2.25% complete, ETA 01:20:12
+# Fork: 1 of 1
+# Warmup Iteration   1: 387.077 us/op
+Iteration   1: 232.464 us/op
+Iteration   2: 236.200 us/op
+Iteration   3: 232.615 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  233.760 ±(99.9%) 38.581 us/op [Average]
+  (min, avg, max) = (232.464, 233.760, 236.200), stdev = 2.115
+  CI (99.9%): [195.179, 272.341] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_1-4.flat)
+
+# Run progress: 3.37% complete, ETA 01:20:17
+# Fork: 1 of 1
+# Warmup Iteration   1: 53.993 us/op
+Iteration   1: 46.014 us/op
+Iteration   2: 45.045 us/op
+Iteration   3: 45.519 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  45.526 ±(99.9%) 8.838 us/op [Average]
+  (min, avg, max) = (45.045, 45.526, 46.014), stdev = 0.484
+  CI (99.9%): [36.688, 54.364] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_2-1.flat)
+
+# Run progress: 4.49% complete, ETA 01:18:11
+# Fork: 1 of 1
+# Warmup Iteration   1: 47.092 us/op
+Iteration   1: 38.574 us/op
+Iteration   2: 38.044 us/op
+Iteration   3: 38.561 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  38.393 ±(99.9%) 5.515 us/op [Average]
+  (min, avg, max) = (38.044, 38.393, 38.574), stdev = 0.302
+  CI (99.9%): [32.878, 43.908] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_2-2.flat)
+
+# Run progress: 5.62% complete, ETA 01:16:31
+# Fork: 1 of 1
+# Warmup Iteration   1: 537.272 us/op
+Iteration   1: 246.652 us/op
+Iteration   2: 250.550 us/op
+Iteration   3: 250.395 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  249.199 ±(99.9%) 40.272 us/op [Average]
+  (min, avg, max) = (246.652, 249.199, 250.550), stdev = 2.207
+  CI (99.9%): [208.927, 289.471] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_2-3.flat)
+
+# Run progress: 6.74% complete, ETA 01:16:19
+# Fork: 1 of 1
+# Warmup Iteration   1: 593.146 us/op
+Iteration   1: 303.690 us/op
+Iteration   2: 298.385 us/op
+Iteration   3: 297.653 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  299.910 ±(99.9%) 60.106 us/op [Average]
+  (min, avg, max) = (297.653, 299.910, 303.690), stdev = 3.295
+  CI (99.9%): [239.804, 360.015] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_2-4.flat)
+
+# Run progress: 7.87% complete, ETA 01:15:53
+# Fork: 1 of 1
+# Warmup Iteration   1: 379.319 us/op
+Iteration   1: 237.301 us/op
+Iteration   2: 240.310 us/op
+Iteration   3: 236.067 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  237.893 ±(99.9%) 39.817 us/op [Average]
+  (min, avg, max) = (236.067, 237.893, 240.310), stdev = 2.183
+  CI (99.9%): [198.075, 277.710] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_2-5.flat)
+
+# Run progress: 8.99% complete, ETA 01:15:20
+# Fork: 1 of 1
+# Warmup Iteration   1: 53.488 us/op
+Iteration   1: 46.059 us/op
+Iteration   2: 45.426 us/op
+Iteration   3: 45.482 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  45.656 ±(99.9%) 6.393 us/op [Average]
+  (min, avg, max) = (45.426, 45.656, 46.059), stdev = 0.350
+  CI (99.9%): [39.263, 52.049] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-1.flat)
+
+# Run progress: 10.11% complete, ETA 01:13:57
+# Fork: 1 of 1
+# Warmup Iteration   1: 44.308 us/op
+Iteration   1: 43.151 us/op
+Iteration   2: 41.728 us/op
+Iteration   3: 42.277 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  42.385 ±(99.9%) 13.089 us/op [Average]
+  (min, avg, max) = (41.728, 42.385, 43.151), stdev = 0.717
+  CI (99.9%): [29.296, 55.474] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-2.flat)
+
+# Run progress: 11.24% complete, ETA 01:12:21
+# Fork: 1 of 1
+# Warmup Iteration   1: 179.367 us/op
+Iteration   1: 164.953 us/op
+Iteration   2: 167.680 us/op
+Iteration   3: 161.539 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  164.724 ±(99.9%) 56.132 us/op [Average]
+  (min, avg, max) = (161.539, 164.724, 167.680), stdev = 3.077
+  CI (99.9%): [108.592, 220.855] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-3.flat)
+
+# Run progress: 12.36% complete, ETA 01:11:05
+# Fork: 1 of 1
+# Warmup Iteration   1: 706.964 us/op
+Iteration   1: 617.193 us/op
+Iteration   2: 617.342 us/op
+Iteration   3: 617.793 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  617.443 ±(99.9%) 5.697 us/op [Average]
+  (min, avg, max) = (617.193, 617.443, 617.793), stdev = 0.312
+  CI (99.9%): [611.746, 623.139] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-4.flat)
+
+# Run progress: 13.48% complete, ETA 01:09:56
+# Fork: 1 of 1
+# Warmup Iteration   1: 285.476 us/op
+Iteration   1: 244.924 us/op
+Iteration   2: 246.705 us/op
+Iteration   3: 246.735 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  246.121 ±(99.9%) 18.915 us/op [Average]
+  (min, avg, max) = (244.924, 246.121, 246.735), stdev = 1.037
+  CI (99.9%): [227.207, 265.036] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-5.flat)
+
+# Run progress: 14.61% complete, ETA 01:08:49
+# Fork: 1 of 1
+# Warmup Iteration   1: 100.039 us/op
+Iteration   1: 90.189 us/op
+Iteration   2: 89.071 us/op
+Iteration   3: 90.691 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  89.984 ±(99.9%) 15.132 us/op [Average]
+  (min, avg, max) = (89.071, 89.984, 90.691), stdev = 0.829
+  CI (99.9%): [74.851, 105.116] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-6.flat)
+
+# Run progress: 15.73% complete, ETA 01:07:44
+# Fork: 1 of 1
+# Warmup Iteration   1: 155.335 us/op
+Iteration   1: 144.573 us/op
+Iteration   2: 146.777 us/op
+Iteration   3: 145.096 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  145.482 ±(99.9%) 21.007 us/op [Average]
+  (min, avg, max) = (144.573, 145.482, 146.777), stdev = 1.151
+  CI (99.9%): [124.476, 166.489] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-7.flat)
+
+# Run progress: 16.85% complete, ETA 01:06:34
+# Fork: 1 of 1
+# Warmup Iteration   1: 60.152 us/op
+Iteration   1: 57.584 us/op
+Iteration   2: 57.612 us/op
+Iteration   3: 57.815 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  57.670 ±(99.9%) 2.303 us/op [Average]
+  (min, avg, max) = (57.584, 57.670, 57.815), stdev = 0.126
+  CI (99.9%): [55.367, 59.973] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = crowdfunding-success-1.flat)
+
+# Run progress: 17.98% complete, ETA 01:05:25
+# Fork: 1 of 1
+# Warmup Iteration   1: 53.225 us/op
+Iteration   1: 43.753 us/op
+Iteration   2: 42.897 us/op
+Iteration   3: 43.154 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  43.268 ±(99.9%) 8.013 us/op [Average]
+  (min, avg, max) = (42.897, 43.268, 43.753), stdev = 0.439
+  CI (99.9%): [35.255, 51.280] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = crowdfunding-success-2.flat)
+
+# Run progress: 19.10% complete, ETA 01:04:31
+# Fork: 1 of 1
+# Warmup Iteration   1: 55.632 us/op
+Iteration   1: 47.534 us/op
+Iteration   2: 43.987 us/op
+Iteration   3: 45.782 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  45.768 ±(99.9%) 32.361 us/op [Average]
+  (min, avg, max) = (43.987, 45.768, 47.534), stdev = 1.774
+  CI (99.9%): [13.406, 78.129] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = crowdfunding-success-3.flat)
+
+# Run progress: 20.22% complete, ETA 01:03:36
+# Fork: 1 of 1
+# Warmup Iteration   1: 54.345 us/op
+Iteration   1: 45.064 us/op
+Iteration   2: 44.295 us/op
+Iteration   3: 45.534 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  44.965 ±(99.9%) 11.410 us/op [Average]
+  (min, avg, max) = (44.295, 44.965, 45.534), stdev = 0.625
+  CI (99.9%): [33.555, 56.375] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = currency-1.flat)
+
+# Run progress: 21.35% complete, ETA 01:02:41
+# Fork: 1 of 1
+# Warmup Iteration   1: 92.060 us/op
+Iteration   1: 73.554 us/op
+Iteration   2: 71.451 us/op
+Iteration   3: 70.765 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  71.924 ±(99.9%) 26.509 us/op [Average]
+  (min, avg, max) = (70.765, 71.924, 73.554), stdev = 1.453
+  CI (99.9%): [45.414, 98.433] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = escrow-redeem_1-1.flat)
+
+# Run progress: 22.47% complete, ETA 01:01:47
+# Fork: 1 of 1
+# Warmup Iteration   1: 121.614 us/op
+Iteration   1: 96.025 us/op
+Iteration   2: 91.460 us/op
+Iteration   3: 91.192 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  92.893 ±(99.9%) 49.553 us/op [Average]
+  (min, avg, max) = (91.192, 92.893, 96.025), stdev = 2.716
+  CI (99.9%): [43.339, 142.446] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = escrow-redeem_1-2.flat)
+
+# Run progress: 23.60% complete, ETA 01:00:54
+# Fork: 1 of 1
+# Warmup Iteration   1: 120.373 us/op
+Iteration   1: 94.735 us/op
+Iteration   2: 92.697 us/op
+Iteration   3: 91.353 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  92.928 ±(99.9%) 31.064 us/op [Average]
+  (min, avg, max) = (91.353, 92.928, 94.735), stdev = 1.703
+  CI (99.9%): [61.864, 123.992] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = escrow-redeem_2-1.flat)
+
+# Run progress: 24.72% complete, ETA 01:00:01
+# Fork: 1 of 1
+# Warmup Iteration   1: 143.611 us/op
+Iteration   1: 112.372 us/op
+Iteration   2: 109.668 us/op
+Iteration   3: 106.475 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  109.505 ±(99.9%) 53.853 us/op [Average]
+  (min, avg, max) = (106.475, 109.505, 112.372), stdev = 2.952
+  CI (99.9%): [55.652, 163.358] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = escrow-redeem_2-2.flat)
+
+# Run progress: 25.84% complete, ETA 00:59:09
+# Fork: 1 of 1
+# Warmup Iteration   1: 142.633 us/op
+Iteration   1: 110.394 us/op
+Iteration   2: 108.247 us/op
+Iteration   3: 106.826 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  108.489 ±(99.9%) 32.774 us/op [Average]
+  (min, avg, max) = (106.826, 108.489, 110.394), stdev = 1.796
+  CI (99.9%): [75.715, 141.263] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = escrow-redeem_2-3.flat)
+
+# Run progress: 26.97% complete, ETA 00:58:16
+# Fork: 1 of 1
+# Warmup Iteration   1: 141.825 us/op
+Iteration   1: 111.142 us/op
+Iteration   2: 107.603 us/op
+Iteration   3: 106.274 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  108.340 ±(99.9%) 45.908 us/op [Average]
+  (min, avg, max) = (106.274, 108.340, 111.142), stdev = 2.516
+  CI (99.9%): [62.432, 154.248] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = escrow-refund-1.flat)
+
+# Run progress: 28.09% complete, ETA 00:57:23
+# Fork: 1 of 1
+# Warmup Iteration   1: 45.882 us/op
+Iteration   1: 37.155 us/op
+Iteration   2: 35.559 us/op
+Iteration   3: 36.234 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  36.316 ±(99.9%) 14.616 us/op [Average]
+  (min, avg, max) = (35.559, 36.316, 37.155), stdev = 0.801
+  CI (99.9%): [21.700, 50.932] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-increase-margin-1.flat)
+
+# Run progress: 29.21% complete, ETA 00:56:31
+# Fork: 1 of 1
+# Warmup Iteration   1: 90.193 us/op
+Iteration   1: 74.525 us/op
+Iteration   2: 70.964 us/op
+Iteration   3: 69.448 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  71.645 ±(99.9%) 47.546 us/op [Average]
+  (min, avg, max) = (69.448, 71.645, 74.525), stdev = 2.606
+  CI (99.9%): [24.100, 119.191] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-increase-margin-2.flat)
+
+# Run progress: 30.34% complete, ETA 00:55:37
+# Fork: 1 of 1
+# Warmup Iteration   1: 195.489 us/op
+Iteration   1: 146.703 us/op
+Iteration   2: 144.653 us/op
+Iteration   3: 144.050 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  145.135 ±(99.9%) 25.366 us/op [Average]
+  (min, avg, max) = (144.050, 145.135, 146.703), stdev = 1.390
+  CI (99.9%): [119.769, 170.501] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-increase-margin-3.flat)
+
+# Run progress: 31.46% complete, ETA 00:54:43
+# Fork: 1 of 1
+# Warmup Iteration   1: 192.388 us/op
+Iteration   1: 150.991 us/op
+Iteration   2: 147.590 us/op
+Iteration   3: 144.914 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  147.831 ±(99.9%) 55.565 us/op [Average]
+  (min, avg, max) = (144.914, 147.831, 150.991), stdev = 3.046
+  CI (99.9%): [92.266, 203.396] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-increase-margin-4.flat)
+
+# Run progress: 32.58% complete, ETA 00:53:51
+# Fork: 1 of 1
+# Warmup Iteration   1: 358.735 us/op
+Iteration   1: 219.349 us/op
+Iteration   2: 220.619 us/op
+Iteration   3: 219.636 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  219.868 ±(99.9%) 12.150 us/op [Average]
+  (min, avg, max) = (219.349, 219.868, 220.619), stdev = 0.666
+  CI (99.9%): [207.717, 232.018] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-increase-margin-5.flat)
+
+# Run progress: 33.71% complete, ETA 00:53:09
+# Fork: 1 of 1
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+925.490 us/op
+Iteration   1: 460.067 us/op
+Iteration   2: 396.847 us/op
+Iteration   3: 376.645 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  411.187 ±(99.9%) 793.971 us/op [Average]
+  (min, avg, max) = (376.645, 411.187, 460.067), stdev = 43.520
+  CI (99.9%): [≈ 0, 1205.157] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-pay-out-1.flat)
+
+# Run progress: 34.83% complete, ETA 00:52:26
+# Fork: 1 of 1
+# Warmup Iteration   1: 92.073 us/op
+Iteration   1: 73.083 us/op
+Iteration   2: 71.719 us/op
+Iteration   3: 72.152 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  72.318 ±(99.9%) 12.717 us/op [Average]
+  (min, avg, max) = (71.719, 72.318, 73.083), stdev = 0.697
+  CI (99.9%): [59.601, 85.035] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-pay-out-2.flat)
+
+# Run progress: 35.96% complete, ETA 00:51:30
+# Fork: 1 of 1
+# Warmup Iteration   1: 197.372 us/op
+Iteration   1: 152.411 us/op
+Iteration   2: 152.794 us/op
+Iteration   3: 149.022 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  151.409 ±(99.9%) 37.874 us/op [Average]
+  (min, avg, max) = (149.022, 151.409, 152.794), stdev = 2.076
+  CI (99.9%): [113.535, 189.283] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-pay-out-3.flat)
+
+# Run progress: 37.08% complete, ETA 00:50:36
+# Fork: 1 of 1
+# Warmup Iteration   1: 197.964 us/op
+Iteration   1: 149.140 us/op
+Iteration   2: 145.924 us/op
+Iteration   3: 142.641 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  145.902 ±(99.9%) 59.286 us/op [Average]
+  (min, avg, max) = (142.641, 145.902, 149.140), stdev = 3.250
+  CI (99.9%): [86.615, 205.188] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-pay-out-4.flat)
+
+# Run progress: 38.20% complete, ETA 00:49:42
+# Fork: 1 of 1
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+862.342 us/op
+Iteration   1: 442.304 us/op
+Iteration   2: 385.881 us/op
+Iteration   3: 382.291 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  403.492 ±(99.9%) 614.090 us/op [Average]
+  (min, avg, max) = (382.291, 403.492, 442.304), stdev = 33.660
+  CI (99.9%): [≈ 0, 1017.582] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-settle-early-1.flat)
+
+# Run progress: 39.33% complete, ETA 00:48:56
+# Fork: 1 of 1
+# Warmup Iteration   1: 90.396 us/op
+Iteration   1: 71.826 us/op
+Iteration   2: 70.510 us/op
+Iteration   3: 70.629 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  70.988 ±(99.9%) 13.276 us/op [Average]
+  (min, avg, max) = (70.510, 70.988, 71.826), stdev = 0.728
+  CI (99.9%): [57.712, 84.264] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-settle-early-2.flat)
+
+# Run progress: 40.45% complete, ETA 00:48:01
+# Fork: 1 of 1
+# Warmup Iteration   1: 197.032 us/op
+Iteration   1: 152.236 us/op
+Iteration   2: 148.751 us/op
+Iteration   3: 144.904 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  148.630 ±(99.9%) 66.906 us/op [Average]
+  (min, avg, max) = (144.904, 148.630, 152.236), stdev = 3.667
+  CI (99.9%): [81.724, 215.537] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-settle-early-3.flat)
+
+# Run progress: 41.57% complete, ETA 00:47:06
+# Fork: 1 of 1
+# Warmup Iteration   1: 198.965 us/op
+Iteration   1: 150.140 us/op
+Iteration   2: 147.222 us/op
+Iteration   3: 144.545 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  147.303 ±(99.9%) 51.055 us/op [Average]
+  (min, avg, max) = (144.545, 147.303, 150.140), stdev = 2.798
+  CI (99.9%): [96.248, 198.357] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-settle-early-4.flat)
+
+# Run progress: 42.70% complete, ETA 00:46:12
+# Fork: 1 of 1
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+742.780 us/op
+Iteration   1: 352.863 us/op
+Iteration   2: 314.547 us/op
+Iteration   3: 323.213 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  330.208 ±(99.9%) 366.571 us/op [Average]
+  (min, avg, max) = (314.547, 330.208, 352.863), stdev = 20.093
+  CI (99.9%): [≈ 0, 696.779] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_1-1.flat)
+
+# Run progress: 43.82% complete, ETA 00:45:24
+# Fork: 1 of 1
+# Warmup Iteration   1: 241.114 us/op
+Iteration   1: 157.340 us/op
+Iteration   2: 157.512 us/op
+Iteration   3: 151.974 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  155.608 ±(99.9%) 57.451 us/op [Average]
+  (min, avg, max) = (151.974, 155.608, 157.512), stdev = 3.149
+  CI (99.9%): [98.157, 213.060] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_1-2.flat)
+
+# Run progress: 44.94% complete, ETA 00:44:34
+# Fork: 1 of 1
+# Warmup Iteration   1: 44.856 us/op
+Iteration   1: 39.110 us/op
+Iteration   2: 38.715 us/op
+Iteration   3: 38.838 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  38.887 ±(99.9%) 3.687 us/op [Average]
+  (min, avg, max) = (38.715, 38.887, 39.110), stdev = 0.202
+  CI (99.9%): [35.201, 42.574] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_1-3.flat)
+
+# Run progress: 46.07% complete, ETA 00:43:37
+# Fork: 1 of 1
+# Warmup Iteration   1: 399.188 us/op
+Iteration   1: 233.537 us/op
+Iteration   2: 236.348 us/op
+Iteration   3: 236.832 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  235.572 ±(99.9%) 32.462 us/op [Average]
+  (min, avg, max) = (233.537, 235.572, 236.832), stdev = 1.779
+  CI (99.9%): [203.111, 268.034] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_1-4.flat)
+
+# Run progress: 47.19% complete, ETA 00:42:46
+# Fork: 1 of 1
+# Warmup Iteration   1: 52.103 us/op
+Iteration   1: 45.299 us/op
+Iteration   2: 45.202 us/op
+Iteration   3: 45.457 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  45.319 ±(99.9%) 2.346 us/op [Average]
+  (min, avg, max) = (45.202, 45.319, 45.457), stdev = 0.129
+  CI (99.9%): [42.973, 47.665] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_2-1.flat)
+
+# Run progress: 48.31% complete, ETA 00:41:49
+# Fork: 1 of 1
+# Warmup Iteration   1: 233.925 us/op
+Iteration   1: 152.323 us/op
+Iteration   2: 154.013 us/op
+Iteration   3: 152.831 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  153.055 ±(99.9%) 15.819 us/op [Average]
+  (min, avg, max) = (152.323, 153.055, 154.013), stdev = 0.867
+  CI (99.9%): [137.236, 168.874] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_2-2.flat)
+
+# Run progress: 49.44% complete, ETA 00:40:58
+# Fork: 1 of 1
+# Warmup Iteration   1: 45.120 us/op
+Iteration   1: 38.901 us/op
+Iteration   2: 38.875 us/op
+Iteration   3: 39.156 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  38.978 ±(99.9%) 2.830 us/op [Average]
+  (min, avg, max) = (38.875, 38.978, 39.156), stdev = 0.155
+  CI (99.9%): [36.148, 41.808] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_2-3.flat)
+
+# Run progress: 50.56% complete, ETA 00:40:01
+# Fork: 1 of 1
+# Warmup Iteration   1: 407.246 us/op
+Iteration   1: 234.962 us/op
+Iteration   2: 236.538 us/op
+Iteration   3: 236.396 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  235.965 ±(99.9%) 15.910 us/op [Average]
+  (min, avg, max) = (234.962, 235.965, 236.538), stdev = 0.872
+  CI (99.9%): [220.055, 251.876] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_2-4.flat)
+
+# Run progress: 51.69% complete, ETA 00:39:09
+# Fork: 1 of 1
+# Warmup Iteration   1: 51.404 us/op
+Iteration   1: 44.358 us/op
+Iteration   2: 44.015 us/op
+Iteration   3: 44.503 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  44.292 ±(99.9%) 4.570 us/op [Average]
+  (min, avg, max) = (44.015, 44.292, 44.503), stdev = 0.251
+  CI (99.9%): [39.722, 48.862] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_2-5.flat)
+
+# Run progress: 52.81% complete, ETA 00:38:13
+# Fork: 1 of 1
+# Warmup Iteration   1: 402.952 us/op
+Iteration   1: 234.686 us/op
+Iteration   2: 234.659 us/op
+Iteration   3: 235.970 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  235.105 ±(99.9%) 13.664 us/op [Average]
+  (min, avg, max) = (234.659, 235.105, 235.970), stdev = 0.749
+  CI (99.9%): [221.441, 248.769] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_2-6.flat)
+
+# Run progress: 53.93% complete, ETA 00:37:21
+# Fork: 1 of 1
+# Warmup Iteration   1: 50.681 us/op
+Iteration   1: 43.946 us/op
+Iteration   2: 42.912 us/op
+Iteration   3: 44.063 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  43.640 ±(99.9%) 11.555 us/op [Average]
+  (min, avg, max) = (42.912, 43.640, 44.063), stdev = 0.633
+  CI (99.9%): [32.085, 55.195] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = guardrail-sorted-large.flat)
+
+# Run progress: 55.06% complete, ETA 00:36:24
+# Fork: 1 of 1
+# Warmup Iteration   1: 219.048 us/op
+Iteration   1: 208.512 us/op
+Iteration   2: 208.554 us/op
+Iteration   3: 211.603 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  209.556 ±(99.9%) 32.334 us/op [Average]
+  (min, avg, max) = (208.512, 209.556, 211.603), stdev = 1.772
+  CI (99.9%): [177.222, 241.890] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = guardrail-sorted-small.flat)
+
+# Run progress: 56.18% complete, ETA 00:35:26
+# Fork: 1 of 1
+# Warmup Iteration   1: 76.823 us/op
+Iteration   1: 75.117 us/op
+Iteration   2: 74.233 us/op
+Iteration   3: 74.409 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  74.586 ±(99.9%) 8.530 us/op [Average]
+  (min, avg, max) = (74.233, 74.586, 75.117), stdev = 0.468
+  CI (99.9%): [66.056, 83.116] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = guardrail-unsorted-large.flat)
+
+# Run progress: 57.30% complete, ETA 00:34:29
+# Fork: 1 of 1
+# Warmup Iteration   1: 287.638 us/op
+Iteration   1: 271.424 us/op
+Iteration   2: 274.123 us/op
+Iteration   3: 272.336 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  272.628 ±(99.9%) 25.044 us/op [Average]
+  (min, avg, max) = (271.424, 272.628, 274.123), stdev = 1.373
+  CI (99.9%): [247.584, 297.672] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = guardrail-unsorted-small.flat)
+
+# Run progress: 58.43% complete, ETA 00:33:32
+# Fork: 1 of 1
+# Warmup Iteration   1: 75.656 us/op
+Iteration   1: 74.206 us/op
+Iteration   2: 73.603 us/op
+Iteration   3: 73.019 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  73.609 ±(99.9%) 10.831 us/op [Average]
+  (min, avg, max) = (73.019, 73.609, 74.206), stdev = 0.594
+  CI (99.9%): [62.779, 84.440] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-01.flat)
+
+# Run progress: 59.55% complete, ETA 00:32:35
+# Fork: 1 of 1
+# Warmup Iteration   1: 273.873 us/op
+Iteration   1: 170.538 us/op
+Iteration   2: 171.630 us/op
+Iteration   3: 171.457 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  171.209 ±(99.9%) 10.705 us/op [Average]
+  (min, avg, max) = (170.538, 171.209, 171.630), stdev = 0.587
+  CI (99.9%): [160.503, 181.914] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-02.flat)
+
+# Run progress: 60.67% complete, ETA 00:31:43
+# Fork: 1 of 1
+# Warmup Iteration   1: 298.299 us/op
+Iteration   1: 179.923 us/op
+Iteration   2: 175.415 us/op
+Iteration   3: 177.608 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  177.649 ±(99.9%) 41.128 us/op [Average]
+  (min, avg, max) = (175.415, 177.649, 179.923), stdev = 2.254
+  CI (99.9%): [136.520, 218.777] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-03.flat)
+
+# Run progress: 61.80% complete, ETA 00:30:51
+# Fork: 1 of 1
+# Warmup Iteration   1: 292.416 us/op
+Iteration   1: 181.451 us/op
+Iteration   2: 178.081 us/op
+Iteration   3: 182.425 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  180.652 ±(99.9%) 41.584 us/op [Average]
+  (min, avg, max) = (178.081, 180.652, 182.425), stdev = 2.279
+  CI (99.9%): [139.068, 222.236] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-04.flat)
+
+# Run progress: 62.92% complete, ETA 00:29:59
+# Fork: 1 of 1
+# Warmup Iteration   1: 293.966 us/op
+Iteration   1: 178.673 us/op
+Iteration   2: 179.671 us/op
+Iteration   3: 177.265 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  178.536 ±(99.9%) 22.057 us/op [Average]
+  (min, avg, max) = (177.265, 178.536, 179.671), stdev = 1.209
+  CI (99.9%): [156.480, 200.593] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-05.flat)
+
+# Run progress: 64.04% complete, ETA 00:29:07
+# Fork: 1 of 1
+# Warmup Iteration   1: 471.021 us/op
+Iteration   1: 236.002 us/op
+Iteration   2: 240.891 us/op
+Iteration   3: 235.390 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  237.428 ±(99.9%) 54.999 us/op [Average]
+  (min, avg, max) = (235.390, 237.428, 240.891), stdev = 3.015
+  CI (99.9%): [182.428, 292.427] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-06.flat)
+
+# Run progress: 65.17% complete, ETA 00:28:15
+# Fork: 1 of 1
+# Warmup Iteration   1: 275.296 us/op
+Iteration   1: 171.553 us/op
+Iteration   2: 174.632 us/op
+Iteration   3: 175.185 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  173.790 ±(99.9%) 35.703 us/op [Average]
+  (min, avg, max) = (171.553, 173.790, 175.185), stdev = 1.957
+  CI (99.9%): [138.087, 209.493] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-07.flat)
+
+# Run progress: 66.29% complete, ETA 00:27:22
+# Fork: 1 of 1
+# Warmup Iteration   1: 295.320 us/op
+Iteration   1: 178.422 us/op
+Iteration   2: 175.454 us/op
+Iteration   3: 178.557 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  177.478 ±(99.9%) 31.999 us/op [Average]
+  (min, avg, max) = (175.454, 177.478, 178.557), stdev = 1.754
+  CI (99.9%): [145.479, 209.477] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-08.flat)
+
+# Run progress: 67.42% complete, ETA 00:26:29
+# Fork: 1 of 1
+# Warmup Iteration   1: 296.834 us/op
+Iteration   1: 182.263 us/op
+Iteration   2: 175.974 us/op
+Iteration   3: 180.631 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  179.623 ±(99.9%) 59.536 us/op [Average]
+  (min, avg, max) = (175.974, 179.623, 182.263), stdev = 3.263
+  CI (99.9%): [120.087, 239.159] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-09.flat)
+
+# Run progress: 68.54% complete, ETA 00:25:36
+# Fork: 1 of 1
+# Warmup Iteration   1: 305.003 us/op
+Iteration   1: 180.335 us/op
+Iteration   2: 177.322 us/op
+Iteration   3: 180.709 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  179.456 ±(99.9%) 33.878 us/op [Average]
+  (min, avg, max) = (177.322, 179.456, 180.709), stdev = 1.857
+  CI (99.9%): [145.577, 213.334] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-10.flat)
+
+# Run progress: 69.66% complete, ETA 00:24:43
+# Fork: 1 of 1
+# Warmup Iteration   1: 499.353 us/op
+Iteration   1: 239.356 us/op
+Iteration   2: 238.610 us/op
+Iteration   3: 240.567 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  239.511 ±(99.9%) 18.018 us/op [Average]
+  (min, avg, max) = (238.610, 239.511, 240.567), stdev = 0.988
+  CI (99.9%): [221.493, 257.528] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = ping-pong-1.flat)
+
+# Run progress: 70.79% complete, ETA 00:23:50
+# Fork: 1 of 1
+# Warmup Iteration   1: 195.215 us/op
+Iteration   1: 131.132 us/op
+Iteration   2: 132.290 us/op
+Iteration   3: 130.632 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  131.351 ±(99.9%) 15.508 us/op [Average]
+  (min, avg, max) = (130.632, 131.351, 132.290), stdev = 0.850
+  CI (99.9%): [115.843, 146.860] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = ping-pong-2.flat)
+
+# Run progress: 71.91% complete, ETA 00:22:56
+# Fork: 1 of 1
+# Warmup Iteration   1: 198.403 us/op
+Iteration   1: 133.231 us/op
+Iteration   2: 133.142 us/op
+Iteration   3: 130.473 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  132.282 ±(99.9%) 28.589 us/op [Average]
+  (min, avg, max) = (130.473, 132.282, 133.231), stdev = 1.567
+  CI (99.9%): [103.693, 160.871] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = ping-pong_2-1.flat)
+
+# Run progress: 73.03% complete, ETA 00:22:01
+# Fork: 1 of 1
+# Warmup Iteration   1: 114.341 us/op
+Iteration   1: 86.842 us/op
+Iteration   2: 84.421 us/op
+Iteration   3: 84.755 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  85.339 ±(99.9%) 23.944 us/op [Average]
+  (min, avg, max) = (84.421, 85.339, 86.842), stdev = 1.312
+  CI (99.9%): [61.395, 109.284] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = prism-1.flat)
+
+# Run progress: 74.16% complete, ETA 00:21:07
+# Fork: 1 of 1
+# Warmup Iteration   1: 35.991 us/op
+Iteration   1: 31.527 us/op
+Iteration   2: 31.344 us/op
+Iteration   3: 31.577 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  31.483 ±(99.9%) 2.232 us/op [Average]
+  (min, avg, max) = (31.344, 31.483, 31.577), stdev = 0.122
+  CI (99.9%): [29.251, 33.715] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = prism-2.flat)
+
+# Run progress: 75.28% complete, ETA 00:20:11
+# Fork: 1 of 1
+# Warmup Iteration   1: 242.126 us/op
+Iteration   1: 166.747 us/op
+Iteration   2: 166.367 us/op
+Iteration   3: 161.130 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  164.748 ±(99.9%) 57.269 us/op [Average]
+  (min, avg, max) = (161.130, 164.748, 166.747), stdev = 3.139
+  CI (99.9%): [107.479, 222.017] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = prism-3.flat)
+
+# Run progress: 76.40% complete, ETA 00:19:16
+# Fork: 1 of 1
+# Warmup Iteration   1: 128.442 us/op
+Iteration   1: 100.425 us/op
+Iteration   2: 97.502 us/op
+Iteration   3: 97.011 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  98.313 ±(99.9%) 33.669 us/op [Average]
+  (min, avg, max) = (97.011, 98.313, 100.425), stdev = 1.846
+  CI (99.9%): [64.644, 131.982] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = pubkey-1.flat)
+
+# Run progress: 77.53% complete, ETA 00:18:21
+# Fork: 1 of 1
+# Warmup Iteration   1: 31.607 us/op
+Iteration   1: 27.880 us/op
+Iteration   2: 27.728 us/op
+Iteration   3: 28.002 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  27.870 ±(99.9%) 2.505 us/op [Average]
+  (min, avg, max) = (27.728, 27.870, 28.002), stdev = 0.137
+  CI (99.9%): [25.365, 30.375] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_1-1.flat)
+
+# Run progress: 78.65% complete, ETA 00:17:25
+# Fork: 1 of 1
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2067.785 us/op
+Iteration   1: 836.337 us/op
+Iteration   2: 726.215 us/op
+Iteration   3: 675.121 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  745.891 ±(99.9%) 1503.083 us/op [Average]
+  (min, avg, max) = (675.121, 745.891, 836.337), stdev = 82.389
+  CI (99.9%): [≈ 0, 2248.974] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_1-2.flat)
+
+# Run progress: 79.78% complete, ETA 00:16:32
+# Fork: 1 of 1
+# Warmup Iteration   1: 44.435 us/op
+Iteration   1: 38.364 us/op
+Iteration   2: 37.900 us/op
+Iteration   3: 39.019 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  38.428 ±(99.9%) 10.260 us/op [Average]
+  (min, avg, max) = (37.900, 38.428, 39.019), stdev = 0.562
+  CI (99.9%): [28.168, 48.687] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_1-3.flat)
+
+# Run progress: 80.90% complete, ETA 00:15:36
+# Fork: 1 of 1
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2613.073 us/op
+Iteration   1: 1167.398 us/op
+Iteration   2: 940.602 us/op
+Iteration   3: 827.207 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  978.402 ±(99.9%) 3160.121 us/op [Average]
+  (min, avg, max) = (827.207, 978.402, 1167.398), stdev = 173.217
+  CI (99.9%): [≈ 0, 4138.523] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_1-4.flat)
+
+# Run progress: 82.02% complete, ETA 00:14:42
+# Fork: 1 of 1
+# Warmup Iteration   1: 45.734 us/op
+Iteration   1: 39.799 us/op
+Iteration   2: 39.376 us/op
+Iteration   3: 39.859 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  39.678 ±(99.9%) 4.805 us/op [Average]
+  (min, avg, max) = (39.376, 39.678, 39.859), stdev = 0.263
+  CI (99.9%): [34.873, 44.483] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_1-5.flat)
+
+# Run progress: 83.15% complete, ETA 00:13:47
+# Fork: 1 of 1
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+4023.226 us/op
+Iteration   1: 2133.584 us/op
+Iteration   2: 1424.587 us/op
+Iteration   3: 1103.939 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  1554.037 ±(99.9%) 9612.387 us/op [Average]
+  (min, avg, max) = (1103.939, 1554.037, 2133.584), stdev = 526.887
+  CI (99.9%): [≈ 0, 11166.424] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_1-6.flat)
+
+# Run progress: 84.27% complete, ETA 00:12:53
+# Fork: 1 of 1
+# Warmup Iteration   1: 55.739 us/op
+Iteration   1: 47.974 us/op
+Iteration   2: 48.247 us/op
+Iteration   3: 48.665 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  48.295 ±(99.9%) 6.351 us/op [Average]
+  (min, avg, max) = (47.974, 48.295, 48.665), stdev = 0.348
+  CI (99.9%): [41.945, 54.646] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_2-1.flat)
+
+# Run progress: 85.39% complete, ETA 00:11:57
+# Fork: 1 of 1
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+3612.481 us/op
+Iteration   1: 1544.012 us/op
+Iteration   2: 1237.203 us/op
+Iteration   3: 881.409 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  1220.875 ±(99.9%) 6049.681 us/op [Average]
+  (min, avg, max) = (881.409, 1220.875, 1544.012), stdev = 331.603
+  CI (99.9%): [≈ 0, 7270.555] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_2-2.flat)
+
+# Run progress: 86.52% complete, ETA 00:11:03
+# Fork: 1 of 1
+# Warmup Iteration   1: 44.040 us/op
+Iteration   1: 38.128 us/op
+Iteration   2: 37.626 us/op
+Iteration   3: 37.261 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  37.672 ±(99.9%) 7.942 us/op [Average]
+  (min, avg, max) = (37.261, 37.672, 38.128), stdev = 0.435
+  CI (99.9%): [29.729, 45.614] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_2-3.flat)
+
+# Run progress: 87.64% complete, ETA 00:10:07
+# Fork: 1 of 1
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2810.111 us/op
+Iteration   1: 1244.653 us/op
+Iteration   2: 1009.485 us/op
+Iteration   3: 855.879 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  1036.672 ±(99.9%) 3572.263 us/op [Average]
+  (min, avg, max) = (855.879, 1036.672, 1244.653), stdev = 195.808
+  CI (99.9%): [≈ 0, 4608.936] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_2-4.flat)
+
+# Run progress: 88.76% complete, ETA 00:09:13
+# Fork: 1 of 1
+# Warmup Iteration   1: 47.025 us/op
+Iteration   1: 41.171 us/op
+Iteration   2: 41.168 us/op
+Iteration   3: 41.396 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  41.245 ±(99.9%) 2.390 us/op [Average]
+  (min, avg, max) = (41.168, 41.245, 41.396), stdev = 0.131
+  CI (99.9%): [38.855, 43.635] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = token-account-1.flat)
+
+# Run progress: 89.89% complete, ETA 00:08:17
+# Fork: 1 of 1
+# Warmup Iteration   1: 70.628 us/op
+Iteration   1: 57.951 us/op
+Iteration   2: 54.455 us/op
+Iteration   3: 55.253 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  55.886 ±(99.9%) 33.418 us/op [Average]
+  (min, avg, max) = (54.455, 55.886, 57.951), stdev = 1.832
+  CI (99.9%): [22.468, 89.305] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = token-account-2.flat)
+
+# Run progress: 91.01% complete, ETA 00:07:22
+# Fork: 1 of 1
+# Warmup Iteration   1: 97.751 us/op
+Iteration   1: 79.591 us/op
+Iteration   2: 79.496 us/op
+Iteration   3: 79.487 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  79.525 ±(99.9%) 1.053 us/op [Average]
+  (min, avg, max) = (79.487, 79.525, 79.591), stdev = 0.058
+  CI (99.9%): [78.472, 80.578] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = uniswap-1.flat)
+
+# Run progress: 92.13% complete, ETA 00:06:26
+# Fork: 1 of 1
+# Warmup Iteration   1: 145.843 us/op
+Iteration   1: 120.292 us/op
+Iteration   2: 117.575 us/op
+Iteration   3: 118.910 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  118.926 ±(99.9%) 24.786 us/op [Average]
+  (min, avg, max) = (117.575, 118.926, 120.292), stdev = 1.359
+  CI (99.9%): [94.140, 143.712] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = uniswap-2.flat)
+
+# Run progress: 93.26% complete, ETA 00:05:31
+# Fork: 1 of 1
+# Warmup Iteration   1: 75.982 us/op
+Iteration   1: 60.997 us/op
+Iteration   2: 57.614 us/op
+Iteration   3: 57.907 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  58.840 ±(99.9%) 34.198 us/op [Average]
+  (min, avg, max) = (57.614, 58.840, 60.997), stdev = 1.875
+  CI (99.9%): [24.642, 93.037] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = uniswap-3.flat)
+
+# Run progress: 94.38% complete, ETA 00:04:36
+# Fork: 1 of 1
+# Warmup Iteration   1: 860.136 us/op
+Iteration   1: 543.478 us/op
+Iteration   2: 549.725 us/op
+Iteration   3: 537.295 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  543.499 ±(99.9%) 113.378 us/op [Average]
+  (min, avg, max) = (537.295, 543.499, 549.725), stdev = 6.215
+  CI (99.9%): [430.121, 656.877] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = uniswap-4.flat)
+
+# Run progress: 95.51% complete, ETA 00:03:40
+# Fork: 1 of 1
+# Warmup Iteration   1: 73.456 us/op
+Iteration   1: 62.956 us/op
+Iteration   2: 61.894 us/op
+Iteration   3: 62.920 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  62.590 ±(99.9%) 10.999 us/op [Average]
+  (min, avg, max) = (61.894, 62.590, 62.956), stdev = 0.603
+  CI (99.9%): [51.591, 73.589] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = uniswap-5.flat)
+
+# Run progress: 96.63% complete, ETA 00:02:45
+# Fork: 1 of 1
+# Warmup Iteration   1: 579.104 us/op
+Iteration   1: 360.700 us/op
+Iteration   2: 354.409 us/op
+Iteration   3: 354.409 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  356.506 ±(99.9%) 66.261 us/op [Average]
+  (min, avg, max) = (354.409, 356.506, 360.700), stdev = 3.632
+  CI (99.9%): [290.245, 422.767] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = uniswap-6.flat)
+
+# Run progress: 97.75% complete, ETA 00:01:50
+# Fork: 1 of 1
+# Warmup Iteration   1: 74.338 us/op
+Iteration   1: 63.425 us/op
+Iteration   2: 63.514 us/op
+Iteration   3: 63.780 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  63.573 ±(99.9%) 3.371 us/op [Average]
+  (min, avg, max) = (63.425, 63.573, 63.780), stdev = 0.185
+  CI (99.9%): [60.203, 66.944] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.2, Java HotSpot(TM) 64-Bit Server VM, 25.0.2+10-LTS-jvmci-b01
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -Xss64m -Xmx4g -Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = vesting-1.flat)
+
+# Run progress: 98.88% complete, ETA 00:00:55
+# Fork: 1 of 1
+# Warmup Iteration   1: 160.144 us/op
+Iteration   1: 110.956 us/op
+Iteration   2: 109.402 us/op
+Iteration   3: 108.929 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  109.763 ±(99.9%) 19.350 us/op [Average]
+  (min, avg, max) = (108.929, 109.763, 110.956), stdev = 1.061
+  CI (99.9%): [90.413, 129.112] (assumes normal distribution)
+
+
+# Run complete. Total time: 01:21:53
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+NOTE: Current JVM experimentally supports Compiler Blackholes, and they are in use. Please exercise
+extra caution when trusting the results, look into the generated code to check the benchmark still
+works, and factor in a small probability of new VM bugs. Additionally, while comparisons between
+different JVMs are already problematic, the performance difference caused by different Blackhole
+modes can be very significant. Please make sure you use the consistent Blackhole mode for comparisons.
+
+Benchmark                                     (file)  Mode  Cnt     Score      Error  Units
+JITBenchmark.benchJIT               auction_1-1.flat  avgt    3    37.910 ±   11.417  us/op
+JITBenchmark.benchJIT               auction_1-2.flat  avgt    3   255.405 ±   45.577  us/op
+JITBenchmark.benchJIT               auction_1-3.flat  avgt    3   233.760 ±   38.581  us/op
+JITBenchmark.benchJIT               auction_1-4.flat  avgt    3    45.526 ±    8.838  us/op
+JITBenchmark.benchJIT               auction_2-1.flat  avgt    3    38.393 ±    5.515  us/op
+JITBenchmark.benchJIT               auction_2-2.flat  avgt    3   249.199 ±   40.272  us/op
+JITBenchmark.benchJIT               auction_2-3.flat  avgt    3   299.910 ±   60.106  us/op
+JITBenchmark.benchJIT               auction_2-4.flat  avgt    3   237.893 ±   39.817  us/op
+JITBenchmark.benchJIT               auction_2-5.flat  avgt    3    45.656 ±    6.393  us/op
+JITBenchmark.benchJIT                    coop-1.flat  avgt    3    42.385 ±   13.089  us/op
+JITBenchmark.benchJIT                    coop-2.flat  avgt    3   164.724 ±   56.132  us/op
+JITBenchmark.benchJIT                    coop-3.flat  avgt    3   617.443 ±    5.697  us/op
+JITBenchmark.benchJIT                    coop-4.flat  avgt    3   246.121 ±   18.915  us/op
+JITBenchmark.benchJIT                    coop-5.flat  avgt    3    89.984 ±   15.132  us/op
+JITBenchmark.benchJIT                    coop-6.flat  avgt    3   145.482 ±   21.007  us/op
+JITBenchmark.benchJIT                    coop-7.flat  avgt    3    57.670 ±    2.303  us/op
+JITBenchmark.benchJIT    crowdfunding-success-1.flat  avgt    3    43.268 ±    8.013  us/op
+JITBenchmark.benchJIT    crowdfunding-success-2.flat  avgt    3    45.768 ±   32.361  us/op
+JITBenchmark.benchJIT    crowdfunding-success-3.flat  avgt    3    44.965 ±   11.410  us/op
+JITBenchmark.benchJIT                currency-1.flat  avgt    3    71.924 ±   26.509  us/op
+JITBenchmark.benchJIT         escrow-redeem_1-1.flat  avgt    3    92.893 ±   49.553  us/op
+JITBenchmark.benchJIT         escrow-redeem_1-2.flat  avgt    3    92.928 ±   31.064  us/op
+JITBenchmark.benchJIT         escrow-redeem_2-1.flat  avgt    3   109.505 ±   53.853  us/op
+JITBenchmark.benchJIT         escrow-redeem_2-2.flat  avgt    3   108.489 ±   32.774  us/op
+JITBenchmark.benchJIT         escrow-redeem_2-3.flat  avgt    3   108.340 ±   45.908  us/op
+JITBenchmark.benchJIT           escrow-refund-1.flat  avgt    3    36.316 ±   14.616  us/op
+JITBenchmark.benchJIT  future-increase-margin-1.flat  avgt    3    71.645 ±   47.546  us/op
+JITBenchmark.benchJIT  future-increase-margin-2.flat  avgt    3   145.135 ±   25.366  us/op
+JITBenchmark.benchJIT  future-increase-margin-3.flat  avgt    3   147.831 ±   55.565  us/op
+JITBenchmark.benchJIT  future-increase-margin-4.flat  avgt    3   219.868 ±   12.150  us/op
+JITBenchmark.benchJIT  future-increase-margin-5.flat  avgt    3   411.187 ±  793.971  us/op
+JITBenchmark.benchJIT          future-pay-out-1.flat  avgt    3    72.318 ±   12.717  us/op
+JITBenchmark.benchJIT          future-pay-out-2.flat  avgt    3   151.409 ±   37.874  us/op
+JITBenchmark.benchJIT          future-pay-out-3.flat  avgt    3   145.902 ±   59.286  us/op
+JITBenchmark.benchJIT          future-pay-out-4.flat  avgt    3   403.492 ±  614.090  us/op
+JITBenchmark.benchJIT     future-settle-early-1.flat  avgt    3    70.988 ±   13.276  us/op
+JITBenchmark.benchJIT     future-settle-early-2.flat  avgt    3   148.630 ±   66.906  us/op
+JITBenchmark.benchJIT     future-settle-early-3.flat  avgt    3   147.303 ±   51.055  us/op
+JITBenchmark.benchJIT     future-settle-early-4.flat  avgt    3   330.208 ±  366.571  us/op
+JITBenchmark.benchJIT       game-sm-success_1-1.flat  avgt    3   155.608 ±   57.451  us/op
+JITBenchmark.benchJIT       game-sm-success_1-2.flat  avgt    3    38.887 ±    3.687  us/op
+JITBenchmark.benchJIT       game-sm-success_1-3.flat  avgt    3   235.572 ±   32.462  us/op
+JITBenchmark.benchJIT       game-sm-success_1-4.flat  avgt    3    45.319 ±    2.346  us/op
+JITBenchmark.benchJIT       game-sm-success_2-1.flat  avgt    3   153.055 ±   15.819  us/op
+JITBenchmark.benchJIT       game-sm-success_2-2.flat  avgt    3    38.978 ±    2.830  us/op
+JITBenchmark.benchJIT       game-sm-success_2-3.flat  avgt    3   235.965 ±   15.910  us/op
+JITBenchmark.benchJIT       game-sm-success_2-4.flat  avgt    3    44.292 ±    4.570  us/op
+JITBenchmark.benchJIT       game-sm-success_2-5.flat  avgt    3   235.105 ±   13.664  us/op
+JITBenchmark.benchJIT       game-sm-success_2-6.flat  avgt    3    43.640 ±   11.555  us/op
+JITBenchmark.benchJIT    guardrail-sorted-large.flat  avgt    3   209.556 ±   32.334  us/op
+JITBenchmark.benchJIT    guardrail-sorted-small.flat  avgt    3    74.586 ±    8.530  us/op
+JITBenchmark.benchJIT  guardrail-unsorted-large.flat  avgt    3   272.628 ±   25.044  us/op
+JITBenchmark.benchJIT  guardrail-unsorted-small.flat  avgt    3    73.609 ±   10.831  us/op
+JITBenchmark.benchJIT            multisig-sm-01.flat  avgt    3   171.209 ±   10.705  us/op
+JITBenchmark.benchJIT            multisig-sm-02.flat  avgt    3   177.649 ±   41.128  us/op
+JITBenchmark.benchJIT            multisig-sm-03.flat  avgt    3   180.652 ±   41.584  us/op
+JITBenchmark.benchJIT            multisig-sm-04.flat  avgt    3   178.536 ±   22.057  us/op
+JITBenchmark.benchJIT            multisig-sm-05.flat  avgt    3   237.428 ±   54.999  us/op
+JITBenchmark.benchJIT            multisig-sm-06.flat  avgt    3   173.790 ±   35.703  us/op
+JITBenchmark.benchJIT            multisig-sm-07.flat  avgt    3   177.478 ±   31.999  us/op
+JITBenchmark.benchJIT            multisig-sm-08.flat  avgt    3   179.623 ±   59.536  us/op
+JITBenchmark.benchJIT            multisig-sm-09.flat  avgt    3   179.456 ±   33.878  us/op
+JITBenchmark.benchJIT            multisig-sm-10.flat  avgt    3   239.511 ±   18.018  us/op
+JITBenchmark.benchJIT               ping-pong-1.flat  avgt    3   131.351 ±   15.508  us/op
+JITBenchmark.benchJIT               ping-pong-2.flat  avgt    3   132.282 ±   28.589  us/op
+JITBenchmark.benchJIT             ping-pong_2-1.flat  avgt    3    85.339 ±   23.944  us/op
+JITBenchmark.benchJIT                   prism-1.flat  avgt    3    31.483 ±    2.232  us/op
+JITBenchmark.benchJIT                   prism-2.flat  avgt    3   164.748 ±   57.269  us/op
+JITBenchmark.benchJIT                   prism-3.flat  avgt    3    98.313 ±   33.669  us/op
+JITBenchmark.benchJIT                  pubkey-1.flat  avgt    3    27.870 ±    2.505  us/op
+JITBenchmark.benchJIT            stablecoin_1-1.flat  avgt    3   745.891 ± 1503.083  us/op
+JITBenchmark.benchJIT            stablecoin_1-2.flat  avgt    3    38.428 ±   10.260  us/op
+JITBenchmark.benchJIT            stablecoin_1-3.flat  avgt    3   978.402 ± 3160.121  us/op
+JITBenchmark.benchJIT            stablecoin_1-4.flat  avgt    3    39.678 ±    4.805  us/op
+JITBenchmark.benchJIT            stablecoin_1-5.flat  avgt    3  1554.037 ± 9612.387  us/op
+JITBenchmark.benchJIT            stablecoin_1-6.flat  avgt    3    48.295 ±    6.351  us/op
+JITBenchmark.benchJIT            stablecoin_2-1.flat  avgt    3  1220.875 ± 6049.681  us/op
+JITBenchmark.benchJIT            stablecoin_2-2.flat  avgt    3    37.672 ±    7.942  us/op
+JITBenchmark.benchJIT            stablecoin_2-3.flat  avgt    3  1036.672 ± 3572.263  us/op
+JITBenchmark.benchJIT            stablecoin_2-4.flat  avgt    3    41.245 ±    2.390  us/op
+JITBenchmark.benchJIT           token-account-1.flat  avgt    3    55.886 ±   33.418  us/op
+JITBenchmark.benchJIT           token-account-2.flat  avgt    3    79.525 ±    1.053  us/op
+JITBenchmark.benchJIT                 uniswap-1.flat  avgt    3   118.926 ±   24.786  us/op
+JITBenchmark.benchJIT                 uniswap-2.flat  avgt    3    58.840 ±   34.198  us/op
+JITBenchmark.benchJIT                 uniswap-3.flat  avgt    3   543.499 ±  113.378  us/op
+JITBenchmark.benchJIT                 uniswap-4.flat  avgt    3    62.590 ±   10.999  us/op
+JITBenchmark.benchJIT                 uniswap-5.flat  avgt    3   356.506 ±   66.261  us/op
+JITBenchmark.benchJIT                 uniswap-6.flat  avgt    3    63.573 ±    3.371  us/op
+JITBenchmark.benchJIT                 vesting-1.flat  avgt    3   109.763 ±   19.350  us/op
+
+Benchmark result is saved to /results/scalus-jit-jmh.json
+=== check
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
