@@ -368,7 +368,9 @@ jobs:
 
   pages:
     needs: finish
-    if: needs.finish.outputs.published == 'true'
+    # always(): wait-2/wait-3 are skipped in a normal run, and a skipped job anywhere upstream
+    # makes the default success() false, which skipped this job on 2026-10-23.
+    if: always() && needs.finish.result == 'success' && needs.finish.outputs.published == 'true'
     runs-on: ubuntu-latest
     permissions:
       pages: write
