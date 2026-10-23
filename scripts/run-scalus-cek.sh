@@ -18,19 +18,20 @@ loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 
 echo "Scalus CEK (Scala / JVM / JMH)"
 
-# JMH timing: one 20 s warm-up iteration (docs/IMAGE_CONTRACT.md), then 3 measurement iterations of
-# 5 s each, so the CSV has a standard deviation over the iteration means. BENCH_TIMING=quick
-# shortens warm-up and measurement to one 1 s iteration each.
-WARMUP=20s
+# JMH timing (METHODOLOGY.md, D13): one 30 s warm-up iteration, then 3 measurement iterations of
+# 5 s each, so the CSV has a standard deviation over the iteration means. The JS rows use an
+# adaptive warm-up with a 30 s cap; the JMH rows keep JMH's own warm-up iterations at that cap.
+# BENCH_TIMING=quick shortens warm-up and measurement to one 1 s iteration each.
+WARMUP=30s
 WARMUP_ITERATIONS=1
 MEASURE=5s
 ITERATIONS=3
-# BENCH_TRACE=1: the same 20 s of warm-up as 20 iterations of 1 s (-wi 20 -w 1s), so the log has
-# a score per second; parse_warmup.py writes them to $VM-warmup.csv. The measured iterations stay
-# the same.
+# BENCH_TRACE=1: the same 30 s of warm-up as 30 iterations of 1 s (-wi 30 -w 1s), so the log has
+# a score per second; parse_warmup.py writes them to $VM-warmup.csv. The measurement settings stay
+# the same (the measured time can differ, METHODOLOGY.md).
 if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
     WARMUP=1s
-    WARMUP_ITERATIONS=20
+    WARMUP_ITERATIONS=30
 fi
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
     WARMUP=1s
@@ -103,9 +104,14 @@ if loop eval; then
     python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM-eval.csv" "$DATA_DIR" "$VM" "$RAW"
 fi
 
-# BENCH_TRACE=1: the warm-up scores, one per second -> $VM-warmup.csv
-if [[ "${BENCH_TRACE:-0}" == 1 ]] && { loop d3 || loop eval; }; then
-    python3 /bench/parsers/parse_warmup.py "$VM" "$RUN_DIR/$VM-raw.log" > "$RUN_DIR/$VM-warmup.csv" || true
+# The warm-up of each script and loop (the "# Warmup:" lines of JMH): its length, with capped=fixed
+# -> $VM-warmup-used.csv. BENCH_TRACE=1: also the score of each 1 s warm-up iteration ->
+# $VM-warmup.csv
+if loop d3 || loop eval; then
+    python3 /bench/parsers/parse_warmup.py --used "$VM" "$RUN_DIR/$VM-raw.log" > "$RUN_DIR/$VM-warmup-used.csv" || true
+    if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
+        python3 /bench/parsers/parse_warmup.py "$VM" "$RUN_DIR/$VM-raw.log" > "$RUN_DIR/$VM-warmup.csv" || true
+    fi
 fi
 
 # Check (spec D4): one evaluation per script, same code and parameters -> $VM-check.csv

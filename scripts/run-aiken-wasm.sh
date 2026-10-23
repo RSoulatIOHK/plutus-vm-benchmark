@@ -28,13 +28,15 @@ if loop check; then
     DATA_DIR="$DATA_DIR" node check.mjs > "$RUN_DIR/$VM-check.csv" 2> >(tee -a "$RAW" >&2)
 fi
 
-# Timing (spec D3, D13): the JMH shape of the JVM rows, one 20 s warm-up round and 3 measured rounds
-# of 5 s (time.mjs). BENCH_TIMING=quick: 0.5 s warm-up, one 0.5 s round.
+# Timing (spec D3, D13): the JMH shape of the JVM rows, the adaptive warm-up and 3 measured rounds
+# of 5 s (time.mjs). Adaptive: rounds of 1 s until at least 5 s have passed and the last 5 are
+# within 3 % of their median, 30 s at most. BENCH_TIMING=quick: a fixed 0.5 s warm-up, one 0.5 s
+# round.
 # A new node process per script (spec D14), so no JIT profile, GC state or decode cache carries
 # over from another script. The "--- <name>: process <pid>" line ties a crash in the log to its
 # script (fill_failures.py); a script without a PVB_RESULT line gets -1. A crash must not kill the
 # run.
-export PVB_WARMUP_MS=20000 PVB_ROUND_MS=5000 PVB_ROUNDS=3
+export PVB_WARMUP_MS=adaptive PVB_ROUND_MS=5000 PVB_ROUNDS=3
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
     export PVB_WARMUP_MS=500 PVB_ROUND_MS=500 PVB_ROUNDS=1
 fi
@@ -52,7 +54,9 @@ if loop d3 || loop eval; then
     if loop d3; then cp "$TIMING_CSV" "$RUN_DIR/$VM.csv"; fi
     if loop eval; then cp "$TIMING_CSV" "$RUN_DIR/$VM-eval.csv"; fi
     rm -f "$TIMING_CSV"
-    # BENCH_TRACE=1: the warm-up in 1 s slices -> $VM-warmup.csv
+    # The length of each warm-up and whether it hit the cap -> $VM-warmup-used.csv.
+    # BENCH_TRACE=1: also the warm-up in 1 s slices -> $VM-warmup.csv
+    python3 /bench/parsers/parse_warmup.py --used "$VM" "$RAW" > "$RUN_DIR/$VM-warmup-used.csv" || true
     if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
         python3 /bench/parsers/parse_warmup.py "$VM" "$RAW" > "$RUN_DIR/$VM-warmup.csv" || true
     fi
