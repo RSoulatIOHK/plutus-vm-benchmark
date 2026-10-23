@@ -120,7 +120,7 @@ downstream user today, or they publish no artifact.
 
 | Image | Why it is not ranked |
 |---|---|
-| `scalus-jit` | The `scalus-uplc-jit-compiler` module of Scalus v1.4.0 is not published to Maven. It has no downstream users. Its timed loop runs the compiled script: badge "decode and compile excluded". |
+| `scalus-jit` | The `scalus-uplc-jit-compiler` module of Scalus v1.4.0 is not published to Maven. It has no downstream users. Its timed loop runs the compiled script: badge "decode and compile excluded". So its time is shown only as an eval-only time. |
 
 ## Not included
 

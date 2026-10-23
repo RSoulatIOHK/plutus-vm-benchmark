@@ -39,8 +39,11 @@ same process as the D3 loop of the script, after it (see [Fairness rules](#fairn
 The Scalus JIT compiles a script to JVM bytecode before it runs it. It decodes and compiles each
 script once, before timing. Its timed loop evaluates the compiled script, so neither the flat
 decode nor the compile step is timed. The page shows it with a "decode and compile excluded"
-badge and a compile-time column (`<vm>-compile.csv`, the median of 3 compiles per script). Today
-the Scalus JIT is in the unranked Experimental section (see [Inclusion rules](#inclusion-rules)).
+badge and a compile-time column (`<vm>-compile.csv`, the median of 3 compiles per script). So a
+compiling VM has only an eval-only time. The report shows its time only as eval only: its
+decode + eval cell is "–", it is not in the decode + eval ranking or the geometric-mean chart, and
+its history ratio uses Haskell's eval-only time. Today the Scalus JIT is in the unranked
+Experimental section (see [Inclusion rules](#inclusion-rules)).
 
 ### Cached decode
 
@@ -224,6 +227,7 @@ Decisions D13 to D17 of the
   the eval-only time comes from a process that has already run the D3 loop.
 - **Compiled VMs (D15)**: the Scalus JIT row has a "decode and compile excluded" badge. Its timed
   loop runs the compiled script; the decode and the compile happen once per script, before timing.
+  So its time is shown only as an eval-only time, never as a decode + eval time.
 - **Runtime settings (D16)**: each VM runs with the settings that its project documents for
   production use. A VM without such documentation runs with the defaults of its runtime. Scalus
   must document its JVM flags in public, so the flags of the Scalus rows are not settings only

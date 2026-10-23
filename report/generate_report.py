@@ -15,14 +15,19 @@ Reads from the run dir:
                          without gate.json are shown as they are
 - <vm>-compile.csv       compile time per script (vm,script,compile_ns), for VMs that compile
                          before they run: "decode and compile excluded" badge and a
-                         compile-time column
+                         compile-time column. Such a VM decodes and compiles each script once,
+                         before timing, so its timed loop is eval only: it has no decode + eval
+                         time. Its time is shown only as an eval-only time (from <vm>-eval.csv, or
+                         its D3 rows if the run has no <vm>-eval.csv). It is not in the decode +
+                         eval ranking, the penalty rule, the geometric-mean chart or the
+                         per-script fastest; its history ratio uses Haskell's eval-only time
 - <vm>-eval.csv          eval-only timing (program decoded once before the timed loop): an "eval
-                         only" column next to the D3 time and its geometric mean. Not for a VM
-                         with <vm>-compile.csv: its D3 time already is the eval time. The ranking
+                         only" column next to the D3 time and its geometric mean. The ranking
                          stays on the D3 time
 A VM in EXPERIMENTAL that passes the gate is shown in its own "Experimental" section with its
 numbers, but it is not ranked: not in the summary ranking, not a competitor in the penalty rule,
-not in "vs fastest", the per-script fastest or the history chart.
+not in "vs fastest" or the per-script fastest. A compiling VM that is not in EXPERIMENTAL is
+shown there too (COMPILING_REASON): it has no decode + eval time to rank.
 - drift.json             the drift probe (parsers/normalize.py): Haskell at the end of the run
                          vs the start, shown as a note
 - ../<date>/             earlier runs next to this one, for the history chart: each VM's geometric
@@ -102,6 +107,10 @@ NOISE_BAND = 0.05
 # The badge of a VM with <vm>-compile.csv (Scalus JIT): its timed loop runs the compiled script,
 # so neither the flat decode nor the compile step is in its time.
 COMPILE_BADGE = "decode and compile excluded"
+# Why a compiling VM has no decode + eval time (summary tables, tooltips).
+NO_D3_NOTE = "compiled once before timing, see the compile column"
+# The "not ranked" reason of a compiling VM that is not in EXPERIMENTAL.
+COMPILING_REASON = "not ranked: it compiles each script once before timing, so it has no decode + eval time"
 
 VM_LABELS = {
     "uplc-turbo": "uplc-turbo AST walker (Rust)",
@@ -456,10 +465,14 @@ def load_history(run_dir: str) -> dict:
 
     A run counts only if Haskell passed its gate there; a VM that failed the gate in a run has no
     point for that run. An EXPERIMENTAL VM has a line too; the page draws it dashed and marks it.
+    A VM with <vm>-compile.csv in a run has only an eval-only time there: its point is its eval
+    time divided by Haskell's eval-only time (haskell-eval.csv), never by Haskell's decode + eval
+    time. Without haskell-eval.csv the point is missing. Such VMs are listed in "eval_only".
     """
     parent = os.path.dirname(os.path.abspath(run_dir))
     runs: list[str] = []
     series: dict[str, list[float | None]] = {}
+    eval_only: set[str] = set()
     for d in sorted(os.listdir(parent)):
         rd = os.path.join(parent, d)
         gate = load_gate(rd)
@@ -476,15 +489,30 @@ def load_history(run_dir: str) -> dict:
             continue
         idx = len(runs)
         runs.append(d)
+        compiling = set(load_compile(rd))
+        evals = load_eval(rd) if compiling else {}
+        eval_only |= compiling & set(shown)
+
+        def ratio(vm):
+            if vm not in compiling:
+                return ratio_to_haskell(data, vm)
+            # Eval vs eval: the VM's eval time (its D3 rows if it has no -eval.csv) / Haskell's.
+            if "haskell" not in evals:
+                return None
+            own = evals.get(vm) or {s: t[vm] for s, t in data.items() if t.get(vm, 0) > 0}
+            return ratio_to_haskell({s: {vm: own.get(s, 0), "haskell": evals["haskell"].get(s, 0)}
+                                     for s in own}, vm)
+
+        point = {vm: ratio(vm) for vm in shown}
         for vm in shown:
-            r = ratio_to_haskell(data, vm)
-            if r is not None:
+            if point[vm] is not None:
                 series.setdefault(vm, [None] * idx)
         for vm in series:
-            series[vm].append(ratio_to_haskell(data, vm) if vm in shown else None)
+            series[vm].append(point.get(vm))
     order = {vm: i for i, vm in enumerate(VM_ORDER)}
     return {"runs": runs,
-            "series": {vm: series[vm] for vm in sorted(series, key=lambda v: (order.get(v, 99), v))}}
+            "series": {vm: series[vm] for vm in sorted(series, key=lambda v: (order.get(v, 99), v))},
+            "eval_only": sorted(eval_only & set(series))}
 
 
 def compute_geo_means(data, scripts, present_vms):
@@ -521,6 +549,17 @@ def compute_geo_means(data, scripts, present_vms):
 def experimental_geo_mean(data, scripts, ranked: list[str], vm: str) -> float:
     """Geometric mean of an EXPERIMENTAL VM, with the penalty rule against the ranked VMs only."""
     return compute_geo_means(data, scripts, ranked + [vm])[vm]
+
+
+def unranked_reason(vm: str) -> str:
+    """Why a shown VM is not ranked: its EXPERIMENTAL reason, else the compiling-VM reason."""
+    return EXPERIMENTAL.get(vm, COMPILING_REASON)
+
+
+def eval_geo(eval_ns, vm: str) -> float:
+    """Geometric mean of the VM's eval-only times, or 0."""
+    ev = eval_ns.get(vm)
+    return geometric_mean(list(ev.values())) if ev else 0
 
 
 def badge_text(vm: str) -> str:
@@ -561,8 +600,9 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
     lines.append("*Note: VMs that fail or skip a script are assigned the slowest competitor's time for that script.*")
     if compile_ns:
         lines.append(f"*A compiling VM's timed loop runs the compiled script (\"{COMPILE_BADGE}\": the "
-                     "decode and the compile run once per script, before timing). The Compile column "
-                     "is the geometric mean of the compile time over the scripts.*")
+                     "decode and the compile run once per script, before timing). So it has only an "
+                     "eval-only time: its Geo Mean (decode + eval) is \"–\" and it is not ranked. "
+                     "The Compile column is the geometric mean of the compile time over the scripts.*")
     if eval_ns:
         lines.append("*Geo Mean: flat decode + evaluation (the ranking). Eval only: evaluation of a "
                      "program decoded before the timed loop, geometric mean over its scripts.*")
@@ -592,22 +632,26 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
         lines.append("### Experimental")
         lines.append("")
         lines.append("Run, gated and shown, but not ranked: not in the table above, not a competitor "
-                     "in the penalty rule, not in the history. Geo Mean uses the penalty rule against "
-                     "the ranked VMs.")
+                     "in the penalty rule. Geo Mean uses the penalty rule against the ranked VMs. "
+                     f"Geo Mean \"–\" ({NO_D3_NOTE}): the VM has only an eval-only time.")
         lines.append("")
         lines.append("| VM | Language | Geo Mean | Eval only | Compile | Check | Reason |")
         lines.append("|---|---|---|---|---|---|---|")
         for vm in experimental:
             label = VM_LABELS.get(vm, vm)
             lang = label.split("(")[-1].rstrip(")") if "(" in label else ""
-            geo = experimental_geo_mean(data, scripts, present_vms, vm)
             comp = compile_ns.get(vm)
             comp_cell = f"{fmt_ns(int(geometric_mean(list(comp.values()))))} ({COMPILE_BADGE})" if comp else "-"
             ev = eval_ns.get(vm)
             eval_cell = fmt_ns(int(geometric_mean(list(ev.values())))) if ev else "-"
-            geo_cell = fmt_ns(int(geo)) if geo > 0 else "-"
+            if comp:
+                # No decode + eval time: the penalty rule would invent one from the other VMs.
+                geo_cell = "–"
+            else:
+                geo = experimental_geo_mean(data, scripts, present_vms, vm)
+                geo_cell = fmt_ns(int(geo)) if geo > 0 else "-"
             lines.append(f"| **{label}**{badge_text(vm)} | {lang} | {geo_cell} | {eval_cell} | {comp_cell} | "
-                         f"{check_label(gate, vm)} | {EXPERIMENTAL[vm]} |")
+                         f"{check_label(gate, vm)} | {unranked_reason(vm)} |")
 
     if hidden:
         lines.append("")
@@ -637,9 +681,15 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
         for vm, values in history["series"].items():
             cells = [speed_text(v) if v is not None else "-" for v in values]
             cells.append("reference" if vm == "haskell" else history_change_text(values))
-            tag = " (experimental)" if vm in EXPERIMENTAL else ""
+            tags = (["experimental"] if vm in EXPERIMENTAL else []) + \
+                (["eval only"] if vm in history.get("eval_only", []) else [])
+            tag = f" ({', '.join(tags)})" if tags else ""
             lines.append(f"| {VM_LABELS.get(vm, vm)}{tag} | " + " | ".join(cells) + " |")
         lines.append("")
+        if history.get("eval_only"):
+            lines.append("A VM marked \"eval only\" compiles each script before timing: its ratio is its "
+                         "eval-only time divided by Haskell's eval-only time.")
+            lines.append("")
         lines.append(f"Servers of the same type differ: ratios to Haskell move up to about "
                      f"{NOISE_BAND * 100:.0f} % between two runs on different servers, so a change under "
                      f"{NOISE_BAND * 100:.0f} % is shown as no change.")
@@ -651,7 +701,9 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
     lines.append("| VM | Passed | Failed | Missing | Total |")
     lines.append("|---|---|---|---|---|")
     for vm in sorted_vms + experimental:
-        success = sum(1 for s in scripts if data[s].get(vm, 0) > 0)
+        # A compiling VM's successful times are in eval_ns (see generate).
+        success = (len(eval_ns.get(vm, {})) if vm in compile_ns
+                   else sum(1 for s in scripts if data[s].get(vm, 0) > 0))
         fail = sum(1 for s in scripts if data[s].get(vm, 0) < 0)
         missing = len(scripts) - success - fail
         tag = " (experimental)" if vm in EXPERIMENTAL else ""
@@ -661,9 +713,11 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
 
     lines.append("## Per-Script Results")
     lines.append("")
-    # Each VM's D3 column, followed by its eval-only column if it has <vm>-eval.csv. The experimental
-    # VMs come last and are never the bold fastest.
-    columns = [c for vm in all_vms for c in ([(vm, False), (vm, True)] if vm in eval_ns else [(vm, False)])]
+    # Each VM's D3 column, followed by its eval-only column if it has <vm>-eval.csv; a compiling VM
+    # has only the eval-only column. The experimental VMs come last and are never the bold fastest.
+    columns = [c for vm in all_vms for c in ([(vm, True)] if vm in compile_ns
+                                             else [(vm, False), (vm, True)] if vm in eval_ns
+                                             else [(vm, False)])]
     header = "| Script |" + "|".join(
         f" {VM_LABELS.get(vm, vm)}{' (experimental)' if vm in EXPERIMENTAL else ''}"
         f"{' (eval only)' if ev else ''} " for vm, ev in columns) + "|"
@@ -787,9 +841,13 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
                            hidden, compile_ns)
     with open(os.path.join(run_dir, "unified.csv")) as f:
         lines = f.read().strip().split("\n")
-    csv_data = "\n".join([lines[0]] + [l for l in lines[1:] if l.split(",", 1)[0] in shown])
+    # A compiling VM's rows leave the CSV: the page gets its times as eval-only (REPORT.eval).
+    csv_data = "\n".join([lines[0]] + [l for l in lines[1:]
+                                       if l.split(",", 1)[0] in shown and l.split(",", 1)[0] not in compile_ns])
 
     report = {
+        # The shown VMs in VM_ORDER: a compiling VM has no row in the CSV.
+        "vms": [vm for vm in VM_ORDER if vm in shown] + sorted(shown - set(VM_ORDER)),
         "gate": None if gate is None else {
             vm: {"verdict": v.get("verdict"), "mode": v.get("mode"), "reason": v.get("reason")}
             for vm, v in gate["vms"].items()},
@@ -802,7 +860,8 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
         "notes": {vm: n for vm, n in VM_NOTES.items() if vm in shown},
         "compile_badge": COMPILE_BADGE,
         "badges": {vm: b for vm, b in VM_BADGES.items() if vm in shown},
-        "experimental": {vm: EXPERIMENTAL[vm] for vm in experimental},
+        "experimental": {vm: unranked_reason(vm) for vm in experimental},
+        "no_d3_note": NO_D3_NOTE,
         "drift": drift_text(drift),
         "drift_percent": drift["percent"] if drift else None,
         "run": os.path.basename(os.path.abspath(run_dir)),
@@ -848,7 +907,7 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
             .replace("{{HARNESS_LINK}}", harness_link)
             .replace("{{VM_LIST}}", vm_list)
             .replace("{{REPORT_JSON}}", report_json))
-    seo = seo_parts(run_dir, data, scripts, present_vms, experimental, gate, eval_ns)
+    seo = seo_parts(run_dir, data, scripts, present_vms, experimental, gate, eval_ns, compile_ns)
     page = page.replace("{{SEO_HEAD}}", seo["head"])
     for key in ("{{SEO_INTRO}}", "{{SEO_SUMMARY_SUB}}", "{{SEO_SUMMARY}}", "{{SEO_FAQ}}"):
         page = page.replace(key, seo[key])
@@ -915,22 +974,23 @@ def split_label(vm: str) -> tuple[str, str]:
     return label, ""
 
 
-def summary_rows(data, scripts, present_vms, experimental, gate, eval_ns) -> list[dict]:
+def summary_rows(data, scripts, present_vms, experimental, gate, eval_ns, compile_ns) -> list[dict]:
     """One row per shown VM: the ranked ones fastest first (geo mean with the penalty rule, as in
-    report.md and the page's overall ranking), then the experimental ones."""
+    report.md and the page's overall ranking), then the experimental ones. A compiling VM has no
+    decode + eval time: geo 0, "compiled" True."""
     geo = compute_geo_means(data, scripts, present_vms)
     ranked = sorted((vm for vm in present_vms if geo.get(vm, 0) > 0), key=lambda vm: geo[vm])
     fastest = geo[ranked[0]] if ranked else 0
     rows = []
     for vm in ranked + experimental:
         exp = vm in experimental
-        g = experimental_geo_mean(data, scripts, present_vms, vm) if exp else geo[vm]
-        ev = eval_ns.get(vm)
+        comp = vm in compile_ns
+        g = 0 if comp else experimental_geo_mean(data, scripts, present_vms, vm) if exp else geo[vm]
         name, lang = split_label(vm)
         rows.append({
-            "vm": vm, "name": name, "lang": lang, "experimental": exp,
+            "vm": vm, "name": name, "lang": lang, "experimental": exp, "compiled": comp,
             "rank": None if exp else len(rows) + 1,
-            "geo": g, "eval": geometric_mean(list(ev.values())) if ev else 0,
+            "geo": g, "eval": eval_geo(eval_ns, vm),
             "ratio": g / fastest if (fastest > 0 and g > 0 and not exp) else None,
             "check": check_label(gate, vm),
         })
@@ -949,17 +1009,20 @@ def summary_html(rows: list[dict], n_scripts: int) -> str:
         ratio = "not ranked" if r["experimental"] else (f"{r['ratio']:.2f}×" if r["ratio"] else "-")
         name = escape(r["name"]) + (" (experimental)" if r["experimental"] else "")
         tr = '<tr class="exp">' if r["experimental"] else "<tr>"
+        # A compiling VM: no decode + eval time ("–" with the reason as a tooltip).
+        d3 = f'<td title="{escape(NO_D3_NOTE)}">–</td>' if r["compiled"] else f'<td>{fmt_ns_html(r["geo"])}</td>'
         out.append(f'        {tr}<td>{rank}</td>'
                    f'<td class="l vm">{name}</td><td class="l lang">{escape(r["lang"])}</td>'
-                   f'<td>{fmt_ns_html(r["geo"])}</td><td>{fmt_ns_html(r["eval"])}</td><td>{ratio}</td>'
+                   f'{d3}<td>{fmt_ns_html(r["eval"])}</td><td>{ratio}</td>'
                    f'<td class="l {check_cls}">{escape(r["check"])}</td></tr>')
     out += ['      </tbody>', '    </table></div>',
             f'    <p class="summary-caption">Geometric mean of the time per script over the {n_scripts} '
             'scripts. <em>Decode + eval</em> is the ranking metric. A VM that fails or skips a script '
             'gets the slowest competitor\'s time for it. <em>Eval only</em> times a program that was '
-            'decoded before the timed loop. A dash means that the run has no eval-only time for the VM. '
-            'For a VM that compiles a script before it runs it, the decode + eval column already is '
-            'its eval time: neither the decode nor the compile is timed. The VMs use different execution models, so compare VMs of the same model too '
+            'decoded before the timed loop. A dash means that the run has no such time for the VM. '
+            'A VM that compiles a script before it runs it decodes and compiles each script once, '
+            'before timing. So it has only an eval-only time, and no decode + eval time. '
+            'The VMs use different execution models, so compare VMs of the same model too '
             '(<a href="#exec-model">Execution Model</a>). Experimental VMs are shown, but not ranked.</p>']
     return "\n".join(out)
 
@@ -1123,10 +1186,10 @@ def seo_head(description: str, date: str, ld: str, published: bool, favicon: str
     return "\n".join(lines)
 
 
-def seo_parts(run_dir, data, scripts, present_vms, experimental, gate, eval_ns) -> dict:
+def seo_parts(run_dir, data, scripts, present_vms, experimental, gate, eval_ns, compile_ns) -> dict:
     """The template placeholders, and the rows for write_site_files."""
     date = run_date(run_dir)
-    rows = summary_rows(data, scripts, present_vms, experimental, gate, eval_ns)
+    rows = summary_rows(data, scripts, present_vms, experimental, gate, eval_ns, compile_ns)
     items = faq_items(rows, len(scripts), date)
     description = meta_description(rows, len(scripts), date)
     ld = json_ld(rows, items, run_dir, date, description, len(scripts))
@@ -1251,15 +1314,21 @@ def generate(run_dir: str, write_index: bool = False) -> None:
     for s in scripts:
         for vm in hidden:
             data[s].pop(vm, None)
-    # The gate first: an experimental VM that fails it is listed as "failed check".
-    present_vms = [vm for vm in shown_vms if vm not in EXPERIMENTAL]
-    experimental = [vm for vm in shown_vms if vm in EXPERIMENTAL]
     compile_ns = {vm: v for vm, v in load_compile(run_dir).items() if vm in shown_vms}
-    # A compiling VM's D3 time already is its eval time: no second column for it (unless the run
-    # had no d3 loop).
-    has_d3 = {vm for s in scripts for vm in data[s]}
-    eval_ns = {vm: v for vm, v in eval_all.items()
-               if vm in shown_vms and not (vm in compile_ns and vm in has_d3)}
+    eval_ns = {vm: v for vm, v in eval_all.items() if vm in shown_vms}
+    # A compiling VM decodes and compiles each script before timing: its timed loop is eval only.
+    # Its time is an eval-only time (its D3 rows if it has no -eval.csv), never a decode + eval
+    # time, so its successful D3 times leave data (a failure stays, for the script coverage).
+    for vm in compile_ns:
+        d3 = {s: data[s][vm] for s in scripts if data[s].get(vm, 0) > 0}
+        if vm not in eval_ns and d3:
+            eval_ns[vm] = d3
+        for s in d3:
+            del data[s][vm]
+    # The gate first: an experimental VM that fails it is listed as "failed check". A compiling
+    # VM has no decode + eval time to rank: it is shown with the experimental VMs.
+    present_vms = [vm for vm in shown_vms if vm not in EXPERIMENTAL and vm not in compile_ns]
+    experimental = [vm for vm in shown_vms if vm in EXPERIMENTAL or vm in compile_ns]
     history = load_history(run_dir)
     drift = load_drift(run_dir)
     generate_markdown(run_dir, data, scripts, present_vms, experimental, env_info, gate, hidden,
