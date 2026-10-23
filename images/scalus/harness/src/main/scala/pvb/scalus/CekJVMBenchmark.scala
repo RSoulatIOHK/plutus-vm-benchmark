@@ -1,7 +1,6 @@
 package pvb.scalus
 
 import org.openjdk.jmh.annotations.*
-import org.openjdk.jmh.infra.{BenchmarkParams, Blackhole}
 import scalus.uplc.Term
 import scalus.uplc.eval.{CountingBudgetSpender, PlutusVM}
 
@@ -15,9 +14,6 @@ import scala.annotation.nowarn
   *
   * Both reuse the VM (machine parameters from the cost model) and make a new counting budget spender
   * and CEK state per invocation.
-  *
-  * JMH forks one JVM per method and script. The setup warms up the method of its fork
-  * (AdaptiveWarmup.scala).
   */
 @State(Scope.Thread)
 class CekJVMBenchmark {
@@ -28,15 +24,11 @@ class CekJVMBenchmark {
     private var term: Term = null
     private var vm: PlutusVM = null
 
-    @Setup(Level.Trial)
-    def setup(params: BenchmarkParams, bh: Blackhole): Unit = {
+    @Setup
+    def setup(): Unit = {
         vm = Harness.makeVM()
         flat = Harness.readScript(file)
         term = Harness.decode(flat).term
-        val script = file.stripSuffix(".flat")
-        if params.getBenchmark.endsWith(".benchEval") then
-            AdaptiveWarmup.run(script, "eval", bh, () => benchEval())
-        else AdaptiveWarmup.run(script, "d3", bh, () => bench())
     }
 
     @Benchmark

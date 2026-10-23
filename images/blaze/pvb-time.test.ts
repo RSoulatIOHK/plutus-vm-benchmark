@@ -16,9 +16,8 @@
 // ($PVB_WARMUP_MS, $PVB_ROUND_MS, $PVB_ROUNDS). tinybench cannot give a mean per round.
 //
 // Warm-up ($PVB_WARMUP_MS, METHODOLOGY.md D13): "adaptive" runs rounds of 1 s until at least 5 s
-// have passed and the last 5 rounds are within 3 % of their median, 30 s at most (the cap); the
-// same rule as the JMH rows (images/scalus/harness, AdaptiveWarmup.scala). A number is one fixed
-// warm-up round of that many ms (BENCH_TIMING=quick). After the warm-up of a loop the harness prints
+// have passed and the last 5 rounds are within 3 % of their median, 30 s at most (the cap). A
+// number is one fixed warm-up round of that many ms (BENCH_TIMING=quick). After the warm-up of a loop the harness prints
 // "PVB_WARMUP {json}" with its slices and whether it hit the cap (parsers/parse_warmup.py ->
 // <vm>-warmup-used.csv, and <vm>-warmup.csv with BENCH_TRACE=1).
 //
@@ -64,9 +63,8 @@ function show(label: string, r: Round): string {
   return `${label}: ${(r.ns / 1e9).toFixed(2)} s, ${r.ops} ops, ${(r.ns / r.ops).toFixed(0)} ns/op`;
 }
 
-// The adaptive warm-up rule. Keep it the same in every harness: images/blaze/pvb-time.test.ts,
-// images/scalus-js/time.mjs, images/aiken-wasm/time.mjs and AdaptiveWarmup.scala in
-// images/scalus/harness.
+// The adaptive warm-up rule. Keep it the same in every JS harness: images/blaze/pvb-time.test.ts,
+// images/scalus-js/time.mjs and images/aiken-wasm/time.mjs.
 const SLICE_MS = 1000;
 const WINDOW = 5;
 const TOLERANCE = 0.03;
@@ -150,7 +148,7 @@ test(
       const { slices, end } = warmUp(op, warmupSpec);
       const warmup = { ops: slices.reduce((n, sl) => n + sl.ops, 0), ns: slices.reduce((n, sl) => n + sl.ns, 0) };
       console.log(`${show(`${tag} warm-up`, warmup)}, ${slices.length} slices, ${end}`);
-      console.log(`PVB_WARMUP ${JSON.stringify({ script: name, loop, slices, capped: end === "capped" })}`);
+      console.log(`PVB_WARMUP ${JSON.stringify({ script: name, loop, slices, capped: end === "capped", end })}`);
       const measured: Round[] = [];
       for (let i = 1; i <= rounds; i++) {
         const r = round(op, roundMs);

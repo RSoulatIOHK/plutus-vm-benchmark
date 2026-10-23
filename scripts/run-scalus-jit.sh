@@ -20,17 +20,24 @@ loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 
 echo "Scalus JIT (Scala / JVM / JMH)"
 
-# Timing (METHODOLOGY.md, D13): the adaptive warm-up, then 3 measurement iterations of 5 s each,
-# so the CSV has a standard deviation over the iteration means. JMH cannot end a warm-up early, so
-# JMH runs no warm-up iterations (-wi 0): the benchmark warms up in its setup, in the forked JVM
-# (AdaptiveWarmup.scala in images/scalus/harness). PVB_WARMUP_MS=adaptive: slices of 1 s until at
-# least 5 s have passed and the last 5 slices are within 3 % of their median; 30 s at most.
-# BENCH_TIMING=quick: a fixed 1 s warm-up and one 1 s measurement iteration.
-export PVB_WARMUP_MS=adaptive
+# JMH timing (METHODOLOGY.md, D13): one 30 s warm-up iteration, then 3 measurement iterations of
+# 5 s each, so the CSV has a standard deviation over the iteration means. The JS rows use an
+# adaptive warm-up with a 30 s cap; the JMH rows keep JMH's own warm-up iterations at that cap.
+# BENCH_TIMING=quick shortens warm-up and measurement to one 1 s iteration each.
+WARMUP=30s
+WARMUP_ITERATIONS=1
 MEASURE=5s
 ITERATIONS=3
+# BENCH_TRACE=1: the same 30 s of warm-up as 30 iterations of 1 s (-wi 30 -w 1s), so the log has
+# a score per second; parse_warmup.py writes them to $VM-warmup.csv. The measurement settings stay
+# the same (the measured time can differ, METHODOLOGY.md).
+if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
+    WARMUP=1s
+    WARMUP_ITERATIONS=30
+fi
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
-    export PVB_WARMUP_MS=1000
+    WARMUP=1s
+    WARMUP_ITERATIONS=1
     MEASURE=1s
     ITERATIONS=1
     # The check compiles every selected script: one compile each instead of the median of 3.
@@ -55,7 +62,7 @@ cd "$BENCH_DIR"
 : > "$RUN_DIR/$VM-raw.log"
 if loop d3 || loop eval; then
     java -Xss64m -Xmx4g -cp "$CP" org.openjdk.jmh.Main \
-        -i "$ITERATIONS" -wi 0 -r "$MEASURE" -f 1 -t 1 \
+        -i "$ITERATIONS" -wi "$WARMUP_ITERATIONS" -w "$WARMUP" -r "$MEASURE" -f 1 -t 1 \
         -jvm /opt/jdk-25/bin/java \
         -jvmArgsAppend "$JVM_FLAGS -XX:+AlwaysPreTouch -Xms$HEAP" \
         -rf json -rff "$RUN_DIR/$VM-jmh.json" -p "file=$FILE_LIST" 'pvb.scalus.JITBenchmark' \
@@ -72,9 +79,9 @@ if loop d3 || loop eval; then
     rm -f "$TIMING_CSV"
 fi
 
-# The warm-up of each script and loop (the "PVB_WARMUP" lines of the forked JVMs): its length and
-# whether it hit the cap -> $VM-warmup-used.csv. BENCH_TRACE=1: also the time per operation of
-# each 1 s slice -> $VM-warmup.csv
+# The warm-up of each script and loop (the "# Warmup:" lines of JMH): its length, with capped=fixed
+# -> $VM-warmup-used.csv. BENCH_TRACE=1: also the score of each 1 s warm-up iteration ->
+# $VM-warmup.csv
 if loop d3 || loop eval; then
     python3 /bench/parsers/parse_warmup.py --used "$VM" "$RUN_DIR/$VM-raw.log" > "$RUN_DIR/$VM-warmup-used.csv" || true
     if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
