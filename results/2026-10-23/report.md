@@ -62,7 +62,7 @@ drift (haskell, end vs start): +0.6 % over 5 scripts
 ## Summary (geometric mean across all scripts)
 
 *Note: VMs that fail or skip a script are assigned the slowest competitor's time for that script.*
-*A compiling VM's timed loop runs the compiled script ("decode and compile excluded": the decode and the compile run once per script, before timing). The Compile column is the geometric mean of the compile time over the scripts.*
+*A compiling VM's timed loop runs the compiled script ("decode and compile excluded": the decode and the compile run once per script, before timing). So it has only an eval-only time: its Geo Mean (decode + eval) is "–" and it is not ranked. The Compile column is the geometric mean of the compile time over the scripts.*
 *Geo Mean: flat decode + evaluation (the ranking). Eval only: evaluation of a program decoded before the timed loop, geometric mean over its scripts.*
 *Aiken uplc CEK (Rust → WASM / Node V8), "decode cached (by the library)": The library caches the decoded program by a hash of the flat bytes. After the first call (in the warm-up), the timed loop runs hash + evaluation, without the decode. Its eval-only time is the same loop.*
 
@@ -79,11 +79,11 @@ drift (haskell, end vs start): +0.6 % over 5 scripts
 
 ### Experimental
 
-Run, gated and shown, but not ranked: not in the table above, not a competitor in the penalty rule, not in the history. Geo Mean uses the penalty rule against the ranked VMs.
+Run, gated and shown, but not ranked: not in the table above, not a competitor in the penalty rule. Geo Mean uses the penalty rule against the ranked VMs. Geo Mean "–" (compiled once before timing, see the compile column): the VM has only an eval-only time.
 
 | VM | Language | Geo Mean | Eval only | Compile | Check | Reason |
 |---|---|---|---|---|---|---|
-| **Scalus UPLC→JVM JIT (Scala / JVM)** | Scala / JVM | 123.96 us | - | 1.74 s (decode and compile excluded) | pass | not ranked: the JIT module is not published as a release artifact and has no downstream users yet (spec D17) |
+| **Scalus UPLC→JVM JIT (Scala / JVM)** | Scala / JVM | – | 123.96 us | 1.74 s (decode and compile excluded) | pass | not ranked: the JIT module is not published as a release artifact and has no downstream users yet (spec D17) |
 
 ### Notes
 
@@ -95,7 +95,7 @@ Run, gated and shown, but not ranked: not in the table above, not a competitor i
 | VM | 2026-10-23 | Change vs previous run |
 |---|---|---|
 | plutus-core CEK (Haskell / GHC) | 1x (Haskell) | reference |
-| Scalus UPLC→JVM JIT (Scala / JVM) (experimental) | 5.7x faster | - |
+| Scalus UPLC→JVM JIT (Scala / JVM) (experimental, eval only) | 2.2x faster | - |
 | Scalus CEK (Scala / JVM) | 1.8x faster | - |
 | Scalus CEK (Scala.js / Node V8) | 5.0x slower | - |
 | Aiken uplc CEK (Rust) | 11.6x slower | - |
@@ -103,6 +103,8 @@ Run, gated and shown, but not ranked: not in the table above, not a competitor i
 | uplc-turbo AST walker (Rust) | 1.5x faster | - |
 | Plutigo CEK (Go) | 2.5x faster | - |
 | blaze-plutus CEK (TypeScript / Node V8) | 2.5x slower | - |
+
+A VM marked "eval only" compiles each script before timing: its ratio is its eval-only time divided by Haskell's eval-only time.
 
 Servers of the same type differ: ratios to Haskell move up to about 5 % between two runs on different servers, so a change under 5 % is shown as no change.
 
@@ -122,7 +124,7 @@ Servers of the same type differ: ratios to Haskell move up to about 5 % between 
 
 ## Per-Script Results
 
-| Script | plutus-core CEK (Haskell / GHC) | plutus-core CEK (Haskell / GHC) (eval only) | Scalus CEK (Scala / JVM) | Scalus CEK (Scala / JVM) (eval only) | Scalus CEK (Scala.js / Node V8) | Aiken uplc CEK (Rust) | Aiken uplc CEK (Rust) (eval only) | Aiken uplc CEK (Rust → WASM / Node V8) | Aiken uplc CEK (Rust → WASM / Node V8) (eval only) | uplc-turbo AST walker (Rust) | uplc-turbo AST walker (Rust) (eval only) | Plutigo CEK (Go) | Plutigo CEK (Go) (eval only) | blaze-plutus CEK (TypeScript / Node V8) | blaze-plutus CEK (TypeScript / Node V8) (eval only) | Scalus UPLC→JVM JIT (Scala / JVM) (experimental) |
+| Script | plutus-core CEK (Haskell / GHC) | plutus-core CEK (Haskell / GHC) (eval only) | Scalus CEK (Scala / JVM) | Scalus CEK (Scala / JVM) (eval only) | Scalus CEK (Scala.js / Node V8) | Aiken uplc CEK (Rust) | Aiken uplc CEK (Rust) (eval only) | Aiken uplc CEK (Rust → WASM / Node V8) | Aiken uplc CEK (Rust → WASM / Node V8) (eval only) | uplc-turbo AST walker (Rust) | uplc-turbo AST walker (Rust) (eval only) | Plutigo CEK (Go) | Plutigo CEK (Go) (eval only) | blaze-plutus CEK (TypeScript / Node V8) | blaze-plutus CEK (TypeScript / Node V8) (eval only) | Scalus UPLC→JVM JIT (Scala / JVM) (experimental) (eval only) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | auction_1-1 | 374.44 us | 130.46 us | 177.45 us | 125.81 us | 1.38 ms | 3.02 ms | 1.91 ms | 365.53 us | 365.53 us | 241.18 us | 181.63 us | **130.90 us** | 78.38 us | 703.79 us | 560.70 us | 37.91 us |
 | auction_1-2 | 1.08 ms | 422.51 us | 687.46 us | 511.84 us | 6.13 ms | 12.45 ms | 9.87 ms | 1.52 ms | 1.52 ms | 727.48 us | 595.40 us | **461.85 us** | 325.38 us | 2.45 ms | 1.82 ms | 255.41 us |
