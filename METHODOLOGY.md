@@ -151,7 +151,9 @@ The JS rows (blaze-v8, scalus-js, aiken-wasm) use an adaptive warm-up:
 3. Stop at 30 s at the latest (the cap), steady or not.
 
 The JMH rows (scalus-cek, scalus-jit) use one JMH warm-up iteration of 30 s, the cap
-(`-wi 1 -w 30s`). The JMH rows keep JMH's own warm-up iterations, at the 30 s cap. JMH cannot
+(`-wi 1 -w 30s`). The JMH rows keep JMH's own warm-up iterations, at the 30 s cap. This change
+from 20 s to 30 s (2026-10-23) made the Scalus CEK decode + eval time about 7 % faster: the JVM
+settles on one of two speed levels for this row, and a 20 s warm-up often stopped on the slower one. JMH cannot
 end its own warm-up early.
 
 Why: the measurement must start in the steady state of each engine. A fixed 20 s warm-up could
