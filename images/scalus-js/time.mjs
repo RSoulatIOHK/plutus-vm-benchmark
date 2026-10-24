@@ -1,4 +1,6 @@
-// Timing (spec D3): flat decode + evaluation with costing on, for one script ($PVB_SCRIPT).
+// Timing, for one script ($PVB_SCRIPT) and one loop ($PVB_LOOP, default d3):
+//   d3    flat decode + evaluation with costing on (spec D3)
+//   eval  evaluation with costing on of the program decoded before the timing (branch build only)
 //
 // One script per process: scripts/run-scalus-js.sh starts `node time.mjs` once per script, so no
 // JIT profile or GC state carries over from another script.
@@ -22,11 +24,12 @@
 // Output: one line per round, then "PVB_RESULT {json}" with the rounds, for parsers/parse_vitest.py.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { DATA_DIR, evaluate } from "./common.mjs";
+import { DATA_DIR, decode, evaluate, evaluateProgram } from "./common.mjs";
 
 const name = process.env.PVB_SCRIPT;
 const warmupSpec = process.env.PVB_WARMUP_MS;
 const roundMs = Number(process.env.PVB_ROUND_MS);
+const loop = process.env.PVB_LOOP ?? "d3";
 const rounds = Number(process.env.PVB_ROUNDS);
 
 // Keeps the result of every evaluation reachable, so the engine cannot drop the work (JMH's
@@ -87,18 +90,20 @@ if (!name || !(rounds >= 1) || !(warmupSpec === "adaptive" || Number(warmupSpec)
   throw new Error("set PVB_SCRIPT, PVB_WARMUP_MS (adaptive or ms), PVB_ROUND_MS, PVB_ROUNDS");
 }
 const flat = new Uint8Array(readFileSync(join(DATA_DIR, `${name}.flat`)));
-const op = () => evaluate(flat);
+if (loop !== "d3" && loop !== "eval") throw new Error(`PVB_LOOP=${loop}: expected d3 or eval`);
+const program = loop === "eval" ? decode(flat) : null;
+const op = loop === "eval" ? () => evaluateProgram(program) : () => evaluate(flat);
 
-const tag = `d3 ${name} pid ${process.pid}`;
+const tag = `${loop} ${name} pid ${process.pid}`;
 const { slices, end } = warmUp(op, warmupSpec);
 const warmup = { ops: slices.reduce((n, sl) => n + sl.ops, 0), ns: slices.reduce((n, sl) => n + sl.ns, 0) };
 console.log(`${show(`${tag} warm-up`, warmup)}, ${slices.length} slices, ${end}`);
-console.log(`PVB_WARMUP ${JSON.stringify({ script: name, loop: "d3", slices, capped: end === "capped", end })}`);
+console.log(`PVB_WARMUP ${JSON.stringify({ script: name, loop, slices, capped: end === "capped", end })}`);
 const measured = [];
 for (let i = 1; i <= rounds; i++) {
   const r = round(op, roundMs);
   measured.push(r);
   console.log(show(`${tag} round ${i}`, r));
 }
-console.log(`PVB_RESULT ${JSON.stringify({ script: name, loop: "d3", pid: process.pid, warmup, rounds: measured })}`);
+console.log(`PVB_RESULT ${JSON.stringify({ script: name, loop, pid: process.pid, warmup, rounds: measured })}`);
 if (sink === Symbol.for("never")) console.log("unreachable");

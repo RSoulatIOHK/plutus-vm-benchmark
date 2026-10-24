@@ -3,8 +3,7 @@ package pvb.scalus
 import scalus.cardano.ledger.{CostModels, Language, MajorProtocolVersion}
 import scalus.uplc.{DeBruijnedProgram, Term}
 import scalus.uplc.eval.*
-import scalus.uplc.jit.{CompiledTerm, UplcCompiler}
-import scalus.uplc.jit.nativestack.StackThresholdException
+import scalus.uplc.jit.{UplcCompiler, UplcEvaluator}
 
 import java.nio.file.{Files, Path, Paths}
 
@@ -57,25 +56,19 @@ object Harness {
     def cekEvalTerm(vm: PlutusVM, term: Term, spender: BudgetSpender): Term =
         vm.evaluateDeBruijnedTerm(term, spender, NoLogger)
 
-    /** A script compiled by the JIT, with its De Bruijn term for the CEK fallback. */
-    final class Jitted(val code: CompiledTerm, val deBruijned: Term)
+    /** scalus-jit compile: flat decode + JIT compile (the compile column, spec D5). The result
+      * falls back to the CEK machine on the JIT's call-depth limit.
+      */
+    def jitCompile(flat: Array[Byte]): UplcEvaluator =
+        UplcCompiler.compile(decode(flat).toProgram.term).withFallback()
 
-    /** scalus-jit compile: flat decode + JIT compile (the compile column, spec D5). */
-    def jitCompile(flat: Array[Byte]): Jitted = {
-        val program = decode(flat)
-        Jitted(UplcCompiler.compile(program.toProgram.term).code, program.term)
-    }
-
-    /** scalus-jit: evaluates the compiled code, as `UplcCompiler.Compiled.withFallback` does, but
-      * returns the JIT value instead of converting it to a term: 78 scripts return a function, which
-      * has no term in the JIT (`FunctionResultError`), and the CEK machine returns it as `ok`.
+    /** scalus-jit: evaluates the compiled script for its budget only (`UplcEvaluator.run`): 78
+      * scripts return a function, which has no term in the JIT, and `run` returns normally for them,
+      * as the CEK machine does.
       *
       * A script deeper than the JIT's call-depth limit is evaluated again with the CEK machine, with
       * a new spender: the last spender `newSpender` made holds the budget of the result.
       */
-    def jitEval(vm: PlutusVM, jitted: Jitted, newSpender: () => BudgetSpender): AnyRef =
-        try jitted.code(NoLogger, newSpender(), vm.machineParams)
-        catch
-            case _: StackThresholdException =>
-                vm.evaluateDeBruijnedTerm(jitted.deBruijned, newSpender(), NoLogger)
+    def jitEval(vm: PlutusVM, jitted: UplcEvaluator, newSpender: () => BudgetSpender): Unit =
+        jitted.run(newSpender(), NoLogger)(using vm)
 }

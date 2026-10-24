@@ -1,6 +1,7 @@
 package pvb.scalus
 
 import scalus.uplc.eval.{BudgetSpender, CountingBudgetSpender}
+import scalus.uplc.jit.UplcEvaluator
 
 import java.io.PrintWriter
 import java.nio.file.{Files, Path, Paths}
@@ -49,7 +50,7 @@ object Check {
                     withCsv(outDir.resolve("scalus-jit-compile.csv"), "vm,script,compile_ns") { compile =>
                         for f <- files do
                             val flat = Harness.readScript(f)
-                            var jitted: Harness.Jitted = null
+                            var jitted: UplcEvaluator = null
                             val times =
                                 try
                                     (1 to runs).map { _ =>

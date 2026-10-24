@@ -3,20 +3,24 @@
 #
 #   run-scalus-js.sh <results-dir>
 #
-# pvb-loops: d3 check
+# pvb-loops: d3 eval check
 # Runs the loops of $BENCH_LOOPS over the scripts in $BENCH_DATA_DIR; $BENCH_TIMING=quick shortens
-# the timing. The check covers the same scripts. No eval loop: the scalus npm API cannot evaluate
-# an already decoded program (images/scalus-js/README.md, "No eval-only timing").
+# the timing. The check covers the same scripts.
+# TEMPORARY (Scalus 1.4.1 preparation): the scalus-js image is the branch build, with PlutusVM and
+# uplc.decodeProgram, so it has an eval loop: evaluation of a program decoded before the timing.
+# scalus-js-140 (npm 1.4.0, run-scalus-js-140.sh) runs this script with PVB_JS_VM=scalus-js-140
+# and without the eval loop.
 set -uo pipefail
 
-VM=scalus-js
+VM="${PVB_JS_VM:-scalus-js}"
+export PVB_JS_VM="$VM"
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
 RAW="$RUN_DIR/$VM-raw.log"
 loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 
 cd /bench/scalus-js || exit 1
-echo "scalus-js (Scala.js / Node.js $(node --version) / V8), scalus $(node -p 'require("./node_modules/scalus/package.json").version')" \
+echo "$VM (Scala.js / Node.js $(node --version) / V8), scalus $(node -p 'require("./node_modules/scalus/package.json").version')" \
     | tee "$RAW"
 
 # Correctness: one evaluation per script.
@@ -35,15 +39,22 @@ export PVB_WARMUP_MS=adaptive PVB_ROUND_MS=5000 PVB_ROUNDS=3
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
     export PVB_WARMUP_MS=500 PVB_ROUND_MS=500 PVB_ROUNDS=1
 fi
-if loop d3; then
+# time_loop <loop>: one node process per script, then the CSV of that loop.
+time_loop() {
+    local csv="$RUN_DIR/$VM.csv"
+    [[ "$1" == eval ]] && csv="$RUN_DIR/$VM-eval.csv"
     for f in $(cd "$DATA_DIR" && ls -- *.flat | LC_ALL=C sort); do
         name="${f%.flat}"
         # $BASHPID is the pid of the subshell, which exec turns into the node process.
         ( echo "--- $name: process $BASHPID"
-          DATA_DIR="$DATA_DIR" PVB_SCRIPT="$name" exec node time.mjs ) 2>&1 | tee -a "$RAW" || true
+          DATA_DIR="$DATA_DIR" PVB_SCRIPT="$name" PVB_LOOP="$1" exec node time.mjs ) 2>&1 | tee -a "$RAW" || true
     done
-    python3 /bench/parsers/parse_vitest.py "$VM" "$RAW" > "$RUN_DIR/$VM.csv"
-    python3 /bench/parsers/fill_failures.py "$RUN_DIR/$VM.csv" "$DATA_DIR" "$VM" "$RAW"
+    python3 /bench/parsers/parse_vitest.py "$VM" "$RAW" "$1" > "$csv"
+    python3 /bench/parsers/fill_failures.py "$csv" "$DATA_DIR" "$VM" "$RAW"
+}
+if loop d3; then time_loop d3; fi
+if loop eval; then time_loop eval; fi
+if loop d3 || loop eval; then
     # The length of each warm-up and whether it hit the cap -> $VM-warmup-used.csv.
     # BENCH_TRACE=1: also the warm-up in 1 s slices -> $VM-warmup.csv
     python3 /bench/parsers/parse_warmup.py --used "$VM" "$RAW" > "$RUN_DIR/$VM-warmup-used.csv" || true

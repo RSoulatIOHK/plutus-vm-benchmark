@@ -57,6 +57,12 @@ on:
         description: Run beside another run (own server, own concurrency group); for tests only, never published
         type: boolean
         default: false
+      variants:
+        description: >-
+          TEMPORARY (Scalus 1.4.1 preparation): a variants file such as scripts/variants/scalus-141.txt.
+          Runs once per line on the same server, into results/<run>/<variant> (scripts/run-variants.sh);
+          always a partial run
+        default: ""
       publish:
         description: >-
           Commit results/<date> and deploy the page (otherwise the results are only an artifact).
@@ -111,6 +117,7 @@ jobs:
           VMS: ${{ inputs.vms }}
           # The raw input: LANES (job env) turns an empty input into LANES_DEFAULT.
           LANES_INPUT: ${{ inputs.lanes }}
+          VARIANTS: ${{ inputs.variants }}
         run: |
           # Skip a scheduled run when only results/ and the published page (and its sitemap and
           # link-preview image) changed since the last results commit.
@@ -137,6 +144,13 @@ jobs:
             echo "$all_vms" | tr ' ' '\n' | grep -qx -- "$vm" || { echo "::error::unknown VM '$vm'"; exit 1; }
           done
           vms=$(echo "${VMS:-$all_vms}" | xargs -n1 | sort -u | paste -sd' ' -)
+          if [[ -n "$VARIANTS" ]]; then
+            [[ -f "$VARIANTS" ]] || { echo "::error::variants file '$VARIANTS' does not exist"; exit 1; }
+            [[ "$LANES" != *,* ]] || { echo "::error::variants and a lanes comma list do not combine"; exit 1; }
+            for vm in $(sed -n 's/.*[[:space:]]VMS=\([^[:space:]]*\).*/\1/p' "$VARIANTS" | tr ',' ' '); do
+              echo " $vms " | grep -q " $vm " || { echo "::error::variants file VM '$vm' is not in vms"; exit 1; }
+            done
+          fi
           if [[ -n "$BENCH_SCRIPTS" ]]; then
             # grep exits 1 for no match, 2 for a bad regex.
             rc=0
@@ -150,7 +164,7 @@ jobs:
           # default lane count (3). A comma list (A/B test) and anything else is partial.
           partial=true
           if [[ "$vms" == "$all_vms" && -z "$BENCH_SCRIPTS" && "$loops" == check,d3,eval && "$BENCH_TIMING" == normal \
-            && "$BENCH_TRACE" == 0 && ( "$LANES" == 1 || "$LANES" == "$LANES_DEFAULT" ) ]]; then
+            && "$BENCH_TRACE" == 0 && -z "$VARIANTS" && ( "$LANES" == 1 || "$LANES" == "$LANES_DEFAULT" ) ]]; then
             partial=false
           fi
           if [[ "$partial" == true ]]; then
@@ -224,6 +238,7 @@ jobs:
           RUN_ID: ${{ steps.plan.outputs.run_id }}
           NAME: ${{ steps.plan.outputs.name }}
           VMS: ${{ inputs.vms }}
+          VARIANTS: ${{ inputs.variants }}
         # VMS is a space-separated list: split it on purpose. PVB_QUALIFY goes to environment.txt.
         run: |
           PVB_QUALIFY="$(cat "$BENCH_STATE/$RUN_ID/qualify.txt" 2>/dev/null || true)"

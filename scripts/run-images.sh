@@ -25,6 +25,8 @@
 #   BENCH_TRACE    1 = the JIT rows log warm-up slices into <vm>-warmup.csv (default 0)
 #   DRIFT          1 = drift probe (default), 0 = off. See "Drift probe" below
 #   PVB_PROGRESS   progress file, one line per stage (default <results-dir>/progress.txt)
+#   SCALUS_JAVA, SCALUS_JVM_FLAGS  TEMPORARY (Scalus 1.4.1 preparation): passed to every image when
+#                  set; the JVM of the scalus-cek and scalus-jit rows (scripts/run-scalus-cek.sh)
 # The BENCH_ switches are passed to the images (docs/IMAGE_CONTRACT.md). A run of a subset of
 # the scripts writes their names to scripts.txt; the gate then compares only those.
 #
@@ -253,6 +255,10 @@ elif [[ "$CPUSET" == auto ]]; then
     fi
 fi
 DOCKER_FLAGS=(--rm --cap-add SYS_NICE --network none)
+# TEMPORARY (Scalus 1.4.1 preparation): the JVM switches of the Scalus rows, when set.
+for v in SCALUS_JAVA SCALUS_JVM_FLAGS; do
+    [[ -z "${!v:-}" ]] || DOCKER_FLAGS+=(-e "$v=${!v}")
+done
 if [[ "$LANES" -eq 1 ]]; then
     # One lane: the CPU set is in DOCKER_FLAGS, and run_image adds none.
     [[ "$CPUSET" == none ]] || DOCKER_FLAGS+=(--cpuset-cpus "$CPUSET")

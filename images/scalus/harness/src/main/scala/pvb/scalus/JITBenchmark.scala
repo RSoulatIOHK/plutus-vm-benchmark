@@ -1,7 +1,8 @@
 package pvb.scalus
 
 import org.openjdk.jmh.annotations.*
-import scalus.uplc.eval.{CountingBudgetSpender, PlutusVM}
+import scalus.uplc.eval.{BudgetSpender, CountingBudgetSpender, PlutusVM}
+import scalus.uplc.jit.UplcEvaluator
 
 import java.util.concurrent.TimeUnit
 import scala.annotation.nowarn
@@ -15,7 +16,7 @@ class JITBenchmark {
     @Param(Array("auction_1-1.flat"))
     @nowarn("msg=unset private variable")
     private var file: String = ""
-    private var jitted: Harness.Jitted = null
+    private var jitted: UplcEvaluator = null
     private var vm: PlutusVM = null
 
     @Setup
@@ -27,5 +28,10 @@ class JITBenchmark {
     @Benchmark
     @BenchmarkMode(Array(Mode.AverageTime))
     @OutputTimeUnit(TimeUnit.MICROSECONDS)
-    def benchJIT(): AnyRef = Harness.jitEval(vm, jitted, () => CountingBudgetSpender())
+    def benchJIT(): AnyRef = {
+        // The spender is the result, so JMH consumes the evaluation's budget.
+        var spender: BudgetSpender = null
+        Harness.jitEval(vm, jitted, () => { spender = CountingBudgetSpender(); spender })
+        spender
+    }
 }

@@ -47,9 +47,22 @@ export BENCH_DATA_DIR="$DATA_DIR"
 export SCALUS_COST_MODEL="$BENCH_DIR/mainnet-plutusv3-costmodel.json"
 CP="$(cat "$BENCH_DIR/jmh-classpath.txt")"
 
-# The benchmark JVM is GraalVM 25 at /opt/jdk-25. Compact object headers + Graal JIT +
-# Scala-friendly inlining together give ~14% geo-mean speedup over the JDK 21 default.
-JVM_FLAGS="-Xss64m --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m"
+# The forked benchmark JVM. SCALUS_JAVA: 25.0.2 or 25.4.4 (the Oracle GraalVM releases in the
+# image, images/scalus/Dockerfile), or the path of a java binary; default /opt/jdk-25 (25.0.2).
+case "${SCALUS_JAVA:-}" in
+    "") JAVA=/opt/jdk-25/bin/java ;;
+    /*) JAVA="$SCALUS_JAVA" ;;
+    *) JAVA="/opt/graalvm-$SCALUS_JAVA/bin/java" ;;
+esac
+[[ -x "$JAVA" ]] || { echo "ERROR: SCALUS_JAVA=$SCALUS_JAVA: $JAVA is not there" >&2; exit 1; }
+# SCALUS_JVM_FLAGS: default = the flags below (compact object headers + Scala-friendly inlining gave
+# ~14% geo-mean speedup on GraalVM 25 over the JDK 21 default); none = no extra flags, only the heap
+# flags (-Xmx, -Xms, -XX:+AlwaysPreTouch).
+case "${SCALUS_JVM_FLAGS:-default}" in
+    default) JVM_FLAGS="--enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m" ;;
+    none) JVM_FLAGS="" ;;
+    *) echo "ERROR: SCALUS_JVM_FLAGS=$SCALUS_JVM_FLAGS: expected default or none" >&2; exit 1 ;;
+esac
 
 # JMH on the classpath the image build exported from sbt (images/scalus/Dockerfile), not through sbt.
 # JMH methods of the requested loops: bench (d3), benchEval (eval).
@@ -66,15 +79,17 @@ fi
 cd "$BENCH_DIR"
 RAW="$RUN_DIR/$VM-raw.log"
 : > "$RAW"
+echo "jvm: $JAVA ($("$JAVA" -version 2>&1 | sed -n 2p)), flags ${SCALUS_JVM_FLAGS:-default}: ${JVM_FLAGS:-<none>}" \
+    | tee -a "$RUN_DIR/$VM-raw.log"
 if [[ -n "$PATTERN" ]]; then
     jsons=$(mktemp -d /tmp/scalus-cek-jmh.XXXXXX)
     for f in $(cd "$DATA_DIR" && ls -- *.flat | LC_ALL=C sort); do
         # $BASHPID is the pid of the subshell, which exec turns into the JMH launcher of this script.
         # shellcheck disable=SC2086
         ( echo "--- ${f%.flat}: process $BASHPID"
-          exec java -Xss64m -Xmx4g -cp "$CP" org.openjdk.jmh.Main \
+          exec java -Xmx4g -cp "$CP" org.openjdk.jmh.Main \
               -i "$ITERATIONS" -wi "$WARMUP_ITERATIONS" -w "$WARMUP" -r "$MEASURE" -f 1 -t 1 \
-              -jvm /opt/jdk-25/bin/java -jvmArgsAppend "$JVM_FLAGS -XX:+AlwaysPreTouch -Xms$HEAP" \
+              -jvm "$JAVA" -jvmArgsAppend "$JVM_FLAGS -XX:+AlwaysPreTouch -Xms$HEAP" \
               -rf json -rff "$jsons/${f%.flat}.json" -p "file=$f" "$PATTERN" ) \
             2>&1 | tee -a "$RAW" || true
     done
@@ -118,6 +133,6 @@ fi
 if loop check; then
     echo "=== check" | tee -a "$RUN_DIR/$VM-raw.log"
     # shellcheck disable=SC2086
-    /opt/jdk-25/bin/java $JVM_FLAGS -Xmx4g -cp "$CP" pvb.scalus.Check cek "$RUN_DIR" \
+    "$JAVA" $JVM_FLAGS -Xmx4g -cp "$CP" pvb.scalus.Check cek "$RUN_DIR" \
         2>&1 | tee -a "$RUN_DIR/$VM-raw.log" || true
 fi

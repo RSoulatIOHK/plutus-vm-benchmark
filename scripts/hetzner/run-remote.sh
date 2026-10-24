@@ -10,7 +10,9 @@
 # and the 6 h limit of a GitHub-hosted job. `collect` copies results/<name> and
 # the run log back into this checkout. BENCH_SCRIPTS, BENCH_LOOPS, BENCH_TIMING, BENCH_QUICK,
 # BENCH_TRACE, LANES and PVB_QUALIFY (the server qualification line of up-qualified.sh, written
-# to environment.txt) are passed through (scripts/run-images.sh).
+# to environment.txt) are passed through (scripts/run-images.sh). TEMPORARY (Scalus 1.4.1
+# preparation): VARIANTS=<variants file> runs scripts/run-variants.sh instead, one pass per line,
+# into results/<name>/<variant>.
 set -euo pipefail
 
 CMD="${1:?usage: run-remote.sh start|status|collect <run-id> ...}"
@@ -40,7 +42,11 @@ case "$CMD" in
     QUALIFY_Q=$(printf %q "${PVB_QUALIFY:-}")
     # LANES as a comma list (1,3): run the same VMs once per value on this server, into
     # results/<name>/lanes<N>, so lane effects are measured without a server-to-server difference.
-    if [[ "${LANES:-1}" == *,* ]]; then
+    if [[ -n "${VARIANTS:-}" ]]; then
+      [[ "${LANES:-1}" != *,* ]] || { echo "VARIANTS and a LANES comma list do not combine" >&2; exit 1; }
+      VARIANTS_Q=$(printf %q "$VARIANTS")
+      RUN_CMD="scripts/run-variants.sh $VARIANTS_Q results/$NAME $VMS > /root/run.log 2>&1; echo \$? > $DONE"
+    elif [[ "${LANES:-1}" == *,* ]]; then
       RUN_CMD="rc=0; for l in ${LANES//,/ }; do LANES=\$l scripts/run-images.sh results/$NAME/lanes\$l $VMS >> /root/run.log 2>&1 || rc=\$?; done; echo \$rc > $DONE"
       LANES_Q=1
     else
