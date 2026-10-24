@@ -95,6 +95,10 @@ VM_BADGES = {
 
 # VMs that are run, gated and shown with their numbers, but not ranked (spec D17): {vm: reason}.
 EXPERIMENTAL = {
+    "blaze-v8": "not ranked: no released project outside the Blaze repo depends on @blaze-cardano/plutus "
+                "yet; Blaze itself evaluates scripts with @blaze-cardano/vm (Aiken uplc as WASM) (spec D17)",
+    "blaze-jsc": "not ranked: no released project outside the Blaze repo depends on @blaze-cardano/plutus "
+                 "yet; Blaze itself evaluates scripts with @blaze-cardano/vm (Aiken uplc as WASM) (spec D17)",
     "scalus-jit": "not ranked: the JIT module is not published as a release artifact and has no "
                   "downstream users yet (spec D17)",
 }
@@ -144,15 +148,13 @@ VM_FACTS = {
 # Where each VM comes from. The pinned version is read from .env at the repo root (env: the .env
 # key, pattern: a regex whose group 1 is the release tag, matched on "<value> # <comment>"); version
 # and tag are the fallback when .env has no match. release: the release page of the tag ({tag}).
-# used_by: (name, url) of a node or SDK that ships the VM.
 _SCALUS_REPO = "https://github.com/scalus3/scalus"
 _BLAZE_REPO = "https://github.com/butaneprotocol/blaze-cardano"
 VM_SOURCES = {
     "haskell": {
         "repo": "https://github.com/IntersectMBO/plutus", "home": "https://plutus.cardano.intersectmbo.org",
         "env": "HASKELL_SHA", "pattern": r"release (\d+(?:\.\d+)+)", "tag": "1.70.0.0",
-        "release": "https://github.com/IntersectMBO/plutus/releases/tag/{tag}",
-        "used_by": ("cardano-node", "https://github.com/IntersectMBO/cardano-node")},
+        "release": "https://github.com/IntersectMBO/plutus/releases/tag/{tag}"},
     "scalus-jit": {
         "repo": _SCALUS_REPO, "home": "https://scalus.org",
         "env": "SCALUS_SHA", "pattern": r"#\s*(v\d+(?:\.\d+)+)", "tag": "v1.4.0",
@@ -178,13 +180,11 @@ VM_SOURCES = {
     "uplc-turbo": {
         "repo": "https://github.com/pragma-org/uplc", "home": None,
         "env": "UPLC_TURBO_SHA", "pattern": r"#\s*(amaru-uplc-v\d+(?:\.\d+)+)", "tag": "amaru-uplc-v0.4.0",
-        "release": "https://github.com/pragma-org/uplc/releases/tag/{tag}",
-        "used_by": ("Amaru", "https://github.com/pragma-org/amaru")},
+        "release": "https://github.com/pragma-org/uplc/releases/tag/{tag}"},
     "plutigo": {
         "repo": "https://github.com/blinklabs-io/plutigo", "home": None,
         "env": "PLUTIGO_SHA", "pattern": r"#\s*(v\d+(?:\.\d+)+)", "tag": "v0.1.10",
-        "release": "https://github.com/blinklabs-io/plutigo/releases/tag/{tag}",
-        "used_by": ("Dingo", "https://github.com/blinklabs-io/dingo")},
+        "release": "https://github.com/blinklabs-io/plutigo/releases/tag/{tag}"},
     "blaze-jsc": {
         "repo": _BLAZE_REPO, "home": "https://blaze.butane.dev",
         "env": "BLAZE_SHA", "pattern": r"@blaze-cardano/plutus (\d+(?:\.\d+)+)", "tag": "0.1.1",
@@ -195,6 +195,47 @@ VM_SOURCES = {
         "env": "BLAZE_SHA", "pattern": r"@blaze-cardano/plutus (\d+(?:\.\d+)+)", "tag": "0.1.1",
         "version": "@blaze-cardano/plutus {tag}",
         "release": _BLAZE_REPO + "/releases/tag/@blaze-cardano/plutus@{tag}"},
+}
+
+# The downstream users of each VM (spec D17): released projects outside the VM's own repo that
+# depend on it, default evaluator or not. (name, kind, project url, proof url); the proof is a
+# dependency line or the project's docs. A VM without one is shown in Experimental, not ranked.
+USED_BY = {
+    "haskell": [
+        ("cardano-node", "node", "https://github.com/IntersectMBO/cardano-node",
+         "https://github.com/IntersectMBO/cardano-ledger/blob/master/eras/alonzo/impl/cardano-ledger-alonzo.cabal#L112")],
+    "scalus-cek": [
+        ("Hydrozoa", "L2", "https://github.com/cardano-hydrozoa/hydrozoa",
+         "https://github.com/cardano-hydrozoa/hydrozoa/blob/main/build.sbt#L171"),
+        ("Bifrost", "bridge", "https://github.com/FluidTokens/ft-bifrost-bridge",
+         "https://github.com/lantr-io/binocular/blob/main/build.sbt#L147"),
+        ("Cardano Client Lib", "SDK", "https://github.com/bloxbean/cardano-client-lib",
+         "https://github.com/bloxbean/cardano-client-lib/blob/master/docs/content/integrations/scalus-integration-api.mdx#L35"),
+        ("Yaci Store", "indexer", "https://github.com/bloxbean/yaci-store",
+         "https://github.com/bloxbean/yaci-store/blob/main/gradle/libs.versions.toml#L7"),
+        ("Yaci DevKit", "dev tool", "https://github.com/bloxbean/yaci-devkit",
+         "https://github.com/bloxbean/yaci-devkit/blob/main/docs/pages/services.mdx#L31")],
+    "scalus-js": [
+        ("Lucid Evolution", "SDK", "https://github.com/Anastasia-Labs/lucid-evolution",
+         "https://github.com/Anastasia-Labs/lucid-evolution/blob/main/packages/scalus-uplc/package.json#L39"),
+        ("MeshJS", "SDK", "https://github.com/MeshJS/mesh",
+         "https://github.com/MeshJS/mesh/blob/main/packages/mesh-core-cst/package.json#L56"),
+        ("Evolution SDK", "SDK", "https://github.com/IntersectMBO/evolution-sdk",
+         "https://github.com/IntersectMBO/evolution-sdk/blob/main/packages/scalus-uplc/package.json#L41")],
+    "aiken": [
+        ("Aiken", "compiler", "https://aiken-lang.org",
+         "https://github.com/aiken-lang/aiken/blob/main/crates/aiken-project/Cargo.toml#L54"),
+        ("Blaze SDK", "SDK", "https://github.com/butaneprotocol/blaze-cardano",
+         "https://github.com/butaneprotocol/blaze-cardano/blob/main/packages/blaze-uplc/wasm/Cargo.toml#L15")],
+    "aiken-wasm": [
+        ("Lucid Evolution", "SDK", "https://github.com/Anastasia-Labs/lucid-evolution",
+         "https://github.com/Anastasia-Labs/lucid-evolution/blob/main/packages/lucid/package.json#L63")],
+    "uplc-turbo": [
+        ("Amaru", "node", "https://github.com/pragma-org/amaru",
+         "https://github.com/pragma-org/amaru/blob/main/Cargo.toml#L147")],
+    "plutigo": [
+        ("Dingo", "node", "https://github.com/blinklabs-io/dingo",
+         "https://github.com/blinklabs-io/dingo/blob/main/go.mod#L24")],
 }
 
 
@@ -218,13 +259,12 @@ def vm_links(env: dict[str, str]) -> dict[str, dict]:
     for vm, s in VM_SOURCES.items():
         m = re.search(s["pattern"], env.get(s["env"], ""))
         tag = m.group(1) if m else s["tag"]
-        used_by = s.get("used_by")
         out[vm] = {
             "repo": s["repo"],
             "home": s["home"],
             "release": s["release"].format(tag=tag),
             "version": s.get("version", "{tag}").format(tag=tag),
-            "used_by": {"name": used_by[0], "url": used_by[1]} if used_by else None,
+            "used_by": [{"name": n, "kind": k, "url": u, "proof": p} for n, k, u, p in USED_BY.get(vm, [])],
         }
     return out
 
@@ -286,30 +326,39 @@ def _short(url: str) -> str:
 
 
 def vm_list_html(order: list[str], links: dict[str, dict], gate, hidden, compile_ns) -> str:
-    """The rows of "VMs in this benchmark" (static HTML, one row per VM, id vm-<key>)."""
+    """The rows of "VMs and toolchains" (static HTML, one table row per VM, id vm-<key>). The page
+    fills the toolchain cell (.vml-tc) from its VM metadata."""
     rows = []
     for vm in order:
         facts = VM_FACTS.get(vm, {"lang": "", "runtime": "", "model": ""})
         link = links.get(vm)
         name = html.escape(VM_LABELS.get(vm, vm))
-        meta = " · ".join(html.escape(x) for x in (facts["lang"], facts["runtime"], facts["model"]) if x)
+        meta = ", ".join(html.escape(x) for x in (facts["lang"], facts["runtime"], facts["model"]) if x)
+        key = re.sub(r"[^a-z0-9-]", "-", vm.lower())
         cells = []
+        version = _ext(link["release"], link["version"]) if link else "&ndash;"
         if link:
-            cells.append(f'<span class="vml-k">version</span> {_ext(link["release"], link["version"])}')
             cells.append(f'<span class="vml-k">source</span> {_ext(link["repo"], _short(link["repo"]))}')
             if link["home"]:
                 cells.append(f'<span class="vml-k">home</span> {_ext(link["home"], _short(link["home"]))}')
-            if link["used_by"]:
-                cells.append(f'<span class="vml-k">used by</span> {_ext(link["used_by"]["url"], link["used_by"]["name"])}')
         badges = "".join(f'<span class="vm-badge {c}" title="{html.escape(t)}">{html.escape(x)}</span>'
                          for c, x, t in vm_list_badges(vm, gate, hidden, compile_ns))
         note = f'<div class="vml-note">{md_links_to_html(VM_NOTES[vm])}</div>' if vm in VM_NOTES else ""
-        cls = " failed" if vm in hidden else " exp" if vm in EXPERIMENTAL else ""
+        cls = ' class="failed"' if vm in hidden else ' class="exp"' if vm in EXPERIMENTAL else ""
+        badge_html = f'<span class="vm-badges">{badges}</span>' if badges else ""
+        link_html = "".join(f"<span>{c}</span>" for c in cells) or "&ndash;"
+        users = (link or {}).get("used_by") or []
+        used_html = "".join(
+            f'<span class="vml-user">{_ext(u["url"], u["name"])} <span class="vml-kind">{html.escape(u["kind"])}</span>'
+            f' {_ext(u["proof"], "proof")}</span>' for u in users) or '<span class="vml-none">none yet</span>'
         rows.append(
-            f'<div class="vml-row{cls}" id="{vm_anchor(vm)}">'
-            f'<div class="vml-name"><span class="vml-title">{name}</span><span class="vml-meta">{meta}</span>'
-            + (f'<span class="vm-badges">{badges}</span>' if badges else "")
-            + f'</div><div class="vml-links">{"".join(f"<span>{c}</span>" for c in cells)}{note}</div></div>')
+            f'<tr{cls} id="{vm_anchor(vm)}">'
+            f'<td><span class="vml-title"><span class="vsw" style="background:var(--vm-{key}, var(--vm-other))"></span>{name}</span>'
+            f'<span class="vml-sub">{meta}</span><span class="vml-tc" data-vm="{html.escape(vm)}"></span></td>'
+            f'<td>{version}</td>'
+            f'<td class="vml-links">{link_html}</td>'
+            f'<td class="vml-used">{used_html}</td>'
+            f'<td>{badge_html}{note}</td></tr>')
     return "\n".join(rows)
 
 
@@ -324,7 +373,7 @@ def vm_list_markdown(order: list[str], links: dict[str, dict], gate, hidden, com
         version = f'[{link["version"]}]({link["release"]})' if link else "-"
         repo = f'[{_short(link["repo"])}]({link["repo"]})' if link else "-"
         home = f'[{_short(link["home"])}]({link["home"]})' if link and link["home"] else "-"
-        used_by = f'[{link["used_by"]["name"]}]({link["used_by"]["url"]})' if link and link["used_by"] else "-"
+        used_by = ", ".join(f'[{u["name"]}]({u["url"]}) ({u["kind"]})' for u in link["used_by"]) if link and link["used_by"] else "-"
         badges = ", ".join(x for _, x, _ in vm_list_badges(vm, gate, hidden, compile_ns)) or "-"
         note = VM_NOTES.get(vm, "-").replace("|", "\\|")
         lines.append(f'| {VM_LABELS.get(vm, vm)} | {facts["lang"]} | {facts["runtime"]} | {facts["model"]} | '

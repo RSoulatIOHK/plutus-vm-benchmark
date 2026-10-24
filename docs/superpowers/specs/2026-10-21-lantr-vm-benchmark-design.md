@@ -22,14 +22,14 @@ Status: approved 2026-10-21.
 | D14 | Process model | A fresh process per script for every VM. No JIT profile, heap or allocator state carries over between scripts. The d3 and eval loops of a script share that process (d3 first, each loop with its own warm-up and measurement), except JMH, which forks a JVM per loop |
 | D15 | Scalus JIT badge | "decode and compile excluded": the timed loop runs the compiled script; the decode and the compile run once per script, before timing |
 | D16 | Runtime settings | Each VM runs with the settings its project documents for production use, else with the runtime defaults. Scalus must document its JVM flags in public |
-| D17 | Inclusion rules | A ranked row needs (1) a published release: a stable version on a package registry, or a release tag; pre-releases such as `-alpha` or `0.1.0-preNN` do not count; (2) a downstream user today; (3) a pass of the correctness gate. A library that caches the decoded program or compiles it ahead is ranked with a badge: Scalus JIT style "decode and compile excluded"; Aiken WASM "decode cached (by the library)". An unranked "Experimental" section shows rows that have a release tag and pass the gate but miss rule (2) or publish no artifact; today that is the Scalus JIT (the `scalus-uplc-jit-compiler` module is not published to Maven and has no downstream users). Aiken WASM is ranked: the published npm package `@lucid-evolution/uplc` 0.4.0 used as is, built from colll78/aiken (aiken main plus fixes) |
+| D17 | Inclusion rules | A ranked row needs (1) a published release: a stable version on a package registry, or a release tag; pre-releases such as `-alpha` or `0.1.0-preNN` do not count; (2) a downstream user today: a released project outside the VM's own repo that depends on it, default evaluator or not, listed with a proof link (`USED_BY`); (3) a pass of the correctness gate. A library that caches the decoded program or compiles it ahead is ranked with a badge: Scalus JIT style "decode and compile excluded"; Aiken WASM "decode cached (by the library)". An unranked "Experimental" section shows rows that have a release tag and pass the gate but miss rule (2) or publish no artifact; today that is the Scalus JIT (the `scalus-uplc-jit-compiler` module is not published to Maven and has no downstream users) and blaze-plutus (2026-10-24: no project outside the Blaze repo depends on `@blaze-cardano/plutus`; Blaze uses `@blaze-cardano/vm`, Aiken uplc as WASM). Aiken WASM is ranked: the published npm package `@lucid-evolution/uplc` 0.4.0 used as is, built from colll78/aiken (aiken main plus fixes) |
 | D18 | Server qualification | Servers of one Hetzner type differ: one ccx43 ran every VM 2.1x slower than another ccx43 (same CPU model AMD EPYC-Milan, 0 % steal); two good ccx33 servers agreed within 0.3 % on Haskell. So each run times the Haskell image on 3 scripts (`auction_1-1`, `coop-6`, `uniswap-1`; d3, normal timing, the run's docker flags and CPU set) right after the server install. It compares the geometric mean with the reference of the server type (`check/reference/host-reference.json`, harness b0d8a22, measured 2026-10-22). A ratio above 1.15 deletes the server and creates a new one, at most 3 servers, then the run fails. A faster server passes. No reference for the type: skip with a warning. The result goes to `environment.txt` and the job summary. Refresh the reference with `scripts/hetzner/qualify.py reference` when the Haskell harness changes |
 | D19 | Full-run hardware | `ccx43` (16 dedicated vCPUs) with 3 lanes. Measured on one ccx43: with 3 lanes the geometric mean of each VM moved by -2.4 % to +0.9 % against one lane, within the noise; only the experimental Scalus JIT moved by +7 %. Run time on 5 scripts: 31 min to 12 min, about 3.6 h projected for 89 scripts. A full run has every VM, script and loop, normal timing, no trace, and 1 lane or the default 3 lanes; a comma list (A/B test) is always partial. A ccx33 with 1 lane stays possible. The Hetzner project limit must allow a ccx43 (16 vCPUs) |
 | D20 | History noise band | The ratio of a VM to Haskell varies by up to about 5 % between two good servers. The history chart shows a change below 5 % as no change |
 
 ### Line-up (rules: D17)
 
-10 images. 9 are ranked, 1 is experimental:
+10 images. 8 are ranked, 2 are experimental:
 
 | VM (image) | Language | Runtime | Status |
 |---|---|---|---|
@@ -41,7 +41,7 @@ Status: approved 2026-10-21.
 | Aiken WASM, `@lucid-evolution/uplc` 0.4.0 (`aiken-wasm`) | Rust → WASM | Node (V8) | Ranked, badge "decode cached (by the library)" |
 | uplc-turbo, Amaru (`uplc-turbo`) | Rust | native | Ranked |
 | plutigo, Dingo (`plutigo`) | Go | native | Ranked |
-| blaze-plutus (`blaze-v8`) | TypeScript | Node (V8) | Ranked |
+| blaze-plutus (`blaze-v8`) | TypeScript | Node (V8) | Experimental: no downstream user yet |
 
 Dropped, each with the D17 rule that fails:
 

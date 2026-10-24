@@ -59,7 +59,9 @@ A VM is ranked when it meets three rules:
 
 1. It has a published release: a stable version on a package registry, or a release tag.
    Pre-releases, such as `-alpha` or `0.1.0-preNN` versions, do not count.
-2. It has a downstream user today, for example a node, a wallet, an SDK or a dev tool that runs it.
+2. It has a downstream user today: a released project outside the VM's own repo that depends on it,
+   for example a node, a wallet, an SDK or a dev tool. It need not be the project's default
+   evaluator. The page lists each user with a proof link (`USED_BY` in `report/generate_report.py`).
 3. It passes the [correctness gate](#correctness-gate).
 
 A VM that caches the decoded program or compiles it ahead is ranked with a badge:
@@ -70,8 +72,9 @@ A VM that caches the decoded program or compiles it ahead is ranked with a badge
 | decode cached (by the library) | The library caches the decoded program; the harness cannot turn the cache off | Aiken WASM (`@lucid-evolution/uplc` 0.4.0) |
 
 The page shows an unranked "Experimental" section. It holds VMs that have a release tag and pass
-the gate, but miss rule 2 or publish no artifact. Today that is the Scalus JIT: the
-`scalus-uplc-jit-compiler` module is not published to Maven, and it has no downstream users.
+the gate, but miss rule 2 or publish no artifact. Today these are the Scalus JIT (the
+`scalus-uplc-jit-compiler` module is not published to Maven, and it has no downstream users) and
+blaze-plutus (no released project outside the Blaze repo depends on `@blaze-cardano/plutus`).
 
 The README lists the VMs that are not included and the rule that each one fails.
 

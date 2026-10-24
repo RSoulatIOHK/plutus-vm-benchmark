@@ -145,7 +145,9 @@ ranked when it meets three rules:
 
 1. It has a published release: a stable version on a package registry, or a release tag.
    Pre-releases, such as `-alpha` or `0.1.0-preNN` versions, do not count.
-2. It has a downstream user today, for example a node, a wallet, an SDK or a dev tool that runs it.
+2. It has a downstream user today: a released project outside the VM's own repo that depends on it,
+   for example a node, a wallet, an SDK or a dev tool. It need not be the project's default
+   evaluator. The page lists each user with a proof link (`USED_BY` in `report/generate_report.py`).
 3. It passes the correctness gate on all 89 scripts.
 
 A VM that caches the decoded program or compiles it ahead is ranked with a badge: "decode cached

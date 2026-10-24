@@ -76,8 +76,8 @@ What changed:
   them with Haskell plutus-core ([check/README.md](check/README.md)).
 - **Node-equivalent parameters.** Flat decode + evaluation with PlutusV3 semantics, protocol version 11,
   the mainnet cost model and costing on, for every VM.
-- **Curated line-up.** A ranked VM has a published release, a downstream user today, and passes the
-  correctness gate. A VM that caches the decoded program or compiles it ahead is ranked with a
+- **Curated line-up.** A ranked VM has a published release, a downstream user today (a released
+  project outside its own repo that depends on it), and passes the correctness gate. A VM that caches the decoded program or compiles it ahead is ranked with a
   badge. An unranked [Experimental](#experimental) section shows VMs that miss the downstream-user
   rule or publish no artifact. See [Not included](#not-included).
 - **Eval-only column.** A second timing evaluates a program decoded once before timing.
@@ -97,7 +97,7 @@ What changed:
 | `aiken-wasm` | Aiken uplc as WASM (Lucid Evolution), badge "decode cached (by the library)" | Rust → WASM / Node.js | Vitest bench | [Anastasia-Labs/lucid-evolution](https://github.com/Anastasia-Labs/lucid-evolution/tree/main/packages/uplc) | npm `@lucid-evolution/uplc` [0.4.0](https://github.com/Anastasia-Labs/lucid-evolution/releases/tag/%40lucid-evolution%2Fuplc%400.4.0) |
 | `uplc-turbo` | uplc-turbo (Amaru) | Rust | Criterion.rs | [pragma-org/uplc](https://github.com/pragma-org/uplc) | [amaru-uplc-v0.4.0](https://github.com/pragma-org/uplc/releases/tag/amaru-uplc-v0.4.0) |
 | `plutigo` | Plutigo (Dingo) | Go | testing.B | [blinklabs-io/plutigo](https://github.com/blinklabs-io/plutigo) | [v0.1.10](https://github.com/blinklabs-io/plutigo/releases/tag/v0.1.10) |
-| `blaze-v8` | blaze-plutus on Node (V8) | TypeScript | Vitest bench | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) | [@blaze-cardano/plutus 0.1.1](https://github.com/butaneprotocol/blaze-cardano/releases/tag/%40blaze-cardano%2Fplutus%400.1.1) |
+| `blaze-v8` | blaze-plutus on Node (V8), [experimental](#experimental), not ranked | TypeScript | Vitest bench | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) | [@blaze-cardano/plutus 0.1.1](https://github.com/butaneprotocol/blaze-cardano/releases/tag/%40blaze-cardano%2Fplutus%400.1.1) |
 
 That is 10 images: `scripts/images.sh list` prints them. The pins are in [`.env`](.env).
 
@@ -121,6 +121,7 @@ downstream user today, or they publish no artifact.
 | Image | Why it is not ranked |
 |---|---|
 | `scalus-jit` | The `scalus-uplc-jit-compiler` module of Scalus v1.4.0 is not published to Maven. It has no downstream users. Its timed loop runs the compiled script: badge "decode and compile excluded". So its time is shown only as an eval-only time. |
+| `blaze-v8` | No released project outside the Blaze repo depends on `@blaze-cardano/plutus` 0.1.1. Blaze itself evaluates scripts with `@blaze-cardano/vm`, which wraps the Aiken `uplc` crate as WASM. It moves to the ranking when a project depends on it. |
 
 ## Not included
 
@@ -128,7 +129,9 @@ A VM is ranked when it meets three rules:
 
 1. It has a published release: a stable version on a package registry, or a release tag.
    Pre-releases, such as `-alpha` or `0.1.0-preNN` versions, do not count.
-2. It has a downstream user today.
+2. It has a downstream user today: a released project outside the VM's own repo that depends on it,
+   for example a node, a wallet, an SDK or a dev tool. It need not be the project's default
+   evaluator. The page lists each user with a proof link (`USED_BY` in `report/generate_report.py`).
 3. It passes the correctness gate.
 
 A VM that caches the decoded program, or compiles it ahead, is ranked with a badge. A VM that has

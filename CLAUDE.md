@@ -42,8 +42,9 @@ BENCH_LOOPS=check scripts/run-images.sh /tmp/check uplc-turbo
   only that image. Run the check on all 89 scripts before you commit.
 - Add: `images/<vm>/Dockerfile`, `scripts/run-<vm>.sh` and a parser in `parsers/` if the
   framework is new. Follow `docs/IMAGE_CONTRACT.md`. `normalize.py` needs no edit.
-- A VM joins only with a downstream user today, a stable release and a passing gate (README,
-  "Not included"). Update the README VM table and `report/` labels.
+- A VM joins only with a downstream user today (a released project outside its repo that depends
+  on it; add it with a proof link to `USED_BY` in `report/generate_report.py`), a stable release
+  and a passing gate (README, "Not included"). Update the README VM table and `report/` labels.
 
 ## Gotchas
 
