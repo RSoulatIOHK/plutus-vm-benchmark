@@ -42,3 +42,9 @@ results/**/PlutusUseCasesBenchmarks-report.html
 results/partial-*/
 results/quick-*/
 results/local-*/
+
+# Editor and tool state (Metals, Scala CLI, Claude Code)
+.bsp/
+.metals/
+.scala-build/
+.claude/
