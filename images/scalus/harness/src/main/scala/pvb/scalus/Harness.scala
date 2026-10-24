@@ -1,6 +1,6 @@
 package pvb.scalus
 
-import scalus.cardano.ledger.{CostModels, Language, MajorProtocolVersion}
+import scalus.cardano.ledger.{CostModels, ExUnits, Language, MajorProtocolVersion}
 import scalus.uplc.{DeBruijnedProgram, Term}
 import scalus.uplc.eval.*
 import scalus.uplc.jit.{UplcCompiler, UplcEvaluator}
@@ -9,9 +9,15 @@ import java.nio.file.{Files, Path, Paths}
 
 /** The evaluation parameters of check/README.md, shared by the timed loops and the check:
   * PlutusV3, protocol version 11 (builtin semantics variant E), the mainnet PlutusV3 cost model,
-  * counting budget.
+  * and a restricting budget too large to run out (as the node restricts, and as the other VMs do).
   */
 object Harness {
+
+    /** A new budget spender for one evaluation: restricting, with a budget no script can spend. Its
+      * `getSpentBudget` is the cost of the evaluation, the same as a counting spender's.
+      */
+    def newSpender(): BudgetSpender = RestrictingBudgetSpender(ExUnits.enormous)
+
     val protocolVersion: MajorProtocolVersion = MajorProtocolVersion.vanRossemPV
 
     def dataDir: Path = Paths.get(sys.env.getOrElse("BENCH_DATA_DIR", "/bench/data/plutus_use_cases"))

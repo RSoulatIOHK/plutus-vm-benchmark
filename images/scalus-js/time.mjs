@@ -1,6 +1,6 @@
 // Timing, for one script ($PVB_SCRIPT) and one loop ($PVB_LOOP, default d3):
 //   d3    flat decode + evaluation with costing on (spec D3)
-//   eval  evaluation with costing on of the program decoded before the timing (branch build only)
+//   eval  evaluation with costing on of the program decoded before the timing
 //
 // One script per process: scripts/run-scalus-js.sh starts `node time.mjs` once per script, so no
 // JIT profile or GC state carries over from another script.

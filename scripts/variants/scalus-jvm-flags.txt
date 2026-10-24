@@ -1,0 +1,7 @@
+# scripts/run-variants.sh: the Scalus rows with no JVM tuning flags (the default, spec D16) and
+# with the tuned flags used before 2026-10-24, on one server. plutigo is the control: it fills the
+# third lane at no extra wall-clock time. A2 repeats A at the end (drift). -Xss64m stays on in every
+# scalus-jit pass (scripts/run-scalus-jit.sh).
+A   SCALUS_JVM_FLAGS=none  VMS=plutigo,scalus-cek,scalus-jit
+T   SCALUS_JVM_FLAGS=tuned VMS=plutigo,scalus-cek,scalus-jit
+A2  SCALUS_JVM_FLAGS=none  VMS=plutigo,scalus-cek,scalus-jit

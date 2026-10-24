@@ -17,6 +17,8 @@ Read `README.md`, `METHODOLOGY.md` and `docs/IMAGE_CONTRACT.md` first.
 - `scripts/image-entry.sh` – entry point of every image: switches, data selection, exit code.
 - `scripts/images.sh` – `list`, `tag`, `build` the images.
 - `scripts/run-images.sh` – runs images one at a time, then gate, normalize and report.
+- `scripts/run-variants.sh` – runs `run-images.sh` once per line of a variants file
+  (`scripts/variants/`) on one server, for A/B tests of settings; `run.yml` input `variants`.
 - `check/` – correctness gate (`gate.py`, tests in `test_gate.py`) and the Haskell reference.
 - `parsers/` – one normalizer per benchmark framework; `normalize.py` merges the CSVs.
 - `report/` – `unified.csv` to `report.md` and `docs/index.html`.

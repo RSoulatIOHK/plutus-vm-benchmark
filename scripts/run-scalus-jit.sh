@@ -1,8 +1,9 @@
 #!/bin/bash
 # scalus-jit: JMH JITBenchmark of images/scalus/harness. Per invocation: evaluation of the script
 # compiled once in setup, with the machine parameters of PlutusV3 at protocol version 11 and the
-# mainnet cost model and a counting budget spender (spec D3, check/README.md). This loop is
-# eval-only already, so scalus-jit.csv and scalus-jit-eval.csv have the same rows. Then the check and
+# mainnet cost model and a restricting budget spender with a budget too large to run out (spec D3,
+# check/README.md). This loop is eval-only already, so scalus-jit.csv and scalus-jit-eval.csv have
+# the same rows. Then the check and
 # the compile column (spec D5): per script, the median time of SCALUS_JIT_COMPILE_RUNS (default 3)
 # flat decodes + JIT compiles, and one evaluation of the compiled script.
 #
@@ -14,11 +15,7 @@ set -euo pipefail
 
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
-# TEMPORARY (Scalus 1.4.1 preparation): SCALUS_BUILD picks the Scalus build of the image,
-# base (default) or perf (images/scalus/Dockerfile).
-BUILD="${SCALUS_BUILD:-base}"
-BENCH_DIR="/bench/scalus/$BUILD"
-[[ -f "$BENCH_DIR/jmh-classpath.txt" ]] || { echo "ERROR: SCALUS_BUILD=$BUILD: no $BENCH_DIR" >&2; exit 1; }
+BENCH_DIR="/bench/scalus"
 VM=scalus-jit
 loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 
@@ -56,23 +53,19 @@ export SCALUS_COST_MODEL="$BENCH_DIR/mainnet-plutusv3-costmodel.json"
 FILE_LIST=$(for f in "$DATA_DIR"/*.flat; do basename "$f"; done | LC_ALL=C sort | paste -sd, -)
 CP="$(cat "$BENCH_DIR/jmh-classpath.txt")"
 
-# The forked benchmark JVM. SCALUS_JAVA: 25.0.2 or 25.4.4 (the Oracle GraalVM releases in the
-# image, images/scalus/Dockerfile), or the path of a java binary; default /opt/jdk-25 (25.0.2).
-case "${SCALUS_JAVA:-}" in
-    "") JAVA=/opt/jdk-25/bin/java ;;
-    /*) JAVA="$SCALUS_JAVA" ;;
-    *) JAVA="/opt/graalvm-$SCALUS_JAVA/bin/java" ;;
-esac
+# The forked benchmark JVM: Oracle GraalVM at /opt/jdk-25 (images/scalus/Dockerfile), or the java
+# binary at the path SCALUS_JAVA.
+JAVA="${SCALUS_JAVA:-/opt/jdk-25/bin/java}"
 [[ -x "$JAVA" ]] || { echo "ERROR: SCALUS_JAVA=$SCALUS_JAVA: $JAVA is not there" >&2; exit 1; }
-# SCALUS_JVM_FLAGS: default = the flags below (compact object headers + Scala-friendly inlining gave
-# ~14% geo-mean speedup on GraalVM 25 over the JDK 21 default); none = no extra flags, only the heap
-# flags (-Xmx, -Xms, -XX:+AlwaysPreTouch).
+# JVM flags (spec D16): none by default, only the heap flags (-Xmx, -Xms, -XX:+AlwaysPreTouch).
+# SCALUS_JVM_FLAGS=tuned adds the flags used before 2026-10-24, for comparisons. On GraalVM 25 they
+# gave no speed-up: CEK within +-2 %, JIT 2-5 % slower (results/partial-2026-10-24T1302).
 # -Xss64m is in every case: the JIT's call-depth limit (25 000) assumes a 64 MB stack.
 JIT_STACK="-Xss64m"
-case "${SCALUS_JVM_FLAGS:-default}" in
-    default) JVM_FLAGS="--enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m" ;;
+case "${SCALUS_JVM_FLAGS:-none}" in
     none) JVM_FLAGS="" ;;
-    *) echo "ERROR: SCALUS_JVM_FLAGS=$SCALUS_JVM_FLAGS: expected default or none" >&2; exit 1 ;;
+    tuned) JVM_FLAGS="--enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m" ;;
+    *) echo "ERROR: SCALUS_JVM_FLAGS=$SCALUS_JVM_FLAGS: expected none or tuned" >&2; exit 1 ;;
 esac
 JVM_FLAGS="$JIT_STACK${JVM_FLAGS:+ $JVM_FLAGS}"
 
@@ -80,8 +73,8 @@ JVM_FLAGS="$JIT_STACK${JVM_FLAGS:+ $JVM_FLAGS}"
 # The launcher JVM flags (-Xss64m -Xmx4g) are passed on to the forked JVM, as by `sbt Jmh/run`.
 cd "$BENCH_DIR"
 : > "$RUN_DIR/$VM-raw.log"
-echo "scalus build: $BUILD ($(grep -o "scalus_3-[^/]*\.jar" "$BENCH_DIR/jmh-classpath.txt"))" | tee -a "$RUN_DIR/$VM-raw.log"
-echo "jvm: $JAVA ($("$JAVA" -version 2>&1 | sed -n 2p)), flags ${SCALUS_JVM_FLAGS:-default}: ${JVM_FLAGS:-<none>}" \
+echo "scalus: $(grep -o "scalus_3-[^/]*\.jar" "$BENCH_DIR/jmh-classpath.txt")" | tee -a "$RUN_DIR/$VM-raw.log"
+echo "jvm: $JAVA ($("$JAVA" -version 2>&1 | sed -n 2p)), flags ${SCALUS_JVM_FLAGS:-none}: ${JVM_FLAGS:-<none>}" \
     | tee -a "$RUN_DIR/$VM-raw.log"
 if loop d3 || loop eval; then
     java -Xss64m -Xmx4g -cp "$CP" org.openjdk.jmh.Main \

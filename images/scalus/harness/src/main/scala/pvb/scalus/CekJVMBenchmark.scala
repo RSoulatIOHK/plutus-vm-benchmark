@@ -2,7 +2,7 @@ package pvb.scalus
 
 import org.openjdk.jmh.annotations.*
 import scalus.uplc.Term
-import scalus.uplc.eval.{CountingBudgetSpender, PlutusVM}
+import scalus.uplc.eval.PlutusVM
 
 import java.util.concurrent.TimeUnit
 import scala.annotation.nowarn
@@ -12,7 +12,7 @@ import scala.annotation.nowarn
   *   - `benchEval`: per invocation, CEK evaluation of the program decoded once in setup
   *     (`scalus-cek-eval.csv`).
   *
-  * Both reuse the VM (machine parameters from the cost model) and make a new counting budget spender
+  * Both reuse the VM (machine parameters from the cost model) and make a new restricting budget spender (`Harness.newSpender`)
   * and CEK state per invocation.
   */
 @State(Scope.Thread)
@@ -34,10 +34,10 @@ class CekJVMBenchmark {
     @Benchmark
     @BenchmarkMode(Array(Mode.AverageTime))
     @OutputTimeUnit(TimeUnit.MICROSECONDS)
-    def bench(): Term = Harness.cekEval(vm, flat, CountingBudgetSpender())
+    def bench(): Term = Harness.cekEval(vm, flat, Harness.newSpender())
 
     @Benchmark
     @BenchmarkMode(Array(Mode.AverageTime))
     @OutputTimeUnit(TimeUnit.MICROSECONDS)
-    def benchEval(): Term = Harness.cekEvalTerm(vm, term, CountingBudgetSpender())
+    def benchEval(): Term = Harness.cekEvalTerm(vm, term, Harness.newSpender())
 }

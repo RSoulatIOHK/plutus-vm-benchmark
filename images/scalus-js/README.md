@@ -5,7 +5,7 @@ The Scalus CEK machine compiled with Scala.js, as published on npm as
 and the same timing loop as the `blaze-v8` harness, run by plain `node`. The image follows
 `docs/IMAGE_CONTRACT.md`.
 
-Pin in `.env`: `SCALUS_JS_VERSION` (the npm version).
+Pin in `.env`: `SCALUS_SHA` (the Scalus source the package is built from) and `SCALUS_VERSION`.
 
 ```bash
 scripts/images.sh build scalus-js
@@ -14,21 +14,24 @@ scripts/run-images.sh results/<date> scalus-js
 
 ## What is timed
 
-One call of the public API per iteration, on the raw `.flat` bytes (no CBOR wrapping needed: the
-API takes raw flat, single CBOR or double CBOR):
+One call of the public API per iteration, with one `PlutusVM` built at load:
 
 ```js
-import { evaluator, EvaluationOptions } from "scalus";
-const options = EvaluationOptions.mainnet("PlutusV3"); // once, at load
-evaluator.evaluateScript(flatBytes, [], options);      // timed
+import { EvaluationOptions, PlutusVM, uplc } from "scalus";
+const vm = new PlutusVM(EvaluationOptions.mainnet("PlutusV3")); // once, at load
+vm.evaluateScript(flatBytes, []);                              // D3 loop: decode + eval, timed
+const program = uplc.decodeProgram(flatBytes);                  // eval loop: decoded once...
+vm.evaluateScript(program, []);                                 // ...then timed
 ```
 
 `EvaluationOptions.mainnet("PlutusV3")` is the mainnet snapshot bundled in the package: protocol
-version 11 and the PlutusV3 cost model. Costing is on (a counting budget spender, no limit).
+version 11 and the PlutusV3 cost model. Costing is on: the `PlutusVM` has a `maxBudget` too large to run out (2^63 − 1 steps and
+memory), so it restricts, as the node does, but never stops a script.
+`evaluator.evaluateScript(script, args, options)` would build the machine from the cost model on
+every call; a `PlutusVM` builds it once, as a downstream user evaluating many scripts would.
 
-The call does flat decode + CEK evaluation, and also turns the cost-model array into machine
-parameters on every call. The public API has no way to reuse a machine for single scripts, so a
-downstream npm user pays this too. Measured on an M-series Mac in Docker: about 114 µs per call.
+The image builds the package from Scalus source at `SCALUS_SHA` (`.env`), with the npm bundle task
+of the Scalus build.
 
 ## Timing
 
@@ -50,16 +53,3 @@ PlutusV1-era and most of them return the Scott-encoded unit `(delay (lam x x))`,
 has finished, and the budget is the full evaluation cost. The harness reports these scripts as
 `ok`. Any other error code (`SCRIPT_FAILURE`, `BUILTIN_FAILURE`, `OUT_OF_BUDGET`,
 `INTERNAL_ERROR`) is `error`.
-
-## No eval-only timing
-
-The image writes no `scalus-js-eval.csv` (docs/IMAGE_CONTRACT.md allows a missing file). The
-public API of `scalus` 1.4.0 cannot evaluate a program that was decoded before:
-
-- `evaluator.evaluateScript` takes the script bytes (hex or bytes of flat, single or double CBOR)
-  and decodes them on every call.
-- `uplc.decodeToFlat` and `uplc.applyArgs` return flat bytes, not a decoded program.
-- `TxEvaluator` with a `ScriptCache` keeps decoded scripts across evaluations, but it evaluates
-  the scripts of a transaction, not a bare program.
-
-The harness does not reach into the Scala.js internals of the bundle.

@@ -10,9 +10,8 @@
 # and the 6 h limit of a GitHub-hosted job. `collect` copies results/<name> and
 # the run log back into this checkout. BENCH_SCRIPTS, BENCH_LOOPS, BENCH_TIMING, BENCH_QUICK,
 # BENCH_TRACE, LANES and PVB_QUALIFY (the server qualification line of up-qualified.sh, written
-# to environment.txt) are passed through (scripts/run-images.sh). TEMPORARY (Scalus 1.4.1
-# preparation): VARIANTS=<variants file> runs scripts/run-variants.sh instead, one pass per line,
-# into results/<name>/<variant>.
+# to environment.txt) are passed through (scripts/run-images.sh). VARIANTS=<variants file> runs
+# scripts/run-variants.sh instead, one pass per line, into results/<name>/<variant>.
 set -euo pipefail
 
 CMD="${1:?usage: run-remote.sh start|status|collect <run-id> ...}"

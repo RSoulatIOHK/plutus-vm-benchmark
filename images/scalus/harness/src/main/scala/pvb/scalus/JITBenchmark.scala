@@ -1,7 +1,7 @@
 package pvb.scalus
 
 import org.openjdk.jmh.annotations.*
-import scalus.uplc.eval.{BudgetSpender, CountingBudgetSpender, PlutusVM}
+import scalus.uplc.eval.{BudgetSpender, PlutusVM}
 import scalus.uplc.jit.UplcEvaluator
 
 import java.util.concurrent.TimeUnit
@@ -31,7 +31,7 @@ class JITBenchmark {
     def benchJIT(): AnyRef = {
         // The spender is the result, so JMH consumes the evaluation's budget.
         var spender: BudgetSpender = null
-        Harness.jitEval(vm, jitted, () => { spender = CountingBudgetSpender(); spender })
+        Harness.jitEval(vm, jitted, () => { spender = Harness.newSpender(); spender })
         spender
     }
 }

@@ -232,9 +232,10 @@ Decisions D13 to D17 of the
   loop runs the compiled script; the decode and the compile happen once per script, before timing.
   So its time is shown only as an eval-only time, never as a decode + eval time.
 - **Runtime settings (D16)**: each VM runs with the settings that its project documents for
-  production use. A VM without such documentation runs with the defaults of its runtime. Scalus
-  must document its JVM flags in public, so the flags of the Scalus rows are not settings only
-  this benchmark uses.
+  production use. A VM without such documentation runs with the defaults of its runtime. The
+  Scalus rows run on Oracle GraalVM 25.4 with no tuning flags; the JIT adds `-Xss64m`, which its
+  call-depth limit needs. Tuning flags (compact object headers, inlining limits, code cache) gave
+  no speed-up on GraalVM 25 in a test on 5 scripts (2026-10-24): CEK within ±2 %, JIT 2–5 % slower.
 - **Inclusion rules (D17)**: a ranked VM has a published release, a downstream user today, and
   passes the gate. See [Inclusion rules](#inclusion-rules).
 
@@ -329,10 +330,7 @@ run. The ratio is less sensitive to hardware changes and to drift between runs t
   or machine parameters across evaluations. uplc-turbo builds its default cost model in every
   evaluation call, because the crate keeps the cost model types private. Aiken's machine takes the
   cost model by value, and the crate's evaluation entry point builds a new one per call.
-  scalus-js turns the cost model into machine parameters on every call. This work is in their
-  timed loops.
-- **No eval-only time for scalus-js**: its public API has no call that evaluates an already decoded
-  program, so it has no eval-only column.
+  This work is in their timed loops. scalus-js builds its machine (`PlutusVM`) once and reuses it.
 - **Memory use is not compared**: the VMs use different allocators and garbage collectors.
 - **Docker overhead**: containers add a small overhead compared with bare metal. It applies to all VMs.
 

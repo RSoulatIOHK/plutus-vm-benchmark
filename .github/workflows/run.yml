@@ -59,7 +59,7 @@ on:
         default: false
       variants:
         description: >-
-          TEMPORARY (Scalus 1.4.1 preparation): a variants file such as scripts/variants/scalus-141.txt.
+          A variants file such as scripts/variants/scalus-jvm-flags.txt.
           Runs once per line on the same server, into results/<run>/<variant> (scripts/run-variants.sh);
           always a partial run
         default: ""

@@ -1,6 +1,6 @@
 package pvb.scalus
 
-import scalus.uplc.eval.{BudgetSpender, CountingBudgetSpender}
+import scalus.uplc.eval.BudgetSpender
 import scalus.uplc.jit.UplcEvaluator
 
 import java.io.PrintWriter
@@ -39,7 +39,7 @@ object Check {
                 withCsv(outDir.resolve("scalus-cek-check.csv"), "vm,script,status,cpu,mem") { check =>
                     for f <- files do
                         val flat = Harness.readScript(f)
-                        val spender = CountingBudgetSpender()
+                        val spender = Harness.newSpender()
                         val status = run(f)(Harness.cekEval(vm, flat, spender))
                         check.println(row("scalus-cek", f, status, spender))
                 }
@@ -70,7 +70,7 @@ object Check {
                             else
                                 compile.println(s"scalus-jit,$script,${times.sorted.apply(times.size / 2)}")
                                 var spender: BudgetSpender = null
-                                val newSpender = () => { spender = CountingBudgetSpender(); spender }
+                                val newSpender = () => { spender = Harness.newSpender(); spender }
                                 val status = run(f)(Harness.jitEval(vm, jitted, newSpender))
                                 check.println(row("scalus-jit", f, status, spender))
                     }

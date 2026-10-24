@@ -1,10 +1,10 @@
 // JMH harness for scalus-cek and scalus-jit (images/scalus/Dockerfile).
 //
-// Scalus core: SCALUS_VERSION. TEMPORARY (Scalus 1.4.1 preparation): built from source by the
-// Dockerfile and published to the local Maven repository, so it resolves from there.
+// Scalus core: SCALUS_VERSION, built from source at SCALUS_SHA by the Dockerfile and published to
+// the local Maven repository, so it resolves from there.
 // Scalus JIT: scalus-uplc-jit-compiler is not published, so its sources at the same commit
 // (SCALUS_SRC, cloned by the Dockerfile) are compiled here, against that core.
-val scalusVersion = sys.env.getOrElse("SCALUS_VERSION", "1.4.1-base")
+val scalusVersion = sys.env.getOrElse("SCALUS_VERSION", "1.4.1-SNAPSHOT")
 
 ThisBuild / resolvers += Resolver.mavenLocal
 val scalusSrc = file(sys.env.getOrElse("SCALUS_SRC", "/bench/scalus-src"))

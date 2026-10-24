@@ -5,27 +5,17 @@
 #
 # pvb-loops: d3 eval check
 # Runs the loops of $BENCH_LOOPS over the scripts in $BENCH_DATA_DIR; $BENCH_TIMING=quick shortens
-# the timing. The check covers the same scripts.
-# TEMPORARY (Scalus 1.4.1 preparation): the scalus-js image is the branch build, with PlutusVM and
-# uplc.decodeProgram, so it has an eval loop: evaluation of a program decoded before the timing.
-# scalus-js-140 (npm 1.4.0, run-scalus-js-140.sh) runs this script with PVB_JS_VM=scalus-js-140
-# and without the eval loop.
+# the timing. The check covers the same scripts. The eval loop evaluates a program decoded
+# before the timing (uplc.decodeProgram).
 set -uo pipefail
 
-VM="${PVB_JS_VM:-scalus-js}"
-export PVB_JS_VM="$VM"
+VM=scalus-js
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
 RAW="$RUN_DIR/$VM-raw.log"
 loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 
 cd /bench/scalus-js || exit 1
-# TEMPORARY (Scalus 1.4.1 preparation): SCALUS_BUILD picks the package of the image, pkgs/<build>
-# (base or perf for scalus-js, 1.4.0 for scalus-js-140).
-BUILD="${SCALUS_BUILD:-base}"
-[[ -f "pkgs/$BUILD/scalus.js" ]] || { echo "ERROR: SCALUS_BUILD=$BUILD: no pkgs/$BUILD" >&2; exit 1; }
-mkdir -p node_modules
-ln -sfn "/bench/scalus-js/pkgs/$BUILD" node_modules/scalus
 echo "$VM (Scala.js / Node.js $(node --version) / V8), scalus $(node -p 'require("./node_modules/scalus/package.json").version')" \
     | tee "$RAW"
 

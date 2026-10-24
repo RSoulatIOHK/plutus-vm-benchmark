@@ -58,7 +58,7 @@ How the image applies them:
   as `scripts.txt`). A selected script that a VM's check lacks still fails as "missing".
 - The run script gets `$BENCH_LOOPS` and `$BENCH_TIMING` and runs only the requested loops.
 - A run script declares the loops it has in a header line, for example `# pvb-loops: d3 check`
-  (scalus-js has no eval loop). `image-entry.sh` skips a requested loop the VM does not have, with a
+  (a VM without an eval loop). `image-entry.sh` skips a requested loop the VM does not have, with a
   note; when none is left it exits 0 without running anything.
 - The Scalus JIT has one timed loop (evaluation of the compiled script). It runs when `d3` or
   `eval` is requested and writes the same rows to `<vm>.csv` (for `d3`) and `<vm>-eval.csv` (for

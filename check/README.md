@@ -62,7 +62,7 @@ Every VM evaluates every script with these parameters, in the timed loop and in 
 | Ledger language | PlutusV3 |
 | Protocol version | 11 (`vanRossemPV`). This selects builtin semantics variant E and enables case on builtin types |
 | Cost model | The mainnet PlutusV3 cost model: 350 parameters, mainnet epoch 662, protocol version 11.0 (`reference/mainnet-plutusv3-costmodel.json`) |
-| Budget mode | Counting: no limit, add up the cost. On success this gives the same numbers as the node's restricting mode |
+| Budget mode | Counting (no limit, add up the cost) or restricting with a budget too large to run out. On success both give the same numbers as the node's restricting mode |
 | `status` | `ok` if the evaluation returns a term, `error` if it fails. The PlutusV3 ledger rule that the result must be `unit` (CIP-117) is **not** applied, see below |
 | `cpu`, `mem` | The total ExUnits of one evaluation, including the machine startup cost |
 

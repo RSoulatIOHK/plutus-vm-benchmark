@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
-# TEMPORARY (Scalus 1.4.1 preparation, revert after the run).
 # Runs scripts/run-images.sh once per line of a variants file, on the same server, one pass after
 # the other, so the passes compare without a server-to-server difference.
 #
 #   scripts/run-variants.sh <variants-file> <results-dir> [vm ...]
 #
 # A line of the file: <name> [KEY=VALUE ...]. The pass writes to <results-dir>/<name>. Allowed
-# keys: SCALUS_BUILD (base or perf), SCALUS_JAVA, SCALUS_JVM_FLAGS (the Scalus build and JVM), BENCH_LOOPS, BENCH_SCRIPTS
+# keys: SCALUS_JAVA, SCALUS_JVM_FLAGS (the JVM of the Scalus rows), BENCH_LOOPS, BENCH_SCRIPTS
 # (override the run's switches; an empty value = every script) and VMS (a comma list instead of
 # the given VMs). Values have no spaces. Blank lines and lines starting with # are skipped.
 # Exit code: non-zero when a pass failed; every pass runs.
@@ -26,7 +25,7 @@ while read -r name assignments; do
     [[ "$names" != *" $name "* ]] || { echo "ERROR: $FILE: variant '$name' twice" >&2; exit 2; }
     names="$names$name "
     for a in $assignments; do
-        [[ "$a" =~ ^(SCALUS_BUILD|SCALUS_JAVA|SCALUS_JVM_FLAGS|BENCH_LOOPS|BENCH_SCRIPTS|VMS)=[^[:space:]]*$ ]] \
+        [[ "$a" =~ ^(SCALUS_JAVA|SCALUS_JVM_FLAGS|BENCH_LOOPS|BENCH_SCRIPTS|VMS)=[^[:space:]]*$ ]] \
             || { echo "ERROR: $FILE: variant $name: '$a' is not KEY=VALUE with an allowed key" >&2; exit 2; }
     done
 done < "$FILE"
