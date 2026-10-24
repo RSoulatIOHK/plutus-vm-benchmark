@@ -12,7 +12,11 @@ set -euo pipefail
 
 RUN_DIR="$1"
 DATA_DIR="${BENCH_DATA_DIR:-/bench/data/plutus_use_cases}"
-BENCH_DIR="/bench/scalus"
+# TEMPORARY (Scalus 1.4.1 preparation): SCALUS_BUILD picks the Scalus build of the image,
+# base (default) or perf (images/scalus/Dockerfile).
+BUILD="${SCALUS_BUILD:-base}"
+BENCH_DIR="/bench/scalus/$BUILD"
+[[ -f "$BENCH_DIR/jmh-classpath.txt" ]] || { echo "ERROR: SCALUS_BUILD=$BUILD: no $BENCH_DIR" >&2; exit 1; }
 VM=scalus-cek
 loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 
@@ -79,6 +83,7 @@ fi
 cd "$BENCH_DIR"
 RAW="$RUN_DIR/$VM-raw.log"
 : > "$RAW"
+echo "scalus build: $BUILD ($(grep -o "scalus_3-[^/]*\.jar" "$BENCH_DIR/jmh-classpath.txt"))" | tee -a "$RUN_DIR/$VM-raw.log"
 echo "jvm: $JAVA ($("$JAVA" -version 2>&1 | sed -n 2p)), flags ${SCALUS_JVM_FLAGS:-default}: ${JVM_FLAGS:-<none>}" \
     | tee -a "$RUN_DIR/$VM-raw.log"
 if [[ -n "$PATTERN" ]]; then

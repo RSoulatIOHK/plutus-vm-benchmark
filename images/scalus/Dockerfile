@@ -6,12 +6,15 @@
 # pvb-vms: scalus-cek scalus-jit
 #
 # TEMPORARY (Scalus 1.4.1 preparation, revert after the run): our own JMH harness
-# (images/scalus/harness) on Scalus built from source: Scalus master SCALUS_BUNDLE_BASE from
-# GitHub plus the local branch in scalus-vm-api-141.bundle (tip SCALUS_BUNDLE_SHA). The core is
-# published to the local Maven repository as SCALUS_BUNDLE_VERSION; the JIT
-# (scalus-uplc-jit-compiler, not published) is compiled from the same sources. JMH runs on JDK 21.
-# The forked benchmark JVM is one of two Oracle GraalVM releases, chosen at run time by
-# SCALUS_JAVA (scripts/run-scalus-cek.sh):
+# (images/scalus/harness) on Scalus built from source, twice: Scalus master SCALUS_BUNDLE_BASE from
+# GitHub plus the local branches in scalus-141.bundle. SCALUS_BUILD picks one at run time
+# (scripts/run-scalus-cek.sh):
+#   base  pvb-base = feat/vm-api-141 (SCALUS_BUNDLE_BASE_SHA), core version 1.4.1-base
+#   perf  pvb-perf = base merged with perf/cek-env-first (SCALUS_BUNDLE_PERF_SHA), 1.4.1-perf
+# Each core is published to the local Maven repository; the JIT (scalus-uplc-jit-compiler, not
+# published) is compiled from the same sources into the harness of that build, /bench/scalus/<build>.
+# JMH runs on JDK 21. The forked benchmark JVM is one of two Oracle GraalVM releases, chosen at run
+# time by SCALUS_JAVA:
 #   /opt/graalvm-25.0.2  GraalVM for JDK 25.0.2 (also at /opt/jdk-25, the default)
 #   /opt/graalvm-25.4.4  GraalVM 25.4 for JDK 25.0.4 (graalvm-jdk-25i4-25.0.4.1.1; SDKMAN calls it
 #                        25.4.4+1-graal)
@@ -23,8 +26,8 @@ FROM eclipse-temurin:${JDK_VERSION}-jdk-jammy
 ARG SBT_VERSION
 ARG SCALUS_REPO
 ARG SCALUS_BUNDLE_BASE
-ARG SCALUS_BUNDLE_SHA
-ARG SCALUS_BUNDLE_VERSION
+ARG SCALUS_BUNDLE_BASE_SHA
+ARG SCALUS_BUNDLE_PERF_SHA
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -63,37 +66,50 @@ RUN set -eu; \
     install_graal "$b" "$b_sha" /opt/graalvm-25.4.4; \
     ln -s /opt/graalvm-25.0.2 /opt/jdk-25
 
-# Scalus sources: the base from GitHub, then the branch from the bundle.
-COPY images/scalus/scalus-vm-api-141.bundle /tmp/scalus.bundle
-RUN git init -q /bench/scalus-src \
-    && cd /bench/scalus-src \
-    && git fetch -q --depth 1 "$SCALUS_REPO" "$SCALUS_BUNDLE_BASE" \
-    && git fetch -q /tmp/scalus.bundle feat/vm-api-141 \
-    && git checkout -q FETCH_HEAD \
-    && test "$(git rev-parse HEAD)" = "$SCALUS_BUNDLE_SHA"
+# Scalus sources, one dir per build: the base from GitHub, then the branch from the bundle.
+COPY images/scalus/scalus-141.bundle /tmp/scalus.bundle
+RUN set -eu; \
+    for b in base perf; do \
+        case "$b" in base) sha="$SCALUS_BUNDLE_BASE_SHA" ;; perf) sha="$SCALUS_BUNDLE_PERF_SHA" ;; esac; \
+        git init -q "/bench/scalus-src-$b"; \
+        cd "/bench/scalus-src-$b"; \
+        git fetch -q --depth 1 "$SCALUS_REPO" "$SCALUS_BUNDLE_BASE"; \
+        git fetch -q /tmp/scalus.bundle "pvb-$b"; \
+        git checkout -q FETCH_HEAD; \
+        test "$(git rev-parse HEAD)" = "$sha"; \
+    done
 
-# The Scalus core to the local Maven repository (~/.m2), as SCALUS_BUNDLE_VERSION.
-RUN cd /bench/scalus-src \
-    && SBT_OPTS="-Xmx6g" sbt -Dsbt.supershell=false -Dsbt.log.noformat=true \
-       "set ThisBuild / version := \"${SCALUS_BUNDLE_VERSION}\"" \
-       "set scalus.jvm / Compile / packageDoc / publishArtifact := false" \
-       scalusJVM/publishM2 \
-    && test -f "/root/.m2/repository/org/scalus/scalus_3/${SCALUS_BUNDLE_VERSION}/scalus_3-${SCALUS_BUNDLE_VERSION}.jar"
+# Each Scalus core to the local Maven repository (~/.m2), as 1.4.1-<build>.
+RUN set -eu; \
+    for b in base perf; do \
+        cd "/bench/scalus-src-$b"; \
+        SBT_OPTS="-Xmx6g" sbt -Dsbt.supershell=false -Dsbt.log.noformat=true \
+            "set ThisBuild / version := \"1.4.1-$b\"" \
+            "set scalus.jvm / Compile / packageDoc / publishArtifact := false" \
+            scalusJVM/publishM2; \
+        test -f "/root/.m2/repository/org/scalus/scalus_3/1.4.1-$b/scalus_3-1.4.1-$b.jar"; \
+    done
 
-COPY images/scalus/harness/ /bench/scalus/
+COPY images/scalus/harness/ /bench/scalus/harness-src/
 COPY check/reference/mainnet-plutusv3-costmodel.json /bench/scalus/mainnet-plutusv3-costmodel.json
 
-WORKDIR /bench/scalus
-
-# Compile the harness and the JMH code, then save the JMH classpath. The run scripts call
-# org.openjdk.jmh.Main on it directly instead of sbt Jmh/run: image layers keep file times in whole
-# seconds, so sbt would recompile at run time (and sbt at run time ran out of memory before).
-ENV SCALUS_SRC=/bench/scalus-src SCALUS_VERSION=${SCALUS_BUNDLE_VERSION}
-RUN sbt -Dsbt.supershell=false Jmh/compile \
-    && sbt -Dsbt.supershell=false -Dsbt.log.noformat=true -error "export Jmh/fullClasspath" \
-       | tail -1 > /bench/scalus/jmh-classpath.txt \
-    && grep -q jmh-core /bench/scalus/jmh-classpath.txt \
-    && grep -q "scalus_3-${SCALUS_VERSION}.jar" /bench/scalus/jmh-classpath.txt
+# One harness per build, /bench/scalus/<build>: compile the harness and the JMH code, then save the
+# JMH classpath. The run scripts call org.openjdk.jmh.Main on it directly instead of sbt Jmh/run:
+# image layers keep file times in whole seconds, so sbt would recompile at run time (and sbt at run
+# time ran out of memory before).
+RUN set -eu; \
+    for b in base perf; do \
+        cp -r /bench/scalus/harness-src "/bench/scalus/$b"; \
+        cp /bench/scalus/mainnet-plutusv3-costmodel.json "/bench/scalus/$b/"; \
+        cd "/bench/scalus/$b"; \
+        export SCALUS_SRC="/bench/scalus-src-$b" SCALUS_VERSION="1.4.1-$b"; \
+        sbt -Dsbt.supershell=false Jmh/compile; \
+        sbt -Dsbt.supershell=false -Dsbt.log.noformat=true -error "export Jmh/fullClasspath" \
+            | tail -1 > jmh-classpath.txt; \
+        grep -q jmh-core jmh-classpath.txt; \
+        grep -q "scalus_3-1.4.1-$b.jar" jmh-classpath.txt; \
+        grep -q "/bench/scalus/$b/target" jmh-classpath.txt; \
+    done
 
 COPY parsers/ /bench/parsers/
 COPY scripts/image-entry.sh scripts/run-scalus-cek.sh scripts/run-scalus-jit.sh /bench/scripts/

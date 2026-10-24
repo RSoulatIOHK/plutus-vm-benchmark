@@ -4,7 +4,7 @@
 // Dockerfile and published to the local Maven repository, so it resolves from there.
 // Scalus JIT: scalus-uplc-jit-compiler is not published, so its sources at the same commit
 // (SCALUS_SRC, cloned by the Dockerfile) are compiled here, against that core.
-val scalusVersion = sys.env.getOrElse("SCALUS_VERSION", "1.4.1-pvb")
+val scalusVersion = sys.env.getOrElse("SCALUS_VERSION", "1.4.1-base")
 
 ThisBuild / resolvers += Resolver.mavenLocal
 val scalusSrc = file(sys.env.getOrElse("SCALUS_SRC", "/bench/scalus-src"))

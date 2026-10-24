@@ -25,7 +25,7 @@
 #   BENCH_TRACE    1 = the JIT rows log warm-up slices into <vm>-warmup.csv (default 0)
 #   DRIFT          1 = drift probe (default), 0 = off. See "Drift probe" below
 #   PVB_PROGRESS   progress file, one line per stage (default <results-dir>/progress.txt)
-#   SCALUS_JAVA, SCALUS_JVM_FLAGS  TEMPORARY (Scalus 1.4.1 preparation): passed to every image when
+#   SCALUS_BUILD, SCALUS_JAVA, SCALUS_JVM_FLAGS  TEMPORARY (Scalus 1.4.1 preparation): passed to every image when
 #                  set; the JVM of the scalus-cek and scalus-jit rows (scripts/run-scalus-cek.sh)
 # The BENCH_ switches are passed to the images (docs/IMAGE_CONTRACT.md). A run of a subset of
 # the scripts writes their names to scripts.txt; the gate then compares only those.
@@ -256,7 +256,7 @@ elif [[ "$CPUSET" == auto ]]; then
 fi
 DOCKER_FLAGS=(--rm --cap-add SYS_NICE --network none)
 # TEMPORARY (Scalus 1.4.1 preparation): the JVM switches of the Scalus rows, when set.
-for v in SCALUS_JAVA SCALUS_JVM_FLAGS; do
+for v in SCALUS_BUILD SCALUS_JAVA SCALUS_JVM_FLAGS; do
     [[ -z "${!v:-}" ]] || DOCKER_FLAGS+=(-e "$v=${!v}")
 done
 if [[ "$LANES" -eq 1 ]]; then
@@ -477,7 +477,7 @@ else
     # A work queue: each free lane takes the next VM. Every record (environment.txt, FAILED,
     # progress) is written here in the main shell, when a container starts or ends. The output of
     # a container goes to a file and is printed when it ends, so run.log does not interleave.
-    declare -A JOB_VM JOB_I JOB_LANE JOB_START JOB_LOAD JOB_TICKS
+    declare -A JOB_VM JOB_I JOB_LANE JOB_START JOB_LOAD JOB_TICKS RUNNING_PIDS
     FREE_LANES=()
     for l in "${!LANE_CPUS[@]}"; do FREE_LANES+=("$l"); done
     next=0
@@ -498,6 +498,7 @@ else
                 "$BENCH_TRACE" "${LANE_CPUS[$lane]}" > "$WORK/$vm.log" 2>&1 &
             pid=$!
             JOB_VM[$pid]=$vm
+            RUNNING_PIDS[$pid]=1
             JOB_I[$pid]=$i
             JOB_LANE[$pid]=$lane
             JOB_START[$pid]=$(date +%s)
@@ -509,8 +510,16 @@ else
         # set -e: a container that fails must not end the script, so take wait's status here.
         rc=0
         pid=""
-        wait -n -p pid || rc=$?
+        # Only the running containers: bash 5.3 `wait -n` without pids can report a job that a
+        # plain `wait` reaped before (the image pulls), which is not in JOB_VM. That ended a run on
+        # 2026-10-24 with "JOB_VM[$pid]: unbound variable".
+        wait -n -p pid "${!RUNNING_PIDS[@]}" || rc=$?
         [[ -n "$pid" ]] || die "wait -n returned no job (exit $rc)"
+        if [[ -z "${RUNNING_PIDS[$pid]+x}" ]]; then
+            echo "WARNING: wait -n returned pid $pid, not a running container of this run; waiting on"
+            continue
+        fi
+        unset "RUNNING_PIDS[$pid]"
         vm=${JOB_VM[$pid]}
         running=$((running - 1))
         FREE_LANES+=("${JOB_LANE[$pid]}")

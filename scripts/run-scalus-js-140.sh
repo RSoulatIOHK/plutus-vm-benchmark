@@ -9,4 +9,4 @@ set -uo pipefail
 # image-entry.sh passes the requested loops on as they are: drop eval.
 BENCH_LOOPS=$(echo ",${BENCH_LOOPS:-d3,eval,check}," | sed 's/,eval,/,/g; s/^,//; s/,$//')
 export BENCH_LOOPS
-PVB_JS_VM=scalus-js-140 exec bash /bench/scripts/run-scalus-js.sh "$@"
+PVB_JS_VM=scalus-js-140 SCALUS_BUILD=1.4.0 exec bash /bench/scripts/run-scalus-js.sh "$@"

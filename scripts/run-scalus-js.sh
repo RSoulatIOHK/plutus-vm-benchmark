@@ -20,6 +20,12 @@ RAW="$RUN_DIR/$VM-raw.log"
 loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 
 cd /bench/scalus-js || exit 1
+# TEMPORARY (Scalus 1.4.1 preparation): SCALUS_BUILD picks the package of the image, pkgs/<build>
+# (base or perf for scalus-js, 1.4.0 for scalus-js-140).
+BUILD="${SCALUS_BUILD:-base}"
+[[ -f "pkgs/$BUILD/scalus.js" ]] || { echo "ERROR: SCALUS_BUILD=$BUILD: no pkgs/$BUILD" >&2; exit 1; }
+mkdir -p node_modules
+ln -sfn "/bench/scalus-js/pkgs/$BUILD" node_modules/scalus
 echo "$VM (Scala.js / Node.js $(node --version) / V8), scalus $(node -p 'require("./node_modules/scalus/package.json").version')" \
     | tee "$RAW"
 

@@ -1,12 +1,18 @@
 # TEMPORARY (Scalus 1.4.1 preparation, revert after the run): scripts/run-variants.sh.
-# The JVM of scalus-cek and scalus-jit: Oracle GraalVM 25.0.2 or 25.4.4, with the default flags or
-# none (heap flags only). -Xss64m stays on in every scalus-jit variant (scripts/run-scalus-jit.sh).
+# SCALUS_BUILD: base = feat/vm-api-141, perf = base + perf/cek-env-first (.env). The JVM of
+# scalus-cek and scalus-jit: Oracle GraalVM 25.0.2 or 25.4.4, with the default flags or none (heap
+# flags only). -Xss64m stays on in every scalus-jit variant (scripts/run-scalus-jit.sh).
 # plutigo runs in every pass as the control: it fills the third lane, at no extra wall-clock time.
-# A is the baseline, A2 the same again at the end (drift). check: the scalus-cek check on all 89
-# scripts, without -Xss64m.
-A     SCALUS_JAVA=25.0.2 SCALUS_JVM_FLAGS=default
-B     SCALUS_JAVA=25.0.2 SCALUS_JVM_FLAGS=none    VMS=plutigo,scalus-cek,scalus-jit
-C     SCALUS_JAVA=25.4.4 SCALUS_JVM_FLAGS=default VMS=plutigo,scalus-cek,scalus-jit
-D     SCALUS_JAVA=25.4.4 SCALUS_JVM_FLAGS=none    VMS=plutigo,scalus-cek,scalus-jit
-A2    SCALUS_JAVA=25.0.2 SCALUS_JVM_FLAGS=default VMS=plutigo,scalus-cek,scalus-jit
-check SCALUS_JAVA=25.0.2 SCALUS_JVM_FLAGS=default VMS=scalus-cek BENCH_LOOPS=check BENCH_SCRIPTS=
+# A and P are the baselines of each build, A2 and P2 the same again at the end (drift).
+# check: the scalus-cek check of the perf build on all 89 scripts, without -Xss64m.
+A     SCALUS_BUILD=base SCALUS_JAVA=25.0.2 SCALUS_JVM_FLAGS=default
+P     SCALUS_BUILD=perf SCALUS_JAVA=25.0.2 SCALUS_JVM_FLAGS=default VMS=plutigo,scalus-js,scalus-cek,scalus-jit
+PB    SCALUS_BUILD=perf SCALUS_JAVA=25.0.2 SCALUS_JVM_FLAGS=none    VMS=plutigo,scalus-cek,scalus-jit
+PC    SCALUS_BUILD=perf SCALUS_JAVA=25.4.4 SCALUS_JVM_FLAGS=default VMS=plutigo,scalus-cek,scalus-jit
+PD    SCALUS_BUILD=perf SCALUS_JAVA=25.4.4 SCALUS_JVM_FLAGS=none    VMS=plutigo,scalus-cek,scalus-jit
+B     SCALUS_BUILD=base SCALUS_JAVA=25.0.2 SCALUS_JVM_FLAGS=none    VMS=plutigo,scalus-cek,scalus-jit
+C     SCALUS_BUILD=base SCALUS_JAVA=25.4.4 SCALUS_JVM_FLAGS=default VMS=plutigo,scalus-cek,scalus-jit
+D     SCALUS_BUILD=base SCALUS_JAVA=25.4.4 SCALUS_JVM_FLAGS=none    VMS=plutigo,scalus-cek,scalus-jit
+A2    SCALUS_BUILD=base SCALUS_JAVA=25.0.2 SCALUS_JVM_FLAGS=default VMS=plutigo,scalus-cek,scalus-jit
+P2    SCALUS_BUILD=perf SCALUS_JAVA=25.0.2 SCALUS_JVM_FLAGS=default VMS=plutigo,scalus-cek,scalus-jit
+check SCALUS_BUILD=perf SCALUS_JAVA=25.0.2 SCALUS_JVM_FLAGS=default VMS=scalus-cek BENCH_LOOPS=check BENCH_SCRIPTS=
