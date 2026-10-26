@@ -59,7 +59,7 @@ VM_ORDER = [
     "haskell", "scalus-jit", "scalus-cek", "scalus-js",
     "aiken", "aiken-wasm", "uplc-turbo",
     "plutigo", "blaze-jsc", "blaze-v8",
-    "chrysalis", "chrysalis-aot", "julc-java", "plutuz", "llvm-uplc-jit", "uplc-turbo-bc",
+    "chrysalis", "chrysalis-aot", "julc-java", "plutuz", "uplc-turbo-bc",
 ]
 
 # The header logo in report/template.html, a file in docs/.
@@ -111,7 +111,6 @@ EXPERIMENTAL = {
     "chrysalis-aot": "not ranked: only pre-releases on NuGet (Chrysalis.Plutus -alpha); the one stable "
                      "version, 1.7.1, is unlisted (spec D22)",
     "plutuz": "not ranked: no release (no tags or releases on GitHub), pinned to a main commit (spec D22)",
-    "llvm-uplc-jit": "not ranked: no release (no tags or releases on GitHub), pinned to a main commit (spec D22)",
     "uplc-turbo-bc": "not ranked: no release has the bytecode mode; it is in the fork jonathanlim222/uplc "
                      "(closed PR pragma-org/uplc#47), pinned to a commit (spec D22)",
 }
@@ -126,7 +125,6 @@ EXPERIMENTAL_TAG = {
     "chrysalis": "pre-release only",
     "chrysalis-aot": "pre-release only",
     "plutuz": "no release",
-    "llvm-uplc-jit": "no release",
     "uplc-turbo-bc": "no release",
 }
 
@@ -171,7 +169,7 @@ def d3_ranked(present_vms) -> list[str]:
     return [vm for vm in present_vms if vm not in DECODE_CACHED]
 
 VM_LABELS = {
-    "uplc-turbo": "uplc-turbo AST walker (Rust)",
+    "uplc-turbo": "amaru-uplc AST walker (Rust)",
     "plutigo": "Plutigo CEK (Go)",
     "blaze-jsc": "blaze-plutus CEK (TypeScript / Bun JSC)",
     "blaze-v8": "blaze-plutus CEK (TypeScript / Node V8)",
@@ -185,8 +183,7 @@ VM_LABELS = {
     "chrysalis": "Chrysalis CEK (C# / .NET JIT)",
     "chrysalis-aot": "Chrysalis CEK (C# / .NET AOT)",
     "plutuz": "Plutuz CEK (Zig)",
-    "llvm-uplc-jit": "llvm-uplc UPLC→native JIT (C++ / LLVM)",
-    "uplc-turbo-bc": "uplc-turbo bytecode VM (Rust)",
+    "uplc-turbo-bc": "amaru-uplc bytecode VM, fork jonathanlim222/uplc (Rust)",
 }
 
 
@@ -207,7 +204,6 @@ VM_FACTS = {
     "chrysalis": {"lang": "C#", "runtime": ".NET 10 (JIT)", "model": "Interpreter (CEK)"},
     "chrysalis-aot": {"lang": "C#", "runtime": ".NET 10 (NativeAOT)", "model": "Interpreter (CEK)"},
     "plutuz": {"lang": "Zig", "runtime": "native", "model": "Interpreter (CEK)"},
-    "llvm-uplc-jit": {"lang": "C / C++", "runtime": "native (LLVM 22 LLJIT)", "model": "JIT compiler (UPLC → native code)"},
     "uplc-turbo-bc": {"lang": "Rust", "runtime": "native", "model": "Bytecode VM (UPLC → bytecode)"},
 }
 
@@ -278,10 +274,6 @@ VM_SOURCES = {
         "repo": "https://github.com/utxo-company/plutuz", "home": None,
         "env": "PLUTUZ_SHA", "pattern": r"^([0-9a-f]{7})", "tag": "33b812d", "version": "main {tag}",
         "release": "https://github.com/utxo-company/plutuz/commit/{tag}"},
-    "llvm-uplc-jit": {
-        "repo": "https://github.com/SeungheonOh/llvm-uplc", "home": None,
-        "env": "LLVM_UPLC_SHA", "pattern": r"^([0-9a-f]{7})", "tag": "6bcef67", "version": "main {tag}",
-        "release": "https://github.com/SeungheonOh/llvm-uplc/commit/{tag}"},
     "uplc-turbo-bc": {
         "repo": "https://github.com/jonathanlim222/uplc", "home": None,
         "env": "UPLC_TURBO_BC_SHA", "pattern": r"^([0-9a-f]{7})", "tag": "069cef5", "version": "fork {tag}",
@@ -1109,7 +1101,7 @@ OG_SIZE = (1200, 630)
 KEYWORDS = [
     "Cardano", "Plutus", "UPLC", "Untyped Plutus Core", "Plutus VM", "smart contract",
     "CEK machine", "evaluator", "benchmark", "performance", "plutus-core", "Aiken", "Scalus",
-    "blaze-plutus", "Plutigo", "uplc-turbo",
+    "blaze-plutus", "Plutigo", "amaru-uplc", "Chrysalis", "Julc", "Plutuz",
 ]
 
 

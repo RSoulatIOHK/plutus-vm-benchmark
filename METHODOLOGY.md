@@ -83,7 +83,7 @@ line-up that miss rule 1 or rule 2. Each row shows its reason:
 | Reason | Meaning | Example |
 |---|---|---|
 | pre-release only | Only `-alpha` or `-preNN` versions; pinned to the newest pre-release tag | Chrysalis, Julc |
-| no release | No tag or release; pinned to a `main` commit | Plutuz, llvm-uplc |
+| no release | No tag or release; pinned to a `main` commit | Plutuz |
 | no downstream user | A release, but no released project outside its repo depends on it | Scalus JIT, blaze-plutus |
 
 An experimental row never gets a rank. It is never a competitor in the penalty rule, and it has no

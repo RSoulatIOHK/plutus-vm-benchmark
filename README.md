@@ -96,11 +96,16 @@ What changed:
 | `scalus-js` | Scalus.js | Scala.js / Node.js | Vitest bench | [scalus3/scalus](https://github.com/scalus3/scalus) | npm `scalus` [1.4.1](https://github.com/scalus3/scalus/releases/tag/v1.4.1) |
 | `aiken` | Aiken uplc | Rust | Criterion.rs | [aiken-lang/aiken](https://github.com/aiken-lang/aiken) | [v1.1.24](https://github.com/aiken-lang/aiken/releases/tag/v1.1.24) |
 | `aiken-wasm` | Aiken uplc as WASM (Lucid Evolution), badge "decode cached (by the library)" | Rust → WASM / Node.js | Vitest bench | [Anastasia-Labs/lucid-evolution](https://github.com/Anastasia-Labs/lucid-evolution/tree/main/packages/uplc) | npm `@lucid-evolution/uplc` [0.4.0](https://github.com/Anastasia-Labs/lucid-evolution/releases/tag/%40lucid-evolution%2Fuplc%400.4.0) |
-| `uplc-turbo` | uplc-turbo (Amaru) | Rust | Criterion.rs | [pragma-org/uplc](https://github.com/pragma-org/uplc) | [amaru-uplc-v0.4.0](https://github.com/pragma-org/uplc/releases/tag/amaru-uplc-v0.4.0) |
+| `uplc-turbo` | amaru-uplc (Amaru) | Rust | Criterion.rs | [pragma-org/uplc](https://github.com/pragma-org/uplc) | [amaru-uplc-v0.4.0](https://github.com/pragma-org/uplc/releases/tag/amaru-uplc-v0.4.0) |
 | `plutigo` | Plutigo (Dingo) | Go | testing.B | [blinklabs-io/plutigo](https://github.com/blinklabs-io/plutigo) | [v0.1.10](https://github.com/blinklabs-io/plutigo/releases/tag/v0.1.10) |
 | `blaze-v8` | blaze-plutus on Node (V8), [experimental](#experimental), not ranked | TypeScript | Vitest bench | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) | [@blaze-cardano/plutus 0.1.1](https://github.com/butaneprotocol/blaze-cardano/releases/tag/%40blaze-cardano%2Fplutus%400.1.1) |
+| `chrysalis` | Chrysalis CEK, [experimental](#experimental), not ranked | C# / .NET 10 (JIT) | BenchmarkDotNet | [SAIB-Inc/Chrysalis](https://github.com/SAIB-Inc/Chrysalis) | NuGet `Chrysalis.Plutus` [1.7.14-alpha](https://www.nuget.org/packages/Chrysalis.Plutus/1.7.14-alpha) (pre-release) |
+| `chrysalis-aot` | Chrysalis CEK, [experimental](#experimental), not ranked | C# / .NET 10 (NativeAOT) | BenchmarkDotNet | [SAIB-Inc/Chrysalis](https://github.com/SAIB-Inc/Chrysalis) | NuGet `Chrysalis.Plutus` [1.7.14-alpha](https://www.nuget.org/packages/Chrysalis.Plutus/1.7.14-alpha) (pre-release) |
+| `julc-java` | Julc Java CEK, [experimental](#experimental), not ranked | Java / GraalVM 25 | JMH | [bloxbean/julc](https://github.com/bloxbean/julc) | [v0.1.0-pre19](https://github.com/bloxbean/julc/releases/tag/v0.1.0-pre19) (pre-release) |
+| `plutuz` | Plutuz CEK, [experimental](#experimental), not ranked | Zig | own timing loop | [utxo-company/plutuz](https://github.com/utxo-company/plutuz) | `main` [33b812d](https://github.com/utxo-company/plutuz/commit/33b812dbcf88f6851286e54cb93a4a443353f94c) (no release) |
+| `uplc-turbo-bc` | amaru-uplc bytecode VM, [experimental](#experimental), not ranked | Rust | Criterion.rs | [jonathanlim222/uplc](https://github.com/jonathanlim222/uplc) (fork) | [069cef5](https://github.com/jonathanlim222/uplc/commit/069cef5684d57064d040ab498a5d2eac01e63275) (no release) |
 
-That is 10 images: `scripts/images.sh list` prints them. The pins are in [`.env`](.env).
+That is 14 VMs in 12 images: `scripts/images.sh list` prints them. The pins are in [`.env`](.env).
 
 The `aiken-wasm` row times the published npm package `@lucid-evolution/uplc` 0.4.0 as is. The
 package is built from [colll78/aiken](https://github.com/colll78/aiken): aiken main after v1.1.24,
@@ -129,8 +134,7 @@ is left out. A row with no passing script is listed as "failed check".
 | `chrysalis`, `chrysalis-aot` | Pre-release only. The NuGet package `Chrysalis.Plutus` has only `-alpha` versions (1.7.14-alpha or newer); the one stable version, 1.7.1, is unlisted. Pinned to the newest pre-release tag. |
 | `julc-java` | Pre-release only (`0.1.0-preNN`). Pinned to the newest pre-release tag. |
 | `plutuz` | No release: no tags or releases on GitHub. Pinned to a `main` commit. |
-| `llvm-uplc-jit` | No release: no tags or releases on GitHub. Pinned to a `main` commit. |
-| `uplc-turbo-bc` | No release with the bytecode mode: the released `uplc-turbo` crate has none. Pinned to a commit that has it. |
+| `uplc-turbo-bc` | amaru-uplc bytecode mode. No release has it: the mode is only in the fork [jonathanlim222/uplc](https://github.com/jonathanlim222/uplc) (closed PR pragma-org/uplc#47). Pinned to a commit of the fork. |
 
 ## Not included
 
@@ -149,6 +153,7 @@ only: its decode runs outside the timed loop. A VM of the original SAIB line-up 
 
 | Project | Rule that fails |
 |---|---|
+| [llvm-uplc](https://github.com/SeungheonOh/llvm-uplc) | Outdated. Its built-in cost model is from before protocol version 11 (for example `divideInteger` c11 549, mainnet 960), it has no API that takes a cost model, and its last commit is from 2026-04-16. |
 | [OpShin uplc](https://github.com/OpShin/uplc) | Rule 3. Fails the correctness gate at its latest release 1.3.3. It has no `case` on builtin values, a protocol version 11 feature. |
 
 ### How a VM can join

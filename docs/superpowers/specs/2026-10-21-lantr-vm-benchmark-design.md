@@ -27,11 +27,11 @@ Status: approved 2026-10-21.
 | D19 | Full-run hardware | `ccx43` (16 dedicated vCPUs) with 3 lanes. Measured on one ccx43: with 3 lanes the geometric mean of each VM moved by -2.4 % to +0.9 % against one lane, within the noise; only the experimental Scalus JIT moved by +7 %. Run time on 5 scripts: 31 min to 12 min, about 3.6 h projected for 89 scripts. A full run has every VM, script and loop, normal timing, no trace, and 1 lane or the default 3 lanes; a comma list (A/B test) is always partial. A ccx33 with 1 lane stays possible. The Hetzner project limit must allow a ccx43 (16 vCPUs) |
 | D20 | History noise band | The ratio of a VM to Haskell varies by up to about 5 % between two good servers. The history chart shows a change below 5 % as no change |
 | D21 | Eval-only VMs | (2026-10-26) A VM whose decode runs outside its timed loop has only an eval-only time: one that compiles each script before timing (D15), and one whose library caches decoded programs with no off switch. It is never in the decode + eval ranking, is not a competitor in the penalty rule there, and is ranked only on eval only (if it meets D17). Its history ratio uses Haskell's eval-only time. Reason: `@lucid-evolution/uplc` caches decoded programs (`ProgramCache`, keyed by a hash of the bytes) and the cache cannot be turned off, so its "decode + eval" time is really hash + eval (`aiken-wasm.csv` equals `aiken-wasm-eval.csv`). It cannot be timed on decode + eval without changing the inputs, which D17 ("used as it is") forbids. One rule for every VM whose decode runs outside the timed loop. The page says so next to the decode + eval ranking |
-| D22 | Experimental scope | (2026-10-26) The Experimental section shows a VM of the original SAIB line-up (a VM with a `scripts/run-<vm>.sh` on branch `saib-main`) that misses D17 rule 1 (no stable release) or rule 2 (no downstream user). Its pin is its newest pre-release tag; without one, the newest `main` commit. The page shows the reason next to the row: "pre-release only", "no release" or "no downstream user". An experimental row never gets a rank. It is never a competitor in the penalty rule. It has no line in the history chart. The gate checks each script of an experimental row. A script that fails the gate is marked "failed check" on its cell, and its time is left out of the row's geometric mean. The row itself stays. A row with no passing script, or without `<vm>-check.csv`, is listed as "failed check" (D4). Today: Chrysalis (`chrysalis`, `chrysalis-aot`), Julc (`julc-java`), Plutuz (`plutuz`), llvm-uplc (`llvm-uplc-jit`), uplc-turbo bytecode mode (`uplc-turbo-bc`, only if a commit with that mode can be pinned), Scalus JIT and blaze-plutus. Not OpShin (it fails rule 3) and not blaze-jsc. Reason: the SAIB benchmark showed these VMs, and their authors and users want to see them. The ranking stays for VMs that meet D17 |
+| D22 | Experimental scope | (2026-10-26) The Experimental section shows a VM of the original SAIB line-up (a VM with a `scripts/run-<vm>.sh` on branch `saib-main`) that misses D17 rule 1 (no stable release) or rule 2 (no downstream user). Its pin is its newest pre-release tag; without one, the newest `main` commit. The page shows the reason next to the row: "pre-release only", "no release" or "no downstream user". An experimental row never gets a rank. It is never a competitor in the penalty rule. It has no line in the history chart. The gate checks each script of an experimental row. A script that fails the gate is marked "failed check" on its cell, and its time is left out of the row's geometric mean. The row itself stays. A row with no passing script, or without `<vm>-check.csv`, is listed as "failed check" (D4). Today: Chrysalis (`chrysalis`, `chrysalis-aot`), Julc (`julc-java`), Plutuz (`plutuz`), amaru-uplc bytecode mode (`uplc-turbo-bc`, a commit of the fork jonathanlim222/uplc), Scalus JIT and blaze-plutus. Not OpShin (it fails rule 3), not llvm-uplc (outdated) and not blaze-jsc. Reason: the SAIB benchmark showed these VMs, and their authors and users want to see them. The ranking stays for VMs that meet D17 |
 
 ### Line-up (rules: D17)
 
-15 VMs. 7 are ranked, 8 are experimental (D22). `uplc-turbo-bc` joins only if a commit with the bytecode mode can be pinned:
+14 VMs. 7 are ranked, 7 are experimental (D22). The page calls `uplc-turbo` "amaru-uplc", the name of the pragma-org/uplc crate; the image ids stay:
 
 | VM (image) | Language | Runtime | Status |
 |---|---|---|---|
@@ -41,18 +41,20 @@ Status: approved 2026-10-21.
 | Scalus.js (`scalus-js`) | Scala.js | Node (V8) | Ranked |
 | Aiken (`aiken`) | Rust | native | Ranked |
 | Aiken WASM, `@lucid-evolution/uplc` 0.4.0 (`aiken-wasm`) | Rust → WASM | Node (V8) | Ranked, badge "decode cached (by the library)" |
-| uplc-turbo, Amaru (`uplc-turbo`) | Rust | native | Ranked |
+| amaru-uplc, Amaru (`uplc-turbo`) | Rust | native | Ranked |
 | plutigo, Dingo (`plutigo`) | Go | native | Ranked |
 | blaze-plutus (`blaze-v8`) | TypeScript | Node (V8) | Experimental: no downstream user yet |
 | Chrysalis (`chrysalis`) | C# | .NET (JIT) | Experimental: pre-release only (NuGet `Chrysalis.Plutus` 1.7.14-alpha or newer) |
 | Chrysalis AOT (`chrysalis-aot`) | C# | .NET (native AOT) | Experimental: pre-release only |
 | Julc (`julc-java`) | Java | JVM | Experimental: pre-release only (`0.1.0-preNN`) |
 | Plutuz (`plutuz`) | Zig | native | Experimental: no release (`main` commit) |
-| llvm-uplc (`llvm-uplc-jit`) | C++ | native (LLVM JIT) | Experimental: no release (`main` commit) |
-| uplc-turbo bytecode (`uplc-turbo-bc`) | Rust | native | Experimental: no release with the bytecode mode |
+| amaru-uplc bytecode, fork jonathanlim222/uplc (`uplc-turbo-bc`) | Rust | native | Experimental: no release with the bytecode mode |
 
 Dropped:
 
+- llvm-uplc (`llvm-uplc-jit`), dropped 2026-10-26: outdated. Its built-in cost model is variant C
+  (before protocol version 11; for example `divideInteger` c11 is 549, mainnet 960). It has no API
+  that takes a cost model. Its last commit is from 2026-04-16.
 - OpShin uplc: rule 3. It fails the correctness gate at its latest release 1.3.3 (no `case` on
   builtin values, a protocol version 11 feature).
 - blaze-jsc (blaze on Bun / JavaScriptCore), removed 2026-10-22: not a separate evaluator. Every JS
@@ -70,7 +72,7 @@ Repo `lantr-io/plutus-vm-benchmark`:
 
 | Unit | Does | Change from today |
 |---|---|---|
-| `harness/<vm>/` + `scripts/run-<vm>.sh` | One harness per VM | Add `aiken`, `aiken-wasm`, `scalus-js`. Remove chrysalis, plutuz, llvm-uplc |
+| `harness/<vm>/` + `scripts/run-<vm>.sh` | One harness per VM | Add `aiken`, `aiken-wasm`, `scalus-js`. Remove llvm-uplc (dropped, outdated). Chrysalis, Julc, Plutuz and uplc-turbo-bc return as experimental (D22) |
 | `.env` | Pins each VM to a SHA or tag | Haskell pinned to the plutus tag of the production node (today 1.63.0.0) |
 | `images/` | One Docker image per VM, pushed to GHCR | Replaces the single image: a bump rebuilds one VM only |
 | `check/` | Correctness gate: each VM writes result + ExUnits per script; the gate diffs them against Haskell | New |
