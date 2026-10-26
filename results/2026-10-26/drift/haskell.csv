@@ -1,0 +1,6 @@
+vm,script,mean_ns,median_ns,min_ns,max_ns,stddev_ns,iterations
+haskell,auction_1-1,353794,,,,13957,91
+haskell,crowdfunding-success-2,424621,,,,15941,88
+haskell,future-settle-early-1,442135,,,,10724,87
+haskell,multisig-sm-01,905575,,,,35167,73
+haskell,stablecoin_1-2,336186,,,,11299,92

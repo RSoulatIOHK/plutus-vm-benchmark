@@ -1,0 +1,1247 @@
+scalus-js (Scala.js / Node.js v22.23.4 / V8), scalus 1.4.1
+--- auction_1-1: process 138
+d3 auction_1-1 pid 138 warm-up: 8.00 s, 12561 ops, 637084 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"auction_1-1","loop":"d3","slices":[{"ops":1260,"ns":1000589221.0000001},{"ops":1566,"ns":1000561003.9999999},{"ops":1563,"ns":1000104820.9999999},{"ops":1626,"ns":1000473235.9999998},{"ops":1636,"ns":1000112225.0000007},{"ops":1625,"ns":1000374410.9999998},{"ops":1644,"ns":1000062409.0000001},{"ops":1641,"ns":1000138727.9999999}],"capped":false,"end":"steady"}
+d3 auction_1-1 pid 138 round 1: 5.00 s, 8226 ops, 607872 ns/op
+d3 auction_1-1 pid 138 round 2: 5.00 s, 8182 ops, 611108 ns/op
+d3 auction_1-1 pid 138 round 3: 5.00 s, 8188 ops, 610664 ns/op
+PVB_RESULT {"script":"auction_1-1","loop":"d3","pid":138,"warmup":{"ops":12561,"ns":8002416055.000001},"rounds":[{"ops":8226,"ns":5000353234},{"ops":8182,"ns":5000084649.999999},{"ops":8188,"ns":5000120250}]}
+--- auction_1-2: process 146
+d3 auction_1-2 pid 146 warm-up: 6.00 s, 3244 ops, 1850834 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"auction_1-2","loop":"d3","slices":[{"ops":445,"ns":1000534483},{"ops":550,"ns":1000562543},{"ops":558,"ns":1001419411.0000004},{"ops":568,"ns":1000540125.9999999},{"ops":567,"ns":1000653865.9999996},{"ops":556,"ns":1000395308.0000001}],"capped":false,"end":"steady"}
+d3 auction_1-2 pid 146 round 1: 5.00 s, 2838 ops, 1762035 ns/op
+d3 auction_1-2 pid 146 round 2: 5.00 s, 2827 ops, 1769125 ns/op
+d3 auction_1-2 pid 146 round 3: 5.00 s, 2796 ops, 1788623 ns/op
+PVB_RESULT {"script":"auction_1-2","loop":"d3","pid":146,"warmup":{"ops":3244,"ns":6004105737},"rounds":[{"ops":2838,"ns":5000656648},{"ops":2827,"ns":5001317519},{"ops":2796,"ns":5000990619.999999}]}
+--- auction_1-3: process 154
+d3 auction_1-3 pid 154 warm-up: 7.01 s, 3472 ops, 2018452 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"auction_1-3","loop":"d3","slices":[{"ops":402,"ns":1001679220},{"ops":483,"ns":1000349458.0000001},{"ops":510,"ns":1002004027},{"ops":518,"ns":1000704677.0000006},{"ops":524,"ns":1001525783.9999995},{"ops":521,"ns":1000639960.0000005},{"ops":514,"ns":1001163582.0000001}],"capped":false,"end":"steady"}
+d3 auction_1-3 pid 154 round 1: 5.00 s, 2620 ops, 1908835 ns/op
+d3 auction_1-3 pid 154 round 2: 5.00 s, 2672 ops, 1871709 ns/op
+d3 auction_1-3 pid 154 round 3: 5.00 s, 2667 ops, 1874888 ns/op
+PVB_RESULT {"script":"auction_1-3","loop":"d3","pid":154,"warmup":{"ops":3472,"ns":7008066708},"rounds":[{"ops":2620,"ns":5001147384},{"ops":2672,"ns":5001207543.999999},{"ops":2667,"ns":5000326450.999997}]}
+--- auction_1-4: process 162
+d3 auction_1-4 pid 162 warm-up: 8.00 s, 10504 ops, 761877 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"auction_1-4","loop":"d3","slices":[{"ops":1058,"ns":1000426243.9999999},{"ops":1296,"ns":1000357861},{"ops":1323,"ns":1000476487.0000004},{"ops":1365,"ns":1000448179.9999999},{"ops":1366,"ns":1000186166.0000004},{"ops":1360,"ns":1000517068.9999995},{"ops":1368,"ns":1000118786},{"ops":1368,"ns":1000230424.0000004}],"capped":false,"end":"steady"}
+d3 auction_1-4 pid 162 round 1: 5.00 s, 6841 ops, 730980 ns/op
+d3 auction_1-4 pid 162 round 2: 5.00 s, 6766 ops, 739024 ns/op
+d3 auction_1-4 pid 162 round 3: 5.00 s, 6872 ops, 727608 ns/op
+PVB_RESULT {"script":"auction_1-4","loop":"d3","pid":162,"warmup":{"ops":10504,"ns":8002761217},"rounds":[{"ops":6841,"ns":5000634650},{"ops":6766,"ns":5000239072},{"ops":6872,"ns":5000123264.000002}]}
+--- auction_2-1: process 170
+d3 auction_2-1 pid 170 warm-up: 8.00 s, 12331 ops, 648938 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"auction_2-1","loop":"d3","slices":[{"ops":1213,"ns":1000475482},{"ops":1514,"ns":1000258473.0000001},{"ops":1550,"ns":1000245806.9999998},{"ops":1595,"ns":1000287586.9999998},{"ops":1619,"ns":1000588826.9999995},{"ops":1621,"ns":1000147724.9999998},{"ops":1600,"ns":1000017304.9999994},{"ops":1619,"ns":1000034829.9999996}],"capped":false,"end":"steady"}
+d3 auction_2-1 pid 170 round 1: 5.00 s, 8031 ops, 622601 ns/op
+d3 auction_2-1 pid 170 round 2: 5.00 s, 7940 ops, 629801 ns/op
+d3 auction_2-1 pid 170 round 3: 5.00 s, 7978 ops, 626763 ns/op
+PVB_RESULT {"script":"auction_2-1","loop":"d3","pid":170,"warmup":{"ops":12331,"ns":8002056035.999999},"rounds":[{"ops":8031,"ns":5000108729.000001},{"ops":7940,"ns":5000618611},{"ops":7978,"ns":5000317222.999998}]}
+--- auction_2-2: process 178
+d3 auction_2-2 pid 178 warm-up: 6.01 s, 3130 ops, 1918699 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"auction_2-2","loop":"d3","slices":[{"ops":426,"ns":1000143310.0000001},{"ops":535,"ns":1000451871.9999999},{"ops":541,"ns":1001736705.9999996},{"ops":542,"ns":1000718836.9999999},{"ops":549,"ns":1001330291.0000002},{"ops":537,"ns":1001147428.0000002}],"capped":false,"end":"steady"}
+d3 auction_2-2 pid 178 round 1: 5.00 s, 2754 ops, 1815814 ns/op
+d3 auction_2-2 pid 178 round 2: 5.00 s, 2791 ops, 1791509 ns/op
+d3 auction_2-2 pid 178 round 3: 5.00 s, 2752 ops, 1817463 ns/op
+PVB_RESULT {"script":"auction_2-2","loop":"d3","pid":178,"warmup":{"ops":3130,"ns":6005528444},"rounds":[{"ops":2754,"ns":5000752923.000001},{"ops":2791,"ns":5000101334.000001},{"ops":2752,"ns":5001657486}]}
+--- auction_2-3: process 186
+d3 auction_2-3 pid 186 warm-up: 6.01 s, 2458 ops, 2445251 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"auction_2-3","loop":"d3","slices":[{"ops":329,"ns":1001843996},{"ops":424,"ns":1003662023.9999998},{"ops":420,"ns":1002669520.9999998},{"ops":425,"ns":1001379772.9999996},{"ops":429,"ns":1000489451.9999998},{"ops":431,"ns":1000383286.9999996}],"capped":false,"end":"steady"}
+d3 auction_2-3 pid 186 round 1: 5.00 s, 2141 ops, 2335558 ns/op
+d3 auction_2-3 pid 186 round 2: 5.00 s, 2164 ops, 2311543 ns/op
+d3 auction_2-3 pid 186 round 3: 5.00 s, 2177 ops, 2297219 ns/op
+PVB_RESULT {"script":"auction_2-3","loop":"d3","pid":186,"warmup":{"ops":2458,"ns":6010428052.999999},"rounds":[{"ops":2141,"ns":5000428731},{"ops":2164,"ns":5002179821},{"ops":2177,"ns":5001045469.000001}]}
+--- auction_2-4: process 194
+d3 auction_2-4 pid 194 warm-up: 11.01 s, 5685 ops, 1937106 ns/op, 11 slices, steady
+PVB_WARMUP {"script":"auction_2-4","loop":"d3","slices":[{"ops":427,"ns":1000184945.0000001},{"ops":506,"ns":1001269699},{"ops":518,"ns":1000766608.9999998},{"ops":535,"ns":1000307239.0000002},{"ops":529,"ns":1000836730},{"ops":511,"ns":1000643471.0000004},{"ops":537,"ns":1002094798.0000001},{"ops":530,"ns":1001435770},{"ops":523,"ns":1001112661.0000011},{"ops":531,"ns":1002259442.0000005},{"ops":538,"ns":1001538638}],"capped":false,"end":"steady"}
+d3 auction_2-4 pid 194 round 1: 5.00 s, 2639 ops, 1895132 ns/op
+d3 auction_2-4 pid 194 round 2: 5.00 s, 2638 ops, 1895758 ns/op
+d3 auction_2-4 pid 194 round 3: 5.00 s, 2662 ops, 1878578 ns/op
+PVB_RESULT {"script":"auction_2-4","loop":"d3","pid":194,"warmup":{"ops":5685,"ns":11012450002.000002},"rounds":[{"ops":2639,"ns":5001252120.000001},{"ops":2638,"ns":5001009086.000002},{"ops":2662,"ns":5000775186.000003}]}
+--- auction_2-5: process 202
+d3 auction_2-5 pid 202 warm-up: 6.00 s, 7812 ops, 768383 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"auction_2-5","loop":"d3","slices":[{"ops":1074,"ns":1000082601.0000001},{"ops":1323,"ns":1000611069.9999999},{"ops":1339,"ns":1000239243},{"ops":1352,"ns":1000614987.9999998},{"ops":1365,"ns":1000604986.0000002},{"ops":1359,"ns":1000457751.9999994}],"capped":false,"end":"steady"}
+d3 auction_2-5 pid 202 round 1: 5.00 s, 6784 ops, 737062 ns/op
+d3 auction_2-5 pid 202 round 2: 5.00 s, 6839 ops, 731196 ns/op
+d3 auction_2-5 pid 202 round 3: 5.00 s, 6799 ops, 735490 ns/op
+PVB_RESULT {"script":"auction_2-5","loop":"d3","pid":202,"warmup":{"ops":7812,"ns":6002610639.999999},"rounds":[{"ops":6784,"ns":5000226633},{"ops":6839,"ns":5000649277},{"ops":6799,"ns":5000594315.000002}]}
+--- coop-1: process 210
+d3 coop-1 pid 210 warm-up: 6.00 s, 6860 ops, 875212 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"coop-1","loop":"d3","slices":[{"ops":949,"ns":1000762589.9999999},{"ops":1170,"ns":1000679094.0000001},{"ops":1162,"ns":1000769372.0000002},{"ops":1187,"ns":1000745068.9999996},{"ops":1196,"ns":1000586119.9999999},{"ops":1196,"ns":1000408793.0000005}],"capped":false,"end":"steady"}
+d3 coop-1 pid 210 round 1: 5.00 s, 5955 ops, 839638 ns/op
+d3 coop-1 pid 210 round 2: 5.00 s, 5901 ops, 847368 ns/op
+d3 coop-1 pid 210 round 3: 5.00 s, 5883 ops, 849910 ns/op
+PVB_RESULT {"script":"coop-1","loop":"d3","pid":210,"warmup":{"ops":6860,"ns":6003951038},"rounds":[{"ops":5955,"ns":5000042363.000001},{"ops":5901,"ns":5000316760},{"ops":5883,"ns":5000018117}]}
+--- coop-2: process 218
+d3 coop-2 pid 218 warm-up: 6.01 s, 2126 ops, 2826885 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"coop-2","loop":"d3","slices":[{"ops":293,"ns":1001765449},{"ops":369,"ns":1002253840.0000001},{"ops":360,"ns":1000944254.9999999},{"ops":366,"ns":1000731850.0000001},{"ops":366,"ns":1002231734},{"ops":372,"ns":1002029843.9999996}],"capped":false,"end":"steady"}
+d3 coop-2 pid 218 round 1: 5.00 s, 1845 ops, 2710510 ns/op
+d3 coop-2 pid 218 round 2: 5.00 s, 1851 ops, 2702292 ns/op
+d3 coop-2 pid 218 round 3: 5.00 s, 1842 ops, 2715029 ns/op
+PVB_RESULT {"script":"coop-2","loop":"d3","pid":218,"warmup":{"ops":2126,"ns":6009956972},"rounds":[{"ops":1845,"ns":5000891379.000001},{"ops":1851,"ns":5001942519},{"ops":1842,"ns":5001082852}]}
+--- coop-3: process 226
+d3 coop-3 pid 226 warm-up: 10.04 s, 1182 ops, 8496085 ns/op, 10 slices, steady
+PVB_WARMUP {"script":"coop-3","loop":"d3","slices":[{"ops":99,"ns":1000146897},{"ops":126,"ns":1006700462.0000002},{"ops":126,"ns":1003219517},{"ops":127,"ns":1008122178.0000005},{"ops":121,"ns":1000853919.0000001},{"ops":117,"ns":1007147590.9999999},{"ops":117,"ns":1008482565.9999996},{"ops":116,"ns":1000171259.0000006},{"ops":117,"ns":1006682715.9999994},{"ops":116,"ns":1000845824}],"capped":false,"end":"steady"}
+d3 coop-3 pid 226 round 1: 5.00 s, 584 ops, 8569406 ns/op
+d3 coop-3 pid 226 round 2: 5.00 s, 591 ops, 8468345 ns/op
+d3 coop-3 pid 226 round 3: 5.01 s, 589 ops, 8503011 ns/op
+PVB_RESULT {"script":"coop-3","loop":"d3","pid":226,"warmup":{"ops":1182,"ns":10042372929.000002},"rounds":[{"ops":584,"ns":5004532881.999999},{"ops":591,"ns":5004792055},{"ops":589,"ns":5008273512}]}
+--- coop-4: process 234
+d3 coop-4 pid 234 warm-up: 7.01 s, 1987 ops, 3528915 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"coop-4","loop":"d3","slices":[{"ops":234,"ns":1002440738},{"ops":284,"ns":1001396282.9999998},{"ops":289,"ns":1001951869},{"ops":294,"ns":1001829650.9999995},{"ops":296,"ns":1001128832.9999998},{"ops":299,"ns":1002527307.0000002},{"ops":291,"ns":1000680340.0000008}],"capped":false,"end":"steady"}
+d3 coop-4 pid 234 round 1: 5.00 s, 1469 ops, 3403842 ns/op
+d3 coop-4 pid 234 round 2: 5.00 s, 1492 ops, 3352075 ns/op
+d3 coop-4 pid 234 round 3: 5.00 s, 1496 ops, 3343116 ns/op
+PVB_RESULT {"script":"coop-4","loop":"d3","pid":234,"warmup":{"ops":1987,"ns":7011955021},"rounds":[{"ops":1469,"ns":5000243662.999999},{"ops":1492,"ns":5001296410.999999},{"ops":1496,"ns":5001301347.000001}]}
+--- coop-5: process 242
+d3 coop-5 pid 242 warm-up: 6.00 s, 3770 ops, 1592774 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"coop-5","loop":"d3","slices":[{"ops":518,"ns":1000574902.0000001},{"ops":643,"ns":1001089091},{"ops":653,"ns":1000866571},{"ops":646,"ns":1000204319.0000004},{"ops":649,"ns":1000997085.9999994},{"ops":661,"ns":1001025858}],"capped":false,"end":"steady"}
+d3 coop-5 pid 242 round 1: 5.00 s, 3296 ops, 1517281 ns/op
+d3 coop-5 pid 242 round 2: 5.00 s, 3314 ops, 1508846 ns/op
+d3 coop-5 pid 242 round 3: 5.00 s, 3329 ops, 1502256 ns/op
+PVB_RESULT {"script":"coop-5","loop":"d3","pid":242,"warmup":{"ops":3770,"ns":6004757827},"rounds":[{"ops":3296,"ns":5000959536},{"ops":3314,"ns":5000314284},{"ops":3329,"ns":5001008622.000001}]}
+--- coop-6: process 250
+d3 coop-6 pid 250 warm-up: 6.01 s, 2346 ops, 2559935 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"coop-6","loop":"d3","slices":[{"ops":317,"ns":1000107114.0000001},{"ops":404,"ns":1001824110.9999999},{"ops":403,"ns":1001753333.0000001},{"ops":405,"ns":1000062606},{"ops":409,"ns":1001635589.9999999},{"ops":408,"ns":1000225144}],"capped":false,"end":"steady"}
+d3 coop-6 pid 250 round 1: 5.00 s, 2042 ops, 2449126 ns/op
+d3 coop-6 pid 250 round 2: 5.00 s, 2061 ops, 2426300 ns/op
+d3 coop-6 pid 250 round 3: 5.00 s, 2069 ops, 2417228 ns/op
+PVB_RESULT {"script":"coop-6","loop":"d3","pid":250,"warmup":{"ops":2346,"ns":6005607898},"rounds":[{"ops":2042,"ns":5001116223.999999},{"ops":2061,"ns":5000604487.000001},{"ops":2069,"ns":5001244626}]}
+--- coop-7: process 258
+d3 coop-7 pid 258 warm-up: 6.00 s, 4934 ops, 1216702 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"coop-7","loop":"d3","slices":[{"ops":692,"ns":1000372498},{"ops":836,"ns":1000736116},{"ops":849,"ns":1000904160.9999999},{"ops":842,"ns":1000810421.0000001},{"ops":858,"ns":1000111507.0000005},{"ops":857,"ns":1000275217.9999998}],"capped":false,"end":"steady"}
+d3 coop-7 pid 258 round 1: 5.00 s, 4315 ops, 1158865 ns/op
+d3 coop-7 pid 258 round 2: 5.00 s, 4295 ops, 1164395 ns/op
+d3 coop-7 pid 258 round 3: 5.00 s, 4304 ops, 1161719 ns/op
+PVB_RESULT {"script":"coop-7","loop":"d3","pid":258,"warmup":{"ops":4934,"ns":6003209921},"rounds":[{"ops":4315,"ns":5000500559},{"ops":4295,"ns":5001078100.999999},{"ops":4304,"ns":5000038105}]}
+--- crowdfunding-success-1: process 266
+d3 crowdfunding-success-1 pid 266 warm-up: 7.00 s, 8741 ops, 801018 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"crowdfunding-success-1","loop":"d3","slices":[{"ops":1042,"ns":1000455495.0000001},{"ops":1236,"ns":1000050961.0000001},{"ops":1261,"ns":1000283927.9999999},{"ops":1282,"ns":1000532547.0000002},{"ops":1302,"ns":1000317286.0000005},{"ops":1298,"ns":1000014525.0000005},{"ops":1320,"ns":1000043096.9999998}],"capped":false,"end":"steady"}
+d3 crowdfunding-success-1 pid 266 round 1: 5.00 s, 6566 ops, 761607 ns/op
+d3 crowdfunding-success-1 pid 266 round 2: 5.00 s, 6558 ops, 762508 ns/op
+d3 crowdfunding-success-1 pid 266 round 3: 5.00 s, 6550 ops, 763422 ns/op
+PVB_RESULT {"script":"crowdfunding-success-1","loop":"d3","pid":266,"warmup":{"ops":8741,"ns":7001697839},"rounds":[{"ops":6566,"ns":5000712649.000001},{"ops":6558,"ns":5000529898.999999},{"ops":6550,"ns":5000416484.999998}]}
+--- crowdfunding-success-2: process 274
+d3 crowdfunding-success-2 pid 274 warm-up: 6.00 s, 7837 ops, 765852 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"crowdfunding-success-2","loop":"d3","slices":[{"ops":1072,"ns":1000201233},{"ops":1336,"ns":1000666032.0000001},{"ops":1339,"ns":1000281518.0000002},{"ops":1361,"ns":1000118370.0000001},{"ops":1381,"ns":1000660577.0000006},{"ops":1348,"ns":1000057327.0000005}],"capped":false,"end":"steady"}
+d3 crowdfunding-success-2 pid 274 round 1: 5.00 s, 6738 ops, 742160 ns/op
+d3 crowdfunding-success-2 pid 274 round 2: 5.00 s, 6729 ops, 743222 ns/op
+d3 crowdfunding-success-2 pid 274 round 3: 5.00 s, 6697 ops, 746641 ns/op
+PVB_RESULT {"script":"crowdfunding-success-2","loop":"d3","pid":274,"warmup":{"ops":7837,"ns":6001985057.000002},"rounds":[{"ops":6738,"ns":5000675603},{"ops":6729,"ns":5001142437},{"ops":6697,"ns":5000254111}]}
+--- crowdfunding-success-3: process 282
+d3 crowdfunding-success-3 pid 282 warm-up: 9.00 s, 12025 ops, 748741 ns/op, 9 slices, steady
+PVB_WARMUP {"script":"crowdfunding-success-3","loop":"d3","slices":[{"ops":1064,"ns":1000568395.9999999},{"ops":1309,"ns":1000636741.9999999},{"ops":1303,"ns":1000192063},{"ops":1342,"ns":1000156162.9999996},{"ops":1381,"ns":1000521955.0000001},{"ops":1401,"ns":1000674207.9999994},{"ops":1407,"ns":1000660160.0000004},{"ops":1414,"ns":1000029961.0000011},{"ops":1404,"ns":1000171508.9999998}],"capped":false,"end":"steady"}
+d3 crowdfunding-success-3 pid 282 round 1: 5.00 s, 7033 ops, 710972 ns/op
+d3 crowdfunding-success-3 pid 282 round 2: 5.00 s, 7030 ops, 711278 ns/op
+d3 crowdfunding-success-3 pid 282 round 3: 5.00 s, 7058 ops, 708425 ns/op
+PVB_RESULT {"script":"crowdfunding-success-3","loop":"d3","pid":282,"warmup":{"ops":12025,"ns":9003611157},"rounds":[{"ops":7033,"ns":5000263751.999999},{"ops":7030,"ns":5000281160},{"ops":7058,"ns":5000065119.999999}]}
+--- currency-1: process 290
+d3 currency-1 pid 290 warm-up: 6.00 s, 7550 ops, 795003 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"currency-1","loop":"d3","slices":[{"ops":1022,"ns":1000234413},{"ops":1277,"ns":1000498961.9999999},{"ops":1282,"ns":1000264025},{"ops":1315,"ns":1000699043.0000005},{"ops":1329,"ns":1000021437.9999998},{"ops":1325,"ns":1000551349.0000004}],"capped":false,"end":"steady"}
+d3 currency-1 pid 290 round 1: 5.00 s, 6652 ops, 751705 ns/op
+d3 currency-1 pid 290 round 2: 5.00 s, 6648 ops, 752136 ns/op
+d3 currency-1 pid 290 round 3: 5.00 s, 6635 ops, 753595 ns/op
+PVB_RESULT {"script":"currency-1","loop":"d3","pid":290,"warmup":{"ops":7550,"ns":6002269230},"rounds":[{"ops":6652,"ns":5000342948},{"ops":6648,"ns":5000200821},{"ops":6635,"ns":5000102256.999999}]}
+--- escrow-redeem_1-1: process 298
+d3 escrow-redeem_1-1 pid 298 warm-up: 7.00 s, 6289 ops, 1113582 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"escrow-redeem_1-1","loop":"d3","slices":[{"ops":729,"ns":1000769907.0000001},{"ops":898,"ns":1000486543.0000002},{"ops":929,"ns":1000001647.9999999},{"ops":917,"ns":1000089349.9999998},{"ops":929,"ns":1000644416.9999995},{"ops":945,"ns":1000777272.0000002},{"ops":942,"ns":1000549154.0000002}],"capped":false,"end":"steady"}
+d3 escrow-redeem_1-1 pid 298 round 1: 5.00 s, 4726 ops, 1058128 ns/op
+d3 escrow-redeem_1-1 pid 298 round 2: 5.00 s, 4723 ops, 1058717 ns/op
+d3 escrow-redeem_1-1 pid 298 round 3: 5.00 s, 4711 ops, 1061433 ns/op
+PVB_RESULT {"script":"escrow-redeem_1-1","loop":"d3","pid":298,"warmup":{"ops":6289,"ns":7003318291},"rounds":[{"ops":4726,"ns":5000710577.000001},{"ops":4723,"ns":5000320965.000001},{"ops":4711,"ns":5000412724.000002}]}
+--- escrow-redeem_1-2: process 306
+d3 escrow-redeem_1-2 pid 306 warm-up: 6.00 s, 5309 ops, 1130496 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"escrow-redeem_1-2","loop":"d3","slices":[{"ops":723,"ns":1000634588},{"ops":899,"ns":1000229002},{"ops":913,"ns":1000722753},{"ops":918,"ns":1000089488.9999995},{"ops":934,"ns":1000067639.9999993},{"ops":922,"ns":1000060410.9999995}],"capped":false,"end":"steady"}
+d3 escrow-redeem_1-2 pid 306 round 1: 5.00 s, 4747 ops, 1053508 ns/op
+d3 escrow-redeem_1-2 pid 306 round 2: 5.00 s, 4766 ops, 1049171 ns/op
+d3 escrow-redeem_1-2 pid 306 round 3: 5.00 s, 4742 ops, 1054588 ns/op
+PVB_RESULT {"script":"escrow-redeem_1-2","loop":"d3","pid":306,"warmup":{"ops":5309,"ns":6001803882.999998},"rounds":[{"ops":4747,"ns":5001002153},{"ops":4766,"ns":5000348490.999999},{"ops":4742,"ns":5000855057.000001}]}
+--- escrow-redeem_2-1: process 314
+d3 escrow-redeem_2-1 pid 314 warm-up: 6.00 s, 4859 ops, 1235552 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"escrow-redeem_2-1","loop":"d3","slices":[{"ops":682,"ns":1001142542.9999999},{"ops":813,"ns":1000416041},{"ops":836,"ns":1000814858.0000002},{"ops":832,"ns":1000236410.9999999},{"ops":844,"ns":1000335801.0000001},{"ops":852,"ns":1000601902.9999998}],"capped":false,"end":"steady"}
+d3 escrow-redeem_2-1 pid 314 round 1: 5.00 s, 4309 ops, 1160438 ns/op
+d3 escrow-redeem_2-1 pid 314 round 2: 5.00 s, 4333 ops, 1154028 ns/op
+d3 escrow-redeem_2-1 pid 314 round 3: 5.00 s, 4322 ops, 1156888 ns/op
+PVB_RESULT {"script":"escrow-redeem_2-1","loop":"d3","pid":314,"warmup":{"ops":4859,"ns":6003547557},"rounds":[{"ops":4309,"ns":5000327584.999999},{"ops":4333,"ns":5000403982.000002},{"ops":4322,"ns":5000071745.999998}]}
+--- escrow-redeem_2-2: process 322
+d3 escrow-redeem_2-2 pid 322 warm-up: 6.00 s, 4880 ops, 1230314 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"escrow-redeem_2-2","loop":"d3","slices":[{"ops":666,"ns":1000410839.0000001},{"ops":831,"ns":1000933779.9999999},{"ops":843,"ns":1000996518.0000004},{"ops":836,"ns":1000430008.0000002},{"ops":844,"ns":1000636145.9999999},{"ops":860,"ns":1000524222}],"capped":false,"end":"steady"}
+d3 escrow-redeem_2-2 pid 322 round 1: 5.00 s, 4315 ops, 1158766 ns/op
+d3 escrow-redeem_2-2 pid 322 round 2: 5.00 s, 4324 ops, 1156678 ns/op
+d3 escrow-redeem_2-2 pid 322 round 3: 5.00 s, 4307 ops, 1160977 ns/op
+PVB_RESULT {"script":"escrow-redeem_2-2","loop":"d3","pid":322,"warmup":{"ops":4880,"ns":6003931513.000001},"rounds":[{"ops":4315,"ns":5000075775.000001},{"ops":4324,"ns":5001475256.000002},{"ops":4307,"ns":5000329056.000002}]}
+--- escrow-redeem_2-3: process 330
+d3 escrow-redeem_2-3 pid 330 warm-up: 6.00 s, 4714 ops, 1273373 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"escrow-redeem_2-3","loop":"d3","slices":[{"ops":647,"ns":1000047818.9999999},{"ops":793,"ns":1000735859.0000001},{"ops":814,"ns":1001075113.0000004},{"ops":803,"ns":1000073606.9999998},{"ops":820,"ns":1000001716.9999992},{"ops":837,"ns":1000744233.9999998}],"capped":false,"end":"steady"}
+d3 escrow-redeem_2-3 pid 330 round 1: 5.00 s, 4207 ops, 1188660 ns/op
+d3 escrow-redeem_2-3 pid 330 round 2: 5.00 s, 4211 ops, 1187459 ns/op
+d3 escrow-redeem_2-3 pid 330 round 3: 5.00 s, 3952 ops, 1265233 ns/op
+PVB_RESULT {"script":"escrow-redeem_2-3","loop":"d3","pid":330,"warmup":{"ops":4714,"ns":6002678348.999999},"rounds":[{"ops":4207,"ns":5000694527.000001},{"ops":4211,"ns":5000387816.999999},{"ops":3952,"ns":5000202115}]}
+--- escrow-refund-1: process 338
+d3 escrow-refund-1 pid 338 warm-up: 8.00 s, 10820 ops, 739669 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"escrow-refund-1","loop":"d3","slices":[{"ops":1074,"ns":1000196761},{"ops":1356,"ns":1000287818.9999999},{"ops":1352,"ns":1000713472.9999998},{"ops":1404,"ns":1000528116.0000004},{"ops":1421,"ns":1000559861.0000006},{"ops":1406,"ns":1000364690.0000004},{"ops":1402,"ns":1000053194.0000001},{"ops":1405,"ns":1000511004.9999994}],"capped":false,"end":"steady"}
+d3 escrow-refund-1 pid 338 round 1: 5.00 s, 6999 ops, 714471 ns/op
+d3 escrow-refund-1 pid 338 round 2: 5.00 s, 7021 ops, 712224 ns/op
+d3 escrow-refund-1 pid 338 round 3: 5.00 s, 7042 ops, 710051 ns/op
+PVB_RESULT {"script":"escrow-refund-1","loop":"d3","pid":338,"warmup":{"ops":10820,"ns":8003214919},"rounds":[{"ops":6999,"ns":5000585515.000001},{"ops":7021,"ns":5000523195},{"ops":7042,"ns":5000180563.999998}]}
+--- future-increase-margin-1: process 346
+d3 future-increase-margin-1 pid 346 warm-up: 8.00 s, 9824 ops, 814729 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"future-increase-margin-1","loop":"d3","slices":[{"ops":995,"ns":1000456861.0000001},{"ops":1268,"ns":1000658853.0000001},{"ops":1229,"ns":1000420679.9999998},{"ops":1238,"ns":1000046449.9999999},{"ops":1281,"ns":1000298080.9999999},{"ops":1276,"ns":1000730845.9999995},{"ops":1268,"ns":1000639688.9999996},{"ops":1269,"ns":1000642092.9999995}],"capped":false,"end":"steady"}
+d3 future-increase-margin-1 pid 346 round 1: 5.00 s, 6356 ops, 786711 ns/op
+d3 future-increase-margin-1 pid 346 round 2: 5.00 s, 6338 ops, 788931 ns/op
+d3 future-increase-margin-1 pid 346 round 3: 5.00 s, 6370 ops, 784937 ns/op
+PVB_RESULT {"script":"future-increase-margin-1","loop":"d3","pid":346,"warmup":{"ops":9824,"ns":8003893553},"rounds":[{"ops":6356,"ns":5000334593},{"ops":6338,"ns":5000242140.000002},{"ops":6370,"ns":5000047986.999998}]}
+--- future-increase-margin-2: process 354
+d3 future-increase-margin-2 pid 354 warm-up: 7.00 s, 4425 ops, 1582830 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"future-increase-margin-2","loop":"d3","slices":[{"ops":527,"ns":1000673296.9999999},{"ops":628,"ns":1000192017.0000001},{"ops":651,"ns":1000967389.0000004},{"ops":655,"ns":1001026591.9999998},{"ops":647,"ns":1000456307.0000004},{"ops":659,"ns":1000510423.0000006},{"ops":658,"ns":1000196536.9999998}],"capped":false,"end":"steady"}
+d3 future-increase-margin-2 pid 354 round 1: 5.00 s, 3320 ops, 1506210 ns/op
+d3 future-increase-margin-2 pid 354 round 2: 5.00 s, 3323 ops, 1505224 ns/op
+d3 future-increase-margin-2 pid 354 round 3: 5.00 s, 3318 ops, 1507234 ns/op
+PVB_RESULT {"script":"future-increase-margin-2","loop":"d3","pid":354,"warmup":{"ops":4425,"ns":7004022562.000001},"rounds":[{"ops":3320,"ns":5000618781.000001},{"ops":3323,"ns":5001858888.000001},{"ops":3318,"ns":5001002737.999999}]}
+--- future-increase-margin-3: process 362
+d3 future-increase-margin-3 pid 362 warm-up: 6.01 s, 3729 ops, 1610511 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-increase-margin-3","loop":"d3","slices":[{"ops":514,"ns":1000825975},{"ops":631,"ns":1000351392.9999999},{"ops":644,"ns":1000523343.0000002},{"ops":651,"ns":1001311243.0000001},{"ops":643,"ns":1001186630.0000001},{"ops":646,"ns":1001396303.9999999}],"capped":false,"end":"steady"}
+d3 future-increase-margin-3 pid 362 round 1: 5.00 s, 3275 ops, 1526798 ns/op
+d3 future-increase-margin-3 pid 362 round 2: 5.00 s, 3287 ops, 1521314 ns/op
+d3 future-increase-margin-3 pid 362 round 3: 5.00 s, 3274 ops, 1527215 ns/op
+PVB_RESULT {"script":"future-increase-margin-3","loop":"d3","pid":362,"warmup":{"ops":3729,"ns":6005594888},"rounds":[{"ops":3275,"ns":5000263570.999999},{"ops":3287,"ns":5000560550.999999},{"ops":3274,"ns":5000102626.000002}]}
+--- future-increase-margin-4: process 370
+d3 future-increase-margin-4 pid 370 warm-up: 6.00 s, 3312 ops, 1812926 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-increase-margin-4","loop":"d3","slices":[{"ops":448,"ns":1000933747.9999999},{"ops":561,"ns":1000085264.0000002},{"ops":574,"ns":1000570983.0000001},{"ops":582,"ns":1000826399},{"ops":570,"ns":1000995144.9999999},{"ops":577,"ns":1000999683}],"capped":false,"end":"steady"}
+d3 future-increase-margin-4 pid 370 round 1: 5.00 s, 2911 ops, 1717787 ns/op
+d3 future-increase-margin-4 pid 370 round 2: 5.00 s, 2932 ops, 1705813 ns/op
+d3 future-increase-margin-4 pid 370 round 3: 5.00 s, 2922 ops, 1711360 ns/op
+PVB_RESULT {"script":"future-increase-margin-4","loop":"d3","pid":370,"warmup":{"ops":3312,"ns":6004411222},"rounds":[{"ops":2911,"ns":5000477291.000001},{"ops":2932,"ns":5001443345.000002},{"ops":2922,"ns":5000594544}]}
+--- future-increase-margin-5: process 378
+d3 future-increase-margin-5 pid 378 warm-up: 6.01 s, 1644 ops, 3658189 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-increase-margin-5","loop":"d3","slices":[{"ops":213,"ns":1000231760},{"ops":284,"ns":1001914208.0000001},{"ops":286,"ns":1002109060.9999996},{"ops":285,"ns":1003422184.9999999},{"ops":287,"ns":1002856345.0000001},{"ops":289,"ns":1003529125}],"capped":false,"end":"steady"}
+d3 future-increase-margin-5 pid 378 round 1: 5.00 s, 1454 ops, 3439383 ns/op
+d3 future-increase-margin-5 pid 378 round 2: 5.00 s, 1477 ops, 3387012 ns/op
+d3 future-increase-margin-5 pid 378 round 3: 5.00 s, 1469 ops, 3404990 ns/op
+PVB_RESULT {"script":"future-increase-margin-5","loop":"d3","pid":378,"warmup":{"ops":1644,"ns":6014062684},"rounds":[{"ops":1454,"ns":5000862508},{"ops":1477,"ns":5002617412},{"ops":1469,"ns":5001930166}]}
+--- future-pay-out-1: process 386
+d3 future-pay-out-1 pid 386 warm-up: 7.00 s, 8443 ops, 829456 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"future-pay-out-1","loop":"d3","slices":[{"ops":983,"ns":1000165099},{"ops":1210,"ns":1000570935.9999999},{"ops":1224,"ns":1000332793},{"ops":1229,"ns":1000590233.9999998},{"ops":1269,"ns":1000495111.0000002},{"ops":1269,"ns":1000618994.9999998},{"ops":1259,"ns":1000324332.9999995}],"capped":false,"end":"steady"}
+d3 future-pay-out-1 pid 386 round 1: 5.00 s, 6325 ops, 790584 ns/op
+d3 future-pay-out-1 pid 386 round 2: 5.00 s, 6444 ops, 775960 ns/op
+d3 future-pay-out-1 pid 386 round 3: 5.00 s, 6423 ops, 778468 ns/op
+PVB_RESULT {"script":"future-pay-out-1","loop":"d3","pid":386,"warmup":{"ops":8443,"ns":7003097501},"rounds":[{"ops":6325,"ns":5000443765.000001},{"ops":6444,"ns":5000287630.000001},{"ops":6423,"ns":5000097608}]}
+--- future-pay-out-2: process 394
+d3 future-pay-out-2 pid 394 warm-up: 6.01 s, 3770 ops, 1593014 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-pay-out-2","loop":"d3","slices":[{"ops":513,"ns":1001177523.0000001},{"ops":637,"ns":1000720916.9999999},{"ops":653,"ns":1001063465.0000001},{"ops":668,"ns":1000011176},{"ops":644,"ns":1001408196.9999998},{"ops":655,"ns":1001281101.0000005}],"capped":false,"end":"steady"}
+d3 future-pay-out-2 pid 394 round 1: 5.00 s, 3310 ops, 1510701 ns/op
+d3 future-pay-out-2 pid 394 round 2: 5.00 s, 3283 ops, 1523304 ns/op
+d3 future-pay-out-2 pid 394 round 3: 5.00 s, 3302 ops, 1514262 ns/op
+PVB_RESULT {"script":"future-pay-out-2","loop":"d3","pid":394,"warmup":{"ops":3770,"ns":6005662379},"rounds":[{"ops":3310,"ns":5000421709.000001},{"ops":3283,"ns":5001007078.999999},{"ops":3302,"ns":5000093477}]}
+--- future-pay-out-3: process 402
+d3 future-pay-out-3 pid 402 warm-up: 8.00 s, 5082 ops, 1575021 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"future-pay-out-3","loop":"d3","slices":[{"ops":500,"ns":1000635987.9999999},{"ops":635,"ns":1000028030},{"ops":648,"ns":1000713827.9999999},{"ops":645,"ns":1000013279.9999996},{"ops":646,"ns":1000501202.0000004},{"ops":676,"ns":1001100308.9999995},{"ops":670,"ns":1001133256.0000001},{"ops":662,"ns":1000130796.0000004}],"capped":false,"end":"steady"}
+d3 future-pay-out-3 pid 402 round 1: 5.00 s, 3410 ops, 1466325 ns/op
+d3 future-pay-out-3 pid 402 round 2: 5.00 s, 3417 ops, 1463357 ns/op
+d3 future-pay-out-3 pid 402 round 3: 5.00 s, 3417 ops, 1463782 ns/op
+PVB_RESULT {"script":"future-pay-out-3","loop":"d3","pid":402,"warmup":{"ops":5082,"ns":8004256689},"rounds":[{"ops":3410,"ns":5000166901.000001},{"ops":3417,"ns":5000291286.999998},{"ops":3417,"ns":5001743456}]}
+--- future-pay-out-4: process 410
+d3 future-pay-out-4 pid 410 warm-up: 6.01 s, 1589 ops, 3781563 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-pay-out-4","loop":"d3","slices":[{"ops":206,"ns":1000044624},{"ops":271,"ns":1002276609.9999999},{"ops":275,"ns":1002582297.0000004},{"ops":277,"ns":1002101406.0000002},{"ops":281,"ns":1001057329.9999996},{"ops":279,"ns":1000840908.9999995}],"capped":false,"end":"steady"}
+d3 future-pay-out-4 pid 410 round 1: 5.00 s, 1418 ops, 3526423 ns/op
+d3 future-pay-out-4 pid 410 round 2: 5.00 s, 1428 ops, 3503159 ns/op
+d3 future-pay-out-4 pid 410 round 3: 5.00 s, 1441 ops, 3471190 ns/op
+PVB_RESULT {"script":"future-pay-out-4","loop":"d3","pid":410,"warmup":{"ops":1589,"ns":6008903176},"rounds":[{"ops":1418,"ns":5000467482.000001},{"ops":1428,"ns":5002510364},{"ops":1441,"ns":5001984962.999999}]}
+--- future-settle-early-1: process 418
+d3 future-settle-early-1 pid 418 warm-up: 7.00 s, 8432 ops, 830531 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"future-settle-early-1","loop":"d3","slices":[{"ops":971,"ns":1000308262},{"ops":1207,"ns":1000710472.9999999},{"ops":1238,"ns":1000598818.9999999},{"ops":1247,"ns":1000524754.9999999},{"ops":1264,"ns":1000084611.9999996},{"ops":1255,"ns":1000222134.0000006},{"ops":1250,"ns":1000587434}],"capped":false,"end":"steady"}
+d3 future-settle-early-1 pid 418 round 1: 5.00 s, 6235 ops, 801929 ns/op
+d3 future-settle-early-1 pid 418 round 2: 5.00 s, 6268 ops, 797793 ns/op
+d3 future-settle-early-1 pid 418 round 3: 5.00 s, 6269 ops, 797656 ns/op
+PVB_RESULT {"script":"future-settle-early-1","loop":"d3","pid":418,"warmup":{"ops":8432,"ns":7003036489.000001},"rounds":[{"ops":6235,"ns":5000025315},{"ops":6268,"ns":5000568494.000001},{"ops":6269,"ns":5000505046.999999}]}
+--- future-settle-early-2: process 426
+d3 future-settle-early-2 pid 426 warm-up: 6.00 s, 3805 ops, 1577620 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-settle-early-2","loop":"d3","slices":[{"ops":535,"ns":1000714990},{"ops":637,"ns":1000005159},{"ops":654,"ns":1001353201.0000004},{"ops":663,"ns":1000032649.0000002},{"ops":652,"ns":1000373496.0000001},{"ops":664,"ns":1000363640.9999999}],"capped":false,"end":"steady"}
+d3 future-settle-early-2 pid 426 round 1: 5.00 s, 3351 ops, 1492099 ns/op
+d3 future-settle-early-2 pid 426 round 2: 5.00 s, 3360 ops, 1488410 ns/op
+d3 future-settle-early-2 pid 426 round 3: 5.00 s, 3362 ops, 1487337 ns/op
+PVB_RESULT {"script":"future-settle-early-2","loop":"d3","pid":426,"warmup":{"ops":3805,"ns":6002843136.000001},"rounds":[{"ops":3351,"ns":5000024730.999999},{"ops":3360,"ns":5001057241.999999},{"ops":3362,"ns":5000428265}]}
+--- future-settle-early-3: process 434
+d3 future-settle-early-3 pid 434 warm-up: 7.01 s, 4483 ops, 1562895 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"future-settle-early-3","loop":"d3","slices":[{"ops":529,"ns":1000062075.9999999},{"ops":636,"ns":1001159790.0000001},{"ops":662,"ns":1001303081},{"ops":668,"ns":1001211913.0000001},{"ops":655,"ns":1000478549.9999998},{"ops":664,"ns":1001534303.9999998},{"ops":669,"ns":1000707962.0000004}],"capped":false,"end":"steady"}
+d3 future-settle-early-3 pid 434 round 1: 5.00 s, 3340 ops, 1497218 ns/op
+d3 future-settle-early-3 pid 434 round 2: 5.00 s, 3347 ops, 1493938 ns/op
+d3 future-settle-early-3 pid 434 round 3: 5.00 s, 3341 ops, 1496610 ns/op
+PVB_RESULT {"script":"future-settle-early-3","loop":"d3","pid":434,"warmup":{"ops":4483,"ns":7006457676},"rounds":[{"ops":3340,"ns":5000709433.000001},{"ops":3347,"ns":5000209535},{"ops":3341,"ns":5000173906}]}
+--- future-settle-early-4: process 442
+d3 future-settle-early-4 pid 442 warm-up: 6.01 s, 1823 ops, 3295659 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-settle-early-4","loop":"d3","slices":[{"ops":241,"ns":1003064276},{"ops":312,"ns":1000812994.9999998},{"ops":314,"ns":1000439824.9999999},{"ops":321,"ns":1000821096.9999995},{"ops":321,"ns":1001629705.0000002},{"ops":314,"ns":1001218942.9999999}],"capped":false,"end":"steady"}
+d3 future-settle-early-4 pid 442 round 1: 5.00 s, 1600 ops, 3126227 ns/op
+d3 future-settle-early-4 pid 442 round 2: 5.00 s, 1645 ops, 3040377 ns/op
+d3 future-settle-early-4 pid 442 round 3: 5.00 s, 1630 ops, 3069078 ns/op
+PVB_RESULT {"script":"future-settle-early-4","loop":"d3","pid":442,"warmup":{"ops":1823,"ns":6007986840.999999},"rounds":[{"ops":1600,"ns":5001963475},{"ops":1645,"ns":5001420457.999999},{"ops":1630,"ns":5002597509.999998}]}
+--- game-sm-success_1-1: process 450
+d3 game-sm-success_1-1 pid 450 warm-up: 7.00 s, 4894 ops, 1431189 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"game-sm-success_1-1","loop":"d3","slices":[{"ops":575,"ns":1000649845},{"ops":696,"ns":1000206436.0000001},{"ops":716,"ns":1000886545.9999998},{"ops":727,"ns":1000258871},{"ops":722,"ns":1000759108.9999996},{"ops":726,"ns":1001004471.9999996},{"ops":732,"ns":1000473990.9999999}],"capped":false,"end":"steady"}
+d3 game-sm-success_1-1 pid 450 round 1: 5.00 s, 3699 ops, 1351983 ns/op
+d3 game-sm-success_1-1 pid 450 round 2: 5.00 s, 3657 ops, 1367472 ns/op
+d3 game-sm-success_1-1 pid 450 round 3: 5.00 s, 3637 ops, 1375068 ns/op
+PVB_RESULT {"script":"game-sm-success_1-1","loop":"d3","pid":450,"warmup":{"ops":4894,"ns":7004239270},"rounds":[{"ops":3699,"ns":5000983870.999999},{"ops":3657,"ns":5000845598.000002},{"ops":3637,"ns":5001123355}]}
+--- game-sm-success_1-2: process 458
+d3 game-sm-success_1-2 pid 458 warm-up: 7.00 s, 10499 ops, 666952 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"game-sm-success_1-2","loop":"d3","slices":[{"ops":1257,"ns":1000129796.9999999},{"ops":1507,"ns":1000493545.9999999},{"ops":1530,"ns":1000037901.0000001},{"ops":1570,"ns":1000452288.0000004},{"ops":1554,"ns":1000009221.0000002},{"ops":1558,"ns":1000691434.0000004},{"ops":1523,"ns":1000515736.9999998}],"capped":false,"end":"steady"}
+d3 game-sm-success_1-2 pid 458 round 1: 5.00 s, 7863 ops, 635912 ns/op
+d3 game-sm-success_1-2 pid 458 round 2: 5.00 s, 8044 ops, 621620 ns/op
+d3 game-sm-success_1-2 pid 458 round 3: 5.00 s, 8029 ops, 622814 ns/op
+PVB_RESULT {"script":"game-sm-success_1-2","loop":"d3","pid":458,"warmup":{"ops":10499,"ns":7002329924.000001},"rounds":[{"ops":7863,"ns":5000178938.999999},{"ops":8044,"ns":5000308377.000001},{"ops":8029,"ns":5000572295.000002}]}
+--- game-sm-success_1-3: process 466
+d3 game-sm-success_1-3 pid 466 warm-up: 6.01 s, 3263 ops, 1840583 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"game-sm-success_1-3","loop":"d3","slices":[{"ops":447,"ns":1000861406},{"ops":553,"ns":1001252652.9999998},{"ops":559,"ns":1001435689.9999998},{"ops":568,"ns":1000166247.9999995},{"ops":573,"ns":1000440419.9999999},{"ops":563,"ns":1001666411.9999995}],"capped":false,"end":"steady"}
+d3 game-sm-success_1-3 pid 466 round 1: 5.00 s, 2897 ops, 1726440 ns/op
+d3 game-sm-success_1-3 pid 466 round 2: 5.00 s, 2908 ops, 1719655 ns/op
+d3 game-sm-success_1-3 pid 466 round 3: 5.00 s, 2924 ops, 1710348 ns/op
+PVB_RESULT {"script":"game-sm-success_1-3","loop":"d3","pid":466,"warmup":{"ops":3263,"ns":6005822828.999998},"rounds":[{"ops":2897,"ns":5001496353.999999},{"ops":2908,"ns":5000756240.000001},{"ops":2924,"ns":5001056928.000002}]}
+--- game-sm-success_1-4: process 474
+d3 game-sm-success_1-4 pid 474 warm-up: 8.00 s, 11091 ops, 721498 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"game-sm-success_1-4","loop":"d3","slices":[{"ops":1144,"ns":1000022553},{"ops":1386,"ns":1000589875.0000001},{"ops":1380,"ns":1000155420},{"ops":1429,"ns":1000141400},{"ops":1434,"ns":1000039138.0000001},{"ops":1441,"ns":1000568787.0000001},{"ops":1439,"ns":1000376490.0000006},{"ops":1438,"ns":1000241049.9999996}],"capped":false,"end":"steady"}
+d3 game-sm-success_1-4 pid 474 round 1: 5.00 s, 7217 ops, 692861 ns/op
+d3 game-sm-success_1-4 pid 474 round 2: 5.00 s, 7226 ops, 692018 ns/op
+d3 game-sm-success_1-4 pid 474 round 3: 5.00 s, 7223 ops, 692314 ns/op
+PVB_RESULT {"script":"game-sm-success_1-4","loop":"d3","pid":474,"warmup":{"ops":11091,"ns":8002134713.000001},"rounds":[{"ops":7217,"ns":5000376070},{"ops":7226,"ns":5000523744},{"ops":7223,"ns":5000586481.000002}]}
+--- game-sm-success_2-1: process 482
+d3 game-sm-success_2-1 pid 482 warm-up: 7.00 s, 5036 ops, 1390813 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"game-sm-success_2-1","loop":"d3","slices":[{"ops":592,"ns":1001266566},{"ops":716,"ns":1001894914.0000002},{"ops":739,"ns":1000014752},{"ops":748,"ns":1000673519.9999999},{"ops":736,"ns":1000126708.0000007},{"ops":749,"ns":1000069688.0000005},{"ops":756,"ns":1000089074.9999999}],"capped":false,"end":"steady"}
+d3 game-sm-success_2-1 pid 482 round 1: 5.00 s, 3745 ops, 1335232 ns/op
+d3 game-sm-success_2-1 pid 482 round 2: 5.00 s, 3747 ops, 1334469 ns/op
+d3 game-sm-success_2-1 pid 482 round 3: 5.00 s, 3730 ops, 1340755 ns/op
+PVB_RESULT {"script":"game-sm-success_2-1","loop":"d3","pid":482,"warmup":{"ops":5036,"ns":7004135223.000002},"rounds":[{"ops":3745,"ns":5000444532},{"ops":3747,"ns":5000253742.999999},{"ops":3730,"ns":5001016706.999999}]}
+--- game-sm-success_2-2: process 490
+d3 game-sm-success_2-2 pid 490 warm-up: 6.00 s, 9022 ops, 665146 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"game-sm-success_2-2","loop":"d3","slices":[{"ops":1258,"ns":1000122547.9999999},{"ops":1543,"ns":1000176693.0000001},{"ops":1538,"ns":1000226765.0000004},{"ops":1561,"ns":1000108809.0000002},{"ops":1536,"ns":1000177916.0000006},{"ops":1586,"ns":1000133595.0000002}],"capped":false,"end":"steady"}
+d3 game-sm-success_2-2 pid 490 round 1: 5.00 s, 7858 ops, 636337 ns/op
+d3 game-sm-success_2-2 pid 490 round 2: 5.00 s, 7964 ops, 627854 ns/op
+d3 game-sm-success_2-2 pid 490 round 3: 5.00 s, 7950 ops, 628960 ns/op
+PVB_RESULT {"script":"game-sm-success_2-2","loop":"d3","pid":490,"warmup":{"ops":9022,"ns":6000946326.000002},"rounds":[{"ops":7858,"ns":5000338015.999999},{"ops":7964,"ns":5000225456},{"ops":7950,"ns":5000232615.000001}]}
+--- game-sm-success_2-3: process 498
+d3 game-sm-success_2-3 pid 498 warm-up: 6.01 s, 3259 ops, 1843226 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"game-sm-success_2-3","loop":"d3","slices":[{"ops":449,"ns":1001400237},{"ops":551,"ns":1001539811.9999998},{"ops":553,"ns":1000889725},{"ops":572,"ns":1001420967.0000005},{"ops":572,"ns":1000430113.9999998},{"ops":562,"ns":1001392989}],"capped":false,"end":"steady"}
+d3 game-sm-success_2-3 pid 498 round 1: 5.00 s, 2893 ops, 1728727 ns/op
+d3 game-sm-success_2-3 pid 498 round 2: 5.00 s, 2920 ops, 1712416 ns/op
+d3 game-sm-success_2-3 pid 498 round 3: 5.00 s, 2929 ops, 1707444 ns/op
+PVB_RESULT {"script":"game-sm-success_2-3","loop":"d3","pid":498,"warmup":{"ops":3259,"ns":6007073844},"rounds":[{"ops":2893,"ns":5001206409},{"ops":2920,"ns":5000255790.000001},{"ops":2929,"ns":5001102538.000001}]}
+--- game-sm-success_2-4: process 506
+d3 game-sm-success_2-4 pid 506 warm-up: 8.00 s, 10932 ops, 731969 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"game-sm-success_2-4","loop":"d3","slices":[{"ops":1138,"ns":1000158110},{"ops":1375,"ns":1000008591.9999999},{"ops":1350,"ns":1000059672.0000004},{"ops":1404,"ns":1000103904.9999995},{"ops":1400,"ns":1000649276.0000001},{"ops":1421,"ns":1000123273.0000001},{"ops":1422,"ns":1000209371.9999994},{"ops":1422,"ns":1000575143.9999994}],"capped":false,"end":"steady"}
+d3 game-sm-success_2-4 pid 506 round 1: 5.00 s, 7121 ops, 702243 ns/op
+d3 game-sm-success_2-4 pid 506 round 2: 5.00 s, 7170 ops, 697425 ns/op
+d3 game-sm-success_2-4 pid 506 round 3: 5.00 s, 7127 ops, 701591 ns/op
+PVB_RESULT {"script":"game-sm-success_2-4","loop":"d3","pid":506,"warmup":{"ops":10932,"ns":8001887343.999998},"rounds":[{"ops":7121,"ns":5000670243.999999},{"ops":7170,"ns":5000534051.000001},{"ops":7127,"ns":5000236583.000002}]}
+--- game-sm-success_2-5: process 514
+d3 game-sm-success_2-5 pid 514 warm-up: 6.01 s, 3247 ops, 1849595 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"game-sm-success_2-5","loop":"d3","slices":[{"ops":448,"ns":1001114141},{"ops":551,"ns":1001643679.9999999},{"ops":557,"ns":1001064151},{"ops":570,"ns":1001270379.9999999},{"ops":567,"ns":1000473446},{"ops":554,"ns":1000070654.9999995}],"capped":false,"end":"steady"}
+d3 game-sm-success_2-5 pid 514 round 1: 5.00 s, 2872 ops, 1741288 ns/op
+d3 game-sm-success_2-5 pid 514 round 2: 5.00 s, 2894 ops, 1727787 ns/op
+d3 game-sm-success_2-5 pid 514 round 3: 5.00 s, 2882 ops, 1735185 ns/op
+PVB_RESULT {"script":"game-sm-success_2-5","loop":"d3","pid":514,"warmup":{"ops":3247,"ns":6005636453},"rounds":[{"ops":2872,"ns":5000978684.000001},{"ops":2894,"ns":5000214763.999998},{"ops":2882,"ns":5000804083.999999}]}
+--- game-sm-success_2-6: process 522
+d3 game-sm-success_2-6 pid 522 warm-up: 7.00 s, 9274 ops, 755135 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"game-sm-success_2-6","loop":"d3","slices":[{"ops":1103,"ns":1001031380},{"ops":1313,"ns":1000420598.9999998},{"ops":1342,"ns":1000528417.9999999},{"ops":1364,"ns":1000060716.0000004},{"ops":1369,"ns":1000108081.9999998},{"ops":1389,"ns":1000383237.9999994},{"ops":1394,"ns":1000590156.0000002}],"capped":false,"end":"steady"}
+d3 game-sm-success_2-6 pid 522 round 1: 5.00 s, 6930 ops, 721525 ns/op
+d3 game-sm-success_2-6 pid 522 round 2: 5.00 s, 6927 ops, 721947 ns/op
+d3 game-sm-success_2-6 pid 522 round 3: 5.00 s, 6923 ops, 722346 ns/op
+PVB_RESULT {"script":"game-sm-success_2-6","loop":"d3","pid":522,"warmup":{"ops":9274,"ns":7003122588.999999},"rounds":[{"ops":6930,"ns":5000164797},{"ops":6927,"ns":5000924102.999999},{"ops":6923,"ns":5000798995.000001}]}
+--- guardrail-sorted-large: process 530
+d3 guardrail-sorted-large pid 530 warm-up: 6.00 s, 3361 ops, 1786664 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"guardrail-sorted-large","loop":"d3","slices":[{"ops":468,"ns":1001006361},{"ops":572,"ns":1001362690.0000001},{"ops":578,"ns":1000762319.9999998},{"ops":582,"ns":1000911409.0000002},{"ops":585,"ns":1000313846},{"ops":576,"ns":1000621075}],"capped":false,"end":"steady"}
+d3 guardrail-sorted-large pid 530 round 1: 5.00 s, 2938 ops, 1701932 ns/op
+d3 guardrail-sorted-large pid 530 round 2: 5.00 s, 2951 ops, 1694896 ns/op
+d3 guardrail-sorted-large pid 530 round 3: 5.00 s, 2950 ops, 1695427 ns/op
+PVB_RESULT {"script":"guardrail-sorted-large","loop":"d3","pid":530,"warmup":{"ops":3361,"ns":6004977701},"rounds":[{"ops":2938,"ns":5000275829},{"ops":2951,"ns":5001637454},{"ops":2950,"ns":5001508449.999999}]}
+--- guardrail-sorted-small: process 538
+d3 guardrail-sorted-small pid 538 warm-up: 7.00 s, 16425 ops, 426287 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"guardrail-sorted-small","loop":"d3","slices":[{"ops":1888,"ns":1000314611.0000001},{"ops":2353,"ns":1000128381},{"ops":2389,"ns":1000162860.0000004},{"ops":2441,"ns":1000254165.9999998},{"ops":2444,"ns":1000364732},{"ops":2450,"ns":1000204338.9999999},{"ops":2460,"ns":1000341389.0000001}],"capped":false,"end":"steady"}
+d3 guardrail-sorted-small pid 538 round 1: 5.00 s, 12244 ops, 408369 ns/op
+d3 guardrail-sorted-small pid 538 round 2: 5.00 s, 12157 ops, 411292 ns/op
+d3 guardrail-sorted-small pid 538 round 3: 5.00 s, 12255 ops, 408028 ns/op
+PVB_RESULT {"script":"guardrail-sorted-small","loop":"d3","pid":538,"warmup":{"ops":16425,"ns":7001770478},"rounds":[{"ops":12244,"ns":5000068415},{"ops":12157,"ns":5000082822},{"ops":12255,"ns":5000386370}]}
+--- guardrail-unsorted-large: process 546
+d3 guardrail-unsorted-large pid 546 warm-up: 6.01 s, 2548 ops, 2357026 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"guardrail-unsorted-large","loop":"d3","slices":[{"ops":365,"ns":1000190423},{"ops":429,"ns":1001100381.9999999},{"ops":437,"ns":1001811646.0000001},{"ops":438,"ns":1001191841.0000002},{"ops":439,"ns":1001176129.9999999},{"ops":440,"ns":1000230599.9999999}],"capped":false,"end":"steady"}
+d3 guardrail-unsorted-large pid 546 round 1: 5.00 s, 2202 ops, 2271429 ns/op
+d3 guardrail-unsorted-large pid 546 round 2: 5.00 s, 2223 ops, 2249589 ns/op
+d3 guardrail-unsorted-large pid 546 round 3: 5.00 s, 2219 ops, 2253797 ns/op
+PVB_RESULT {"script":"guardrail-unsorted-large","loop":"d3","pid":546,"warmup":{"ops":2548,"ns":6005701022},"rounds":[{"ops":2202,"ns":5001685818},{"ops":2223,"ns":5000835685},{"ops":2219,"ns":5001175235.999999}]}
+--- guardrail-unsorted-small: process 554
+d3 guardrail-unsorted-small pid 554 warm-up: 7.00 s, 17043 ops, 410808 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"guardrail-unsorted-small","loop":"d3","slices":[{"ops":1961,"ns":1000162197.9999999},{"ops":2450,"ns":1000379161.0000001},{"ops":2475,"ns":1000304787},{"ops":2528,"ns":1000017636.9999999},{"ops":2548,"ns":1000321200.9999998},{"ops":2539,"ns":1000068988},{"ops":2542,"ns":1000143122.9999999}],"capped":false,"end":"steady"}
+d3 guardrail-unsorted-small pid 554 round 1: 5.00 s, 12694 ops, 393901 ns/op
+d3 guardrail-unsorted-small pid 554 round 2: 5.00 s, 12716 ops, 393220 ns/op
+d3 guardrail-unsorted-small pid 554 round 3: 5.00 s, 12768 ops, 391628 ns/op
+PVB_RESULT {"script":"guardrail-unsorted-small","loop":"d3","pid":554,"warmup":{"ops":17043,"ns":7001397095},"rounds":[{"ops":12694,"ns":5000178608},{"ops":12716,"ns":5000181328.000003},{"ops":12768,"ns":5000308148}]}
+--- multisig-sm-01: process 562
+d3 multisig-sm-01 pid 562 warm-up: 7.00 s, 4902 ops, 1428742 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"multisig-sm-01","loop":"d3","slices":[{"ops":559,"ns":1000772214},{"ops":703,"ns":1000595677.9999999},{"ops":726,"ns":1000530978.0000002},{"ops":727,"ns":1000122999.0000001},{"ops":716,"ns":1000094669.0000001},{"ops":734,"ns":1000491153.9999994},{"ops":737,"ns":1001086954.9999998}],"capped":false,"end":"steady"}
+d3 multisig-sm-01 pid 562 round 1: 5.00 s, 3716 ops, 1345741 ns/op
+d3 multisig-sm-01 pid 562 round 2: 5.00 s, 3726 ops, 1342170 ns/op
+d3 multisig-sm-01 pid 562 round 3: 5.00 s, 3709 ops, 1348074 ns/op
+PVB_RESULT {"script":"multisig-sm-01","loop":"d3","pid":562,"warmup":{"ops":4902,"ns":7003694646.999999},"rounds":[{"ops":3716,"ns":5000773241},{"ops":3726,"ns":5000925480.000002},{"ops":3709,"ns":5000007103}]}
+--- multisig-sm-02: process 570
+d3 multisig-sm-02 pid 570 warm-up: 6.01 s, 4050 ops, 1483280 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-02","loop":"d3","slices":[{"ops":560,"ns":1000993657.9999999},{"ops":679,"ns":1000669755.0000001},{"ops":699,"ns":1001055295.0000001},{"ops":706,"ns":1001530238.0000002},{"ops":699,"ns":1001252850.0000007},{"ops":707,"ns":1001782620}],"capped":false,"end":"steady"}
+d3 multisig-sm-02 pid 570 round 1: 5.00 s, 3609 ops, 1385690 ns/op
+d3 multisig-sm-02 pid 570 round 2: 5.00 s, 3609 ops, 1385705 ns/op
+d3 multisig-sm-02 pid 570 round 3: 5.00 s, 3599 ops, 1389376 ns/op
+PVB_RESULT {"script":"multisig-sm-02","loop":"d3","pid":570,"warmup":{"ops":4050,"ns":6007284416.000001},"rounds":[{"ops":3609,"ns":5000955578.000001},{"ops":3609,"ns":5001007785},{"ops":3599,"ns":5000363379.999999}]}
+--- multisig-sm-03: process 578
+d3 multisig-sm-03 pid 578 warm-up: 7.00 s, 4765 ops, 1469979 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"multisig-sm-03","loop":"d3","slices":[{"ops":569,"ns":1000099705.0000001},{"ops":673,"ns":1000977580.0000002},{"ops":707,"ns":1000002548.9999998},{"ops":718,"ns":1001600310.0000002},{"ops":692,"ns":1000371875.0000007},{"ops":699,"ns":1000560298.9999998},{"ops":707,"ns":1000839426.9999999}],"capped":false,"end":"steady"}
+d3 multisig-sm-03 pid 578 round 1: 5.00 s, 3556 ops, 1406133 ns/op
+d3 multisig-sm-03 pid 578 round 2: 5.00 s, 3568 ops, 1401615 ns/op
+d3 multisig-sm-03 pid 578 round 3: 5.00 s, 3530 ops, 1416803 ns/op
+PVB_RESULT {"script":"multisig-sm-03","loop":"d3","pid":578,"warmup":{"ops":4765,"ns":7004451745.000001},"rounds":[{"ops":3556,"ns":5000209587},{"ops":3568,"ns":5000962251.999999},{"ops":3530,"ns":5001315419.999999}]}
+--- multisig-sm-04: process 586
+d3 multisig-sm-04 pid 586 warm-up: 7.01 s, 4910 ops, 1426695 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"multisig-sm-04","loop":"d3","slices":[{"ops":566,"ns":1000013238.0000001},{"ops":703,"ns":1001086306.0000001},{"ops":721,"ns":1000651218.9999999},{"ops":728,"ns":1000691225},{"ops":725,"ns":1001387907.0000002},{"ops":733,"ns":1000623701.0000005},{"ops":734,"ns":1000618783.9999993}],"capped":false,"end":"steady"}
+d3 multisig-sm-04 pid 586 round 1: 5.00 s, 3682 ops, 1358033 ns/op
+d3 multisig-sm-04 pid 586 round 2: 5.00 s, 3699 ops, 1351788 ns/op
+d3 multisig-sm-04 pid 586 round 3: 5.00 s, 3661 ops, 1366097 ns/op
+PVB_RESULT {"script":"multisig-sm-04","loop":"d3","pid":586,"warmup":{"ops":4910,"ns":7005072379.999999},"rounds":[{"ops":3682,"ns":5000277072.000001},{"ops":3699,"ns":5000262785.999997},{"ops":3661,"ns":5001280651.999998}]}
+--- multisig-sm-05: process 594
+d3 multisig-sm-05 pid 594 warm-up: 6.00 s, 3289 ops, 1825166 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-05","loop":"d3","slices":[{"ops":455,"ns":1000912816.9999999},{"ops":563,"ns":1000241812.0000002},{"ops":570,"ns":1000099111.9999999},{"ops":577,"ns":1000923904.0000002},{"ops":562,"ns":1000110918.9999998},{"ops":562,"ns":1000683297.9999999}],"capped":false,"end":"steady"}
+d3 multisig-sm-05 pid 594 round 1: 5.00 s, 2875 ops, 1739502 ns/op
+d3 multisig-sm-05 pid 594 round 2: 5.00 s, 2853 ops, 1752563 ns/op
+d3 multisig-sm-05 pid 594 round 3: 5.00 s, 2905 ops, 1721366 ns/op
+PVB_RESULT {"script":"multisig-sm-05","loop":"d3","pid":594,"warmup":{"ops":3289,"ns":6002971862},"rounds":[{"ops":2875,"ns":5001069007},{"ops":2853,"ns":5000061984.999998},{"ops":2905,"ns":5000567344.999999}]}
+--- multisig-sm-06: process 602
+d3 multisig-sm-06 pid 602 warm-up: 7.01 s, 4864 ops, 1440196 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"multisig-sm-06","loop":"d3","slices":[{"ops":577,"ns":1001234639.9999999},{"ops":684,"ns":1001348890},{"ops":711,"ns":1000706574.0000002},{"ops":719,"ns":1000127185.9999998},{"ops":718,"ns":1000156116.0000001},{"ops":729,"ns":1001485262.0000001},{"ops":726,"ns":1000055075.0000002}],"capped":false,"end":"steady"}
+d3 multisig-sm-06 pid 602 round 1: 5.00 s, 3644 ops, 1372289 ns/op
+d3 multisig-sm-06 pid 602 round 2: 5.00 s, 3588 ops, 1393914 ns/op
+d3 multisig-sm-06 pid 602 round 3: 5.00 s, 3601 ops, 1388860 ns/op
+PVB_RESULT {"script":"multisig-sm-06","loop":"d3","pid":602,"warmup":{"ops":4864,"ns":7005113743},"rounds":[{"ops":3644,"ns":5000619868.999999},{"ops":3588,"ns":5001363550},{"ops":3601,"ns":5001283684.000002}]}
+--- multisig-sm-07: process 610
+d3 multisig-sm-07 pid 610 warm-up: 6.00 s, 4086 ops, 1469644 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-07","loop":"d3","slices":[{"ops":555,"ns":1000823801},{"ops":689,"ns":1000890333.9999999},{"ops":708,"ns":1000812805.9999999},{"ops":716,"ns":1001239912},{"ops":702,"ns":1000001623.9999995},{"ops":716,"ns":1001198875}],"capped":false,"end":"steady"}
+d3 multisig-sm-07 pid 610 round 1: 5.00 s, 3641 ops, 1373284 ns/op
+d3 multisig-sm-07 pid 610 round 2: 5.00 s, 3643 ops, 1372532 ns/op
+d3 multisig-sm-07 pid 610 round 3: 5.00 s, 3621 ops, 1381088 ns/op
+PVB_RESULT {"script":"multisig-sm-07","loop":"d3","pid":610,"warmup":{"ops":4086,"ns":6004967352},"rounds":[{"ops":3641,"ns":5000125486},{"ops":3643,"ns":5000135743.000001},{"ops":3621,"ns":5000919431.999999}]}
+--- multisig-sm-08: process 618
+d3 multisig-sm-08 pid 618 warm-up: 6.01 s, 4025 ops, 1491937 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-08","loop":"d3","slices":[{"ops":556,"ns":1000431566.9999999},{"ops":679,"ns":1000323365.0000002},{"ops":694,"ns":1000812778.9999999},{"ops":706,"ns":1001335478},{"ops":692,"ns":1000890688.9999999},{"ops":698,"ns":1001253843.9999999}],"capped":false,"end":"steady"}
+d3 multisig-sm-08 pid 618 round 1: 5.00 s, 3596 ops, 1390535 ns/op
+d3 multisig-sm-08 pid 618 round 2: 5.00 s, 3615 ops, 1383316 ns/op
+d3 multisig-sm-08 pid 618 round 3: 5.00 s, 3606 ops, 1386898 ns/op
+PVB_RESULT {"script":"multisig-sm-08","loop":"d3","pid":618,"warmup":{"ops":4025,"ns":6005047722},"rounds":[{"ops":3596,"ns":5000363315},{"ops":3615,"ns":5000687220},{"ops":3606,"ns":5001153855}]}
+--- multisig-sm-09: process 626
+d3 multisig-sm-09 pid 626 warm-up: 6.00 s, 4127 ops, 1454858 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-09","loop":"d3","slices":[{"ops":546,"ns":1000281721.0000001},{"ops":703,"ns":1000985332.9999999},{"ops":717,"ns":1000567630},{"ops":720,"ns":1000299566.0000001},{"ops":719,"ns":1000967278.9999995},{"ops":722,"ns":1001096096.9999996}],"capped":false,"end":"steady"}
+d3 multisig-sm-09 pid 626 round 1: 5.00 s, 3623 ops, 1380486 ns/op
+d3 multisig-sm-09 pid 626 round 2: 5.00 s, 3600 ops, 1389124 ns/op
+d3 multisig-sm-09 pid 626 round 3: 5.00 s, 3579 ops, 1397050 ns/op
+PVB_RESULT {"script":"multisig-sm-09","loop":"d3","pid":626,"warmup":{"ops":4127,"ns":6004197626},"rounds":[{"ops":3623,"ns":5001500968},{"ops":3600,"ns":5000847109},{"ops":3579,"ns":5000043521.000001}]}
+--- multisig-sm-10: process 634
+d3 multisig-sm-10 pid 634 warm-up: 6.01 s, 3140 ops, 1912940 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-10","loop":"d3","slices":[{"ops":434,"ns":1000593389},{"ops":532,"ns":1001496680},{"ops":540,"ns":1001571054},{"ops":549,"ns":1001273318},{"ops":548,"ns":1001235725.9999999},{"ops":537,"ns":1000460944.9999998}],"capped":false,"end":"steady"}
+d3 multisig-sm-10 pid 634 round 1: 5.00 s, 2768 ops, 1806558 ns/op
+d3 multisig-sm-10 pid 634 round 2: 5.00 s, 2830 ops, 1766832 ns/op
+d3 multisig-sm-10 pid 634 round 3: 5.00 s, 2787 ops, 1794071 ns/op
+PVB_RESULT {"script":"multisig-sm-10","loop":"d3","pid":634,"warmup":{"ops":3140,"ns":6006631112},"rounds":[{"ops":2768,"ns":5000552890.999999},{"ops":2830,"ns":5000133207.999999},{"ops":2787,"ns":5000075019.999998}]}
+--- ping-pong-1: process 642
+d3 ping-pong-1 pid 642 warm-up: 7.01 s, 5528 ops, 1267201 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"ping-pong-1","loop":"d3","slices":[{"ops":641,"ns":1000756129},{"ops":777,"ns":1000045648},{"ops":815,"ns":1001129840},{"ops":814,"ns":1000948509.0000002},{"ops":822,"ns":1000556040.0000004},{"ops":823,"ns":1000925126.0000001},{"ops":836,"ns":1000723485.0000005}],"capped":false,"end":"steady"}
+d3 ping-pong-1 pid 642 round 1: 5.00 s, 4185 ops, 1195108 ns/op
+d3 ping-pong-1 pid 642 round 2: 5.00 s, 4193 ops, 1192475 ns/op
+d3 ping-pong-1 pid 642 round 3: 5.00 s, 4164 ops, 1201197 ns/op
+PVB_RESULT {"script":"ping-pong-1","loop":"d3","pid":642,"warmup":{"ops":5528,"ns":7005084777},"rounds":[{"ops":4185,"ns":5001525193},{"ops":4193,"ns":5000045881},{"ops":4164,"ns":5001784191.000003}]}
+--- ping-pong-2: process 650
+d3 ping-pong-2 pid 650 warm-up: 6.00 s, 4694 ops, 1278944 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"ping-pong-2","loop":"d3","slices":[{"ops":635,"ns":1000356704},{"ops":801,"ns":1001104087.0000001},{"ops":810,"ns":1000707523.9999999},{"ops":802,"ns":1000890108.9999999},{"ops":823,"ns":1000009630.9999999},{"ops":823,"ns":1000293435.9999999}],"capped":false,"end":"steady"}
+d3 ping-pong-2 pid 650 round 1: 5.00 s, 4180 ops, 1196342 ns/op
+d3 ping-pong-2 pid 650 round 2: 5.00 s, 4251 ops, 1176248 ns/op
+d3 ping-pong-2 pid 650 round 3: 5.00 s, 4314 ops, 1159018 ns/op
+PVB_RESULT {"script":"ping-pong-2","loop":"d3","pid":650,"warmup":{"ops":4694,"ns":6003361491},"rounds":[{"ops":4180,"ns":5000708326.000001},{"ops":4251,"ns":5000231004.000001},{"ops":4314,"ns":5000005242.000001}]}
+--- ping-pong_2-1: process 658
+d3 ping-pong_2-1 pid 658 warm-up: 6.00 s, 6239 ops, 962105 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"ping-pong_2-1","loop":"d3","slices":[{"ops":865,"ns":1000327084.9999999},{"ops":1054,"ns":1000613054.9999998},{"ops":1071,"ns":1000087912.9999999},{"ops":1057,"ns":1000054514.9999998},{"ops":1090,"ns":1000666699.9999998},{"ops":1102,"ns":1000822207.0000001}],"capped":false,"end":"steady"}
+d3 ping-pong_2-1 pid 658 round 1: 5.00 s, 5513 ops, 907067 ns/op
+d3 ping-pong_2-1 pid 658 round 2: 5.00 s, 5510 ops, 907445 ns/op
+d3 ping-pong_2-1 pid 658 round 3: 5.00 s, 5503 ops, 908615 ns/op
+PVB_RESULT {"script":"ping-pong_2-1","loop":"d3","pid":658,"warmup":{"ops":6239,"ns":6002571474.999999},"rounds":[{"ops":5513,"ns":5000659962.000001},{"ops":5510,"ns":5000022596.000001},{"ops":5503,"ns":5000106254.999999}]}
+--- prism-1: process 666
+d3 prism-1 pid 666 warm-up: 7.00 s, 12153 ops, 576183 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"prism-1","loop":"d3","slices":[{"ops":1418,"ns":1000167786.0000001},{"ops":1714,"ns":1000372682.9999999},{"ops":1790,"ns":1000339266},{"ops":1799,"ns":1000523292.0000004},{"ops":1800,"ns":1000143933.9999998},{"ops":1811,"ns":1000486681.9999998},{"ops":1821,"ns":1000320651}],"capped":false,"end":"steady"}
+d3 prism-1 pid 666 round 1: 5.00 s, 9071 ops, 551217 ns/op
+d3 prism-1 pid 666 round 2: 5.00 s, 9114 ops, 548654 ns/op
+d3 prism-1 pid 666 round 3: 5.00 s, 9081 ops, 550630 ns/op
+PVB_RESULT {"script":"prism-1","loop":"d3","pid":666,"warmup":{"ops":12153,"ns":7002354294},"rounds":[{"ops":9071,"ns":5000091473.000001},{"ops":9114,"ns":5000436897},{"ops":9081,"ns":5000271710.000001}]}
+--- prism-2: process 674
+d3 prism-2 pid 674 warm-up: 6.01 s, 4123 ops, 1456555 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"prism-2","loop":"d3","slices":[{"ops":576,"ns":1000726669},{"ops":700,"ns":1000312760.9999999},{"ops":713,"ns":1001047137},{"ops":715,"ns":1001416361.0000005},{"ops":707,"ns":1000997838.0000002},{"ops":712,"ns":1000876247.9999995}],"capped":false,"end":"steady"}
+d3 prism-2 pid 674 round 1: 5.00 s, 3604 ops, 1387638 ns/op
+d3 prism-2 pid 674 round 2: 5.00 s, 3643 ops, 1372803 ns/op
+d3 prism-2 pid 674 round 3: 5.00 s, 3629 ops, 1378008 ns/op
+PVB_RESULT {"script":"prism-2","loop":"d3","pid":674,"warmup":{"ops":4123,"ns":6005377014},"rounds":[{"ops":3604,"ns":5001048521.000001},{"ops":3643,"ns":5001120273},{"ops":3629,"ns":5000792629}]}
+--- prism-3: process 682
+d3 prism-3 pid 682 warm-up: 7.00 s, 6571 ops, 1065732 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"prism-3","loop":"d3","slices":[{"ops":785,"ns":1000175252},{"ops":931,"ns":1000884352},{"ops":965,"ns":1000443695.9999998},{"ops":957,"ns":1000130619.9999994},{"ops":975,"ns":1000565406.0000006},{"ops":976,"ns":1000537688.9999998},{"ops":982,"ns":1000185327.0000001}],"capped":false,"end":"steady"}
+d3 prism-3 pid 682 round 1: 5.00 s, 4911 ops, 1018276 ns/op
+d3 prism-3 pid 682 round 2: 5.00 s, 4956 ops, 1008940 ns/op
+d3 prism-3 pid 682 round 3: 5.00 s, 4973 ops, 1005433 ns/op
+PVB_RESULT {"script":"prism-3","loop":"d3","pid":682,"warmup":{"ops":6571,"ns":7002922342},"rounds":[{"ops":4911,"ns":5000752178.999999},{"ops":4956,"ns":5000306249.000001},{"ops":4973,"ns":5000019623}]}
+--- pubkey-1: process 690
+d3 pubkey-1 pid 690 warm-up: 8.00 s, 15616 ops, 512421 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"pubkey-1","loop":"d3","slices":[{"ops":1567,"ns":1000384495.9999999},{"ops":1900,"ns":1000106648.9999999},{"ops":1975,"ns":1000171468},{"ops":2017,"ns":1000440244.0000004},{"ops":2039,"ns":1000106829.0000002},{"ops":2053,"ns":1000396313.0000002},{"ops":2040,"ns":1000344070.0000001},{"ops":2025,"ns":1000021740.0000001}],"capped":false,"end":"steady"}
+d3 pubkey-1 pid 690 round 1: 5.00 s, 10189 ops, 490763 ns/op
+d3 pubkey-1 pid 690 round 2: 5.00 s, 10224 ops, 489080 ns/op
+d3 pubkey-1 pid 690 round 3: 5.00 s, 10218 ops, 489368 ns/op
+PVB_RESULT {"script":"pubkey-1","loop":"d3","pid":690,"warmup":{"ops":15616,"ns":8001971809.000001},"rounds":[{"ops":10189,"ns":5000385848.999998},{"ops":10224,"ns":5000356530.999999},{"ops":10218,"ns":5000366349}]}
+--- stablecoin_1-1: process 698
+d3 stablecoin_1-1 pid 698 warm-up: 6.02 s, 1161 ops, 5182936 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"stablecoin_1-1","loop":"d3","slices":[{"ops":153,"ns":1001506686},{"ops":200,"ns":1004983066.9999999},{"ops":201,"ns":1003257429.0000002},{"ops":201,"ns":1003510732.0000002},{"ops":203,"ns":1003151361.0000002},{"ops":203,"ns":1000979339.0000005}],"capped":false,"end":"steady"}
+d3 stablecoin_1-1 pid 698 round 1: 5.00 s, 1017 ops, 4917073 ns/op
+d3 stablecoin_1-1 pid 698 round 2: 5.00 s, 1023 ops, 4887618 ns/op
+d3 stablecoin_1-1 pid 698 round 3: 5.00 s, 1030 ops, 4858219 ns/op
+PVB_RESULT {"script":"stablecoin_1-1","loop":"d3","pid":698,"warmup":{"ops":1161,"ns":6017388614},"rounds":[{"ops":1017,"ns":5000663159.000001},{"ops":1023,"ns":5000032891.000001},{"ops":1030,"ns":5003965603.000002}]}
+--- stablecoin_1-2: process 706
+d3 stablecoin_1-2 pid 706 warm-up: 8.00 s, 12444 ops, 643112 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"stablecoin_1-2","loop":"d3","slices":[{"ops":1279,"ns":1000311138},{"ops":1539,"ns":1000037086},{"ops":1544,"ns":1000459816.9999999},{"ops":1608,"ns":1000419969.0000005},{"ops":1616,"ns":1000527841.0000001},{"ops":1612,"ns":1000027231},{"ops":1616,"ns":1000503216.9999995},{"ops":1630,"ns":1000601022.9999993}],"capped":false,"end":"steady"}
+d3 stablecoin_1-2 pid 706 round 1: 5.00 s, 8098 ops, 617459 ns/op
+d3 stablecoin_1-2 pid 706 round 2: 5.00 s, 8113 ops, 616368 ns/op
+d3 stablecoin_1-2 pid 706 round 3: 5.00 s, 8122 ops, 615657 ns/op
+PVB_RESULT {"script":"stablecoin_1-2","loop":"d3","pid":706,"warmup":{"ops":12444,"ns":8002887321.999999},"rounds":[{"ops":8098,"ns":5000186504.000001},{"ops":8113,"ns":5000593965},{"ops":8122,"ns":5000362716}]}
+--- stablecoin_1-3: process 714
+d3 stablecoin_1-3 pid 714 warm-up: 6.02 s, 1056 ops, 5697072 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"stablecoin_1-3","loop":"d3","slices":[{"ops":139,"ns":1005021996},{"ops":182,"ns":1000607865.0000001},{"ops":183,"ns":1000888385.9999996},{"ops":184,"ns":1002989498.9999998},{"ops":184,"ns":1003383870.0000006},{"ops":184,"ns":1003215895.9999998}],"capped":false,"end":"steady"}
+d3 stablecoin_1-3 pid 714 round 1: 5.00 s, 930 ops, 5380124 ns/op
+d3 stablecoin_1-3 pid 714 round 2: 5.00 s, 934 ops, 5356766 ns/op
+d3 stablecoin_1-3 pid 714 round 3: 5.00 s, 934 ops, 5354195 ns/op
+PVB_RESULT {"script":"stablecoin_1-3","loop":"d3","pid":714,"warmup":{"ops":1056,"ns":6016107512},"rounds":[{"ops":930,"ns":5003515761},{"ops":934,"ns":5003219068.999999},{"ops":934,"ns":5000818290.000001}]}
+--- stablecoin_1-4: process 722
+d3 stablecoin_1-4 pid 722 warm-up: 6.00 s, 8684 ops, 691242 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"stablecoin_1-4","loop":"d3","slices":[{"ops":1226,"ns":1000396862},{"ops":1459,"ns":1000539469.9999999},{"ops":1466,"ns":1000258278.9999996},{"ops":1524,"ns":1000607195.9999999},{"ops":1523,"ns":1000355824.9999996},{"ops":1486,"ns":1000583894.0000004}],"capped":false,"end":"steady"}
+d3 stablecoin_1-4 pid 722 round 1: 5.00 s, 7671 ops, 651816 ns/op
+d3 stablecoin_1-4 pid 722 round 2: 5.00 s, 7709 ops, 648634 ns/op
+d3 stablecoin_1-4 pid 722 round 3: 5.00 s, 7702 ops, 649191 ns/op
+PVB_RESULT {"script":"stablecoin_1-4","loop":"d3","pid":722,"warmup":{"ops":8684,"ns":6002741525.999999},"rounds":[{"ops":7671,"ns":5000084371},{"ops":7709,"ns":5000319722},{"ops":7702,"ns":5000072359}]}
+--- stablecoin_1-5: process 730
+d3 stablecoin_1-5 pid 730 warm-up: 6.02 s, 906 ops, 6639797 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"stablecoin_1-5","loop":"d3","slices":[{"ops":122,"ns":1005049607.9999999},{"ops":159,"ns":1000854472},{"ops":157,"ns":1002036774.0000001},{"ops":154,"ns":1003854089.0000004},{"ops":155,"ns":1000195483.0000005},{"ops":159,"ns":1003665516.9999994}],"capped":false,"end":"steady"}
+d3 stablecoin_1-5 pid 730 round 1: 5.00 s, 796 ops, 6286635 ns/op
+d3 stablecoin_1-5 pid 730 round 2: 5.00 s, 813 ops, 6152556 ns/op
+d3 stablecoin_1-5 pid 730 round 3: 5.00 s, 829 ops, 6031398 ns/op
+PVB_RESULT {"script":"stablecoin_1-5","loop":"d3","pid":730,"warmup":{"ops":906,"ns":6015655943},"rounds":[{"ops":796,"ns":5004161612},{"ops":813,"ns":5002028146.999999},{"ops":829,"ns":5000029237.999999}]}
+--- stablecoin_1-6: process 738
+d3 stablecoin_1-6 pid 738 warm-up: 6.00 s, 7478 ops, 802653 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"stablecoin_1-6","loop":"d3","slices":[{"ops":1042,"ns":1000426314.9999999},{"ops":1261,"ns":1000168036.9999999},{"ops":1272,"ns":1000468646.0000002},{"ops":1288,"ns":1000133127},{"ops":1307,"ns":1000320719.9999998},{"ops":1308,"ns":1000725143.0000006}],"capped":false,"end":"steady"}
+d3 stablecoin_1-6 pid 738 round 1: 5.00 s, 6593 ops, 758407 ns/op
+d3 stablecoin_1-6 pid 738 round 2: 5.00 s, 6641 ops, 752916 ns/op
+d3 stablecoin_1-6 pid 738 round 3: 5.00 s, 6640 ops, 753032 ns/op
+PVB_RESULT {"script":"stablecoin_1-6","loop":"d3","pid":738,"warmup":{"ops":7478,"ns":6002241988.000001},"rounds":[{"ops":6593,"ns":5000178570.999999},{"ops":6641,"ns":5000112030},{"ops":6640,"ns":5000135734.999998}]}
+--- stablecoin_2-1: process 746
+d3 stablecoin_2-1 pid 746 warm-up: 6.02 s, 1166 ops, 5160068 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"stablecoin_2-1","loop":"d3","slices":[{"ops":152,"ns":1003927315},{"ops":199,"ns":1000519438},{"ops":203,"ns":1000589496.9999999},{"ops":202,"ns":1002798058.9999998},{"ops":204,"ns":1004595148.0000004},{"ops":206,"ns":1004210159.9999996}],"capped":false,"end":"steady"}
+d3 stablecoin_2-1 pid 746 round 1: 5.00 s, 1029 ops, 4860377 ns/op
+d3 stablecoin_2-1 pid 746 round 2: 5.00 s, 1036 ops, 4826845 ns/op
+d3 stablecoin_2-1 pid 746 round 3: 5.00 s, 1041 ops, 4805006 ns/op
+PVB_RESULT {"script":"stablecoin_2-1","loop":"d3","pid":746,"warmup":{"ops":1166,"ns":6016639617},"rounds":[{"ops":1029,"ns":5001328083},{"ops":1036,"ns":5000611766},{"ops":1041,"ns":5002011660.999999}]}
+--- stablecoin_2-2: process 754
+d3 stablecoin_2-2 pid 754 warm-up: 8.00 s, 12162 ops, 658024 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"stablecoin_2-2","loop":"d3","slices":[{"ops":1253,"ns":1000401746},{"ops":1496,"ns":1000597940.9999998},{"ops":1511,"ns":1000325509.0000002},{"ops":1559,"ns":1000153489.9999996},{"ops":1576,"ns":1000568358.9999999},{"ops":1589,"ns":1000522504.0000005},{"ops":1586,"ns":1000246529.9999994},{"ops":1592,"ns":1000073347.9999999}],"capped":false,"end":"steady"}
+d3 stablecoin_2-2 pid 754 round 1: 5.00 s, 7941 ops, 629673 ns/op
+d3 stablecoin_2-2 pid 754 round 2: 5.00 s, 7944 ops, 629415 ns/op
+d3 stablecoin_2-2 pid 754 round 3: 5.00 s, 7953 ops, 628763 ns/op
+PVB_RESULT {"script":"stablecoin_2-2","loop":"d3","pid":754,"warmup":{"ops":12162,"ns":8002889426.999999},"rounds":[{"ops":7941,"ns":5000236267},{"ops":7944,"ns":5000076427},{"ops":7953,"ns":5000551170.999999}]}
+--- stablecoin_2-3: process 762
+d3 stablecoin_2-3 pid 762 warm-up: 6.02 s, 1058 ops, 5687602 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"stablecoin_2-3","loop":"d3","slices":[{"ops":139,"ns":1004921004.9999999},{"ops":182,"ns":1002058200},{"ops":184,"ns":1005377293},{"ops":184,"ns":1003374899.0000004},{"ops":184,"ns":1000249265.0000004},{"ops":185,"ns":1001502534.0000002}],"capped":false,"end":"steady"}
+d3 stablecoin_2-3 pid 762 round 1: 5.00 s, 930 ops, 5379186 ns/op
+d3 stablecoin_2-3 pid 762 round 2: 5.00 s, 939 ops, 5327615 ns/op
+d3 stablecoin_2-3 pid 762 round 3: 5.01 s, 936 ops, 5347434 ns/op
+PVB_RESULT {"script":"stablecoin_2-3","loop":"d3","pid":762,"warmup":{"ops":1058,"ns":6017483196.000001},"rounds":[{"ops":930,"ns":5002642845},{"ops":939,"ns":5002630550},{"ops":936,"ns":5005198646.999999}]}
+--- stablecoin_2-4: process 770
+d3 stablecoin_2-4 pid 770 warm-up: 8.00 s, 11886 ops, 673310 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"stablecoin_2-4","loop":"d3","slices":[{"ops":1236,"ns":1000572956.9999999},{"ops":1488,"ns":1000523189.0000002},{"ops":1461,"ns":1000258949.9999999},{"ops":1528,"ns":1000186748.0000001},{"ops":1529,"ns":1000356276.0000005},{"ops":1542,"ns":1000527465.0000001},{"ops":1550,"ns":1000195921.9999999},{"ops":1552,"ns":1000343447.9999996}],"capped":false,"end":"steady"}
+d3 stablecoin_2-4 pid 770 round 1: 5.00 s, 7788 ops, 642086 ns/op
+d3 stablecoin_2-4 pid 770 round 2: 5.00 s, 7669 ops, 652052 ns/op
+d3 stablecoin_2-4 pid 770 round 3: 5.00 s, 7690 ops, 650255 ns/op
+PVB_RESULT {"script":"stablecoin_2-4","loop":"d3","pid":770,"warmup":{"ops":11886,"ns":8002964955},"rounds":[{"ops":7788,"ns":5000566655.000001},{"ops":7669,"ns":5000587366},{"ops":7690,"ns":5000464595.999998}]}
+--- token-account-1: process 778
+d3 token-account-1 pid 778 warm-up: 6.00 s, 8862 ops, 677248 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"token-account-1","loop":"d3","slices":[{"ops":1185,"ns":1000238273},{"ops":1511,"ns":1000582372.0000004},{"ops":1518,"ns":1000134629.0000001},{"ops":1549,"ns":1000600306.9999998},{"ops":1546,"ns":1000105135.9999992},{"ops":1553,"ns":1000107229.9999996}],"capped":false,"end":"steady"}
+d3 token-account-1 pid 778 round 1: 5.00 s, 7720 ops, 647713 ns/op
+d3 token-account-1 pid 778 round 2: 5.00 s, 7785 ops, 642269 ns/op
+d3 token-account-1 pid 778 round 3: 5.00 s, 7779 ops, 642756 ns/op
+PVB_RESULT {"script":"token-account-1","loop":"d3","pid":778,"warmup":{"ops":8862,"ns":6001767946.999999},"rounds":[{"ops":7720,"ns":5000346685},{"ops":7785,"ns":5000066676},{"ops":7779,"ns":5000002247.999999}]}
+--- token-account-2: process 786
+d3 token-account-2 pid 786 warm-up: 6.00 s, 6110 ops, 982304 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"token-account-2","loop":"d3","slices":[{"ops":862,"ns":1000267784.0000001},{"ops":1021,"ns":1000059164.9999999},{"ops":1051,"ns":1000125175.0000001},{"ops":1046,"ns":1000364139.9999996},{"ops":1062,"ns":1000198317.9999998},{"ops":1068,"ns":1000859851.9999996}],"capped":false,"end":"steady"}
+d3 token-account-2 pid 786 round 1: 5.00 s, 5417 ops, 923136 ns/op
+d3 token-account-2 pid 786 round 2: 5.00 s, 5403 ops, 925437 ns/op
+d3 token-account-2 pid 786 round 3: 5.00 s, 5446 ops, 918258 ns/op
+PVB_RESULT {"script":"token-account-2","loop":"d3","pid":786,"warmup":{"ops":6110,"ns":6001874433.999999},"rounds":[{"ops":5417,"ns":5000629808.000001},{"ops":5403,"ns":5000135209},{"ops":5446,"ns":5000833704.999999}]}
+--- uniswap-1: process 794
+d3 uniswap-1 pid 794 warm-up: 7.00 s, 6156 ops, 1137675 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"uniswap-1","loop":"d3","slices":[{"ops":720,"ns":1000890565.0000001},{"ops":878,"ns":1000145946.0000001},{"ops":906,"ns":1001058010.0000002},{"ops":905,"ns":1000149680.9999999},{"ops":912,"ns":1000371791.9999999},{"ops":920,"ns":1000732203.9999999},{"ops":915,"ns":1000178662.0000002}],"capped":false,"end":"steady"}
+d3 uniswap-1 pid 794 round 1: 5.00 s, 4583 ops, 1091103 ns/op
+d3 uniswap-1 pid 794 round 2: 5.00 s, 4599 ops, 1087237 ns/op
+d3 uniswap-1 pid 794 round 3: 5.00 s, 4575 ops, 1092938 ns/op
+PVB_RESULT {"script":"uniswap-1","loop":"d3","pid":794,"warmup":{"ops":6156,"ns":7003526860},"rounds":[{"ops":4583,"ns":5000525789},{"ops":4599,"ns":5000203621.000001},{"ops":4575,"ns":5000191364.999999}]}
+--- uniswap-2: process 802
+d3 uniswap-2 pid 802 warm-up: 6.00 s, 7874 ops, 762223 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"uniswap-2","loop":"d3","slices":[{"ops":1072,"ns":1000513601},{"ops":1325,"ns":1000146448},{"ops":1341,"ns":1000258315},{"ops":1360,"ns":1000287506.0000001},{"ops":1388,"ns":1000280045.0000005},{"ops":1388,"ns":1000259978}],"capped":false,"end":"steady"}
+d3 uniswap-2 pid 802 round 1: 5.00 s, 6938 ops, 720746 ns/op
+d3 uniswap-2 pid 802 round 2: 5.00 s, 6992 ops, 715202 ns/op
+d3 uniswap-2 pid 802 round 3: 5.00 s, 6977 ops, 716680 ns/op
+PVB_RESULT {"script":"uniswap-2","loop":"d3","pid":802,"warmup":{"ops":7874,"ns":6001745893},"rounds":[{"ops":6938,"ns":5000536251},{"ops":6992,"ns":5000691568},{"ops":6977,"ns":5000277642.000001}]}
+--- uniswap-3: process 810
+d3 uniswap-3 pid 810 warm-up: 6.01 s, 1244 ops, 4833785 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"uniswap-3","loop":"d3","slices":[{"ops":169,"ns":1002731438},{"ops":213,"ns":1002916995.9999999},{"ops":215,"ns":1003008174.9999999},{"ops":213,"ns":1001588483},{"ops":217,"ns":1002607545.0000007},{"ops":217,"ns":1000375850.0000004}],"capped":false,"end":"steady"}
+d3 uniswap-3 pid 810 round 1: 5.00 s, 1091 ops, 4583116 ns/op
+d3 uniswap-3 pid 810 round 2: 5.00 s, 1093 ops, 4576344 ns/op
+d3 uniswap-3 pid 810 round 3: 5.00 s, 1099 ops, 4550292 ns/op
+PVB_RESULT {"script":"uniswap-3","loop":"d3","pid":810,"warmup":{"ops":1244,"ns":6013228487.000001},"rounds":[{"ops":1091,"ns":5000179757.999999},{"ops":1093,"ns":5001943512},{"ops":1099,"ns":5000771276.000001}]}
+--- uniswap-4: process 818
+d3 uniswap-4 pid 818 warm-up: 6.00 s, 6058 ops, 991102 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"uniswap-4","loop":"d3","slices":[{"ops":843,"ns":1000892912.9999999},{"ops":1024,"ns":1000386535.0000001},{"ops":1033,"ns":1000294077},{"ops":1036,"ns":1000895266.0000005},{"ops":1060,"ns":1000825738.9999999},{"ops":1062,"ns":1000803047.9999998}],"capped":false,"end":"steady"}
+d3 uniswap-4 pid 818 round 1: 5.00 s, 5326 ops, 938831 ns/op
+d3 uniswap-4 pid 818 round 2: 5.00 s, 5290 ops, 945315 ns/op
+d3 uniswap-4 pid 818 round 3: 5.00 s, 5298 ops, 943786 ns/op
+PVB_RESULT {"script":"uniswap-4","loop":"d3","pid":818,"warmup":{"ops":6058,"ns":6004097578},"rounds":[{"ops":5326,"ns":5000213121.000001},{"ops":5290,"ns":5000717235},{"ops":5298,"ns":5000177733.999999}]}
+--- uniswap-5: process 826
+d3 uniswap-5 pid 826 warm-up: 7.01 s, 2058 ops, 3404755 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"uniswap-5","loop":"d3","slices":[{"ops":235,"ns":1002409400},{"ops":295,"ns":1000507987},{"ops":301,"ns":1000448774},{"ops":305,"ns":1000893895.0000001},{"ops":306,"ns":1000276224.0000002},{"ops":306,"ns":1000260640.9999999},{"ops":310,"ns":1002187891.0000005}],"capped":false,"end":"steady"}
+d3 uniswap-5 pid 826 round 1: 5.00 s, 1537 ops, 3253666 ns/op
+d3 uniswap-5 pid 826 round 2: 5.00 s, 1552 ops, 3223218 ns/op
+d3 uniswap-5 pid 826 round 3: 5.00 s, 1557 ops, 3212477 ns/op
+PVB_RESULT {"script":"uniswap-5","loop":"d3","pid":826,"warmup":{"ops":2058,"ns":7006984812},"rounds":[{"ops":1537,"ns":5000884203},{"ops":1552,"ns":5002433817.999999},{"ops":1557,"ns":5001826390.999999}]}
+--- uniswap-6: process 834
+d3 uniswap-6 pid 834 warm-up: 6.00 s, 6300 ops, 952866 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"uniswap-6","loop":"d3","slices":[{"ops":867,"ns":1000343077},{"ops":1067,"ns":1000876942.0000001},{"ops":1080,"ns":1001186114.0000001},{"ops":1085,"ns":1000200408.0000006},{"ops":1099,"ns":1000223019.9999994},{"ops":1102,"ns":1000225523.9999995}],"capped":false,"end":"steady"}
+d3 uniswap-6 pid 834 round 1: 5.00 s, 5542 ops, 902273 ns/op
+d3 uniswap-6 pid 834 round 2: 5.00 s, 5521 ops, 905641 ns/op
+d3 uniswap-6 pid 834 round 3: 5.00 s, 5504 ops, 908452 ns/op
+PVB_RESULT {"script":"uniswap-6","loop":"d3","pid":834,"warmup":{"ops":6300,"ns":6003055085},"rounds":[{"ops":5542,"ns":5000397427.999999},{"ops":5521,"ns":5000042294.000001},{"ops":5504,"ns":5000117591}]}
+--- vesting-1: process 842
+d3 vesting-1 pid 842 warm-up: 6.00 s, 5503 ops, 1090894 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"vesting-1","loop":"d3","slices":[{"ops":759,"ns":1000570776},{"ops":925,"ns":1000055006.9999999},{"ops":947,"ns":1000304744},{"ops":953,"ns":1000842887.0000002},{"ops":957,"ns":1000586629.0000004},{"ops":962,"ns":1000828246}],"capped":false,"end":"steady"}
+d3 vesting-1 pid 842 round 1: 5.00 s, 4887 ops, 1023288 ns/op
+d3 vesting-1 pid 842 round 2: 5.00 s, 4883 ops, 1024036 ns/op
+d3 vesting-1 pid 842 round 3: 5.00 s, 4899 ops, 1020764 ns/op
+PVB_RESULT {"script":"vesting-1","loop":"d3","pid":842,"warmup":{"ops":5503,"ns":6003188289},"rounds":[{"ops":4887,"ns":5000807646},{"ops":4883,"ns":5000367924},{"ops":4899,"ns":5000723029.999999}]}
+--- auction_1-1: process 855
+eval auction_1-1 pid 855 warm-up: 6.00 s, 15769 ops, 380573 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"auction_1-1","loop":"eval","slices":[{"ops":2413,"ns":1000154998},{"ops":2617,"ns":1000159152.9999999},{"ops":2698,"ns":1000267795.0000002},{"ops":2688,"ns":1000287642.0000002},{"ops":2698,"ns":1000213157.0000001},{"ops":2655,"ns":1000168255.9999999}],"capped":false,"end":"steady"}
+eval auction_1-1 pid 855 round 1: 5.00 s, 13575 ops, 368332 ns/op
+eval auction_1-1 pid 855 round 2: 5.00 s, 13454 ops, 371638 ns/op
+eval auction_1-1 pid 855 round 3: 5.00 s, 13384 ops, 373582 ns/op
+PVB_RESULT {"script":"auction_1-1","loop":"eval","pid":855,"warmup":{"ops":15769,"ns":6001251001},"rounds":[{"ops":13575,"ns":5000102327},{"ops":13454,"ns":5000022456.999999},{"ops":13384,"ns":5000026583.000001}]}
+--- auction_1-2: process 863
+eval auction_1-2 pid 863 warm-up: 6.00 s, 4968 ops, 1208341 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"auction_1-2","loop":"eval","slices":[{"ops":744,"ns":1000311476.0000001},{"ops":835,"ns":1000216183.9999999},{"ops":850,"ns":1000137382.9999998},{"ops":836,"ns":1001116810},{"ops":847,"ns":1000192990.9999999},{"ops":856,"ns":1001065098.9999995}],"capped":false,"end":"steady"}
+eval auction_1-2 pid 863 round 1: 5.00 s, 4272 ops, 1170598 ns/op
+eval auction_1-2 pid 863 round 2: 5.00 s, 4300 ops, 1162975 ns/op
+eval auction_1-2 pid 863 round 3: 5.00 s, 4278 ops, 1169024 ns/op
+PVB_RESULT {"script":"auction_1-2","loop":"eval","pid":863,"warmup":{"ops":4968,"ns":6003039943},"rounds":[{"ops":4272,"ns":5000795479.000001},{"ops":4300,"ns":5000790714.000001},{"ops":4278,"ns":5001083513.000001}]}
+--- auction_1-3: process 871
+eval auction_1-3 pid 871 warm-up: 8.01 s, 6662 ops, 1201610 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"auction_1-3","loop":"eval","slices":[{"ops":756,"ns":1000356040.0000001},{"ops":845,"ns":1000133208},{"ops":807,"ns":1001018724},{"ops":836,"ns":1000493812.0000001},{"ops":846,"ns":1000767962.9999993},{"ops":855,"ns":1000765751.9999993},{"ops":857,"ns":1000933425.0000001},{"ops":860,"ns":1000656678.9999998}],"capped":false,"end":"steady"}
+eval auction_1-3 pid 871 round 1: 5.00 s, 4286 ops, 1166826 ns/op
+eval auction_1-3 pid 871 round 2: 5.00 s, 4265 ops, 1172423 ns/op
+eval auction_1-3 pid 871 round 3: 5.00 s, 4264 ops, 1172799 ns/op
+PVB_RESULT {"script":"auction_1-3","loop":"eval","pid":871,"warmup":{"ops":6662,"ns":8005125602.999998},"rounds":[{"ops":4286,"ns":5001017053},{"ops":4265,"ns":5000385431.999999},{"ops":4264,"ns":5000813000.000002}]}
+--- auction_1-4: process 879
+eval auction_1-4 pid 879 warm-up: 7.00 s, 14885 ops, 470364 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"auction_1-4","loop":"eval","slices":[{"ops":1952,"ns":1000048190},{"ops":2074,"ns":1000312469.9999999},{"ops":2160,"ns":1000063652.0000002},{"ops":2182,"ns":1000299992.0000002},{"ops":2174,"ns":1000411859.0000007},{"ops":2179,"ns":1000175549.0000005},{"ops":2164,"ns":1000052466.9999995}],"capped":false,"end":"steady"}
+eval auction_1-4 pid 879 round 1: 5.00 s, 10882 ops, 459484 ns/op
+eval auction_1-4 pid 879 round 2: 5.00 s, 10876 ops, 459752 ns/op
+eval auction_1-4 pid 879 round 3: 5.00 s, 10930 ops, 457492 ns/op
+PVB_RESULT {"script":"auction_1-4","loop":"eval","pid":879,"warmup":{"ops":14885,"ns":7001364179.000002},"rounds":[{"ops":10882,"ns":5000104874.000001},{"ops":10876,"ns":5000264918.999999},{"ops":10930,"ns":5000384207.000003}]}
+--- auction_2-1: process 887
+eval auction_2-1 pid 887 warm-up: 7.00 s, 18517 ops, 378069 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"auction_2-1","loop":"eval","slices":[{"ops":2434,"ns":1000063612},{"ops":2611,"ns":1000196118.9999998},{"ops":2762,"ns":1000121824.0000002},{"ops":2704,"ns":1000039040.0000001},{"ops":2692,"ns":1000086725.0000001},{"ops":2658,"ns":1000090530.9999999},{"ops":2656,"ns":1000111469.0000004}],"capped":false,"end":"steady"}
+eval auction_2-1 pid 887 round 1: 5.00 s, 13822 ops, 361760 ns/op
+eval auction_2-1 pid 887 round 2: 5.00 s, 13700 ops, 364980 ns/op
+eval auction_2-1 pid 887 round 3: 5.00 s, 13668 ops, 365841 ns/op
+PVB_RESULT {"script":"auction_2-1","loop":"eval","pid":887,"warmup":{"ops":18517,"ns":7000709320},"rounds":[{"ops":13822,"ns":5000250643},{"ops":13700,"ns":5000221180.999999},{"ops":13668,"ns":5000314533.000001}]}
+--- auction_2-2: process 895
+eval auction_2-2 pid 895 warm-up: 6.00 s, 4955 ops, 1211728 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"auction_2-2","loop":"eval","slices":[{"ops":742,"ns":1000947638},{"ops":834,"ns":1000390889.9999999},{"ops":844,"ns":1000704900.0000002},{"ops":837,"ns":1000466456.0000001},{"ops":846,"ns":1000684108.9999998},{"ops":852,"ns":1000916072.9999994}],"capped":false,"end":"steady"}
+eval auction_2-2 pid 895 round 1: 5.00 s, 4284 ops, 1167154 ns/op
+eval auction_2-2 pid 895 round 2: 5.00 s, 4291 ops, 1165384 ns/op
+eval auction_2-2 pid 895 round 3: 5.00 s, 4298 ops, 1163466 ns/op
+PVB_RESULT {"script":"auction_2-2","loop":"eval","pid":895,"warmup":{"ops":4955,"ns":6004110065.999999},"rounds":[{"ops":4284,"ns":5000086475.999999},{"ops":4291,"ns":5000663634},{"ops":4298,"ns":5000577524}]}
+--- auction_2-3: process 903
+eval auction_2-3 pid 903 warm-up: 6.00 s, 3771 ops, 1592044 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"auction_2-3","loop":"eval","slices":[{"ops":565,"ns":1001280684},{"ops":637,"ns":1000018101.9999998},{"ops":638,"ns":1001119488.0000002},{"ops":647,"ns":1000302017.9999999},{"ops":636,"ns":1000722374.9999994},{"ops":648,"ns":1000157115}],"capped":false,"end":"steady"}
+eval auction_2-3 pid 903 round 1: 5.00 s, 3248 ops, 1539552 ns/op
+eval auction_2-3 pid 903 round 2: 5.00 s, 3247 ops, 1540277 ns/op
+eval auction_2-3 pid 903 round 3: 5.00 s, 3247 ops, 1540345 ns/op
+PVB_RESULT {"script":"auction_2-3","loop":"eval","pid":903,"warmup":{"ops":3771,"ns":6003599781.999999},"rounds":[{"ops":3248,"ns":5000466131},{"ops":3247,"ns":5001277844},{"ops":3247,"ns":5001501055.999999}]}
+--- auction_2-4: process 911
+eval auction_2-4 pid 911 warm-up: 6.00 s, 4984 ops, 1204629 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"auction_2-4","loop":"eval","slices":[{"ops":753,"ns":1001660244},{"ops":844,"ns":1000194917.9999996},{"ops":854,"ns":1001071602.9999999},{"ops":839,"ns":1000212873.0000004},{"ops":842,"ns":1000316678.0000001},{"ops":852,"ns":1000415125.9999999}],"capped":false,"end":"steady"}
+eval auction_2-4 pid 911 round 1: 5.00 s, 4291 ops, 1165395 ns/op
+eval auction_2-4 pid 911 round 2: 5.00 s, 4297 ops, 1163867 ns/op
+eval auction_2-4 pid 911 round 3: 5.00 s, 4297 ops, 1163815 ns/op
+PVB_RESULT {"script":"auction_2-4","loop":"eval","pid":911,"warmup":{"ops":4984,"ns":6003871442},"rounds":[{"ops":4291,"ns":5000711996.999999},{"ops":4297,"ns":5001136541},{"ops":4297,"ns":5000914360.999999}]}
+--- auction_2-5: process 919
+eval auction_2-5 pid 919 warm-up: 7.00 s, 14776 ops, 473853 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"auction_2-5","loop":"eval","slices":[{"ops":1934,"ns":1000415838},{"ops":2068,"ns":1000265386.9999999},{"ops":2158,"ns":1000023681.0000001},{"ops":2157,"ns":1000251016.9999996},{"ops":2153,"ns":1000159060},{"ops":2151,"ns":1000142484.9999994},{"ops":2155,"ns":1000393807.9999998}],"capped":false,"end":"steady"}
+eval auction_2-5 pid 919 round 1: 5.00 s, 10815 ops, 462343 ns/op
+eval auction_2-5 pid 919 round 2: 5.00 s, 10793 ops, 463305 ns/op
+eval auction_2-5 pid 919 round 3: 5.00 s, 10724 ops, 466277 ns/op
+PVB_RESULT {"script":"auction_2-5","loop":"eval","pid":919,"warmup":{"ops":14776,"ns":7001651275.999999},"rounds":[{"ops":10815,"ns":5000238760.000001},{"ops":10793,"ns":5000448494.000002},{"ops":10724,"ns":5000353852}]}
+--- coop-1: process 927
+eval coop-1 pid 927 warm-up: 6.00 s, 8971 ops, 669052 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"coop-1","loop":"eval","slices":[{"ops":1372,"ns":1000138271},{"ops":1495,"ns":1000386216.0000001},{"ops":1508,"ns":1000581510},{"ops":1536,"ns":1000183562.9999996},{"ops":1531,"ns":1000274993},{"ops":1529,"ns":1000502389.0000002}],"capped":false,"end":"steady"}
+eval coop-1 pid 927 round 1: 5.00 s, 7664 ops, 652459 ns/op
+eval coop-1 pid 927 round 2: 5.00 s, 7653 ops, 653396 ns/op
+eval coop-1 pid 927 round 3: 5.00 s, 7656 ops, 653084 ns/op
+PVB_RESULT {"script":"coop-1","loop":"eval","pid":927,"warmup":{"ops":8971,"ns":6002066942},"rounds":[{"ops":7664,"ns":5000442619},{"ops":7653,"ns":5000438913.999998},{"ops":7656,"ns":5000013942}]}
+--- coop-2: process 935
+eval coop-2 pid 935 warm-up: 6.00 s, 2776 ops, 2162680 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"coop-2","loop":"eval","slices":[{"ops":409,"ns":1000086660},{"ops":473,"ns":1000463576.0000001},{"ops":475,"ns":1001146769},{"ops":473,"ns":1001658091.9999996},{"ops":472,"ns":1000214176.9999999},{"ops":474,"ns":1000031663.0000007}],"capped":false,"end":"steady"}
+eval coop-2 pid 935 round 1: 5.00 s, 2377 ops, 2103932 ns/op
+eval coop-2 pid 935 round 2: 5.00 s, 2384 ops, 2097376 ns/op
+eval coop-2 pid 935 round 3: 5.00 s, 2391 ops, 2091231 ns/op
+PVB_RESULT {"script":"coop-2","loop":"eval","pid":935,"warmup":{"ops":2776,"ns":6003600937},"rounds":[{"ops":2377,"ns":5001047095.999999},{"ops":2384,"ns":5000145136.000001},{"ops":2391,"ns":5000132519.999999}]}
+--- coop-3: process 943
+eval coop-3 pid 943 warm-up: 6.03 s, 840 ops, 7181288 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"coop-3","loop":"eval","slices":[{"ops":126,"ns":1002459142},{"ops":143,"ns":1006010328.0000001},{"ops":143,"ns":1006933167.0000001},{"ops":142,"ns":1006024217.0000006},{"ops":143,"ns":1006537295.0000001},{"ops":143,"ns":1004317906.9999996}],"capped":false,"end":"steady"}
+eval coop-3 pid 943 round 1: 5.00 s, 709 ops, 7053150 ns/op
+eval coop-3 pid 943 round 2: 5.01 s, 711 ops, 7040364 ns/op
+eval coop-3 pid 943 round 3: 5.01 s, 709 ops, 7061189 ns/op
+PVB_RESULT {"script":"coop-3","loop":"eval","pid":943,"warmup":{"ops":840,"ns":6032282056.000001},"rounds":[{"ops":709,"ns":5000683129.999999},{"ops":711,"ns":5005698892},{"ops":709,"ns":5006383127.999999}]}
+--- coop-4: process 951
+eval coop-4 pid 951 warm-up: 6.01 s, 2147 ops, 2798757 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"coop-4","loop":"eval","slices":[{"ops":316,"ns":1000487369},{"ops":365,"ns":1001542872.9999999},{"ops":366,"ns":1002473592.0000002},{"ops":367,"ns":1002537000.9999996},{"ops":367,"ns":1001637315},{"ops":366,"ns":1000252551.9999999}],"capped":false,"end":"steady"}
+eval coop-4 pid 951 round 1: 5.00 s, 1827 ops, 2737331 ns/op
+eval coop-4 pid 951 round 2: 5.00 s, 1840 ops, 2717814 ns/op
+eval coop-4 pid 951 round 3: 5.00 s, 1837 ops, 2723201 ns/op
+PVB_RESULT {"script":"coop-4","loop":"eval","pid":951,"warmup":{"ops":2147,"ns":6008930702},"rounds":[{"ops":1827,"ns":5001102849},{"ops":1840,"ns":5000776954.999999},{"ops":1837,"ns":5002520560.000001}]}
+--- coop-5: process 959
+eval coop-5 pid 959 warm-up: 6.00 s, 4983 ops, 1205016 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"coop-5","loop":"eval","slices":[{"ops":747,"ns":1000140996},{"ops":841,"ns":1001255132.9999999},{"ops":849,"ns":1000980539.0000001},{"ops":842,"ns":1000357819.9999998},{"ops":850,"ns":1000808650},{"ops":854,"ns":1001049275.0000004}],"capped":false,"end":"steady"}
+eval coop-5 pid 959 round 1: 5.00 s, 4271 ops, 1170782 ns/op
+eval coop-5 pid 959 round 2: 5.00 s, 4255 ops, 1175289 ns/op
+eval coop-5 pid 959 round 3: 5.00 s, 4262 ops, 1173162 ns/op
+PVB_RESULT {"script":"coop-5","loop":"eval","pid":959,"warmup":{"ops":4983,"ns":6004592413},"rounds":[{"ops":4271,"ns":5000407962},{"ops":4255,"ns":5000854416},{"ops":4262,"ns":5000014653.999999}]}
+--- coop-6: process 967
+eval coop-6 pid 967 warm-up: 6.01 s, 2907 ops, 2067159 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"coop-6","loop":"eval","slices":[{"ops":432,"ns":1001933630},{"ops":494,"ns":1001246050},{"ops":497,"ns":1001807362.9999999},{"ops":495,"ns":1001796578.9999999},{"ops":493,"ns":1001238109.9999993},{"ops":496,"ns":1001208297.0000001}],"capped":false,"end":"steady"}
+eval coop-6 pid 967 round 1: 5.00 s, 2474 ops, 2021387 ns/op
+eval coop-6 pid 967 round 2: 5.00 s, 2487 ops, 2010521 ns/op
+eval coop-6 pid 967 round 3: 5.00 s, 2477 ops, 2018733 ns/op
+PVB_RESULT {"script":"coop-6","loop":"eval","pid":967,"warmup":{"ops":2907,"ns":6009230028.999999},"rounds":[{"ops":2474,"ns":5000910416.000001},{"ops":2487,"ns":5000165936.000001},{"ops":2477,"ns":5000401846.999999}]}
+--- coop-7: process 975
+eval coop-7 pid 975 warm-up: 6.00 s, 6404 ops, 937379 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"coop-7","loop":"eval","slices":[{"ops":980,"ns":1000625925},{"ops":1078,"ns":1000393911.0000001},{"ops":1077,"ns":1000342449.0000002},{"ops":1087,"ns":1000460522.9999998},{"ops":1085,"ns":1000373233.0000002},{"ops":1097,"ns":1000777376}],"capped":false,"end":"steady"}
+eval coop-7 pid 975 round 1: 5.00 s, 5497 ops, 909697 ns/op
+eval coop-7 pid 975 round 2: 5.00 s, 5468 ops, 914442 ns/op
+eval coop-7 pid 975 round 3: 5.00 s, 5496 ops, 909906 ns/op
+PVB_RESULT {"script":"coop-7","loop":"eval","pid":975,"warmup":{"ops":6404,"ns":6002973417},"rounds":[{"ops":5497,"ns":5000603109},{"ops":5468,"ns":5000171517.000001},{"ops":5496,"ns":5000845729.000001}]}
+--- crowdfunding-success-1: process 983
+eval crowdfunding-success-1 pid 983 warm-up: 7.00 s, 16331 ops, 428710 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"crowdfunding-success-1","loop":"eval","slices":[{"ops":2149,"ns":1000276007},{"ops":2293,"ns":1000283417.0000001},{"ops":2365,"ns":1000000003.0000001},{"ops":2372,"ns":1000064873.0000002},{"ops":2390,"ns":1000033878.9999996},{"ops":2381,"ns":1000290877.9999998},{"ops":2381,"ns":1000319318.0000007}],"capped":false,"end":"steady"}
+eval crowdfunding-success-1 pid 983 round 1: 5.00 s, 12034 ops, 415515 ns/op
+eval crowdfunding-success-1 pid 983 round 2: 5.00 s, 11905 ops, 419998 ns/op
+eval crowdfunding-success-1 pid 983 round 3: 5.00 s, 11913 ops, 419729 ns/op
+PVB_RESULT {"script":"crowdfunding-success-1","loop":"eval","pid":983,"warmup":{"ops":16331,"ns":7001268375.000001},"rounds":[{"ops":12034,"ns":5000305805.999999},{"ops":11905,"ns":5000071929},{"ops":11913,"ns":5000226222.999998}]}
+--- crowdfunding-success-2: process 991
+eval crowdfunding-success-2 pid 991 warm-up: 7.00 s, 16438 ops, 425924 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"crowdfunding-success-2","loop":"eval","slices":[{"ops":2142,"ns":1000100580},{"ops":2303,"ns":1000049104},{"ops":2373,"ns":1000040873.0000004},{"ops":2411,"ns":1000261061.0000001},{"ops":2402,"ns":1000379884},{"ops":2402,"ns":1000340170.0000004},{"ops":2405,"ns":1000168004.0000001}],"capped":false,"end":"steady"}
+eval crowdfunding-success-2 pid 991 round 1: 5.00 s, 12155 ops, 411362 ns/op
+eval crowdfunding-success-2 pid 991 round 2: 5.00 s, 12104 ops, 413115 ns/op
+eval crowdfunding-success-2 pid 991 round 3: 5.00 s, 11921 ops, 419430 ns/op
+PVB_RESULT {"script":"crowdfunding-success-2","loop":"eval","pid":991,"warmup":{"ops":16438,"ns":7001339676},"rounds":[{"ops":12155,"ns":5000110812.999999},{"ops":12104,"ns":5000345704.000001},{"ops":11921,"ns":5000022570.000001}]}
+--- crowdfunding-success-3: process 999
+eval crowdfunding-success-3 pid 999 warm-up: 7.00 s, 16612 ops, 421433 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"crowdfunding-success-3","loop":"eval","slices":[{"ops":2178,"ns":1000160133},{"ops":2316,"ns":1000046629.9999999},{"ops":2400,"ns":1000010120.0000004},{"ops":2432,"ns":1000058796.0000002},{"ops":2416,"ns":1000035651.9999995},{"ops":2431,"ns":1000154222.0000001},{"ops":2439,"ns":1000387144.9999996}],"capped":false,"end":"steady"}
+eval crowdfunding-success-3 pid 999 round 1: 5.00 s, 12206 ops, 409641 ns/op
+eval crowdfunding-success-3 pid 999 round 2: 5.00 s, 12175 ops, 410699 ns/op
+eval crowdfunding-success-3 pid 999 round 3: 5.00 s, 12167 ops, 410961 ns/op
+PVB_RESULT {"script":"crowdfunding-success-3","loop":"eval","pid":999,"warmup":{"ops":16612,"ns":7000852698},"rounds":[{"ops":12206,"ns":5000079973},{"ops":12175,"ns":5000265853.999997},{"ops":12167,"ns":5000160511.999998}]}
+--- currency-1: process 1007
+eval currency-1 pid 1007 warm-up: 7.00 s, 14257 ops, 491169 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"currency-1","loop":"eval","slices":[{"ops":1851,"ns":1000177130.9999999},{"ops":1992,"ns":1000390820.0000001},{"ops":2089,"ns":1000279807.9999998},{"ops":2081,"ns":1000380396},{"ops":2076,"ns":1000396319.0000004},{"ops":2084,"ns":1000516563.0000001},{"ops":2084,"ns":1000452043.0000002}],"capped":false,"end":"steady"}
+eval currency-1 pid 1007 round 1: 5.00 s, 10361 ops, 482596 ns/op
+eval currency-1 pid 1007 round 2: 5.00 s, 10353 ops, 482969 ns/op
+eval currency-1 pid 1007 round 3: 5.00 s, 10257 ops, 487516 ns/op
+PVB_RESULT {"script":"currency-1","loop":"eval","pid":1007,"warmup":{"ops":14257,"ns":7002593080},"rounds":[{"ops":10361,"ns":5000178410},{"ops":10353,"ns":5000183030.999999},{"ops":10257,"ns":5000447764}]}
+--- escrow-redeem_1-1: process 1015
+eval escrow-redeem_1-1 pid 1015 warm-up: 8.00 s, 11567 ops, 691829 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"escrow-redeem_1-1","loop":"eval","slices":[{"ops":1318,"ns":1000163838.9999999},{"ops":1434,"ns":1000028674.0000001},{"ops":1395,"ns":1000230389.0000002},{"ops":1489,"ns":1000465526},{"ops":1481,"ns":1000430464},{"ops":1476,"ns":1000248859.9999996},{"ops":1482,"ns":1000156525.9999998},{"ops":1492,"ns":1000666033.9999999}],"capped":false,"end":"steady"}
+eval escrow-redeem_1-1 pid 1015 round 1: 5.00 s, 7412 ops, 674643 ns/op
+eval escrow-redeem_1-1 pid 1015 round 2: 5.00 s, 7403 ops, 675444 ns/op
+eval escrow-redeem_1-1 pid 1015 round 3: 5.00 s, 7412 ops, 674658 ns/op
+PVB_RESULT {"script":"escrow-redeem_1-1","loop":"eval","pid":1015,"warmup":{"ops":11567,"ns":8002390312},"rounds":[{"ops":7412,"ns":5000450773.999999},{"ops":7403,"ns":5000308433.999999},{"ops":7412,"ns":5000563292.000003}]}
+--- escrow-redeem_1-2: process 1023
+eval escrow-redeem_1-2 pid 1023 warm-up: 8.00 s, 11520 ops, 694704 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"escrow-redeem_1-2","loop":"eval","slices":[{"ops":1329,"ns":1000653650},{"ops":1440,"ns":1000062050.9999999},{"ops":1412,"ns":1000271496.9999998},{"ops":1481,"ns":1000256880.0000004},{"ops":1471,"ns":1000385162.9999999},{"ops":1456,"ns":1000443277.9999998},{"ops":1459,"ns":1000351192.9999995},{"ops":1472,"ns":1000561446.9999992}],"capped":false,"end":"steady"}
+eval escrow-redeem_1-2 pid 1023 round 1: 5.00 s, 7415 ops, 674388 ns/op
+eval escrow-redeem_1-2 pid 1023 round 2: 5.00 s, 7404 ops, 675370 ns/op
+eval escrow-redeem_1-2 pid 1023 round 3: 5.00 s, 7365 ops, 678913 ns/op
+PVB_RESULT {"script":"escrow-redeem_1-2","loop":"eval","pid":1023,"warmup":{"ops":11520,"ns":8002985158.999999},"rounds":[{"ops":7415,"ns":5000590184.999999},{"ops":7404,"ns":5000440758.000001},{"ops":7365,"ns":5000192723}]}
+--- escrow-redeem_2-1: process 1031
+eval escrow-redeem_2-1 pid 1031 warm-up: 8.00 s, 10026 ops, 798314 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"escrow-redeem_2-1","loop":"eval","slices":[{"ops":1142,"ns":1000676289.9999999},{"ops":1258,"ns":1000172939.9999999},{"ops":1234,"ns":1000804047.0000001},{"ops":1275,"ns":1000285956.0000001},{"ops":1288,"ns":1000240699.9999994},{"ops":1289,"ns":1000382351.0000002},{"ops":1267,"ns":1000572801.9999996},{"ops":1273,"ns":1000759617.9999992}],"capped":false,"end":"steady"}
+eval escrow-redeem_2-1 pid 1031 round 1: 5.00 s, 6414 ops, 779580 ns/op
+eval escrow-redeem_2-1 pid 1031 round 2: 5.00 s, 6431 ops, 777597 ns/op
+eval escrow-redeem_2-1 pid 1031 round 3: 5.00 s, 6441 ops, 776286 ns/op
+PVB_RESULT {"script":"escrow-redeem_2-1","loop":"eval","pid":1031,"warmup":{"ops":10026,"ns":8003894703.999998},"rounds":[{"ops":6414,"ns":5000225542},{"ops":6431,"ns":5000726583.000002},{"ops":6441,"ns":5000059455.999999}]}
+--- escrow-redeem_2-2: process 1039
+eval escrow-redeem_2-2 pid 1039 warm-up: 6.00 s, 7389 ops, 812341 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"escrow-redeem_2-2","loop":"eval","slices":[{"ops":1115,"ns":1000166140.9999999},{"ops":1237,"ns":1000338591.0000001},{"ops":1241,"ns":1000517531},{"ops":1259,"ns":1000412500.0000004},{"ops":1263,"ns":1000506000.0000004},{"ops":1274,"ns":1000447726.9999998}],"capped":false,"end":"steady"}
+eval escrow-redeem_2-2 pid 1039 round 1: 5.00 s, 6328 ops, 790194 ns/op
+eval escrow-redeem_2-2 pid 1039 round 2: 5.00 s, 6286 ops, 795475 ns/op
+eval escrow-redeem_2-2 pid 1039 round 3: 5.00 s, 6342 ops, 788430 ns/op
+PVB_RESULT {"script":"escrow-redeem_2-2","loop":"eval","pid":1039,"warmup":{"ops":7389,"ns":6002388490.000001},"rounds":[{"ops":6328,"ns":5000345076.999999},{"ops":6286,"ns":5000356367},{"ops":6342,"ns":5000221662}]}
+--- escrow-redeem_2-3: process 1047
+eval escrow-redeem_2-3 pid 1047 warm-up: 6.00 s, 7484 ops, 802028 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"escrow-redeem_2-3","loop":"eval","slices":[{"ops":1130,"ns":1000367699.0000001},{"ops":1270,"ns":1000661775.9999999},{"ops":1235,"ns":1000520010.0000002},{"ops":1268,"ns":1000134915.0000001},{"ops":1292,"ns":1000331167.0000002},{"ops":1289,"ns":1000360265.9999996}],"capped":false,"end":"steady"}
+eval escrow-redeem_2-3 pid 1047 round 1: 5.00 s, 6476 ops, 772091 ns/op
+eval escrow-redeem_2-3 pid 1047 round 2: 5.00 s, 6458 ops, 774272 ns/op
+eval escrow-redeem_2-3 pid 1047 round 3: 5.00 s, 6474 ops, 772389 ns/op
+PVB_RESULT {"script":"escrow-redeem_2-3","loop":"eval","pid":1047,"warmup":{"ops":7484,"ns":6002375833},"rounds":[{"ops":6476,"ns":5000061037},{"ops":6458,"ns":5000249430},{"ops":6474,"ns":5000447327}]}
+--- escrow-refund-1: process 1055
+eval escrow-refund-1 pid 1055 warm-up: 7.00 s, 22204 ops, 315303 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"escrow-refund-1","loop":"eval","slices":[{"ops":2892,"ns":1000069367.9999999},{"ops":3078,"ns":1000195143.0000001},{"ops":3258,"ns":1000010212.0000001},{"ops":3246,"ns":1000196095.0000002},{"ops":3251,"ns":1000244080.0000004},{"ops":3246,"ns":1000215086.9999996},{"ops":3233,"ns":1000054427}],"capped":false,"end":"steady"}
+eval escrow-refund-1 pid 1055 round 1: 5.00 s, 16317 ops, 306433 ns/op
+eval escrow-refund-1 pid 1055 round 2: 5.00 s, 16234 ops, 308012 ns/op
+eval escrow-refund-1 pid 1055 round 3: 5.00 s, 16267 ops, 307379 ns/op
+PVB_RESULT {"script":"escrow-refund-1","loop":"eval","pid":1055,"warmup":{"ops":22204,"ns":7000984412},"rounds":[{"ops":16317,"ns":5000075031},{"ops":16234,"ns":5000267486.999999},{"ops":16267,"ns":5000139657}]}
+--- future-increase-margin-1: process 1063
+eval future-increase-margin-1 pid 1063 warm-up: 7.00 s, 14321 ops, 488929 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"future-increase-margin-1","loop":"eval","slices":[{"ops":1847,"ns":1000365648.0000001},{"ops":1991,"ns":1000424741},{"ops":2098,"ns":1000163214.0000001},{"ops":2089,"ns":1000357267.9999998},{"ops":2079,"ns":1000200933.9999995},{"ops":2112,"ns":1000374083.0000006},{"ops":2105,"ns":1000065042.9999996}],"capped":false,"end":"steady"}
+eval future-increase-margin-1 pid 1063 round 1: 5.00 s, 10512 ops, 475652 ns/op
+eval future-increase-margin-1 pid 1063 round 2: 5.00 s, 10480 ops, 477140 ns/op
+eval future-increase-margin-1 pid 1063 round 3: 5.00 s, 10472 ops, 477470 ns/op
+PVB_RESULT {"script":"future-increase-margin-1","loop":"eval","pid":1063,"warmup":{"ops":14321,"ns":7001950931.000001},"rounds":[{"ops":10512,"ns":5000054363.000001},{"ops":10480,"ns":5000429859.000002},{"ops":10472,"ns":5000066826.000002}]}
+--- future-increase-margin-2: process 1071
+eval future-increase-margin-2 pid 1071 warm-up: 6.00 s, 5607 ops, 1070562 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-increase-margin-2","loop":"eval","slices":[{"ops":858,"ns":1000854417},{"ops":946,"ns":1000141142.0000001},{"ops":949,"ns":1000253234.9999996},{"ops":930,"ns":1000129596.0000002},{"ops":959,"ns":1001022837.9999999},{"ops":965,"ns":1000240254.0000002}],"capped":false,"end":"steady"}
+eval future-increase-margin-2 pid 1071 round 1: 5.00 s, 4862 ops, 1028410 ns/op
+eval future-increase-margin-2 pid 1071 round 2: 5.00 s, 4862 ops, 1028580 ns/op
+eval future-increase-margin-2 pid 1071 round 3: 5.00 s, 4868 ops, 1027176 ns/op
+PVB_RESULT {"script":"future-increase-margin-2","loop":"eval","pid":1071,"warmup":{"ops":5607,"ns":6002641482},"rounds":[{"ops":4862,"ns":5000130717.999999},{"ops":4862,"ns":5000957769.000001},{"ops":4868,"ns":5000293222.999999}]}
+--- future-increase-margin-3: process 1079
+eval future-increase-margin-3 pid 1079 warm-up: 6.00 s, 5671 ops, 1058440 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-increase-margin-3","loop":"eval","slices":[{"ops":863,"ns":1000324200},{"ops":959,"ns":1000140975.9999999},{"ops":970,"ns":1000441155},{"ops":955,"ns":1000082665.9999998},{"ops":966,"ns":1000770300.9999995},{"ops":958,"ns":1000651619.0000002}],"capped":false,"end":"steady"}
+eval future-increase-margin-3 pid 1079 round 1: 5.00 s, 4886 ops, 1023433 ns/op
+eval future-increase-margin-3 pid 1079 round 2: 5.00 s, 4860 ops, 1028967 ns/op
+eval future-increase-margin-3 pid 1079 round 3: 5.00 s, 4869 ops, 1026937 ns/op
+PVB_RESULT {"script":"future-increase-margin-3","loop":"eval","pid":1079,"warmup":{"ops":5671,"ns":6002410917},"rounds":[{"ops":4886,"ns":5000495126.000001},{"ops":4860,"ns":5000778351.000001},{"ops":4869,"ns":5000157681.000003}]}
+--- future-increase-margin-4: process 1087
+eval future-increase-margin-4 pid 1087 warm-up: 6.00 s, 6194 ops, 969094 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-increase-margin-4","loop":"eval","slices":[{"ops":916,"ns":1000846217},{"ops":1046,"ns":1000308988.9999999},{"ops":1047,"ns":1000088199.9999996},{"ops":1049,"ns":1000433270.0000005},{"ops":1063,"ns":1000315471.9999993},{"ops":1073,"ns":1000576691.9999996}],"capped":false,"end":"steady"}
+eval future-increase-margin-4 pid 1087 round 1: 5.00 s, 5337 ops, 936940 ns/op
+eval future-increase-margin-4 pid 1087 round 2: 5.00 s, 5383 ops, 928942 ns/op
+eval future-increase-margin-4 pid 1087 round 3: 5.00 s, 5376 ops, 930150 ns/op
+PVB_RESULT {"script":"future-increase-margin-4","loop":"eval","pid":1087,"warmup":{"ops":6194,"ns":6002568839.999999},"rounds":[{"ops":5337,"ns":5000448864},{"ops":5383,"ns":5000493120.000001},{"ops":5376,"ns":5000486909.999998}]}
+--- future-increase-margin-5: process 1095
+eval future-increase-margin-5 pid 1095 warm-up: 6.01 s, 2240 ops, 2683194 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-increase-margin-5","loop":"eval","slices":[{"ops":318,"ns":1001495724.0000001},{"ops":379,"ns":1001005590.0000002},{"ops":386,"ns":1002081435.9999999},{"ops":383,"ns":1001659761.0000004},{"ops":385,"ns":1001688967.9999995},{"ops":389,"ns":1002423503}],"capped":false,"end":"steady"}
+eval future-increase-margin-5 pid 1095 round 1: 5.00 s, 1933 ops, 2587019 ns/op
+eval future-increase-margin-5 pid 1095 round 2: 5.00 s, 1956 ops, 2556419 ns/op
+eval future-increase-margin-5 pid 1095 round 3: 5.00 s, 1900 ops, 2632099 ns/op
+PVB_RESULT {"script":"future-increase-margin-5","loop":"eval","pid":1095,"warmup":{"ops":2240,"ns":6010354982},"rounds":[{"ops":1933,"ns":5000707257},{"ops":1956,"ns":5000355106.000001},{"ops":1900,"ns":5000988330.999999}]}
+--- future-pay-out-1: process 1103
+eval future-pay-out-1 pid 1103 warm-up: 12.00 s, 23727 ops, 505876 ns/op, 12 slices, steady
+PVB_WARMUP {"script":"future-pay-out-1","loop":"eval","slices":[{"ops":1795,"ns":1000075636.9999999},{"ops":1922,"ns":1000462399.9999999},{"ops":1982,"ns":1000292512},{"ops":1999,"ns":1000227529.0000002},{"ops":2013,"ns":1000053324.9999999},{"ops":1973,"ns":1000158050.9999994},{"ops":1915,"ns":1000251291.9999999},{"ops":2010,"ns":1000230365.0000004},{"ops":2040,"ns":1000377254.9999994},{"ops":2038,"ns":1000405041},{"ops":2030,"ns":1000180800.0000001},{"ops":2010,"ns":1000206012.0000006}],"capped":false,"end":"steady"}
+eval future-pay-out-1 pid 1103 round 1: 5.00 s, 10004 ops, 499815 ns/op
+eval future-pay-out-1 pid 1103 round 2: 5.00 s, 10040 ops, 498015 ns/op
+eval future-pay-out-1 pid 1103 round 3: 5.00 s, 10022 ops, 498912 ns/op
+PVB_RESULT {"script":"future-pay-out-1","loop":"eval","pid":1103,"warmup":{"ops":23727,"ns":12002920218.999998},"rounds":[{"ops":10004,"ns":5000151033},{"ops":10040,"ns":5000074045.000001},{"ops":10022,"ns":5000094024.999998}]}
+--- future-pay-out-2: process 1111
+eval future-pay-out-2 pid 1111 warm-up: 6.00 s, 4856 ops, 1236504 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-pay-out-2","loop":"eval","slices":[{"ops":746,"ns":1000313690.0000001},{"ops":819,"ns":1001067282.9999999},{"ops":824,"ns":1001126362.9999999},{"ops":812,"ns":1001131253.9999994},{"ops":817,"ns":1000020603.9999994},{"ops":838,"ns":1000802173}],"capped":false,"end":"steady"}
+eval future-pay-out-2 pid 1111 round 1: 5.00 s, 4197 ops, 1191570 ns/op
+eval future-pay-out-2 pid 1111 round 2: 5.00 s, 4203 ops, 1189735 ns/op
+eval future-pay-out-2 pid 1111 round 3: 5.00 s, 4203 ops, 1189899 ns/op
+PVB_RESULT {"script":"future-pay-out-2","loop":"eval","pid":1111,"warmup":{"ops":4856,"ns":6004461366.999999},"rounds":[{"ops":4197,"ns":5001019479},{"ops":4203,"ns":5000457210.000001},{"ops":4203,"ns":5001146064.000001}]}
+--- future-pay-out-3: process 1119
+eval future-pay-out-3 pid 1119 warm-up: 6.00 s, 5548 ops, 1082063 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-pay-out-3","loop":"eval","slices":[{"ops":840,"ns":1001186054.9999999},{"ops":938,"ns":1000976521.0000002},{"ops":943,"ns":1000929547.0000002},{"ops":938,"ns":1000042711.0000005},{"ops":938,"ns":1000147264.9999996},{"ops":951,"ns":1000001780.9999999}],"capped":false,"end":"steady"}
+eval future-pay-out-3 pid 1119 round 1: 5.00 s, 4760 ops, 1050487 ns/op
+eval future-pay-out-3 pid 1119 round 2: 5.00 s, 4760 ops, 1050465 ns/op
+eval future-pay-out-3 pid 1119 round 3: 5.00 s, 4767 ops, 1048978 ns/op
+PVB_RESULT {"script":"future-pay-out-3","loop":"eval","pid":1119,"warmup":{"ops":5548,"ns":6003283880},"rounds":[{"ops":4760,"ns":5000317779},{"ops":4760,"ns":5000213990},{"ops":4767,"ns":5000478408.999999}]}
+--- future-pay-out-4: process 1127
+eval future-pay-out-4 pid 1127 warm-up: 6.01 s, 2169 ops, 2768913 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-pay-out-4","loop":"eval","slices":[{"ops":299,"ns":1000098084.0000001},{"ops":365,"ns":1001693238.0000001},{"ops":374,"ns":1000856398.9999998},{"ops":376,"ns":1000741993.0000001},{"ops":373,"ns":1000991941.0000002},{"ops":382,"ns":1001390583.0000004}],"capped":false,"end":"steady"}
+eval future-pay-out-4 pid 1127 round 1: 5.00 s, 1880 ops, 2659608 ns/op
+eval future-pay-out-4 pid 1127 round 2: 5.00 s, 1907 ops, 2623341 ns/op
+eval future-pay-out-4 pid 1127 round 3: 5.00 s, 1911 ops, 2616800 ns/op
+PVB_RESULT {"script":"future-pay-out-4","loop":"eval","pid":1127,"warmup":{"ops":2169,"ns":6005772238},"rounds":[{"ops":1880,"ns":5000062170},{"ops":1907,"ns":5002710641.000002},{"ops":1911,"ns":5000705468}]}
+--- future-settle-early-1: process 1135
+eval future-settle-early-1 pid 1135 warm-up: 7.00 s, 13696 ops, 511201 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"future-settle-early-1","loop":"eval","slices":[{"ops":1772,"ns":1000068694},{"ops":1928,"ns":1000112418.0000001},{"ops":1988,"ns":1000166495},{"ops":2005,"ns":1000462239.0000004},{"ops":2007,"ns":1000057957},{"ops":2012,"ns":1000154649.9999995},{"ops":1984,"ns":1000391185.9999999}],"capped":false,"end":"steady"}
+eval future-settle-early-1 pid 1135 round 1: 5.00 s, 10026 ops, 498745 ns/op
+eval future-settle-early-1 pid 1135 round 2: 5.00 s, 10038 ops, 498172 ns/op
+eval future-settle-early-1 pid 1135 round 3: 5.00 s, 9944 ops, 502822 ns/op
+PVB_RESULT {"script":"future-settle-early-1","loop":"eval","pid":1135,"warmup":{"ops":13696,"ns":7001413639},"rounds":[{"ops":10026,"ns":5000414751.000001},{"ops":10038,"ns":5000651240.000001},{"ops":9944,"ns":5000061956.999998}]}
+--- future-settle-early-2: process 1143
+eval future-settle-early-2 pid 1143 warm-up: 6.00 s, 5457 ops, 1099998 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-settle-early-2","loop":"eval","slices":[{"ops":823,"ns":1000631911},{"ops":924,"ns":1000577150.0000001},{"ops":931,"ns":1000071207.9999999},{"ops":919,"ns":1000601404.0000005},{"ops":923,"ns":1000454241.9999998},{"ops":937,"ns":1000352189.0000002}],"capped":false,"end":"steady"}
+eval future-settle-early-2 pid 1143 round 1: 5.00 s, 4664 ops, 1072042 ns/op
+eval future-settle-early-2 pid 1143 round 2: 5.00 s, 4686 ops, 1067043 ns/op
+eval future-settle-early-2 pid 1143 round 3: 5.00 s, 4681 ops, 1068344 ns/op
+PVB_RESULT {"script":"future-settle-early-2","loop":"eval","pid":1143,"warmup":{"ops":5457,"ns":6002688104},"rounds":[{"ops":4664,"ns":5000004919},{"ops":4686,"ns":5000163521},{"ops":4681,"ns":5000919085.999998}]}
+--- future-settle-early-3: process 1151
+eval future-settle-early-3 pid 1151 warm-up: 6.00 s, 5357 ops, 1120643 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-settle-early-3","loop":"eval","slices":[{"ops":779,"ns":1000418853.0000001},{"ops":912,"ns":1000161451},{"ops":924,"ns":1001141635},{"ops":896,"ns":1000390745.0000001},{"ops":919,"ns":1000492215.0000002},{"ops":927,"ns":1000681999.0000004}],"capped":false,"end":"steady"}
+eval future-settle-early-3 pid 1151 round 1: 5.00 s, 4664 ops, 1072224 ns/op
+eval future-settle-early-3 pid 1151 round 2: 5.00 s, 4641 ops, 1077573 ns/op
+eval future-settle-early-3 pid 1151 round 3: 5.00 s, 4587 ops, 1090197 ns/op
+PVB_RESULT {"script":"future-settle-early-3","loop":"eval","pid":1151,"warmup":{"ops":5357,"ns":6003286898},"rounds":[{"ops":4664,"ns":5000852348},{"ops":4641,"ns":5001015284.999999},{"ops":4587,"ns":5000734200.000001}]}
+--- future-settle-early-4: process 1159
+eval future-settle-early-4 pid 1159 warm-up: 6.01 s, 2546 ops, 2359479 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"future-settle-early-4","loop":"eval","slices":[{"ops":356,"ns":1000469608.0000001},{"ops":432,"ns":1000429838.0000002},{"ops":436,"ns":1001317348},{"ops":435,"ns":1001904072.0000002},{"ops":443,"ns":1001729322.9999995},{"ops":444,"ns":1001383808.9999999}],"capped":false,"end":"steady"}
+eval future-settle-early-4 pid 1159 round 1: 5.00 s, 2196 ops, 2277327 ns/op
+eval future-settle-early-4 pid 1159 round 2: 5.00 s, 2232 ops, 2241065 ns/op
+eval future-settle-early-4 pid 1159 round 3: 5.00 s, 2227 ops, 2246075 ns/op
+PVB_RESULT {"script":"future-settle-early-4","loop":"eval","pid":1159,"warmup":{"ops":2546,"ns":6007233998},"rounds":[{"ops":2196,"ns":5001010682.999999},{"ops":2232,"ns":5002057076.999999},{"ops":2227,"ns":5002009916.000001}]}
+--- game-sm-success_1-1: process 1167
+eval game-sm-success_1-1 pid 1167 warm-up: 8.00 s, 10573 ops, 756974 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"game-sm-success_1-1","loop":"eval","slices":[{"ops":1156,"ns":1000366610},{"ops":1335,"ns":1000676216.0000001},{"ops":1300,"ns":1000607763.9999999},{"ops":1341,"ns":1000659359.0000002},{"ops":1364,"ns":1000457690.0000002},{"ops":1358,"ns":1000528699.0000004},{"ops":1356,"ns":1000114599.9999999},{"ops":1363,"ns":1000074283.0000008}],"capped":false,"end":"steady"}
+eval game-sm-success_1-1 pid 1167 round 1: 5.00 s, 6780 ops, 737560 ns/op
+eval game-sm-success_1-1 pid 1167 round 2: 5.00 s, 6777 ops, 737829 ns/op
+eval game-sm-success_1-1 pid 1167 round 3: 5.00 s, 6761 ops, 739565 ns/op
+PVB_RESULT {"script":"game-sm-success_1-1","loop":"eval","pid":1167,"warmup":{"ops":10573,"ns":8003485221.000001},"rounds":[{"ops":6780,"ns":5000655164},{"ops":6777,"ns":5000266293.999999},{"ops":6761,"ns":5000197910.999999}]}
+--- game-sm-success_1-2: process 1175
+eval game-sm-success_1-2 pid 1175 warm-up: 7.00 s, 16306 ops, 429378 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"game-sm-success_1-2","loop":"eval","slices":[{"ops":2125,"ns":1000366951.9999999},{"ops":2306,"ns":1000318810},{"ops":2376,"ns":1000127129},{"ops":2363,"ns":1000180441},{"ops":2390,"ns":1000028894},{"ops":2388,"ns":1000303508},{"ops":2358,"ns":1000117795.0000001}],"capped":false,"end":"steady"}
+eval game-sm-success_1-2 pid 1175 round 1: 5.00 s, 11942 ops, 418705 ns/op
+eval game-sm-success_1-2 pid 1175 round 2: 5.00 s, 11850 ops, 421962 ns/op
+eval game-sm-success_1-2 pid 1175 round 3: 5.00 s, 11884 ops, 420741 ns/op
+PVB_RESULT {"script":"game-sm-success_1-2","loop":"eval","pid":1175,"warmup":{"ops":16306,"ns":7001443529},"rounds":[{"ops":11942,"ns":5000177627.000001},{"ops":11850,"ns":5000247558.999999},{"ops":11884,"ns":5000083088.000003}]}
+--- game-sm-success_1-3: process 1183
+eval game-sm-success_1-3 pid 1183 warm-up: 6.00 s, 4699 ops, 1277689 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"game-sm-success_1-3","loop":"eval","slices":[{"ops":692,"ns":1000683840.9999999},{"ops":788,"ns":1000817408.0000001},{"ops":805,"ns":1000948848.9999999},{"ops":796,"ns":1000063435.0000005},{"ops":808,"ns":1000536429.9999992},{"ops":810,"ns":1000809508.9999998}],"capped":false,"end":"steady"}
+eval game-sm-success_1-3 pid 1183 round 1: 5.00 s, 4067 ops, 1229534 ns/op
+eval game-sm-success_1-3 pid 1183 round 2: 5.00 s, 4041 ops, 1237328 ns/op
+eval game-sm-success_1-3 pid 1183 round 3: 5.00 s, 4057 ops, 1232487 ns/op
+PVB_RESULT {"script":"game-sm-success_1-3","loop":"eval","pid":1183,"warmup":{"ops":4699,"ns":6003859472},"rounds":[{"ops":4067,"ns":5000513820},{"ops":4041,"ns":5000041383},{"ops":4057,"ns":5000199727.000001}]}
+--- game-sm-success_1-4: process 1191
+eval game-sm-success_1-4 pid 1191 warm-up: 7.00 s, 14578 ops, 480304 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"game-sm-success_1-4","loop":"eval","slices":[{"ops":1875,"ns":1000083498.9999999},{"ops":2022,"ns":1000027820.0000002},{"ops":2123,"ns":1000541855},{"ops":2128,"ns":1000371423.0000005},{"ops":2126,"ns":1000093228.0000006},{"ops":2145,"ns":1000385009.0000006},{"ops":2159,"ns":1000368730.0000001}],"capped":false,"end":"steady"}
+eval game-sm-success_1-4 pid 1191 round 1: 5.00 s, 10697 ops, 467456 ns/op
+eval game-sm-success_1-4 pid 1191 round 2: 5.00 s, 10816 ops, 462318 ns/op
+eval game-sm-success_1-4 pid 1191 round 3: 5.00 s, 10805 ops, 462750 ns/op
+PVB_RESULT {"script":"game-sm-success_1-4","loop":"eval","pid":1191,"warmup":{"ops":14578,"ns":7001871564.000002},"rounds":[{"ops":10697,"ns":5000373815},{"ops":10816,"ns":5000429884.999998},{"ops":10805,"ns":5000015748.999998}]}
+--- game-sm-success_2-1: process 1199
+eval game-sm-success_2-1 pid 1199 warm-up: 6.00 s, 7873 ops, 762388 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"game-sm-success_2-1","loop":"eval","slices":[{"ops":1167,"ns":1000006032},{"ops":1327,"ns":1000238241},{"ops":1322,"ns":1001200607.0000002},{"ops":1355,"ns":1000052043.9999995},{"ops":1352,"ns":1000327349.0000001},{"ops":1350,"ns":1000457470.9999998}],"capped":false,"end":"steady"}
+eval game-sm-success_2-1 pid 1199 round 1: 5.00 s, 6813 ops, 733930 ns/op
+eval game-sm-success_2-1 pid 1199 round 2: 5.00 s, 6741 ops, 741790 ns/op
+eval game-sm-success_2-1 pid 1199 round 3: 5.00 s, 6737 ops, 742187 ns/op
+PVB_RESULT {"script":"game-sm-success_2-1","loop":"eval","pid":1199,"warmup":{"ops":7873,"ns":6002281744},"rounds":[{"ops":6813,"ns":5000265710.000001},{"ops":6741,"ns":5000407830},{"ops":6737,"ns":5000115132.000001}]}
+--- game-sm-success_2-2: process 1207
+eval game-sm-success_2-2 pid 1207 warm-up: 11.00 s, 26581 ops, 413922 ns/op, 11 slices, steady
+PVB_WARMUP {"script":"game-sm-success_2-2","loop":"eval","slices":[{"ops":2231,"ns":1000325618.0000001},{"ops":2367,"ns":1000203142.0000001},{"ops":2491,"ns":1000169834.9999996},{"ops":2489,"ns":1000300424.9999994},{"ops":2385,"ns":1000103968.0000004},{"ops":2314,"ns":1000345555.9999993},{"ops":2465,"ns":1000282868.9999996},{"ops":2471,"ns":1000278027.0000002},{"ops":2460,"ns":1000272175.0000001},{"ops":2459,"ns":1000040902.9999992},{"ops":2449,"ns":1000127582.9999995}],"capped":false,"end":"steady"}
+eval game-sm-success_2-2 pid 1207 round 1: 5.00 s, 12268 ops, 407594 ns/op
+eval game-sm-success_2-2 pid 1207 round 2: 5.00 s, 12312 ops, 406113 ns/op
+eval game-sm-success_2-2 pid 1207 round 3: 5.00 s, 12318 ops, 405940 ns/op
+PVB_RESULT {"script":"game-sm-success_2-2","loop":"eval","pid":1207,"warmup":{"ops":26581,"ns":11002450101},"rounds":[{"ops":12268,"ns":5000358814.000001},{"ops":12312,"ns":5000062749.000001},{"ops":12318,"ns":5000363248.999998}]}
+--- game-sm-success_2-3: process 1215
+eval game-sm-success_2-3 pid 1215 warm-up: 6.00 s, 4839 ops, 1240399 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"game-sm-success_2-3","loop":"eval","slices":[{"ops":725,"ns":1000378429},{"ops":809,"ns":1000867812},{"ops":829,"ns":1000419377.0000001},{"ops":822,"ns":1000009812.9999996},{"ops":828,"ns":1000335768.9999994},{"ops":826,"ns":1000277511.9999996}],"capped":false,"end":"steady"}
+eval game-sm-success_2-3 pid 1215 round 1: 5.00 s, 4185 ops, 1194865 ns/op
+eval game-sm-success_2-3 pid 1215 round 2: 5.00 s, 4119 ops, 1214163 ns/op
+eval game-sm-success_2-3 pid 1215 round 3: 5.00 s, 4081 ops, 1225423 ns/op
+PVB_RESULT {"script":"game-sm-success_2-3","loop":"eval","pid":1215,"warmup":{"ops":4839,"ns":6002288711.999999},"rounds":[{"ops":4185,"ns":5000508373},{"ops":4119,"ns":5001138990.000001},{"ops":4081,"ns":5000951384.999998}]}
+--- game-sm-success_2-4: process 1223
+eval game-sm-success_2-4 pid 1223 warm-up: 7.00 s, 14450 ops, 484538 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"game-sm-success_2-4","loop":"eval","slices":[{"ops":1920,"ns":1000022029.0000001},{"ops":2007,"ns":1000254116.0000001},{"ops":2095,"ns":1000017078.9999998},{"ops":2084,"ns":1000238013.0000001},{"ops":2101,"ns":1000332185.9999996},{"ops":2126,"ns":1000339654.9999998},{"ops":2117,"ns":1000374298.0000006}],"capped":false,"end":"steady"}
+eval game-sm-success_2-4 pid 1223 round 1: 5.00 s, 10447 ops, 478624 ns/op
+eval game-sm-success_2-4 pid 1223 round 2: 5.00 s, 10378 ops, 481807 ns/op
+eval game-sm-success_2-4 pid 1223 round 3: 5.00 s, 10504 ops, 476012 ns/op
+PVB_RESULT {"script":"game-sm-success_2-4","loop":"eval","pid":1223,"warmup":{"ops":14450,"ns":7001577376.000001},"rounds":[{"ops":10447,"ns":5000185393.000001},{"ops":10378,"ns":5000190449},{"ops":10504,"ns":5000032367}]}
+--- game-sm-success_2-5: process 1231
+eval game-sm-success_2-5 pid 1231 warm-up: 6.00 s, 4721 ops, 1271629 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"game-sm-success_2-5","loop":"eval","slices":[{"ops":710,"ns":1000325434},{"ops":792,"ns":1000059495.0000002},{"ops":807,"ns":1001047447.9999998},{"ops":794,"ns":1000130459.0000005},{"ops":804,"ns":1000892903.0000008},{"ops":814,"ns":1000906145.0000008}],"capped":false,"end":"steady"}
+eval game-sm-success_2-5 pid 1231 round 1: 5.00 s, 4085 ops, 1224007 ns/op
+eval game-sm-success_2-5 pid 1231 round 2: 5.00 s, 4025 ops, 1242395 ns/op
+eval game-sm-success_2-5 pid 1231 round 3: 5.00 s, 4033 ops, 1239928 ns/op
+PVB_RESULT {"script":"game-sm-success_2-5","loop":"eval","pid":1231,"warmup":{"ops":4721,"ns":6003361884.000002},"rounds":[{"ops":4085,"ns":5000068299.000001},{"ops":4025,"ns":5000638631},{"ops":4033,"ns":5000631305.000001}]}
+--- game-sm-success_2-6: process 1239
+eval game-sm-success_2-6 pid 1239 warm-up: 7.00 s, 14244 ops, 491544 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"game-sm-success_2-6","loop":"eval","slices":[{"ops":1882,"ns":1000113825},{"ops":1980,"ns":1000298203.0000002},{"ops":2066,"ns":1000391561.0000004},{"ops":2077,"ns":1000058768.9999998},{"ops":2075,"ns":1000173544.9999996},{"ops":2077,"ns":1000108538.9999999},{"ops":2087,"ns":1000415301}],"capped":false,"end":"steady"}
+eval game-sm-success_2-6 pid 1239 round 1: 5.00 s, 10469 ops, 477612 ns/op
+eval game-sm-success_2-6 pid 1239 round 2: 5.00 s, 10452 ops, 478412 ns/op
+eval game-sm-success_2-6 pid 1239 round 3: 5.00 s, 10404 ops, 480600 ns/op
+PVB_RESULT {"script":"game-sm-success_2-6","loop":"eval","pid":1239,"warmup":{"ops":14244,"ns":7001559743},"rounds":[{"ops":10469,"ns":5000117606.000001},{"ops":10452,"ns":5000362394},{"ops":10404,"ns":5000160679.000001}]}
+--- guardrail-sorted-large: process 1247
+eval guardrail-sorted-large pid 1247 warm-up: 8.00 s, 5729 ops, 1397212 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"guardrail-sorted-large","loop":"eval","slices":[{"ops":667,"ns":1000316015.0000001},{"ops":734,"ns":1000077324.9999998},{"ops":744,"ns":1001177815.9999999},{"ops":720,"ns":1000796265},{"ops":709,"ns":1000951522.0000002},{"ops":717,"ns":1000907532.0000001},{"ops":720,"ns":1000310671.9999996},{"ops":718,"ns":1000091566.9999995}],"capped":false,"end":"steady"}
+eval guardrail-sorted-large pid 1247 round 1: 5.00 s, 3597 ops, 1390353 ns/op
+eval guardrail-sorted-large pid 1247 round 2: 5.00 s, 3590 ops, 1392884 ns/op
+eval guardrail-sorted-large pid 1247 round 3: 5.00 s, 3589 ops, 1393486 ns/op
+PVB_RESULT {"script":"guardrail-sorted-large","loop":"eval","pid":1247,"warmup":{"ops":5729,"ns":8004628714},"rounds":[{"ops":3597,"ns":5001099510},{"ops":3590,"ns":5000451965},{"ops":3589,"ns":5001222452.999998}]}
+--- guardrail-sorted-small: process 1255
+eval guardrail-sorted-small pid 1255 warm-up: 7.00 s, 23103 ops, 303032 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"guardrail-sorted-small","loop":"eval","slices":[{"ops":3000,"ns":1000268609},{"ops":3264,"ns":1000045627},{"ops":3369,"ns":1000108777.9999998},{"ops":3366,"ns":1000150900.9999995},{"ops":3361,"ns":1000109260.0000001},{"ops":3371,"ns":1000021998.9999996},{"ops":3372,"ns":1000244071.9999995}],"capped":false,"end":"steady"}
+eval guardrail-sorted-small pid 1255 round 1: 5.00 s, 16944 ops, 295094 ns/op
+eval guardrail-sorted-small pid 1255 round 2: 5.00 s, 16967 ops, 294714 ns/op
+eval guardrail-sorted-small pid 1255 round 3: 5.00 s, 16963 ops, 294764 ns/op
+PVB_RESULT {"script":"guardrail-sorted-small","loop":"eval","pid":1255,"warmup":{"ops":23103,"ns":7000949246},"rounds":[{"ops":16944,"ns":5000064872.999999},{"ops":16967,"ns":5000409095.000001},{"ops":16963,"ns":5000081821}]}
+--- guardrail-unsorted-large: process 1263
+eval guardrail-unsorted-large pid 1263 warm-up: 6.01 s, 3075 ops, 1953187 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"guardrail-unsorted-large","loop":"eval","slices":[{"ops":469,"ns":1001860689.0000001},{"ops":520,"ns":1000934930.9999998},{"ops":512,"ns":1000046844.9999999},{"ops":530,"ns":1001585120.0000002},{"ops":529,"ns":1001312628.0000006},{"ops":515,"ns":1000310607.0000004}],"capped":false,"end":"steady"}
+eval guardrail-unsorted-large pid 1263 round 1: 5.00 s, 2649 ops, 1887580 ns/op
+eval guardrail-unsorted-large pid 1263 round 2: 5.00 s, 2636 ops, 1897143 ns/op
+eval guardrail-unsorted-large pid 1263 round 3: 5.00 s, 2630 ops, 1901189 ns/op
+PVB_RESULT {"script":"guardrail-unsorted-large","loop":"eval","pid":1263,"warmup":{"ops":3075,"ns":6006050820.000001},"rounds":[{"ops":2649,"ns":5000198368.999999},{"ops":2636,"ns":5000867731.999999},{"ops":2630,"ns":5000127389.000001}]}
+--- guardrail-unsorted-small: process 1271
+eval guardrail-unsorted-small pid 1271 warm-up: 6.00 s, 19946 ops, 300863 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"guardrail-unsorted-small","loop":"eval","slices":[{"ops":3037,"ns":1000215566.0000001},{"ops":3304,"ns":1000211340.0000001},{"ops":3398,"ns":1000164418.9999998},{"ops":3421,"ns":1000185488.0000005},{"ops":3392,"ns":1000002722.0000001},{"ops":3394,"ns":1000230558.9999996}],"capped":false,"end":"steady"}
+eval guardrail-unsorted-small pid 1271 round 1: 5.00 s, 17104 ops, 292341 ns/op
+eval guardrail-unsorted-small pid 1271 round 2: 5.00 s, 17094 ops, 292511 ns/op
+eval guardrail-unsorted-small pid 1271 round 3: 5.00 s, 17093 ops, 292533 ns/op
+PVB_RESULT {"script":"guardrail-unsorted-small","loop":"eval","pid":1271,"warmup":{"ops":19946,"ns":6001010094.000001},"rounds":[{"ops":17104,"ns":5000208989.000001},{"ops":17094,"ns":5000177387},{"ops":17093,"ns":5000262518}]}
+--- multisig-sm-01: process 1279
+eval multisig-sm-01 pid 1279 warm-up: 6.00 s, 7821 ops, 767394 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-01","loop":"eval","slices":[{"ops":1159,"ns":1000293700},{"ops":1333,"ns":1000305934},{"ops":1322,"ns":1000152236.9999998},{"ops":1330,"ns":1000273145.9999995},{"ops":1331,"ns":1000196831.9999996},{"ops":1346,"ns":1000567258.9999995}],"capped":false,"end":"steady"}
+eval multisig-sm-01 pid 1279 round 1: 5.00 s, 6793 ops, 736105 ns/op
+eval multisig-sm-01 pid 1279 round 2: 5.00 s, 6852 ops, 729745 ns/op
+eval multisig-sm-01 pid 1279 round 3: 5.00 s, 6857 ops, 729242 ns/op
+PVB_RESULT {"script":"multisig-sm-01","loop":"eval","pid":1279,"warmup":{"ops":7821,"ns":6001789107.999998},"rounds":[{"ops":6793,"ns":5000361771},{"ops":6852,"ns":5000210508},{"ops":6857,"ns":5000410924}]}
+--- multisig-sm-02: process 1287
+eval multisig-sm-02 pid 1287 warm-up: 6.00 s, 7977 ops, 752328 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-02","loop":"eval","slices":[{"ops":1187,"ns":1000132909.9999999},{"ops":1351,"ns":1000051848.0000001},{"ops":1329,"ns":1000338268.9999999},{"ops":1357,"ns":1000380721.9999999},{"ops":1384,"ns":1000150757.0000004},{"ops":1369,"ns":1000264758.0000002}],"capped":false,"end":"steady"}
+eval multisig-sm-02 pid 1287 round 1: 5.00 s, 6917 ops, 722892 ns/op
+eval multisig-sm-02 pid 1287 round 2: 5.00 s, 6891 ops, 725654 ns/op
+eval multisig-sm-02 pid 1287 round 3: 5.00 s, 6889 ops, 725843 ns/op
+PVB_RESULT {"script":"multisig-sm-02","loop":"eval","pid":1287,"warmup":{"ops":7977,"ns":6001319264},"rounds":[{"ops":6917,"ns":5000244283.999999},{"ops":6891,"ns":5000481514.999999},{"ops":6889,"ns":5000330721.999999}]}
+--- multisig-sm-03: process 1295
+eval multisig-sm-03 pid 1295 warm-up: 6.00 s, 8055 ops, 745231 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-03","loop":"eval","slices":[{"ops":1205,"ns":1000704177.0000001},{"ops":1365,"ns":1000000823.9999998},{"ops":1337,"ns":1000646236},{"ops":1383,"ns":1000544284.0000005},{"ops":1391,"ns":1000377601.9999995},{"ops":1374,"ns":1000563145.9999995}],"capped":false,"end":"steady"}
+eval multisig-sm-03 pid 1295 round 1: 5.00 s, 6902 ops, 724507 ns/op
+eval multisig-sm-03 pid 1295 round 2: 5.00 s, 6931 ops, 721450 ns/op
+eval multisig-sm-03 pid 1295 round 3: 5.00 s, 6975 ops, 716871 ns/op
+PVB_RESULT {"script":"multisig-sm-03","loop":"eval","pid":1295,"warmup":{"ops":8055,"ns":6002836269},"rounds":[{"ops":6902,"ns":5000545397},{"ops":6931,"ns":5000368666},{"ops":6975,"ns":5000173046}]}
+--- multisig-sm-04: process 1303
+eval multisig-sm-04 pid 1303 warm-up: 8.00 s, 10802 ops, 740824 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"multisig-sm-04","loop":"eval","slices":[{"ops":1176,"ns":1000440522.0000001},{"ops":1359,"ns":1000322975.9999999},{"ops":1335,"ns":1000059342},{"ops":1382,"ns":1000568058.9999998},{"ops":1387,"ns":1000328636.9999996},{"ops":1385,"ns":1000524140.9999999},{"ops":1386,"ns":1000111969.0000005},{"ops":1392,"ns":1000025532.0000006}],"capped":false,"end":"steady"}
+eval multisig-sm-04 pid 1303 round 1: 5.00 s, 6918 ops, 722809 ns/op
+eval multisig-sm-04 pid 1303 round 2: 5.00 s, 6952 ops, 719271 ns/op
+eval multisig-sm-04 pid 1303 round 3: 5.00 s, 6927 ops, 721848 ns/op
+PVB_RESULT {"script":"multisig-sm-04","loop":"eval","pid":1303,"warmup":{"ops":10802,"ns":8002381178.000001},"rounds":[{"ops":6918,"ns":5000389645.000001},{"ops":6952,"ns":5000368684.999999},{"ops":6927,"ns":5000242641.000001}]}
+--- multisig-sm-05: process 1311
+eval multisig-sm-05 pid 1311 warm-up: 6.00 s, 5672 ops, 1058242 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-05","loop":"eval","slices":[{"ops":855,"ns":1000050870.9999999},{"ops":962,"ns":1000183499},{"ops":963,"ns":1000627684.9999999},{"ops":955,"ns":1000479404.9999996},{"ops":966,"ns":1000242715.9999998},{"ops":971,"ns":1000763046}],"capped":false,"end":"steady"}
+eval multisig-sm-05 pid 1311 round 1: 5.00 s, 4879 ops, 1024916 ns/op
+eval multisig-sm-05 pid 1311 round 2: 5.00 s, 4879 ops, 1024908 ns/op
+eval multisig-sm-05 pid 1311 round 3: 5.00 s, 4880 ops, 1024601 ns/op
+PVB_RESULT {"script":"multisig-sm-05","loop":"eval","pid":1311,"warmup":{"ops":5672,"ns":6002347221.999999},"rounds":[{"ops":4879,"ns":5000566671.000001},{"ops":4879,"ns":5000526413.000001},{"ops":4880,"ns":5000052188}]}
+--- multisig-sm-06: process 1319
+eval multisig-sm-06 pid 1319 warm-up: 6.00 s, 8031 ops, 747413 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-06","loop":"eval","slices":[{"ops":1168,"ns":1000161355},{"ops":1355,"ns":1000698256.9999998},{"ops":1348,"ns":1000159728.0000001},{"ops":1385,"ns":1000694326.0000002},{"ops":1384,"ns":1000468087.9999996},{"ops":1391,"ns":1000289034.0000004}],"capped":false,"end":"steady"}
+eval multisig-sm-06 pid 1319 round 1: 5.00 s, 6918 ops, 722842 ns/op
+eval multisig-sm-06 pid 1319 round 2: 5.00 s, 6917 ops, 722866 ns/op
+eval multisig-sm-06 pid 1319 round 3: 5.00 s, 6917 ops, 722949 ns/op
+PVB_RESULT {"script":"multisig-sm-06","loop":"eval","pid":1319,"warmup":{"ops":8031,"ns":6002470788},"rounds":[{"ops":6918,"ns":5000618340.999999},{"ops":6917,"ns":5000064220},{"ops":6917,"ns":5000637350.000001}]}
+--- multisig-sm-07: process 1327
+eval multisig-sm-07 pid 1327 warm-up: 6.00 s, 7860 ops, 763641 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-07","loop":"eval","slices":[{"ops":1153,"ns":1000162220.0000001},{"ops":1338,"ns":1000327429.9999999},{"ops":1332,"ns":1000604919.9999998},{"ops":1319,"ns":1000562827.9999996},{"ops":1352,"ns":1000542355.9999999},{"ops":1366,"ns":1000016852.0000006}],"capped":false,"end":"steady"}
+eval multisig-sm-07 pid 1327 round 1: 5.00 s, 6714 ops, 744777 ns/op
+eval multisig-sm-07 pid 1327 round 2: 5.00 s, 6706 ops, 745604 ns/op
+eval multisig-sm-07 pid 1327 round 3: 5.00 s, 6708 ops, 745476 ns/op
+PVB_RESULT {"script":"multisig-sm-07","loop":"eval","pid":1327,"warmup":{"ops":7860,"ns":6002216606},"rounds":[{"ops":6714,"ns":5000430653},{"ops":6706,"ns":5000021401},{"ops":6708,"ns":5000651592.000002}]}
+--- multisig-sm-08: process 1335
+eval multisig-sm-08 pid 1335 warm-up: 6.00 s, 7991 ops, 751120 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-08","loop":"eval","slices":[{"ops":1184,"ns":1000450366},{"ops":1359,"ns":1000283552.9999998},{"ops":1325,"ns":1000238466.0000002},{"ops":1363,"ns":1000112719.9999996},{"ops":1391,"ns":1000421108.9999999},{"ops":1369,"ns":1000694370.9999996}],"capped":false,"end":"steady"}
+eval multisig-sm-08 pid 1335 round 1: 5.00 s, 6862 ops, 728720 ns/op
+eval multisig-sm-08 pid 1335 round 2: 5.00 s, 6889 ops, 725826 ns/op
+eval multisig-sm-08 pid 1335 round 3: 5.00 s, 6962 ops, 718274 ns/op
+PVB_RESULT {"script":"multisig-sm-08","loop":"eval","pid":1335,"warmup":{"ops":7991,"ns":6002200584.999999},"rounds":[{"ops":6862,"ns":5000477358},{"ops":6889,"ns":5000217742.000001},{"ops":6962,"ns":5000621832.000001}]}
+--- multisig-sm-09: process 1343
+eval multisig-sm-09 pid 1343 warm-up: 6.00 s, 7724 ops, 777069 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-09","loop":"eval","slices":[{"ops":1169,"ns":1000267423.9999999},{"ops":1339,"ns":1000441761.9999999},{"ops":1308,"ns":1000029797.0000001},{"ops":1309,"ns":1000567785.0000002},{"ops":1312,"ns":1000191418.9999998},{"ops":1287,"ns":1000582107.0000001}],"capped":false,"end":"steady"}
+eval multisig-sm-09 pid 1343 round 1: 5.00 s, 6558 ops, 762446 ns/op
+eval multisig-sm-09 pid 1343 round 2: 5.00 s, 6560 ops, 762250 ns/op
+eval multisig-sm-09 pid 1343 round 3: 5.00 s, 6587 ops, 759096 ns/op
+PVB_RESULT {"script":"multisig-sm-09","loop":"eval","pid":1343,"warmup":{"ops":7724,"ns":6002080294},"rounds":[{"ops":6558,"ns":5000117631},{"ops":6560,"ns":5000361552},{"ops":6587,"ns":5000166030}]}
+--- multisig-sm-10: process 1351
+eval multisig-sm-10 pid 1351 warm-up: 6.00 s, 5405 ops, 1110834 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"multisig-sm-10","loop":"eval","slices":[{"ops":805,"ns":1001042963.0000001},{"ops":895,"ns":1000997532.0000001},{"ops":921,"ns":1000410938.9999999},{"ops":912,"ns":1000295282.0000005},{"ops":929,"ns":1000619169.9999999},{"ops":943,"ns":1000694141}],"capped":false,"end":"steady"}
+eval multisig-sm-10 pid 1351 round 1: 5.00 s, 4750 ops, 1052811 ns/op
+eval multisig-sm-10 pid 1351 round 2: 5.00 s, 4722 ops, 1058980 ns/op
+eval multisig-sm-10 pid 1351 round 3: 5.00 s, 4743 ops, 1054293 ns/op
+PVB_RESULT {"script":"multisig-sm-10","loop":"eval","pid":1351,"warmup":{"ops":5405,"ns":6004060027},"rounds":[{"ops":4750,"ns":5000849875.000001},{"ops":4722,"ns":5000504527.000001},{"ops":4743,"ns":5000513770.999998}]}
+--- ping-pong-1: process 1359
+eval ping-pong-1 pid 1359 warm-up: 6.00 s, 9110 ops, 658859 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"ping-pong-1","loop":"eval","slices":[{"ops":1343,"ns":1000272496.9999999},{"ops":1540,"ns":1000403822.9999999},{"ops":1530,"ns":1000048910.9999999},{"ops":1553,"ns":1000584223.0000002},{"ops":1572,"ns":1000295020.9999999},{"ops":1572,"ns":1000604277.9999998}],"capped":false,"end":"steady"}
+eval ping-pong-1 pid 1359 round 1: 5.00 s, 7864 ops, 635826 ns/op
+eval ping-pong-1 pid 1359 round 2: 5.00 s, 7802 ops, 640897 ns/op
+eval ping-pong-1 pid 1359 round 3: 5.00 s, 7586 ops, 659118 ns/op
+PVB_RESULT {"script":"ping-pong-1","loop":"eval","pid":1359,"warmup":{"ops":9110,"ns":6002208753},"rounds":[{"ops":7864,"ns":5000138630.999999},{"ops":7802,"ns":5000276066.999999},{"ops":7586,"ns":5000067305.999999}]}
+--- ping-pong-2: process 1367
+eval ping-pong-2 pid 1367 warm-up: 12.00 s, 18408 ops, 652092 ns/op, 12 slices, steady
+PVB_WARMUP {"script":"ping-pong-2","loop":"eval","slices":[{"ops":1336,"ns":1000900447.9999999},{"ops":1495,"ns":1000157619.0000001},{"ops":1463,"ns":1000057620.9999999},{"ops":1558,"ns":1000127602},{"ops":1527,"ns":1000137221},{"ops":1542,"ns":1000065299.9999993},{"ops":1540,"ns":1000520772.9999993},{"ops":1597,"ns":1000566963.0000002},{"ops":1591,"ns":1000486410.9999999},{"ops":1588,"ns":1000244177.999999},{"ops":1583,"ns":1000198061.9999995},{"ops":1588,"ns":1000249908.0000015}],"capped":false,"end":"steady"}
+eval ping-pong-2 pid 1367 round 1: 5.00 s, 7941 ops, 629720 ns/op
+eval ping-pong-2 pid 1367 round 2: 5.00 s, 7901 ops, 632905 ns/op
+eval ping-pong-2 pid 1367 round 3: 5.00 s, 7947 ops, 629203 ns/op
+PVB_RESULT {"script":"ping-pong-2","loop":"eval","pid":1367,"warmup":{"ops":18408,"ns":12003712105.999998},"rounds":[{"ops":7941,"ns":5000603944},{"ops":7901,"ns":5000583348},{"ops":7947,"ns":5000275534}]}
+--- ping-pong_2-1: process 1375
+eval ping-pong_2-1 pid 1375 warm-up: 7.00 s, 16635 ops, 420910 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"ping-pong_2-1","loop":"eval","slices":[{"ops":2125,"ns":1000268871.9999999},{"ops":2311,"ns":1000142795.9999999},{"ops":2430,"ns":1000239420.9999998},{"ops":2440,"ns":1000326824.9999996},{"ops":2444,"ns":1000358633.0000007},{"ops":2453,"ns":1000170992.9999998},{"ops":2432,"ns":1000334598.9999998}],"capped":false,"end":"steady"}
+eval ping-pong_2-1 pid 1375 round 1: 5.00 s, 12236 ops, 408649 ns/op
+eval ping-pong_2-1 pid 1375 round 2: 5.00 s, 12247 ops, 408270 ns/op
+eval ping-pong_2-1 pid 1375 round 3: 5.00 s, 12316 ops, 405991 ns/op
+PVB_RESULT {"script":"ping-pong_2-1","loop":"eval","pid":1375,"warmup":{"ops":16635,"ns":7001842139},"rounds":[{"ops":12236,"ns":5000231960},{"ops":12247,"ns":5000077053.000001},{"ops":12316,"ns":5000183391.999999}]}
+--- prism-1: process 1383
+eval prism-1 pid 1383 warm-up: 7.00 s, 19472 ops, 359528 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"prism-1","loop":"eval","slices":[{"ops":2528,"ns":1000104791},{"ops":2709,"ns":1000081833},{"ops":2822,"ns":1000008787.9999996},{"ops":2845,"ns":1000155560.0000001},{"ops":2857,"ns":1000009123.9999993},{"ops":2860,"ns":1000237568.0000005},{"ops":2851,"ns":1000141209.0000004}],"capped":false,"end":"steady"}
+eval prism-1 pid 1383 round 1: 5.00 s, 14254 ops, 350788 ns/op
+eval prism-1 pid 1383 round 2: 5.00 s, 14270 ops, 350403 ns/op
+eval prism-1 pid 1383 round 3: 5.00 s, 14201 ops, 352102 ns/op
+PVB_RESULT {"script":"prism-1","loop":"eval","pid":1383,"warmup":{"ops":19472,"ns":7000738873},"rounds":[{"ops":14254,"ns":5000134717.999999},{"ops":14270,"ns":5000245934.999999},{"ops":14201,"ns":5000204018}]}
+--- prism-2: process 1391
+eval prism-2 pid 1391 warm-up: 8.00 s, 9738 ops, 821843 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"prism-2","loop":"eval","slices":[{"ops":1061,"ns":1000242246.9999999},{"ops":1221,"ns":1000762484.0000001},{"ops":1202,"ns":1000324993.0000001},{"ops":1239,"ns":1000323282.9999998},{"ops":1256,"ns":1000046419.0000002},{"ops":1248,"ns":1000586755.0000002},{"ops":1243,"ns":1000500258},{"ops":1268,"ns":1000317721.9999998}],"capped":false,"end":"steady"}
+eval prism-2 pid 1391 round 1: 5.00 s, 6257 ops, 799157 ns/op
+eval prism-2 pid 1391 round 2: 5.00 s, 6249 ops, 800243 ns/op
+eval prism-2 pid 1391 round 3: 5.00 s, 6228 ops, 802918 ns/op
+PVB_RESULT {"script":"prism-2","loop":"eval","pid":1391,"warmup":{"ops":9738,"ns":8003104161},"rounds":[{"ops":6257,"ns":5000323725.999999},{"ops":6249,"ns":5000720093.999998},{"ops":6228,"ns":5000573537}]}
+--- prism-3: process 1399
+eval prism-3 pid 1399 warm-up: 6.00 s, 7947 ops, 755270 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"prism-3","loop":"eval","slices":[{"ops":1190,"ns":1000713305},{"ops":1335,"ns":1000286746.9999999},{"ops":1324,"ns":1000003803.0000001},{"ops":1356,"ns":1000500157},{"ops":1373,"ns":1000417064.0000002},{"ops":1369,"ns":1000206478.0000001}],"capped":false,"end":"steady"}
+eval prism-3 pid 1399 round 1: 5.00 s, 6651 ops, 751821 ns/op
+eval prism-3 pid 1399 round 2: 5.00 s, 6648 ops, 752132 ns/op
+eval prism-3 pid 1399 round 3: 5.00 s, 6613 ops, 756113 ns/op
+PVB_RESULT {"script":"prism-3","loop":"eval","pid":1399,"warmup":{"ops":7947,"ns":6002127554},"rounds":[{"ops":6651,"ns":5000361837},{"ops":6648,"ns":5000175912.999999},{"ops":6613,"ns":5000175184.999998}]}
+--- pubkey-1: process 1407
+eval pubkey-1 pid 1407 warm-up: 7.00 s, 22937 ops, 305238 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"pubkey-1","loop":"eval","slices":[{"ops":2976,"ns":1000227753.0000001},{"ops":3197,"ns":1000206301.9999999},{"ops":3346,"ns":1000055777.9999999},{"ops":3365,"ns":1000201755.9999995},{"ops":3344,"ns":1000187425.0000001},{"ops":3317,"ns":1000082932.9999996},{"ops":3392,"ns":1000285616.0000001}],"capped":false,"end":"steady"}
+eval pubkey-1 pid 1407 round 1: 5.00 s, 16772 ops, 298132 ns/op
+eval pubkey-1 pid 1407 round 2: 5.00 s, 16659 ops, 300143 ns/op
+eval pubkey-1 pid 1407 round 3: 5.00 s, 16790 ops, 297809 ns/op
+PVB_RESULT {"script":"pubkey-1","loop":"eval","pid":1407,"warmup":{"ops":22937,"ns":7001247563},"rounds":[{"ops":16772,"ns":5000265116},{"ops":16659,"ns":5000078529.999999},{"ops":16790,"ns":5000204840.999999}]}
+--- stablecoin_1-1: process 1415
+eval stablecoin_1-1 pid 1415 warm-up: 7.01 s, 1638 ops, 4280633 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"stablecoin_1-1","loop":"eval","slices":[{"ops":192,"ns":1000097676},{"ops":236,"ns":1000126835.0000002},{"ops":238,"ns":1000832801.9999999},{"ops":238,"ns":1003086201.0000001},{"ops":244,"ns":1003628686.9999994},{"ops":248,"ns":1003147170.0000002},{"ops":242,"ns":1000757701.9999999}],"capped":false,"end":"steady"}
+eval stablecoin_1-1 pid 1415 round 1: 5.00 s, 1226 ops, 4078384 ns/op
+eval stablecoin_1-1 pid 1415 round 2: 5.00 s, 1242 ops, 4026419 ns/op
+eval stablecoin_1-1 pid 1415 round 3: 5.00 s, 1238 ops, 4041846 ns/op
+PVB_RESULT {"script":"stablecoin_1-1","loop":"eval","pid":1415,"warmup":{"ops":1638,"ns":7011677072.999999},"rounds":[{"ops":1226,"ns":5000098477},{"ops":1242,"ns":5000811894.000002},{"ops":1238,"ns":5003804779.999999}]}
+--- stablecoin_1-2: process 1423
+eval stablecoin_1-2 pid 1423 warm-up: 7.00 s, 16839 ops, 415760 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"stablecoin_1-2","loop":"eval","slices":[{"ops":2186,"ns":1000163939.9999999},{"ops":2335,"ns":1000063920.0000002},{"ops":2442,"ns":1000150864.9999996},{"ops":2466,"ns":1000034914.0000004},{"ops":2483,"ns":1000265434.9999993},{"ops":2469,"ns":1000199440.9999998},{"ops":2458,"ns":1000112390.0000002}],"capped":false,"end":"steady"}
+eval stablecoin_1-2 pid 1423 round 1: 5.00 s, 12360 ops, 404557 ns/op
+eval stablecoin_1-2 pid 1423 round 2: 5.00 s, 12473 ops, 400870 ns/op
+eval stablecoin_1-2 pid 1423 round 3: 5.00 s, 12646 ops, 395399 ns/op
+PVB_RESULT {"script":"stablecoin_1-2","loop":"eval","pid":1423,"warmup":{"ops":16839,"ns":7000990904.999999},"rounds":[{"ops":12360,"ns":5000323912},{"ops":12473,"ns":5000050095.999999},{"ops":12646,"ns":5000214449.999999}]}
+--- stablecoin_1-3: process 1431
+eval stablecoin_1-3 pid 1431 warm-up: 12.02 s, 2706 ops, 4442752 ns/op, 12 slices, steady
+PVB_WARMUP {"script":"stablecoin_1-3","loop":"eval","slices":[{"ops":185,"ns":1000056499},{"ops":228,"ns":1003434388.0000001},{"ops":228,"ns":1000510538},{"ops":229,"ns":1000659445.9999996},{"ops":227,"ns":1000417321.9999993},{"ops":213,"ns":1001786860.0000001},{"ops":226,"ns":1003013383.9999999},{"ops":233,"ns":1003104613.9999999},{"ops":235,"ns":1001818480.9999985},{"ops":234,"ns":1003553235.9999998},{"ops":233,"ns":1002699227.9999995},{"ops":235,"ns":1001033246.9999994}],"capped":false,"end":"steady"}
+eval stablecoin_1-3 pid 1431 round 1: 5.00 s, 1168 ops, 4282306 ns/op
+eval stablecoin_1-3 pid 1431 round 2: 5.00 s, 1171 ops, 4273512 ns/op
+eval stablecoin_1-3 pid 1431 round 3: 5.00 s, 1170 ops, 4274400 ns/op
+PVB_RESULT {"script":"stablecoin_1-3","loop":"eval","pid":1431,"warmup":{"ops":2706,"ns":12022087242.999998},"rounds":[{"ops":1168,"ns":5001733339},{"ops":1171,"ns":5004282940.000001},{"ops":1170,"ns":5001047575.000001}]}
+--- stablecoin_1-4: process 1439
+eval stablecoin_1-4 pid 1439 warm-up: 7.00 s, 16234 ops, 431279 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"stablecoin_1-4","loop":"eval","slices":[{"ops":2132,"ns":1000248345.0000001},{"ops":2273,"ns":1000018605.9999999},{"ops":2368,"ns":1000356018.9999999},{"ops":2352,"ns":1000146558.0000004},{"ops":2357,"ns":1000142636.9999999},{"ops":2379,"ns":1000393221.9999996},{"ops":2373,"ns":1000076044.9999998}],"capped":false,"end":"steady"}
+eval stablecoin_1-4 pid 1439 round 1: 5.00 s, 11908 ops, 419891 ns/op
+eval stablecoin_1-4 pid 1439 round 2: 5.00 s, 11667 ops, 428587 ns/op
+eval stablecoin_1-4 pid 1439 round 3: 5.00 s, 11845 ops, 422120 ns/op
+PVB_RESULT {"script":"stablecoin_1-4","loop":"eval","pid":1439,"warmup":{"ops":16234,"ns":7001381432},"rounds":[{"ops":11908,"ns":5000056614.999999},{"ops":11667,"ns":5000325709.000001},{"ops":11845,"ns":5000016276.999999}]}
+--- stablecoin_1-5: process 1447
+eval stablecoin_1-5 pid 1447 warm-up: 7.02 s, 1372 ops, 5115624 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"stablecoin_1-5","loop":"eval","slices":[{"ops":163,"ns":1000214289},{"ops":196,"ns":1002033148.0000002},{"ops":199,"ns":1000511340.9999999},{"ops":202,"ns":1002188167.0000002},{"ops":203,"ns":1004318849.9999996},{"ops":203,"ns":1004746044.9999999},{"ops":206,"ns":1004624603.0000002}],"capped":false,"end":"steady"}
+eval stablecoin_1-5 pid 1447 round 1: 5.00 s, 1022 ops, 4896797 ns/op
+eval stablecoin_1-5 pid 1447 round 2: 5.00 s, 1028 ops, 4864013 ns/op
+eval stablecoin_1-5 pid 1447 round 3: 5.01 s, 1001 ops, 5000147 ns/op
+PVB_RESULT {"script":"stablecoin_1-5","loop":"eval","pid":1447,"warmup":{"ops":1372,"ns":7018636443},"rounds":[{"ops":1022,"ns":5004527004.999999},{"ops":1028,"ns":5000205362.999999},{"ops":1001,"ns":5005146957.000001}]}
+--- stablecoin_1-6: process 1455
+eval stablecoin_1-6 pid 1455 warm-up: 6.00 s, 10978 ops, 546674 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"stablecoin_1-6","loop":"eval","slices":[{"ops":1673,"ns":1000496734.0000001},{"ops":1832,"ns":1000286790.9999998},{"ops":1857,"ns":1000116089.0000001},{"ops":1862,"ns":1000053217.0000001},{"ops":1876,"ns":1000236428.9999996},{"ops":1878,"ns":1000197538.0000004}],"capped":false,"end":"steady"}
+eval stablecoin_1-6 pid 1455 round 1: 5.00 s, 9439 ops, 529737 ns/op
+eval stablecoin_1-6 pid 1455 round 2: 5.00 s, 9665 ops, 517371 ns/op
+eval stablecoin_1-6 pid 1455 round 3: 5.00 s, 9600 ops, 520864 ns/op
+PVB_RESULT {"script":"stablecoin_1-6","loop":"eval","pid":1455,"warmup":{"ops":10978,"ns":6001386798},"rounds":[{"ops":9439,"ns":5000183587},{"ops":9665,"ns":5000389443.999998},{"ops":9600,"ns":5000292383.999998}]}
+--- stablecoin_2-1: process 1463
+eval stablecoin_2-1 pid 1463 warm-up: 6.01 s, 1443 ops, 4165230 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"stablecoin_2-1","loop":"eval","slices":[{"ops":204,"ns":1001106651.9999999},{"ops":246,"ns":1002454720},{"ops":245,"ns":1000402715.0000001},{"ops":250,"ns":1002169362.0000001},{"ops":249,"ns":1000719509.0000005},{"ops":249,"ns":1003573287.9999996}],"capped":false,"end":"steady"}
+eval stablecoin_2-1 pid 1463 round 1: 5.00 s, 1270 ops, 3938911 ns/op
+eval stablecoin_2-1 pid 1463 round 2: 5.00 s, 1269 ops, 3943077 ns/op
+eval stablecoin_2-1 pid 1463 round 3: 5.00 s, 1269 ops, 3940521 ns/op
+PVB_RESULT {"script":"stablecoin_2-1","loop":"eval","pid":1463,"warmup":{"ops":1443,"ns":6010426246},"rounds":[{"ops":1270,"ns":5002417164},{"ops":1269,"ns":5003764234.999999},{"ops":1269,"ns":5000521615.999998}]}
+--- stablecoin_2-2: process 1471
+eval stablecoin_2-2 pid 1471 warm-up: 7.00 s, 17234 ops, 406227 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"stablecoin_2-2","loop":"eval","slices":[{"ops":2248,"ns":1000167339},{"ops":2406,"ns":1000246868.0000001},{"ops":2541,"ns":1000206223.0000001},{"ops":2514,"ns":1000010716.9999996},{"ops":2505,"ns":1000035853.0000004},{"ops":2512,"ns":1000227833.9999994},{"ops":2508,"ns":1000016024.9999999}],"capped":false,"end":"steady"}
+eval stablecoin_2-2 pid 1471 round 1: 5.00 s, 12545 ops, 398566 ns/op
+eval stablecoin_2-2 pid 1471 round 2: 5.00 s, 12557 ops, 398211 ns/op
+eval stablecoin_2-2 pid 1471 round 3: 5.00 s, 12405 ops, 403067 ns/op
+PVB_RESULT {"script":"stablecoin_2-2","loop":"eval","pid":1471,"warmup":{"ops":17234,"ns":7000910858.999999},"rounds":[{"ops":12545,"ns":5000009854},{"ops":12557,"ns":5000339045.000001},{"ops":12405,"ns":5000052101.000001}]}
+--- stablecoin_2-3: process 1479
+eval stablecoin_2-3 pid 1479 warm-up: 7.02 s, 1518 ops, 4622601 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"stablecoin_2-3","loop":"eval","slices":[{"ops":180,"ns":1003640511.0000001},{"ops":217,"ns":1003716044},{"ops":225,"ns":1001092197.9999999},{"ops":222,"ns":1001469360.9999999},{"ops":224,"ns":1001587242.0000005},{"ops":227,"ns":1004510293.9999998},{"ops":223,"ns":1001092676.0000002}],"capped":false,"end":"steady"}
+eval stablecoin_2-3 pid 1479 round 1: 5.00 s, 1161 ops, 4310075 ns/op
+eval stablecoin_2-3 pid 1479 round 2: 5.00 s, 1169 ops, 4278977 ns/op
+eval stablecoin_2-3 pid 1479 round 3: 5.00 s, 1181 ops, 4236679 ns/op
+PVB_RESULT {"script":"stablecoin_2-3","loop":"eval","pid":1479,"warmup":{"ops":1518,"ns":7017108326},"rounds":[{"ops":1161,"ns":5003996904.999999},{"ops":1169,"ns":5002123873},{"ops":1181,"ns":5003518311}]}
+--- stablecoin_2-4: process 1487
+eval stablecoin_2-4 pid 1487 warm-up: 7.00 s, 16605 ops, 421666 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"stablecoin_2-4","loop":"eval","slices":[{"ops":2179,"ns":1000173235},{"ops":2334,"ns":1000148588.9999999},{"ops":2427,"ns":1000374035.9999998},{"ops":2408,"ns":1000126706.9999999},{"ops":2413,"ns":1000370670.0000002},{"ops":2427,"ns":1000252026.9999995},{"ops":2417,"ns":1000313898.9999998}],"capped":false,"end":"steady"}
+eval stablecoin_2-4 pid 1487 round 1: 5.00 s, 12080 ops, 413941 ns/op
+eval stablecoin_2-4 pid 1487 round 2: 5.00 s, 12096 ops, 413383 ns/op
+eval stablecoin_2-4 pid 1487 round 3: 5.00 s, 12110 ops, 412887 ns/op
+PVB_RESULT {"script":"stablecoin_2-4","loop":"eval","pid":1487,"warmup":{"ops":16605,"ns":7001759163},"rounds":[{"ops":12080,"ns":5000406948.999999},{"ops":12096,"ns":5000281817.999999},{"ops":12110,"ns":5000062276.000001}]}
+--- token-account-1: process 1495
+eval token-account-1 pid 1495 warm-up: 7.00 s, 18470 ops, 379057 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"token-account-1","loop":"eval","slices":[{"ops":2388,"ns":1000125370},{"ops":2578,"ns":1000005445},{"ops":2700,"ns":1000272215.9999999},{"ops":2704,"ns":1000066283.9999995},{"ops":2703,"ns":1000240268.9999999},{"ops":2699,"ns":1000360711.9999996},{"ops":2698,"ns":1000105781.0000002}],"capped":false,"end":"steady"}
+eval token-account-1 pid 1495 round 1: 5.00 s, 13574 ops, 368360 ns/op
+eval token-account-1 pid 1495 round 2: 5.00 s, 13544 ops, 369192 ns/op
+eval token-account-1 pid 1495 round 3: 5.00 s, 13563 ops, 368668 ns/op
+PVB_RESULT {"script":"token-account-1","loop":"eval","pid":1495,"warmup":{"ops":18470,"ns":7001176076.999999},"rounds":[{"ops":13574,"ns":5000124411},{"ops":13544,"ns":5000341918},{"ops":13563,"ns":5000249109}]}
+--- token-account-2: process 1503
+eval token-account-2 pid 1503 warm-up: 6.00 s, 8966 ops, 669418 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"token-account-2","loop":"eval","slices":[{"ops":1370,"ns":1000521053},{"ops":1497,"ns":1000445358},{"ops":1494,"ns":1000545040},{"ops":1531,"ns":1000139564.0000001},{"ops":1536,"ns":1000276429.0000005},{"ops":1538,"ns":1000073739.9999998}],"capped":false,"end":"steady"}
+eval token-account-2 pid 1503 round 1: 5.00 s, 7702 ops, 649224 ns/op
+eval token-account-2 pid 1503 round 2: 5.00 s, 7638 ops, 654686 ns/op
+eval token-account-2 pid 1503 round 3: 5.00 s, 7655 ops, 653243 ns/op
+PVB_RESULT {"script":"token-account-2","loop":"eval","pid":1503,"warmup":{"ops":8966,"ns":6002001184},"rounds":[{"ops":7702,"ns":5000319684.999999},{"ops":7638,"ns":5000490809.999999},{"ops":7655,"ns":5000576064.999999}]}
+--- uniswap-1: process 1511
+eval uniswap-1 pid 1511 warm-up: 6.00 s, 7308 ops, 821338 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"uniswap-1","loop":"eval","slices":[{"ops":1121,"ns":1000102573.0000001},{"ops":1225,"ns":1000520629.0000001},{"ops":1222,"ns":1000529728},{"ops":1236,"ns":1000474608.9999999},{"ops":1258,"ns":1000054151.9999998},{"ops":1246,"ns":1000655549.9999995}],"capped":false,"end":"steady"}
+eval uniswap-1 pid 1511 round 1: 5.00 s, 6311 ops, 792331 ns/op
+eval uniswap-1 pid 1511 round 2: 5.00 s, 6316 ops, 791710 ns/op
+eval uniswap-1 pid 1511 round 3: 5.00 s, 6315 ops, 791830 ns/op
+PVB_RESULT {"script":"uniswap-1","loop":"eval","pid":1511,"warmup":{"ops":7308,"ns":6002337241},"rounds":[{"ops":6311,"ns":5000399583},{"ops":6316,"ns":5000440196},{"ops":6315,"ns":5000407923.999999}]}
+--- uniswap-2: process 1519
+eval uniswap-2 pid 1519 warm-up: 7.00 s, 15353 ops, 456051 ns/op, 7 slices, steady
+PVB_WARMUP {"script":"uniswap-2","loop":"eval","slices":[{"ops":2022,"ns":1000377873.9999999},{"ops":2137,"ns":1000253530},{"ops":2252,"ns":1000117761},{"ops":2226,"ns":1000137413.0000004},{"ops":2236,"ns":1000284499.0000004},{"ops":2244,"ns":1000342623.9999999},{"ops":2236,"ns":1000233140.0000002}],"capped":false,"end":"steady"}
+eval uniswap-2 pid 1519 round 1: 5.00 s, 11220 ops, 445666 ns/op
+eval uniswap-2 pid 1519 round 2: 5.00 s, 11209 ops, 446075 ns/op
+eval uniswap-2 pid 1519 round 3: 5.00 s, 11177 ops, 447353 ns/op
+PVB_RESULT {"script":"uniswap-2","loop":"eval","pid":1519,"warmup":{"ops":15353,"ns":7001746841.000001},"rounds":[{"ops":11220,"ns":5000369260},{"ops":11209,"ns":5000051064.000001},{"ops":11177,"ns":5000069963.999998}]}
+--- uniswap-3: process 1527
+eval uniswap-3 pid 1527 warm-up: 6.01 s, 1619 ops, 3713003 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"uniswap-3","loop":"eval","slices":[{"ops":230,"ns":1000422090},{"ops":277,"ns":1002413514.0000004},{"ops":275,"ns":1000901124.9999999},{"ops":278,"ns":1002808374.0000002},{"ops":280,"ns":1002908115.0000002},{"ops":279,"ns":1001898181.0000005}],"capped":false,"end":"steady"}
+eval uniswap-3 pid 1527 round 1: 5.00 s, 1392 ops, 3595348 ns/op
+eval uniswap-3 pid 1527 round 2: 5.00 s, 1394 ops, 3587159 ns/op
+eval uniswap-3 pid 1527 round 3: 5.00 s, 1393 ops, 3591741 ns/op
+PVB_RESULT {"script":"uniswap-3","loop":"eval","pid":1527,"warmup":{"ops":1619,"ns":6011351399.000002},"rounds":[{"ops":1392,"ns":5004724823.999999},{"ops":1394,"ns":5000499438.000001},{"ops":1393,"ns":5003294703}]}
+--- uniswap-4: process 1535
+eval uniswap-4 pid 1535 warm-up: 6.00 s, 8663 ops, 692879 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"uniswap-4","loop":"eval","slices":[{"ops":1335,"ns":1000239028.0000001},{"ops":1439,"ns":1000355882.0000001},{"ops":1439,"ns":1000359050},{"ops":1491,"ns":1000497755.0000004},{"ops":1489,"ns":1000431257.9999996},{"ops":1470,"ns":1000526122.0000002}],"capped":false,"end":"steady"}
+eval uniswap-4 pid 1535 round 1: 5.00 s, 7440 ops, 672091 ns/op
+eval uniswap-4 pid 1535 round 2: 5.00 s, 7415 ops, 674362 ns/op
+eval uniswap-4 pid 1535 round 3: 5.00 s, 7440 ops, 672065 ns/op
+PVB_RESULT {"script":"uniswap-4","loop":"eval","pid":1535,"warmup":{"ops":8663,"ns":6002409095},"rounds":[{"ops":7440,"ns":5000354458.000001},{"ops":7415,"ns":5000392347.000001},{"ops":7440,"ns":5000160344.000002}]}
+--- uniswap-5: process 1543
+eval uniswap-5 pid 1543 warm-up: 6.01 s, 2515 ops, 2387874 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"uniswap-5","loop":"eval","slices":[{"ops":358,"ns":1001723720.0000001},{"ops":424,"ns":1000065178.0000001},{"ops":432,"ns":1000103305.0000001},{"ops":433,"ns":1001978088.9999998},{"ops":432,"ns":1000030453.0000004},{"ops":436,"ns":1001602063.0000002}],"capped":false,"end":"steady"}
+eval uniswap-5 pid 1543 round 1: 5.00 s, 2163 ops, 2312592 ns/op
+eval uniswap-5 pid 1543 round 2: 5.00 s, 2174 ops, 2300452 ns/op
+eval uniswap-5 pid 1543 round 3: 5.00 s, 2179 ops, 2294863 ns/op
+PVB_RESULT {"script":"uniswap-5","loop":"eval","pid":1543,"warmup":{"ops":2515,"ns":6005502808},"rounds":[{"ops":2163,"ns":5002136470},{"ops":2174,"ns":5001182171},{"ops":2179,"ns":5000506316.999997}]}
+--- uniswap-6: process 1551
+eval uniswap-6 pid 1551 warm-up: 6.00 s, 8962 ops, 669707 ns/op, 6 slices, steady
+PVB_WARMUP {"script":"uniswap-6","loop":"eval","slices":[{"ops":1384,"ns":1000380426},{"ops":1498,"ns":1000329159.0000001},{"ops":1488,"ns":1000146403.9999996},{"ops":1522,"ns":1000500611.0000004},{"ops":1533,"ns":1000482888.9999999},{"ops":1537,"ns":1000077419.0000002}],"capped":false,"end":"steady"}
+eval uniswap-6 pid 1551 round 1: 5.00 s, 7693 ops, 650029 ns/op
+eval uniswap-6 pid 1551 round 2: 5.00 s, 7653 ops, 653417 ns/op
+eval uniswap-6 pid 1551 round 3: 5.00 s, 7629 ops, 655400 ns/op
+PVB_RESULT {"script":"uniswap-6","loop":"eval","pid":1551,"warmup":{"ops":8962,"ns":6001916908},"rounds":[{"ops":7693,"ns":5000673457},{"ops":7653,"ns":5000597852.999999},{"ops":7629,"ns":5000050240.000001}]}
+--- vesting-1: process 1559
+eval vesting-1 pid 1559 warm-up: 8.00 s, 12090 ops, 661979 ns/op, 8 slices, steady
+PVB_WARMUP {"script":"vesting-1","loop":"eval","slices":[{"ops":1374,"ns":1000446536.9999999},{"ops":1498,"ns":1000120796.0000001},{"ops":1484,"ns":1000417383},{"ops":1544,"ns":1000532342.9999994},{"ops":1548,"ns":1000324390.9999992},{"ops":1542,"ns":1000376806.0000002},{"ops":1547,"ns":1000520445.0000001},{"ops":1553,"ns":1000589241.0000006}],"capped":false,"end":"steady"}
+eval vesting-1 pid 1559 round 1: 5.00 s, 7734 ops, 646577 ns/op
+eval vesting-1 pid 1559 round 2: 5.00 s, 7725 ops, 647326 ns/op
+eval vesting-1 pid 1559 round 3: 5.00 s, 7733 ops, 646629 ns/op
+PVB_RESULT {"script":"vesting-1","loop":"eval","pid":1559,"warmup":{"ops":12090,"ns":8003327942},"rounds":[{"ops":7734,"ns":5000624363.999999},{"ops":7725,"ns":5000594035.999999},{"ops":7733,"ns":5000378723.000002}]}

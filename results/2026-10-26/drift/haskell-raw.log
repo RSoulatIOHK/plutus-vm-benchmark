@@ -1,0 +1,56 @@
+RTS options: +RTS -T -I0 -A16m --disable-delayed-os-memory-return -RTS
+--- auction_1-1: process 141
+PlutusV3 cost model parameters: 350
+note: cost model has 350 of 361 parameters; plutus fills the missing ones with maxBound, as on the node
+PVB_LOOP d3 auction_1-1
+benchmarking d3/auction_1-1
+time                 356.0 μs   (352.0 μs .. 361.0 μs)
+                     0.999 R²   (0.998 R² .. 0.999 R²)
+mean                 353.8 μs   (349.6 μs .. 357.8 μs)
+std dev              13.96 μs   (11.84 μs .. 17.40 μs)
+variance introduced by outliers: 35% (moderately inflated)
+
+--- crowdfunding-success-2: process 147
+PlutusV3 cost model parameters: 350
+note: cost model has 350 of 361 parameters; plutus fills the missing ones with maxBound, as on the node
+PVB_LOOP d3 crowdfunding-success-2
+benchmarking d3/crowdfunding-success-2
+time                 435.1 μs   (425.8 μs .. 445.1 μs)
+                     0.997 R²   (0.996 R² .. 0.999 R²)
+mean                 424.6 μs   (420.1 μs .. 429.4 μs)
+std dev              15.94 μs   (13.07 μs .. 19.50 μs)
+variance introduced by outliers: 32% (moderately inflated)
+
+--- future-settle-early-1: process 153
+PlutusV3 cost model parameters: 350
+note: cost model has 350 of 361 parameters; plutus fills the missing ones with maxBound, as on the node
+PVB_LOOP d3 future-settle-early-1
+benchmarking d3/future-settle-early-1
+time                 443.5 μs   (437.4 μs .. 448.4 μs)
+                     0.999 R²   (0.999 R² .. 1.000 R²)
+mean                 442.1 μs   (438.5 μs .. 445.3 μs)
+std dev              10.72 μs   (8.698 μs .. 13.64 μs)
+variance introduced by outliers: 16% (moderately inflated)
+
+--- multisig-sm-01: process 159
+PlutusV3 cost model parameters: 350
+note: cost model has 350 of 361 parameters; plutus fills the missing ones with maxBound, as on the node
+PVB_LOOP d3 multisig-sm-01
+benchmarking d3/multisig-sm-01
+time                 919.9 μs   (900.2 μs .. 946.3 μs)
+                     0.996 R²   (0.994 R² .. 0.999 R²)
+mean                 905.6 μs   (896.9 μs .. 918.2 μs)
+std dev              35.17 μs   (26.13 μs .. 47.05 μs)
+variance introduced by outliers: 29% (moderately inflated)
+
+--- stablecoin_1-2: process 165
+PlutusV3 cost model parameters: 350
+note: cost model has 350 of 361 parameters; plutus fills the missing ones with maxBound, as on the node
+PVB_LOOP d3 stablecoin_1-2
+benchmarking d3/stablecoin_1-2
+time                 340.6 μs   (335.0 μs .. 345.9 μs)
+                     0.998 R²   (0.998 R² .. 0.999 R²)
+mean                 336.2 μs   (332.8 μs .. 339.9 μs)
+std dev              11.30 μs   (9.900 μs .. 14.50 μs)
+variance introduced by outliers: 28% (moderately inflated)
+

@@ -1,0 +1,32 @@
+{
+  "vm": "haskell",
+  "ratio": 1.0399803271876908,
+  "percent": 3.9980327187690845,
+  "scripts": {
+    "auction_1-1": {
+      "start_ns": 336837.0,
+      "end_ns": 353794.0,
+      "ratio": 1.0503418567437663
+    },
+    "crowdfunding-success-2": {
+      "start_ns": 405394.0,
+      "end_ns": 424621.0,
+      "ratio": 1.0474279343058852
+    },
+    "future-settle-early-1": {
+      "start_ns": 429650.0,
+      "end_ns": 442135.0,
+      "ratio": 1.0290585360176887
+    },
+    "multisig-sm-01": {
+      "start_ns": 872909.0,
+      "end_ns": 905575.0,
+      "ratio": 1.0374219993149343
+    },
+    "stablecoin_1-2": {
+      "start_ns": 324567.0,
+      "end_ns": 336186.0,
+      "ratio": 1.035798463799462
+    }
+  }
+}
