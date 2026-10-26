@@ -77,11 +77,19 @@ eval only (D21: its decode runs outside the timed loop):
 | decode and compile excluded | The decode and the compile run once per script, before timing | Scalus JIT |
 | decode cached (by the library) | The library caches the decoded program; the harness cannot turn the cache off | Aiken WASM (`@lucid-evolution/uplc` 0.4.0) |
 
-The page shows an unranked "Experimental" section. It holds VMs that have a release tag and pass
-the gate, but miss rule 2 or publish no artifact. Today these are the Scalus JIT (since Scalus
-1.4.1, 2026-10-26, the `scalus-uplc-jit-compiler` module is published to Maven, so it meets rule 1;
-it has no downstream users yet, so it misses rule 2) and
-blaze-plutus (no released project outside the Blaze repo depends on `@blaze-cardano/plutus`).
+The page shows an unranked "Experimental" section (spec D22). It holds VMs of the original SAIB
+line-up that miss rule 1 or rule 2. Each row shows its reason:
+
+| Reason | Meaning | Example |
+|---|---|---|
+| pre-release only | Only `-alpha` or `-preNN` versions; pinned to the newest pre-release tag | Chrysalis, Julc |
+| no release | No tag or release; pinned to a `main` commit | Plutuz, llvm-uplc |
+| no downstream user | A release, but no released project outside its repo depends on it | Scalus JIT, blaze-plutus |
+
+An experimental row never gets a rank. It is never a competitor in the penalty rule, and it has no
+line in the history chart. The gate checks each of its scripts. A script that fails is marked
+"failed check", and its time is left out of the row's geometric mean. A row with no passing
+script, or without a check file, is listed as "failed check".
 
 The README lists the VMs that are not included and the rule that each one fails.
 

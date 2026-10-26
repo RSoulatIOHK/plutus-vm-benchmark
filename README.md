@@ -26,8 +26,9 @@ Library and node authors can use it to choose an evaluator.
   uses PlutusV3 semantics at protocol version 11, the mainnet PlutusV3 cost model, and costing on.
 - **Correctness gate.** For every script, the result and the ExUnits of a VM must equal Haskell
   [plutus-core](https://github.com/IntersectMBO/plutus). A VM that fails is not ranked.
-- **Released versions only.** Every VM is pinned to a release in `.env`. Pre-releases, such as
-  `-alpha` or `0.1.0-preNN` versions, do not count.
+- **Released versions only, for the ranking.** Every ranked VM is pinned to a release in `.env`.
+  Pre-releases, such as `-alpha` or `0.1.0-preNN` versions, do not count. An experimental VM is
+  pinned to its newest pre-release tag, or to a `main` commit if it has no tag.
 - **Monthly runs on fixed hardware.** One Hetzner dedicated-vCPU server type (`ccx43`) runs every VM,
   up to 3 at once, each on its own CPU cores. Each run first checks that its server is not slow
   (server qualification, see [METHODOLOGY.md](METHODOLOGY.md#hardware)).
@@ -78,8 +79,8 @@ What changed:
   the mainnet cost model and costing on, for every VM.
 - **Curated line-up.** A ranked VM has a published release, a downstream user today (a released
   project outside its own repo that depends on it), and passes the correctness gate. A VM that caches the decoded program or compiles it ahead gets a
-  badge and is ranked only on eval only. An unranked [Experimental](#experimental) section shows VMs that miss the downstream-user
-  rule or publish no artifact. See [Not included](#not-included).
+  badge and is ranked only on eval only. An unranked [Experimental](#experimental) section shows VMs of the original SAIB line-up
+  that have no stable release or no downstream user. See [Not included](#not-included).
 - **Eval-only column.** A second timing evaluates a program decoded once before timing.
 - **Automated monthly runs.** GitHub Actions creates a Hetzner server, installs NixOS on it, checks
   its speed against a stored Haskell reference, runs the benchmark and deletes the server. A slow
@@ -115,13 +116,21 @@ build contains both fixes. No Aiken release contains them yet.
 
 ### Experimental
 
-These rows have a release tag and pass the correctness gate, but they are not ranked. They have no
-downstream user today, or they publish no artifact.
+These rows are not ranked (spec D22). Each one is a VM of the original SAIB line-up that has no
+stable release or no downstream user. The page shows the reason next to each row. They never get a
+rank, they are not competitors in the penalty rule, and they have no line in the history chart.
+The gate still checks every script: a script that fails is marked "failed check", and its time
+is left out. A row with no passing script is listed as "failed check".
 
 | Image | Why it is not ranked |
 |---|---|
 | `scalus-jit` | The `scalus-uplc-jit-compiler` module is published to Maven since Scalus v1.4.1, but it has no downstream users yet. Its timed loop runs the compiled script: badge "decode and compile excluded". So its time is shown only as an eval-only time. |
 | `blaze-v8` | No released project outside the Blaze repo depends on `@blaze-cardano/plutus` 0.1.1. Blaze itself evaluates scripts with `@blaze-cardano/vm`, which wraps the Aiken `uplc` crate as WASM. It moves to the ranking when a project depends on it. |
+| `chrysalis`, `chrysalis-aot` | Pre-release only. The NuGet package `Chrysalis.Plutus` has only `-alpha` versions (1.7.14-alpha or newer); the one stable version, 1.7.1, is unlisted. Pinned to the newest pre-release tag. |
+| `julc-java` | Pre-release only (`0.1.0-preNN`). Pinned to the newest pre-release tag. |
+| `plutuz` | No release: no tags or releases on GitHub. Pinned to a `main` commit. |
+| `llvm-uplc-jit` | No release: no tags or releases on GitHub. Pinned to a `main` commit. |
+| `uplc-turbo-bc` | No release with the bytecode mode: the released `uplc-turbo` crate has none. Pinned to a commit that has it. |
 
 ## Not included
 
@@ -135,18 +144,12 @@ A VM is ranked when it meets three rules:
 3. It passes the correctness gate.
 
 A VM that caches the decoded program, or compiles it ahead, gets a badge and is ranked only on eval
-only: its decode runs outside the timed loop. A VM that has
-a release tag and passes the gate, but misses rule 2 or publishes no artifact, goes to
+only: its decode runs outside the timed loop. A VM of the original SAIB line-up that misses rule 1 or rule 2 goes to
 [Experimental](#experimental).
 
 | Project | Rule that fails |
 |---|---|
-| [Chrysalis](https://github.com/SAIB-Inc/Chrysalis) | Rule 1. Only pre-releases: the NuGet package `Chrysalis.Plutus` goes up to `1.7.14-alpha`. The one stable version, 1.7.1, is unlisted. |
-| [Plutuz](https://github.com/utxo-company/plutuz) | Rule 1. No release: no tags or releases on GitHub. |
-| [llvm-uplc](https://github.com/SeungheonOh/llvm-uplc) | Rule 1. No release: no tags or releases on GitHub. |
-| [Julc](https://github.com/bloxbean/julc) | Rule 1. Only pre-releases (`0.1.0-preNN`). |
 | [OpShin uplc](https://github.com/OpShin/uplc) | Rule 3. Fails the correctness gate at its latest release 1.3.3. It has no `case` on builtin values, a protocol version 11 feature. |
-| uplc-turbo-bc | Rule 1. The released `uplc-turbo` crate has no bytecode mode. |
 
 ### How a VM can join
 
