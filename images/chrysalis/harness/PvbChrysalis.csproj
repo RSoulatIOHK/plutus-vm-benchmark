@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The pvb harness for Chrysalis (docs/IMAGE_CONTRACT.md). One program for both VMs:
+      chrysalis      dotnet publish -c Release                     (.NET JIT, runtime defaults)
+      chrysalis-aot  dotnet publish -c Release -p:PublishAot=true  (NativeAOT)
+    CHRYSALIS_VERSION is the NuGet version of Chrysalis.Plutus (.env, images/chrysalis/Dockerfile).
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>pvb-chrysalis</AssemblyName>
+    <RootNamespace>Pvb.Chrysalis</RootNamespace>
+    <!-- NativeAOT: trim only the assemblies that opt in. BenchmarkDotNet reads the benchmark class
+         by reflection, so it and this program stay whole. -->
+    <TrimMode>partial</TrimMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Chrysalis.Plutus" Version="$(CHRYSALIS_VERSION)" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
+  </ItemGroup>
+
+</Project>
