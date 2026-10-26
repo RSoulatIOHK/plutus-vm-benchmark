@@ -5,6 +5,9 @@
 # :latest is moved to that tag.
 #
 # Pull requests build the changed images for linux/amd64 and push nothing; they use no secrets.
+# On a pull request each built image also runs the check loop on all 89 scripts, and
+# check/gate.py compares the result with the Haskell reference (mode from check/modes.conf). A
+# gate failure fails the job. The check CSVs are uploaded as an artifact. No timing runs here.
 name: images
 
 on:
@@ -132,6 +135,7 @@ jobs:
           platforms: linux/amd64
           build-args: ${{ steps.args.outputs.build_args }}
           push: ${{ github.event_name != 'pull_request' }}
+          load: ${{ github.event_name == 'pull_request' }}
           tags: |
             ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:${{ matrix.tag }}
             ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:latest
@@ -141,3 +145,37 @@ jobs:
           # VMs that share a Dockerfile (scalus-cek/scalus-jit) share a cache scope.
           cache-from: type=gha,scope=${{ matrix.cache }}
           cache-to: type=gha,mode=max,scope=${{ matrix.cache }}
+
+      # Pull requests: the check loop on all 89 scripts, then the gate (check/README.md).
+      - name: Check (all scripts)
+        if: github.event_name == 'pull_request'
+        env:
+          IMAGE: ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:${{ matrix.tag }}
+          VM: ${{ matrix.vm }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/check"
+          docker run --rm -e BENCH_LOOPS=check -e PVB_VM="$VM" \
+            -v "$PWD/data:/bench/data:ro" -v "$RUNNER_TEMP/check:/results" "$IMAGE" "$VM"
+
+      - name: Gate
+        if: github.event_name == 'pull_request'
+        env:
+          VM: ${{ matrix.vm }}
+        run: |
+          mode=$(awk -v vm="$VM" '$1 == vm { print $2 }' check/modes.conf)
+          args=()
+          case "$mode" in
+            badge:*) args=(--mode "$VM=badge:${mode#badge:}") ;;
+            "" | strict) ;;
+            *) args=(--mode "$VM=$mode") ;;
+          esac
+          python3 check/gate.py --reference check/reference/haskell-check.csv \
+            --json "$RUNNER_TEMP/check/gate.json" "${args[@]}" "$RUNNER_TEMP/check/$VM-check.csv"
+
+      - name: Upload check CSVs
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: check-${{ matrix.vm }}
+          path: ${{ runner.temp }}/check/
+          if-no-files-found: warn
