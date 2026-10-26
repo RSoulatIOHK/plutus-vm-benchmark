@@ -10,13 +10,13 @@
 // flat::decode), V3 builtin semantics, a budget too large to run out (ExBudget::max()), mainnet
 // PlutusV3 cost model.
 //
-// Cost model: vm::execute takes the CostModel by value and the type is not Clone, so the timed
-// loops build CostModel::<BuiltinCostsV3>::default() per call, as the AST harness does. The check
-// also runs every script with the model built from the mainnet array
-// (CostModel::initialize_cost_model) and reports a difference as a COSTMODEL_DRIFT line and an error
-// row. The pinned crate knows the first 297 PlutusV3 parameters only (cost_map.rs): with any other
-// length it drops the bitwise builtins' parameters, and the costs of the later builtins are fixed
-// in builtin_costs_v3.rs. So the check passes the first 297 of the 350 mainnet values.
+// Cost model: built once from the mainnet array (CostModel::initialize_cost_model) and cloned for
+// every evaluation, because vm::execute takes it by value (the Dockerfile adds Clone to the cost
+// model types). The crate's CostModel::default() for V3 is not the mainnet model: its CPU budgets
+// differ from the Haskell reference on every script. The pinned crate knows the first 297
+// PlutusV3 parameters only (cost_map.rs): with any other length it drops the bitwise builtins'
+// parameters, and the costs of the later builtins are fixed in builtin_costs_v3.rs. So it gets the
+// first 297 of the 350 mainnet values. The check (gate) proves the budgets equal Haskell's.
 //
 // Modes:
 //   PVB_CHECK_OUT=<csv>  one evaluation per script, write vm,script,status,cpu,mem; no timing
@@ -106,25 +106,18 @@ fn execute<'a>(
     }
 }
 
-/// One evaluation as in the d3 loop: decode, compile, execute with the default V3 model.
-fn eval_once(arena: &Arena, bytes: &[u8]) -> Result<(i64, i64), (String, i64, i64)> {
+/// One evaluation as in the d3 loop: decode, compile, execute.
+fn eval_once(
+    arena: &Arena,
+    bytes: &[u8],
+    model: &CostModel<BuiltinCostsV3>,
+) -> Result<(i64, i64), (String, i64, i64)> {
     let program = decode(arena, bytes).map_err(|e| (e, 0, 0))?;
     let compiled = compile(program);
-    execute(arena, &compiled, CostModel::default())
+    execute(arena, &compiled, model.clone())
 }
 
-/// The same evaluation with the mainnet array passed in.
-fn eval_mainnet(arena: &Arena, bytes: &[u8], cost_model: &[i64]) -> Option<(bool, i64, i64)> {
-    let program = decode(arena, bytes).ok()?;
-    let compiled = compile(program);
-    let model = CostModel::<BuiltinCostsV3>::initialize_cost_model(&PlutusVersion::V3, cost_model);
-    Some(match execute(arena, &compiled, model) {
-        Ok((cpu, mem)) => (true, cpu, mem),
-        Err((_, cpu, mem)) => (false, cpu, mem),
-    })
-}
-
-fn load_cost_model() -> Vec<i64> {
+fn load_cost_model() -> CostModel<BuiltinCostsV3> {
     let path = std::env::var("PVB_COSTMODEL").expect("set PVB_COSTMODEL");
     let values: Vec<i64> = fs::read_to_string(&path)
         .unwrap_or_else(|e| panic!("cannot read {path}: {e}"))
@@ -132,15 +125,15 @@ fn load_cost_model() -> Vec<i64> {
         .map(|s| s.parse().unwrap())
         .collect();
     assert_eq!(values.len(), 350, "{path}: expected the 350 PlutusV3 parameters");
-    values[..KNOWN_PARAMS].to_vec()
+    CostModel::initialize_cost_model(&PlutusVersion::V3, &values[..KNOWN_PARAMS])
 }
 
 fn check(out: &str) {
-    let cost_model = load_cost_model();
+    let model = load_cost_model();
     let mut arena = Arena::from_bump(Bump::with_capacity(1_048_576));
     let mut csv = String::from("vm,script,status,cpu,mem\n");
     for (name, bytes) in scripts() {
-        let (mut status, cpu, mem) = match eval_once(&arena, &bytes) {
+        let (status, cpu, mem) = match eval_once(&arena, &bytes, &model) {
             Ok((cpu, mem)) => ("ok", cpu, mem),
             Err((msg, cpu, mem)) => {
                 let msg: String = msg.chars().take(200).collect();
@@ -149,15 +142,6 @@ fn check(out: &str) {
             }
         };
         arena.reset();
-        let mainnet = eval_mainnet(&arena, &bytes, &cost_model);
-        arena.reset();
-        if mainnet != Some((status == "ok", cpu, mem)) {
-            println!(
-                "COSTMODEL_DRIFT: {name}: default V3 model gives ({status}, {cpu}, {mem}), \
-                 mainnet array gives {mainnet:?}"
-            );
-            status = "error";
-        }
         csv.push_str(&format!("{VM},{name},{status},{cpu},{mem}\n"));
     }
     fs::File::create(out)
@@ -166,10 +150,11 @@ fn check(out: &str) {
 }
 
 fn bench(c: &mut Criterion, loops: &[&str]) {
+    let model = load_cost_model();
     let mut arena = Arena::from_bump(Bump::with_capacity(1_048_576));
     for (name, bytes) in scripts() {
         // A panic inside b.iter would abort the whole run: evaluate once first, skip on failure.
-        let first = eval_once(&arena, &bytes);
+        let first = eval_once(&arena, &bytes, &model);
         arena.reset();
         if let Err((msg, _, _)) = first {
             let msg: String = msg.chars().take(200).collect();
@@ -188,7 +173,7 @@ fn bench(c: &mut Criterion, loops: &[&str]) {
                             &arena,
                             &compiled,
                             ExBudget::max(),
-                            CostModel::<BuiltinCostsV3>::default(),
+                            model.clone(),
                             BuiltinSemantics::from(&PlutusVersion::V3),
                         );
                         std::hint::black_box(result.term.is_ok());
@@ -212,7 +197,7 @@ fn bench(c: &mut Criterion, loops: &[&str]) {
                             &arena,
                             &compiled,
                             ExBudget::max(),
-                            CostModel::<BuiltinCostsV3>::default(),
+                            model.clone(),
                             BuiltinSemantics::from(&PlutusVersion::V3),
                         );
                         std::hint::black_box(result.term.is_ok());

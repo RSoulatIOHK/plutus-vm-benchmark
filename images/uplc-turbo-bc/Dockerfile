@@ -24,6 +24,13 @@ WORKDIR /src
 # PVB_CHECK_OUT check mode). See the header of images/uplc-turbo-bc/use_cases.rs.
 COPY images/uplc-turbo-bc/use_cases.rs /src/crates/uplc/benches/use_cases/main.rs
 
+# The harness builds the mainnet cost model once and clones it per evaluation (bytecode::vm::execute
+# takes it by value). The pinned cost model types derive only Debug and PartialEq, so add Clone.
+# That adds an impl and changes no code the VM runs. The check: all 21 derives got it.
+RUN sed -i 's/^#\[derive(Debug, PartialEq)\]$/#[derive(Debug, PartialEq, Clone)]/' \
+        $(grep -rl '^#\[derive(Debug, PartialEq)\]$' crates/uplc/src/machine/cost_model) \
+    && test "$(grep -r '^#\[derive(Debug, PartialEq, Clone)\]$' crates/uplc/src/machine/cost_model | wc -l)" -eq 22
+
 # The release profile of Amaru, the node that ships this crate (spec D16): fat LTO and one codegen
 # unit (pragma-org/amaru Cargo.toml:194-196 at a393a0b; its release binaries are built with
 # `cargo build --release`, .github/workflows/release-begin.yml:202). The workspace of the pinned
