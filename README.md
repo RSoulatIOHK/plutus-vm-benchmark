@@ -77,8 +77,8 @@ What changed:
 - **Node-equivalent parameters.** Flat decode + evaluation with PlutusV3 semantics, protocol version 11,
   the mainnet cost model and costing on, for every VM.
 - **Curated line-up.** A ranked VM has a published release, a downstream user today (a released
-  project outside its own repo that depends on it), and passes the correctness gate. A VM that caches the decoded program or compiles it ahead is ranked with a
-  badge. An unranked [Experimental](#experimental) section shows VMs that miss the downstream-user
+  project outside its own repo that depends on it), and passes the correctness gate. A VM that caches the decoded program or compiles it ahead gets a
+  badge and is ranked only on eval only. An unranked [Experimental](#experimental) section shows VMs that miss the downstream-user
   rule or publish no artifact. See [Not included](#not-included).
 - **Eval-only column.** A second timing evaluates a program decoded once before timing.
 - **Automated monthly runs.** GitHub Actions creates a Hetzner server, installs NixOS on it, checks
@@ -134,7 +134,8 @@ A VM is ranked when it meets three rules:
    evaluator. The page lists each user with a proof link (`USED_BY` in `report/generate_report.py`).
 3. It passes the correctness gate.
 
-A VM that caches the decoded program, or compiles it ahead, is ranked with a badge. A VM that has
+A VM that caches the decoded program, or compiles it ahead, gets a badge and is ranked only on eval
+only: its decode runs outside the timed loop. A VM that has
 a release tag and passes the gate, but misses rule 2 or publishes no artifact, goes to
 [Experimental](#experimental).
 

@@ -28,6 +28,9 @@ A VM in EXPERIMENTAL that passes the gate is shown in its own "Experimental" sec
 numbers, but it is not ranked: not in the summary ranking, not a competitor in the penalty rule,
 not in "vs fastest" or the per-script fastest. A compiling VM that is not in EXPERIMENTAL is
 shown there too (COMPILING_REASON): it has no decode + eval time to rank.
+A VM in DECODE_CACHED (its library caches decoded programs and cannot be told not to) times hash +
+eval in its D3 loop, not decode + eval. It stays ranked, but only on eval only, like a compiling
+VM: no decode + eval time, not in that ranking, not a competitor in the penalty rule.
 - drift.json             the drift probe (parsers/normalize.py): Haskell at the end of the run
                          vs the start, shown as a note
 - ../<date>/             earlier runs next to this one, for the history chart: each VM's geometric
@@ -115,6 +118,26 @@ COMPILE_BADGE = "decode and compile excluded"
 NO_D3_NOTE = "compiled once before timing, see the compile column"
 # The "not ranked" reason of a compiling VM that is not in EXPERIMENTAL.
 COMPILING_REASON = "not ranked: it compiles each script once before timing, so it has no decode + eval time"
+# VMs whose library caches decoded programs, with no way to turn the cache off (spec D15, D17): the
+# D3 loop decodes once, then each iteration hashes the bytes and evaluates the cached program. So
+# their time is shown only as eval only, as a compiling VM's; they stay ranked on eval only.
+# {vm: the visible line next to the decode + eval ranking}
+DECODE_CACHED = {
+    "aiken-wasm": "Aiken WASM caches decoded programs inside the library, so its time is shown as eval only.",
+}
+# Why a decode-cached VM has no decode + eval time (summary tables, tooltips).
+NO_D3_CACHED_NOTE = "the library caches decoded programs, so only an eval-only time"
+
+
+def no_d3_note(vm: str) -> str:
+    """Why the VM has no decode + eval time: it compiles before timing, or caches the decode."""
+    return NO_D3_CACHED_NOTE if vm in DECODE_CACHED else NO_D3_NOTE
+
+
+def d3_ranked(present_vms) -> list[str]:
+    """The ranked VMs that have a decode + eval time: the decode + eval ranking and the
+    competitors of the penalty rule. A decode-cached VM is ranked on eval only."""
+    return [vm for vm in present_vms if vm not in DECODE_CACHED]
 
 VM_LABELS = {
     "uplc-turbo": "uplc-turbo AST walker (Rust)",
@@ -309,10 +332,12 @@ def vm_list_badges(vm: str, gate: dict | None, hidden: dict[str, str], compile_n
 def vm_list_order(data, scripts, present_vms, experimental, hidden) -> list[str]:
     """Ranked VMs fastest first (the penalised geometric mean, as the page's bars), then the
     experimental ones, then the ones that failed the check."""
-    geo = compute_geo_means(data, scripts, present_vms)
-    ranked = sorted(present_vms, key=lambda vm: (geo.get(vm) or float("inf"), vm))
+    d3 = d3_ranked(present_vms)
+    geo = compute_geo_means(data, scripts, d3)
+    ranked = sorted(d3, key=lambda vm: (geo.get(vm) or float("inf"), vm))
+    cached = [vm for vm in present_vms if vm not in d3]
     failed = sorted(hidden, key=lambda v: (VM_ORDER.index(v) if v in VM_ORDER else 99, v))
-    return ranked + list(experimental) + failed
+    return ranked + cached + list(experimental) + failed
 
 
 def _ext(url: str, text: str) -> str:
@@ -538,7 +563,8 @@ def load_history(run_dir: str) -> dict:
             continue
         idx = len(runs)
         runs.append(d)
-        compiling = set(load_compile(rd))
+        # Eval-only VMs of the run: compiling ones, and decode-cached ones (DECODE_CACHED).
+        compiling = set(load_compile(rd)) | (set(DECODE_CACHED) & set(shown))
         evals = load_eval(rd) if compiling else {}
         eval_only |= compiling & set(shown)
 
@@ -619,8 +645,10 @@ def badge_text(vm: str) -> str:
 def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, env_info, gate, hidden,
                       compile_ns, eval_ns, history, drift) -> None:
     """Generate report.md. present_vms are the ranked VMs; experimental the shown, unranked ones."""
-    geo_means = compute_geo_means(data, scripts, present_vms)
+    d3_vms = d3_ranked(present_vms)
+    geo_means = compute_geo_means(data, scripts, d3_vms)
     all_vms = present_vms + experimental
+    eval_only = set(compile_ns) | (set(DECODE_CACHED) & set(all_vms))
 
     fastest_geo = min(geo_means.values()) if geo_means else 1
 
@@ -656,23 +684,29 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
         lines.append("*Geo Mean: flat decode + evaluation (the ranking). Eval only: evaluation of a "
                      "program decoded before the timed loop, geometric mean over its scripts.*")
     for vm in all_vms:
+        if vm in DECODE_CACHED:
+            lines.append(f"*{DECODE_CACHED[vm]} It is not in the decode + eval ranking; it is ranked "
+                         "on eval only (Geo Mean \"–\").*")
         if vm in VM_BADGES:
             lines.append(f"*{VM_LABELS.get(vm, vm)}, \"{VM_BADGES[vm]['text']}\": {VM_BADGES[vm]['title']}*")
     lines.append("")
     lines.append("| VM | Language | Geo Mean | vs Fastest | Eval only | Compile | Check |")
     lines.append("|---|---|---|---|---|---|---|")
 
-    sorted_vms = sorted(present_vms, key=lambda vm: geo_means.get(vm, float("inf")))
+    sorted_vms = sorted(d3_vms, key=lambda vm: geo_means.get(vm, float("inf"))) + \
+        [vm for vm in present_vms if vm not in d3_vms]
     for vm in sorted_vms:
         label = VM_LABELS.get(vm, vm)
         lang = label.split("(")[-1].rstrip(")") if "(" in label else ""
-        geo = geo_means[vm]
+        geo = geo_means.get(vm, 0)
         ratio = geo / fastest_geo if fastest_geo > 0 else 0
         comp = compile_ns.get(vm)
         comp_cell = f"{fmt_ns(int(geometric_mean(list(comp.values()))))} ({COMPILE_BADGE})" if comp else "-"
         ev = eval_ns.get(vm)
         eval_cell = fmt_ns(int(geometric_mean(list(ev.values())))) if ev else "-"
         geo_cell, ratio_cell = (fmt_ns(int(geo)), f"{ratio:.2f}x") if geo > 0 else ("-", "-")
+        if vm in DECODE_CACHED:
+            geo_cell, ratio_cell = "–", "eval only"
         lines.append(f"| **{label}**{badge_text(vm)} | {lang} | {geo_cell} | {ratio_cell} | {eval_cell} | "
                      f"{comp_cell} | {check_label(gate, vm)} |")
 
@@ -697,7 +731,7 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
                 # No decode + eval time: the penalty rule would invent one from the other VMs.
                 geo_cell = "–"
             else:
-                geo = experimental_geo_mean(data, scripts, present_vms, vm)
+                geo = experimental_geo_mean(data, scripts, d3_vms, vm)
                 geo_cell = fmt_ns(int(geo)) if geo > 0 else "-"
             lines.append(f"| **{label}**{badge_text(vm)} | {lang} | {geo_cell} | {eval_cell} | {comp_cell} | "
                          f"{check_label(gate, vm)} | {unranked_reason(vm)} |")
@@ -736,8 +770,9 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
             lines.append(f"| {VM_LABELS.get(vm, vm)}{tag} | " + " | ".join(cells) + " |")
         lines.append("")
         if history.get("eval_only"):
-            lines.append("A VM marked \"eval only\" compiles each script before timing: its ratio is its "
-                         "eval-only time divided by Haskell's eval-only time.")
+            lines.append("A VM marked \"eval only\" has no decode + eval time (it compiles each script "
+                         "before timing, or its library caches the decode): its ratio is its eval-only "
+                         "time divided by Haskell's eval-only time.")
             lines.append("")
         lines.append(f"Servers of the same type differ: ratios to Haskell move up to about "
                      f"{NOISE_BAND * 100:.0f} % between two runs on different servers, so a change under "
@@ -751,7 +786,7 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
     lines.append("|---|---|---|---|---|")
     for vm in sorted_vms + experimental:
         # A compiling VM's successful times are in eval_ns (see generate).
-        success = (len(eval_ns.get(vm, {})) if vm in compile_ns
+        success = (len(eval_ns.get(vm, {})) if vm in eval_only
                    else sum(1 for s in scripts if data[s].get(vm, 0) > 0))
         fail = sum(1 for s in scripts if data[s].get(vm, 0) < 0)
         missing = len(scripts) - success - fail
@@ -764,7 +799,7 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
     lines.append("")
     # Each VM's D3 column, followed by its eval-only column if it has <vm>-eval.csv; a compiling VM
     # has only the eval-only column. The experimental VMs come last and are never the bold fastest.
-    columns = [c for vm in all_vms for c in ([(vm, True)] if vm in compile_ns
+    columns = [c for vm in all_vms for c in ([(vm, True)] if vm in eval_only
                                              else [(vm, False), (vm, True)] if vm in eval_ns
                                              else [(vm, False)])]
     header = "| Script |" + "|".join(
@@ -777,7 +812,7 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
     for script in scripts:
         row = f"| {script} |"
         script_times = {vm: data[script].get(vm, 0) for vm in all_vms}
-        ranked_times = [script_times[vm] for vm in present_vms if script_times[vm] > 0]
+        ranked_times = [script_times[vm] for vm in d3_vms if script_times[vm] > 0]
         fastest = min(ranked_times, default=0)
 
         for vm, ev in columns:
@@ -890,9 +925,11 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
                            hidden, compile_ns)
     with open(os.path.join(run_dir, "unified.csv")) as f:
         lines = f.read().strip().split("\n")
-    # A compiling VM's rows leave the CSV: the page gets its times as eval-only (REPORT.eval).
+    # An eval-only VM's rows (compiling or decode-cached) leave the CSV: the page gets its times as
+    # eval-only (REPORT.eval).
+    eval_only = set(compile_ns) | set(DECODE_CACHED)
     csv_data = "\n".join([lines[0]] + [l for l in lines[1:]
-                                       if l.split(",", 1)[0] in shown and l.split(",", 1)[0] not in compile_ns])
+                                       if l.split(",", 1)[0] in shown and l.split(",", 1)[0] not in eval_only])
 
     report = {
         # The shown VMs in VM_ORDER: a compiling VM has no row in the CSV.
@@ -911,6 +948,9 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
         "badges": {vm: b for vm, b in VM_BADGES.items() if vm in shown},
         "experimental": {vm: unranked_reason(vm) for vm in experimental},
         "no_d3_note": NO_D3_NOTE,
+        # {vm: the visible line}: ranked on eval only, no decode + eval time (DECODE_CACHED).
+        "decode_cached": {vm: t for vm, t in DECODE_CACHED.items() if vm in shown},
+        "no_d3_cached_note": NO_D3_CACHED_NOTE,
         "drift": drift_text(drift),
         "drift_percent": drift["percent"] if drift else None,
         "run": os.path.basename(os.path.abspath(run_dir)),
@@ -1026,19 +1066,23 @@ def split_label(vm: str) -> tuple[str, str]:
 def summary_rows(data, scripts, present_vms, experimental, gate, eval_ns, compile_ns) -> list[dict]:
     """One row per shown VM: the ranked ones fastest first (geo mean with the penalty rule, as in
     report.md and the page's overall ranking), then the experimental ones. A compiling VM has no
-    decode + eval time: geo 0, "compiled" True."""
-    geo = compute_geo_means(data, scripts, present_vms)
-    ranked = sorted((vm for vm in present_vms if geo.get(vm, 0) > 0), key=lambda vm: geo[vm])
+    decode + eval time: geo 0, "compiled" True. A decode-cached VM (DECODE_CACHED) comes after the
+    ranked ones: ranked on eval only, no decode + eval time ("compiled" True, rank None)."""
+    d3_vms = d3_ranked(present_vms)
+    geo = compute_geo_means(data, scripts, d3_vms)
+    ranked = sorted((vm for vm in d3_vms if geo.get(vm, 0) > 0), key=lambda vm: geo[vm])
+    cached = [vm for vm in present_vms if vm not in d3_vms]
     fastest = geo[ranked[0]] if ranked else 0
     rows = []
-    for vm in ranked + experimental:
+    for vm in ranked + cached + experimental:
         exp = vm in experimental
-        comp = vm in compile_ns
-        g = 0 if comp else experimental_geo_mean(data, scripts, present_vms, vm) if exp else geo[vm]
+        comp = vm in compile_ns or vm in cached
+        g = 0 if comp else experimental_geo_mean(data, scripts, d3_vms, vm) if exp else geo[vm]
         name, lang = split_label(vm)
         rows.append({
             "vm": vm, "name": name, "lang": lang, "experimental": exp, "compiled": comp,
-            "rank": None if exp else len(rows) + 1,
+            "eval_only_ranked": vm in cached,
+            "rank": None if exp or vm in cached else len(rows) + 1,
             "geo": g, "eval": eval_geo(eval_ns, vm),
             "ratio": g / fastest if (fastest > 0 and g > 0 and not exp) else None,
             "check": check_label(gate, vm),
@@ -1055,11 +1099,13 @@ def summary_html(rows: list[dict], n_scripts: int) -> str:
     for r in rows:
         check_cls = {"pass": "pass", "outdated cost model": "outdated"}.get(r["check"], "")
         rank = "–" if r["rank"] is None else str(r["rank"])
-        ratio = "not ranked" if r["experimental"] else (f"{r['ratio']:.2f}×" if r["ratio"] else "-")
+        ratio = ("not ranked" if r["experimental"] else "eval only" if r["eval_only_ranked"]
+                 else f"{r['ratio']:.2f}×" if r["ratio"] else "-")
         name = escape(r["name"]) + (" (experimental)" if r["experimental"] else "")
         tr = '<tr class="exp">' if r["experimental"] else "<tr>"
         # A compiling VM: no decode + eval time ("–" with the reason as a tooltip).
-        d3 = f'<td title="{escape(NO_D3_NOTE)}">–</td>' if r["compiled"] else f'<td>{fmt_ns_html(r["geo"])}</td>'
+        d3 = (f'<td title="{escape(no_d3_note(r["vm"]))}">–</td>' if r["compiled"]
+              else f'<td>{fmt_ns_html(r["geo"])}</td>')
         out.append(f'        {tr}<td>{rank}</td>'
                    f'<td class="l vm">{name}</td><td class="l lang">{escape(r["lang"])}</td>'
                    f'{d3}<td>{fmt_ns_html(r["eval"])}</td><td>{ratio}</td>'
@@ -1072,7 +1118,9 @@ def summary_html(rows: list[dict], n_scripts: int) -> str:
             'A VM that compiles a script before it runs it decodes and compiles each script once, '
             'before timing. So it has only an eval-only time, and no decode + eval time. '
             'The VMs use different execution models, so compare VMs of the same model too '
-            '(<a href="#exec-model">Execution Model</a>). Experimental VMs are shown, but not ranked.</p>']
+            '(<a href="#exec-model">Execution Model</a>). Experimental VMs are shown, but not ranked.'
+            + "".join(" " + escape(DECODE_CACHED[r["vm"]]) for r in rows if r["eval_only_ranked"])
+            + '</p>']
     return "\n".join(out)
 
 
@@ -1366,9 +1414,10 @@ def generate(run_dir: str, write_index: bool = False) -> None:
     compile_ns = {vm: v for vm, v in load_compile(run_dir).items() if vm in shown_vms}
     eval_ns = {vm: v for vm, v in eval_all.items() if vm in shown_vms}
     # A compiling VM decodes and compiles each script before timing: its timed loop is eval only.
-    # Its time is an eval-only time (its D3 rows if it has no -eval.csv), never a decode + eval
-    # time, so its successful D3 times leave data (a failure stays, for the script coverage).
-    for vm in compile_ns:
+    # A decode-cached VM (DECODE_CACHED) times hash + eval in its D3 loop. Either way the time is an
+    # eval-only time (its D3 rows if it has no -eval.csv), never a decode + eval time, so its
+    # successful D3 times leave data (a failure stays, for the script coverage).
+    for vm in list(compile_ns) + [vm for vm in DECODE_CACHED if vm in shown_vms and vm not in compile_ns]:
         d3 = {s: data[s][vm] for s in scripts if data[s].get(vm, 0) > 0}
         if vm not in eval_ns and d3:
             eval_ns[vm] = d3

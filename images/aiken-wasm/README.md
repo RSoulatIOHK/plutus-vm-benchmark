@@ -46,9 +46,10 @@ bytes. The cache cannot be turned off. Only the first call on a script decodes i
 round makes that call. Every measured call hashes the bytes, takes the decoded program from the
 cache and evaluates it. So the time is hash + evaluation, not flat decode + evaluation.
 
-The report ranks the row, with the badge "decode cached (by the library)". This is like the
-"decode and compile excluded" badge of the Scalus JIT: the time does not include the decode. It
-is also what a Lucid user gets when one script is evaluated again and again.
+The report shows the row with the badge "decode cached (by the library)" and ranks it only on eval
+only (spec D21), as it does for the Scalus JIT ("decode and compile excluded"): the time does not
+include the decode, so it is not in the decode + eval ranking. It is also what a Lucid user gets
+when one script is evaluated again and again.
 
 `run-aiken-wasm.sh` starts a new node process per script, so the cache of one script never
 serves another.

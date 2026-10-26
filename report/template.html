@@ -735,7 +735,9 @@ const CSV_DATA = `{{CSV_DATA}}`;
 // history: {runs: [dir], series: {vm: [ratio or null]}, eval_only: [vm]}; badges: {vm: {text, title}} (how the VM is timed);
 // experimental: {vm: reason} (shown, not ranked); vms: [vm] (the shown VMs, in order).
 // A VM with compile data compiles each script before timing: its timed loop is eval only, so it has
-// no row in CSV_DATA, its times are in eval, and it is shown only as eval only (isCompiled).
+// no row in CSV_DATA, its times are in eval, and it is shown only as eval only (isEvalOnly).
+// decode_cached: {vm: line}: a ranked VM whose library caches decoded programs. It has no row in
+// CSV_DATA either: ranked on eval only, out of the decode + eval ranking and the penalty rule.
 const REPORT = {{REPORT_JSON}};
 
 // One fixed colour per VM, the same in every run and every chart (the colour follows the VM, never
@@ -787,6 +789,9 @@ shownVMs.forEach(vm => { if (!VM_META[vm]) VM_META[vm] = { label: vm, lang: '', 
 // Experimental VMs are shown in their own section and the per-script table, never ranked.
 const EXPERIMENTAL = REPORT.experimental || {};
 const presentVMs = shownVMs.filter(vm => !(vm in EXPERIMENTAL));
+const DECODE_CACHED = REPORT.decode_cached || {};
+// The ranked VMs with a decode + eval time: the decode + eval ranking and the penalty competitors.
+const d3VMs = presentVMs.filter(vm => !(vm in DECODE_CACHED));
 const experimentalVMs = shownVMs.filter(vm => vm in EXPERIMENTAL);
 
 // Badges: what a reader needs to know about how a VM is timed. No "check passed" badge: the gate
@@ -804,12 +809,13 @@ function badges(vm) {
   return out.length ? '<div class="vm-badges">' + out.join('') + '</div>' : '';
 }
 const EVAL = REPORT.eval || {};
-// A compiling VM: only an eval-only time (see REPORT above).
-const isCompiled = vm => !!REPORT.compile[vm];
+// A compiling or decode-cached VM: only an eval-only time (see REPORT above).
+const isEvalOnly = vm => !!REPORT.compile[vm] || vm in DECODE_CACHED;
+const noD3Note = vm => vm in DECODE_CACHED ? REPORT.no_d3_cached_note : REPORT.no_d3_note;
 const evalGeoAll = vm => geoMean(Object.values(EVAL[vm] || {}));
 // "N/M scripts passed", only when N < M: a warning with what the gap does to the geometric mean.
 function scriptsWarning(vm) {
-  const comp = isCompiled(vm);
+  const comp = isEvalOnly(vm);
   const pass = comp ? scripts.filter(sc => EVAL[vm]?.[sc] > 0).length : scripts.filter(sc => data[sc]?.[vm] > 0).length;
   if (pass >= scripts.length) return '';
   const fail = scripts.filter(sc => data[sc]?.[vm] < 0).length;
@@ -827,14 +833,14 @@ function evalLine(vm, common) {
 // and the notes. A compiling VM's headline is its eval-only geometric mean.
 function cardHtml(vm, rank, geo, ratio, common, extra) {
   const m = VM_META[vm];
-  const comp = isCompiled(vm);
+  const comp = isEvalOnly(vm);
   const warn = scriptsWarning(vm);
   const ratioHtml = ratio === null ? ''
     : ratio === 1 ? '<div class="ratio">Fastest in its category</div>'
     : '<div class="ratio" title="Geometric mean time divided by the fastest VM of the category">' + ratio.toFixed(2) + '× the fastest time</div>';
   return '<div class="card' + (rank === '#1' ? ' first' : '') + '">'
     + '<div class="card-head"><div><div class="vm-name">' + vmLink(vm, m.label) + '</div><div class="lang">' + langLine(m) + '</div></div><div class="rank"' + (rank === 'exp' ? ' title="Experimental, not ranked">–' : '>' + rank) + '</div></div>'
-    + (comp ? '<div class="metric-label" title="' + REPORT.no_d3_note + '">Eval only, geometric mean</div>'
+    + (comp ? '<div class="metric-label" title="' + esc(noD3Note(vm)) + '">Eval only, geometric mean</div>'
             : '<div class="metric-label">Decode + eval, geometric mean</div>')
     + '<div class="geo-mean">' + (geo > 0 ? fmtNs(Math.round(geo)) : '–') + '</div>' + ratioHtml
     + (comp ? '' : evalLine(vm, common))
@@ -899,8 +905,8 @@ function penalized(vms, timeOf) {
   return out;
 }
 const d3Of = (vm, s) => data[s]?.[vm] || 0;
-const penalizedGeoMeans = penalized(presentVMs, d3Of);
-const sortedPenalized = [...presentVMs].sort((a,b) => penalizedGeoMeans[a]-penalizedGeoMeans[b]);
+const penalizedGeoMeans = penalized(d3VMs, d3Of);
+const sortedPenalized = [...d3VMs].sort((a,b) => penalizedGeoMeans[a]-penalizedGeoMeans[b]);
 // Geometric mean of an experimental VM: a failed or missing script gets the slowest ranked VM's time
 // (the penalty rule, against the ranked VMs only).
 function experimentalGeo(vm) {
@@ -908,7 +914,7 @@ function experimentalGeo(vm) {
     const t = data[s]?.[vm] || 0;
     if (t > 0) return t;
     let worst = 0;
-    presentVMs.forEach(o => { const ot = data[s]?.[o] || 0; if (ot > worst) worst = ot; });
+    d3VMs.forEach(o => { const ot = data[s]?.[o] || 0; if (ot > worst) worst = ot; });
     return worst;
   }));
 }
@@ -957,7 +963,8 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const swatch = (vm, cls) => '<span class="vsw' + (cls ? ' ' + cls : '') + '" style="background-color:' + VM_META[vm].color + '" aria-hidden="true"></span>';
 const state = { mode: 'd3', script: '', cat: '' };
 const catVMs = cat => cat ? presentVMs.filter(vm => CATS.find(c => c.key === cat).matches.includes(vmCategory(vm))) : presentVMs;
-const NO_D3 = 'compiles each script before timing: only an eval-only time';
+const noD3 = vm => vm in DECODE_CACHED ? 'caches decoded programs in the library: only an eval-only time'
+  : 'compiles each script before timing: only an eval-only time';
 
 function viewOf(st) {
   const ranked = catVMs(st.cat), exps = st.cat ? [] : experimentalVMs;
@@ -965,9 +972,9 @@ function viewOf(st) {
   if (!st.script) {
     if (st.mode === 'd3') {
       // The headline: penalty rule within the shown set (all VMs: the summary table numbers).
-      const g = st.cat ? penalized(ranked, d3Of) : penalizedGeoMeans;
-      ranked.forEach(vm => { time[vm] = g[vm]; });
-      exps.forEach(vm => { if (isCompiled(vm)) why[vm] = NO_D3; else time[vm] = experimentalGeo(vm); });
+      const g = st.cat ? penalized(ranked.filter(vm => !isEvalOnly(vm)), d3Of) : penalizedGeoMeans;
+      ranked.forEach(vm => { if (isEvalOnly(vm)) why[vm] = noD3(vm); else time[vm] = g[vm]; });
+      exps.forEach(vm => { if (isEvalOnly(vm)) why[vm] = noD3(vm); else time[vm] = experimentalGeo(vm); });
     } else {
       // Eval only: the geometric mean of the VM's eval-only times (generate_report.eval_geo).
       ranked.concat(exps).forEach(vm => { const g = evalGeoAll(vm); if (g > 0) time[vm] = g; else why[vm] = 'no eval-only time in this run'; });
@@ -976,7 +983,7 @@ function viewOf(st) {
     const s = st.script;
     ranked.concat(exps).forEach(vm => {
       if (st.mode === 'd3') {
-        if (isCompiled(vm)) { why[vm] = NO_D3; return; }
+        if (isEvalOnly(vm)) { why[vm] = noD3(vm); return; }
         const t = data[s]?.[vm];
         if (t > 0) time[vm] = t; else why[vm] = t < 0 ? 'failed on this script' : 'no time for this script';
       } else {
@@ -1017,16 +1024,16 @@ function rowEl(vm) {
 }
 // Details of a selected row: what D's VM card held, for the current view.
 function detailHtml(vm) {
-  const m = VM_META[vm], comp = isCompiled(vm), out = [];
+  const m = VM_META[vm], comp = isEvalOnly(vm), out = [];
   const item = (k, val, wide) => out.push('<div' + (wide ? ' class="wide"' : '') + '><dt>' + k + '</dt><dd>' + val + '</dd></div>');
   if (state.script) {
     item('Script', '<code>' + esc(state.script) + '</code>');
-    item('Decode + eval', comp ? 'not timed (compiled before timing)' : (data[state.script]?.[vm] > 0 ? fmtNs(data[state.script][vm]) : data[state.script]?.[vm] < 0 ? 'failed' : 'no time'));
+    item('Decode + eval', comp ? 'not timed (' + noD3Note(vm) + ')' : (data[state.script]?.[vm] > 0 ? fmtNs(data[state.script][vm]) : data[state.script]?.[vm] < 0 ? 'failed' : 'no time'));
     item('Eval only', EVAL[vm]?.[state.script] > 0 ? fmtNs(EVAL[vm][state.script]) : 'no time');
     if (comp && REPORT.compile[vm][state.script]) item('Compile, not in the timing', fmtNs(REPORT.compile[vm][state.script]));
   } else {
-    const d3 = comp ? 0 : (vm in EXPERIMENTAL ? experimentalGeo(vm) : penalizedGeoMeans[vm]);
-    item('Decode + eval, geo mean', d3 > 0 ? fmtNs(Math.round(d3)) : 'not timed (compiled before timing)');
+    const d3 = comp ? 0 : (vm in EXPERIMENTAL ? experimentalGeo(vm) : penalizedGeoMeans[vm] || 0);
+    item('Decode + eval, geo mean', d3 > 0 ? fmtNs(Math.round(d3)) : 'not timed (' + noD3Note(vm) + ')');
     item('Eval only, geo mean', evalGeoAll(vm) > 0 ? fmtNs(Math.round(evalGeoAll(vm))) + ' (decode excluded)' : 'no eval-only time');
     const cg = compileGeo(vm);
     if (cg > 0) item('Compile, geo mean', fmtNs(Math.round(cg)) + ' (not in the timing)');
@@ -1144,13 +1151,18 @@ function renderCaption(v) {
   if (v.timed.some(vm => vm in EXPERIMENTAL)) t += ' A hatched bar is an experimental VM. It is not ranked.';
   document.getElementById('board-caption').innerHTML = t;
   // Compiling VMs: out of every decode + eval view.
-  const ex = shownVMs.filter(isCompiled), el = document.getElementById('bar-excluded');
-  if (ex.length && state.mode === 'd3') {
-    const names = ex.map(vm => VM_META[vm].label);
-    const list = names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
-    const one = ex.length === 1;
-    el.textContent = list + (one ? ' compiles' : ' compile') + ' each script once before timing, so ' + (one ? 'it has' : 'they have')
-      + ' only an eval-only time. Choose “eval only” to see ' + (one ? 'it' : 'them') + ' with a bar.';
+  const ex = shownVMs.filter(vm => !!REPORT.compile[vm]), el = document.getElementById('bar-excluded');
+  const cached = shownVMs.filter(vm => vm in DECODE_CACHED);
+  if ((ex.length || cached.length) && state.mode === 'd3') {
+    const parts = cached.map(vm => DECODE_CACHED[vm]);
+    if (ex.length) {
+      const names = ex.map(vm => VM_META[vm].label);
+      const list = names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+      const one = ex.length === 1;
+      parts.push(list + (one ? ' compiles' : ' compile') + ' each script once before timing, so ' + (one ? 'it has' : 'they have')
+        + ' only an eval-only time.');
+    }
+    el.textContent = parts.join(' ') + ' Choose “eval only” to see ' + (ex.length + cached.length === 1 ? 'it' : 'them') + ' with a bar.';
     el.style.display = '';
   } else el.style.display = 'none';
 }
@@ -1252,7 +1264,7 @@ document.querySelectorAll('.vml-tc[data-vm]').forEach(el => { const m = VM_META[
 // the buttons hide and show VMs; the headers sort; a script name loads the script into Figure 1.
 // ---------------------------------------------------------------------------------------------
 const barGeo = Object.assign({}, penalizedGeoMeans);
-experimentalVMs.forEach(vm => { if (!isCompiled(vm)) { const g = experimentalGeo(vm); if (g > 0) barGeo[vm] = g; } });
+experimentalVMs.forEach(vm => { if (!isEvalOnly(vm)) { const g = experimentalGeo(vm); if (g > 0) barGeo[vm] = g; } });
 const barVMs = Object.keys(barGeo).filter(vm => barGeo[vm] > 0).sort((a, b) => barGeo[a] - barGeo[b]);
 const tableVMs = barVMs.concat(presentVMs.concat(experimentalVMs).filter(vm => !barVMs.includes(vm)));
 let activeVMs = new Set(tableVMs);
@@ -1286,9 +1298,9 @@ function renderTable() {
   // VM has only its eval-only column, never marked as the fastest.
   const sub = vm => { const m = VM_META[vm]; return m.runtime + (vm in EXPERIMENTAL ? ', experimental' : ''); };
   document.getElementById('table-head').innerHTML = '<tr><th rowspan="2" class="script-col">' + sortBtn('script', 'Script') + '</th>'
-    + vms.map(vm => `<th class="vm-head g"${EVAL[vm] && !isCompiled(vm) ? ' colspan="2"' : ''}>${vmLink(vm, VM_META[vm].label)}<span class="th-lang">${sub(vm)}</span></th>`).join('')
+    + vms.map(vm => `<th class="vm-head g"${EVAL[vm] && !isEvalOnly(vm) ? ' colspan="2"' : ''}>${vmLink(vm, VM_META[vm].label)}<span class="th-lang">${sub(vm)}</span></th>`).join('')
     + compVMs.map(vm => `<th rowspan="2" class="compile-col g">${sortBtn(vm + ':compile', VM_META[vm].label + ' compile')}<span class="th-lang">not in the timing</span></th>`).join('') + '</tr>'
-    + '<tr class="sub-head">' + vms.map(vm => (isCompiled(vm) ? `<th class="eval-col g" title="${REPORT.no_d3_note}">${sortBtn(vm + ':eval', 'eval only')}</th>`
+    + '<tr class="sub-head">' + vms.map(vm => (isEvalOnly(vm) ? `<th class="eval-col g" title="${esc(noD3Note(vm))}">${sortBtn(vm + ':eval', 'eval only')}</th>`
       : EVAL[vm] ? `<th class="eval-col g">${sortBtn(vm + ':eval', 'eval only')}</th><th>${sortBtn(vm + ':d3', 'decode + eval')}</th>`
       : `<th class="g">${sortBtn(vm + ':d3', 'decode + eval')}</th>`)).join('') + '</tr>';
   const order = [...scripts].sort((a, b) => {
@@ -1300,12 +1312,12 @@ function renderTable() {
     // The fastest is taken over the ranked VMs only.
     vms.forEach(vm => { const t = data[script]?.[vm] || 0; times[vm] = t; if (t > 0 && t < min && !(vm in EXPERIMENTAL)) min = t; });
     // The fastest eval-only time, also over the ranked VMs only.
-    const evalVMs = vms.filter(vm => EVAL[vm] && EVAL[vm][script] > 0 && !(vm in EXPERIMENTAL) && !isCompiled(vm));
+    const evalVMs = vms.filter(vm => EVAL[vm] && EVAL[vm][script] > 0 && !(vm in EXPERIMENTAL));
     const minEval = Math.min(...evalVMs.map(vm => EVAL[vm][script]));
     const evalCell = vm => { if (!EVAL[vm]) return ''; const e = EVAL[vm][script]; if (!(e > 0)) return '<td class="missing g">–</td>'; const best = e === minEval && evalVMs.includes(vm) && evalVMs.length > 1; return `<td class="eval-col g${best ? ' fastest' : ''}">${fmtNs(e)}</td>`; };
     const g = vm => EVAL[vm] ? '' : ' g';
     return '<tr data-script="' + esc(script) + '"><td class="script-col"><button type="button" title="Rank this script in Figure 1">' + esc(script) + '</button></td>' + vms.map(vm => {
-      if (isCompiled(vm)) return evalCell(vm) || '<td class="missing g">–</td>';
+      if (isEvalOnly(vm)) return evalCell(vm) || '<td class="missing g">–</td>';
       const t = times[vm];
       if (t === undefined || t === 0) return evalCell(vm) + '<td class="missing' + g(vm) + '">–</td>';
       if (t < 0) return evalCell(vm) + '<td class="failed' + g(vm) + '">FAIL</td>';
@@ -1338,7 +1350,7 @@ if (experimentalVMs.length) {
   document.getElementById('experimental-section').style.display = '';
   document.getElementById('experimental-cards').innerHTML = experimentalVMs.map(vm => {
     const reason = String(EXPERIMENTAL[vm]).replace(/&/g,'&amp;').replace(/</g,'&lt;');
-    return cardHtml(vm, 'exp', isCompiled(vm) ? evalGeoAll(vm) : experimentalGeo(vm), null, scripts, '<div class="exp-reason">' + reason + '</div>');
+    return cardHtml(vm, 'exp', isEvalOnly(vm) ? evalGeoAll(vm) : experimentalGeo(vm), null, scripts, '<div class="exp-reason">' + reason + '</div>');
   }).join('');
 }
 

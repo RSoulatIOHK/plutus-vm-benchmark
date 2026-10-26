@@ -50,8 +50,13 @@ Experimental section (see [Inclusion rules](#inclusion-rules)).
 The published npm package `@lucid-evolution/uplc` 0.4.0 (the `aiken-wasm` row) caches the decoded
 program, and it has no switch to turn the cache off. The harness uses the package as is. After the
 first call, its timed loop does not decode the script again: it hashes the flat bytes, finds the
-decoded program in the cache and evaluates it. The same times fill its D3 and eval-only columns.
-The page ranks it with a "decode cached (by the library)" badge.
+decoded program in the cache and evaluates it. So its time is hash + evaluation, an eval-only time
+(the D3 and the eval-only files have the same rows). It cannot be timed on decode + eval without
+changing its input, and the package is used as it is (D17). So, as for a compiling VM, the report
+shows its time only as eval only (D21): its decode + eval cell is "–", it is not in the decode +
+eval ranking, not a competitor in the penalty rule there, and not in the geometric-mean chart. It
+is ranked on eval only, with a "decode cached (by the library)" badge, and the page says so next
+to the decode + eval ranking.
 
 ## Inclusion Rules
 
@@ -64,7 +69,8 @@ A VM is ranked when it meets three rules:
    evaluator. The page lists each user with a proof link (`USED_BY` in `report/generate_report.py`).
 3. It passes the [correctness gate](#correctness-gate).
 
-A VM that caches the decoded program or compiles it ahead is ranked with a badge:
+A VM that caches the decoded program or compiles it ahead gets a badge, and it is ranked only on
+eval only (D21: its decode runs outside the timed loop):
 
 | Badge | Meaning | Example |
 |---|---|---|
