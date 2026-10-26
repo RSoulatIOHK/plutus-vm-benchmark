@@ -90,9 +90,9 @@ What changed:
 | Image | VM | Language | Benchmark framework | Project | Pinned release |
 |---|---|---|---|---|---|
 | `haskell` | plutus-core | Haskell | Criterion | [IntersectMBO/plutus](https://github.com/IntersectMBO/plutus) | [1.70.0.0](https://github.com/IntersectMBO/plutus/releases/tag/1.70.0.0) |
-| `scalus-cek` | Scalus CEK | Scala / GraalVM 25 | JMH | [scalus3/scalus](https://github.com/scalus3/scalus) | [v1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |
-| `scalus-jit` | Scalus JIT (UPLC → JVM bytecode), [experimental](#experimental), not ranked | Scala / GraalVM 25 | JMH | [scalus3/scalus](https://github.com/scalus3/scalus) | [v1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |
-| `scalus-js` | Scalus.js | Scala.js / Node.js | Vitest bench | [scalus3/scalus](https://github.com/scalus3/scalus) | npm `scalus` [1.4.0](https://github.com/scalus3/scalus/releases/tag/v1.4.0) |
+| `scalus-cek` | Scalus CEK | Scala / GraalVM 25 | JMH | [scalus3/scalus](https://github.com/scalus3/scalus) | [v1.4.1](https://github.com/scalus3/scalus/releases/tag/v1.4.1) |
+| `scalus-jit` | Scalus JIT (UPLC → JVM bytecode), [experimental](#experimental), not ranked | Scala / GraalVM 25 | JMH | [scalus3/scalus](https://github.com/scalus3/scalus) | [v1.4.1](https://github.com/scalus3/scalus/releases/tag/v1.4.1) |
+| `scalus-js` | Scalus.js | Scala.js / Node.js | Vitest bench | [scalus3/scalus](https://github.com/scalus3/scalus) | npm `scalus` [1.4.1](https://github.com/scalus3/scalus/releases/tag/v1.4.1) |
 | `aiken` | Aiken uplc | Rust | Criterion.rs | [aiken-lang/aiken](https://github.com/aiken-lang/aiken) | [v1.1.24](https://github.com/aiken-lang/aiken/releases/tag/v1.1.24) |
 | `aiken-wasm` | Aiken uplc as WASM (Lucid Evolution), badge "decode cached (by the library)" | Rust → WASM / Node.js | Vitest bench | [Anastasia-Labs/lucid-evolution](https://github.com/Anastasia-Labs/lucid-evolution/tree/main/packages/uplc) | npm `@lucid-evolution/uplc` [0.4.0](https://github.com/Anastasia-Labs/lucid-evolution/releases/tag/%40lucid-evolution%2Fuplc%400.4.0) |
 | `uplc-turbo` | uplc-turbo (Amaru) | Rust | Criterion.rs | [pragma-org/uplc](https://github.com/pragma-org/uplc) | [amaru-uplc-v0.4.0](https://github.com/pragma-org/uplc/releases/tag/amaru-uplc-v0.4.0) |
@@ -120,7 +120,7 @@ downstream user today, or they publish no artifact.
 
 | Image | Why it is not ranked |
 |---|---|
-| `scalus-jit` | The `scalus-uplc-jit-compiler` module of Scalus v1.4.0 is not published to Maven. It has no downstream users. Its timed loop runs the compiled script: badge "decode and compile excluded". So its time is shown only as an eval-only time. |
+| `scalus-jit` | The `scalus-uplc-jit-compiler` module is published to Maven since Scalus v1.4.1, but it has no downstream users yet. Its timed loop runs the compiled script: badge "decode and compile excluded". So its time is shown only as an eval-only time. |
 | `blaze-v8` | No released project outside the Blaze repo depends on `@blaze-cardano/plutus` 0.1.1. Blaze itself evaluates scripts with `@blaze-cardano/vm`, which wraps the Aiken `uplc` crate as WASM. It moves to the ranking when a project depends on it. |
 
 ## Not included

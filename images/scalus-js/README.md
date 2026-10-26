@@ -5,7 +5,7 @@ The Scalus CEK machine compiled with Scala.js, as published on npm as
 and the same timing loop as the `blaze-v8` harness, run by plain `node`. The image follows
 `docs/IMAGE_CONTRACT.md`.
 
-Pin in `.env`: `SCALUS_SHA` (the Scalus source the package is built from) and `SCALUS_VERSION`.
+Pin in `.env`: `SCALUS_JS_VERSION` (the npm version).
 
 ```bash
 scripts/images.sh build scalus-js
@@ -29,9 +29,6 @@ version 11 and the PlutusV3 cost model. Costing is on: the `PlutusVM` has a `max
 memory), so it restricts, as the node does, but never stops a script.
 `evaluator.evaluateScript(script, args, options)` would build the machine from the cost model on
 every call; a `PlutusVM` builds it once, as a downstream user evaluating many scripts would.
-
-The image builds the package from Scalus source at `SCALUS_SHA` (`.env`), with the npm bundle task
-of the Scalus build.
 
 ## Timing
 

@@ -78,8 +78,9 @@ eval only (D21: its decode runs outside the timed loop):
 | decode cached (by the library) | The library caches the decoded program; the harness cannot turn the cache off | Aiken WASM (`@lucid-evolution/uplc` 0.4.0) |
 
 The page shows an unranked "Experimental" section. It holds VMs that have a release tag and pass
-the gate, but miss rule 2 or publish no artifact. Today these are the Scalus JIT (the
-`scalus-uplc-jit-compiler` module is not published to Maven, and it has no downstream users) and
+the gate, but miss rule 2 or publish no artifact. Today these are the Scalus JIT (since Scalus
+1.4.1, 2026-10-26, the `scalus-uplc-jit-compiler` module is published to Maven, so it meets rule 1;
+it has no downstream users yet, so it misses rule 2) and
 blaze-plutus (no released project outside the Blaze repo depends on `@blaze-cardano/plutus`).
 
 The README lists the VMs that are not included and the rule that each one fails.

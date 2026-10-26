@@ -102,7 +102,7 @@ EXPERIMENTAL = {
                 "yet; Blaze itself evaluates scripts with @blaze-cardano/vm (Aiken uplc as WASM) (spec D17)",
     "blaze-jsc": "not ranked: no released project outside the Blaze repo depends on @blaze-cardano/plutus "
                  "yet; Blaze itself evaluates scripts with @blaze-cardano/vm (Aiken uplc as WASM) (spec D17)",
-    "scalus-jit": "not ranked: the JIT module is not published as a release artifact and has no "
+    "scalus-jit": "not ranked: the JIT module is published (Maven, since Scalus 1.4.1) but has no "
                   "downstream users yet (spec D17)",
 }
 
@@ -180,15 +180,15 @@ VM_SOURCES = {
         "release": "https://github.com/IntersectMBO/plutus/releases/tag/{tag}"},
     "scalus-jit": {
         "repo": _SCALUS_REPO, "home": "https://scalus.org",
-        "env": "SCALUS_SHA", "pattern": r"#\s*(v\d+(?:\.\d+)+)", "tag": "v1.4.0",
+        "env": "SCALUS_SHA", "pattern": r"#\s*(v\d+(?:\.\d+)+)", "tag": "v1.4.1",
         "release": _SCALUS_REPO + "/releases/tag/{tag}"},
     "scalus-cek": {
         "repo": _SCALUS_REPO, "home": "https://scalus.org",
-        "env": "SCALUS_VERSION", "pattern": r"^(\d+(?:\.\d+)+)", "tag": "1.4.0", "version": "v{tag}",
+        "env": "SCALUS_VERSION", "pattern": r"^(\d+(?:\.\d+)+)", "tag": "1.4.1", "version": "v{tag}",
         "release": _SCALUS_REPO + "/releases/tag/v{tag}"},
     "scalus-js": {
         "repo": _SCALUS_REPO, "home": "https://scalus.org",
-        "env": "SCALUS_JS_VERSION", "pattern": r"^(\d+(?:\.\d+)+)", "tag": "1.4.0", "version": "scalus {tag} (npm)",
+        "env": "SCALUS_JS_VERSION", "pattern": r"^(\d+(?:\.\d+)+)", "tag": "1.4.1", "version": "scalus {tag} (npm)",
         "release": _SCALUS_REPO + "/releases/tag/v{tag}"},
     "aiken": {
         "repo": "https://github.com/aiken-lang/aiken", "home": "https://aiken-lang.org",
