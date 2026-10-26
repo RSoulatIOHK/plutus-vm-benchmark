@@ -626,14 +626,14 @@
         <tr><td>2</td><td class="l vm">Scalus CEK</td><td class="l lang">Scala / JVM</td><td>399.88 µs</td><td>291.39 µs</td><td>1.41×</td><td class="l pass">pass</td></tr>
         <tr><td>3</td><td class="l vm">uplc-turbo AST walker</td><td class="l lang">Rust</td><td>468.58 µs</td><td>367.94 µs</td><td>1.65×</td><td class="l pass">pass</td></tr>
         <tr><td>4</td><td class="l vm">plutus-core CEK</td><td class="l lang">Haskell / GHC</td><td>702.57 µs</td><td>271.69 µs</td><td>2.47×</td><td class="l pass">pass</td></tr>
-        <tr><td>5</td><td class="l vm">Aiken uplc CEK</td><td class="l lang">Rust → WASM / Node V8</td><td>901.44 µs</td><td>901.44 µs</td><td>3.17×</td><td class="l pass">pass</td></tr>
-        <tr><td>6</td><td class="l vm">Scalus CEK</td><td class="l lang">Scala.js / Node V8</td><td>3.51 ms</td><td>-</td><td>12.37×</td><td class="l pass">pass</td></tr>
-        <tr><td>7</td><td class="l vm">Aiken uplc CEK</td><td class="l lang">Rust</td><td>8.18 ms</td><td>6.17 ms</td><td>28.81×</td><td class="l pass">pass</td></tr>
+        <tr><td>5</td><td class="l vm">Scalus CEK</td><td class="l lang">Scala.js / Node V8</td><td>3.51 ms</td><td>-</td><td>12.37×</td><td class="l pass">pass</td></tr>
+        <tr><td>6</td><td class="l vm">Aiken uplc CEK</td><td class="l lang">Rust</td><td>8.18 ms</td><td>6.17 ms</td><td>28.81×</td><td class="l pass">pass</td></tr>
+        <tr><td>–</td><td class="l vm">Aiken uplc CEK</td><td class="l lang">Rust → WASM / Node V8</td><td title="the library caches decoded programs, so only an eval-only time">–</td><td>901.44 µs</td><td>eval only</td><td class="l pass">pass</td></tr>
         <tr class="exp"><td>–</td><td class="l vm">Scalus UPLC→JVM JIT (experimental)</td><td class="l lang">Scala / JVM</td><td title="compiled once before timing, see the compile column">–</td><td>123.96 µs</td><td>not ranked</td><td class="l pass">pass</td></tr>
         <tr class="exp"><td>–</td><td class="l vm">blaze-plutus CEK (experimental)</td><td class="l lang">TypeScript / Node V8</td><td>1.73 ms</td><td>1.33 ms</td><td>not ranked</td><td class="l pass">pass</td></tr>
       </tbody>
     </table></div>
-    <p class="summary-caption">Geometric mean of the time per script over the 89 scripts. <em>Decode + eval</em> is the ranking metric. A VM that fails or skips a script gets the slowest competitor's time for it. <em>Eval only</em> times a program that was decoded before the timed loop. A dash means that the run has no such time for the VM. A VM that compiles a script before it runs it decodes and compiles each script once, before timing. So it has only an eval-only time, and no decode + eval time. The VMs use different execution models, so compare VMs of the same model too (<a href="#exec-model">Execution Model</a>). Experimental VMs are shown, but not ranked.</p>
+    <p class="summary-caption">Geometric mean of the time per script over the 89 scripts. <em>Decode + eval</em> is the ranking metric. A VM that fails or skips a script gets the slowest competitor's time for it. <em>Eval only</em> times a program that was decoded before the timed loop. A dash means that the run has no such time for the VM. A VM that compiles a script before it runs it decodes and compiles each script once, before timing. So it has only an eval-only time, and no decode + eval time. The VMs use different execution models, so compare VMs of the same model too (<a href="#exec-model">Execution Model</a>). Experimental VMs are shown, but not ranked. Aiken WASM caches decoded programs inside the library, so its time is shown as eval only.</p>
       </details>
     </div>
   </section>
@@ -723,9 +723,9 @@
 <tr id="vm-scalus-cek"><td><span class="vml-title"><span class="vsw" style="background:var(--vm-scalus-cek, var(--vm-other))"></span>Scalus CEK (Scala / JVM)</span><span class="vml-sub">Scala, GraalVM, Interpreter (CEK)</span><span class="vml-tc" data-vm="scalus-cek"></span></td><td><a href="https://github.com/scalus3/scalus/releases/tag/v1.4.0" target="_blank" rel="noopener">v1.4.0</a></td><td class="vml-links"><span><span class="vml-k">source</span> <a href="https://github.com/scalus3/scalus" target="_blank" rel="noopener">scalus3/scalus</a></span><span><span class="vml-k">home</span> <a href="https://scalus.org" target="_blank" rel="noopener">scalus.org</a></span></td><td class="vml-used"><span class="vml-user"><a href="https://github.com/cardano-hydrozoa/hydrozoa" target="_blank" rel="noopener">Hydrozoa</a> <span class="vml-kind">L2</span> <a href="https://github.com/cardano-hydrozoa/hydrozoa/blob/main/build.sbt#L171" target="_blank" rel="noopener">proof</a></span><span class="vml-user"><a href="https://github.com/FluidTokens/ft-bifrost-bridge" target="_blank" rel="noopener">Bifrost</a> <span class="vml-kind">bridge</span> <a href="https://github.com/lantr-io/binocular/blob/main/build.sbt#L147" target="_blank" rel="noopener">proof</a></span><span class="vml-user"><a href="https://github.com/bloxbean/cardano-client-lib" target="_blank" rel="noopener">Cardano Client Lib</a> <span class="vml-kind">SDK</span> <a href="https://github.com/bloxbean/cardano-client-lib/blob/master/docs/content/integrations/scalus-integration-api.mdx#L35" target="_blank" rel="noopener">proof</a></span><span class="vml-user"><a href="https://github.com/bloxbean/yaci-store" target="_blank" rel="noopener">Yaci Store</a> <span class="vml-kind">indexer</span> <a href="https://github.com/bloxbean/yaci-store/blob/main/gradle/libs.versions.toml#L7" target="_blank" rel="noopener">proof</a></span><span class="vml-user"><a href="https://github.com/bloxbean/yaci-devkit" target="_blank" rel="noopener">Yaci DevKit</a> <span class="vml-kind">dev tool</span> <a href="https://github.com/bloxbean/yaci-devkit/blob/main/docs/pages/services.mdx#L31" target="_blank" rel="noopener">proof</a></span></td><td></td></tr>
 <tr id="vm-uplc-turbo"><td><span class="vml-title"><span class="vsw" style="background:var(--vm-uplc-turbo, var(--vm-other))"></span>uplc-turbo AST walker (Rust)</span><span class="vml-sub">Rust, native, Interpreter (AST walker)</span><span class="vml-tc" data-vm="uplc-turbo"></span></td><td><a href="https://github.com/pragma-org/uplc/releases/tag/amaru-uplc-v0.4.0" target="_blank" rel="noopener">amaru-uplc-v0.4.0</a></td><td class="vml-links"><span><span class="vml-k">source</span> <a href="https://github.com/pragma-org/uplc" target="_blank" rel="noopener">pragma-org/uplc</a></span></td><td class="vml-used"><span class="vml-user"><a href="https://github.com/pragma-org/amaru" target="_blank" rel="noopener">Amaru</a> <span class="vml-kind">node</span> <a href="https://github.com/pragma-org/amaru/blob/main/Cargo.toml#L147" target="_blank" rel="noopener">proof</a></span></td><td></td></tr>
 <tr id="vm-haskell"><td><span class="vml-title"><span class="vsw" style="background:var(--vm-haskell, var(--vm-other))"></span>plutus-core CEK (Haskell / GHC)</span><span class="vml-sub">Haskell, GHC, Interpreter (CEK)</span><span class="vml-tc" data-vm="haskell"></span></td><td><a href="https://github.com/IntersectMBO/plutus/releases/tag/1.70.0.0" target="_blank" rel="noopener">1.70.0.0</a></td><td class="vml-links"><span><span class="vml-k">source</span> <a href="https://github.com/IntersectMBO/plutus" target="_blank" rel="noopener">IntersectMBO/plutus</a></span><span><span class="vml-k">home</span> <a href="https://plutus.cardano.intersectmbo.org" target="_blank" rel="noopener">plutus.cardano.intersectmbo.org</a></span></td><td class="vml-used"><span class="vml-user"><a href="https://github.com/IntersectMBO/cardano-node" target="_blank" rel="noopener">cardano-node</a> <span class="vml-kind">node</span> <a href="https://github.com/IntersectMBO/cardano-ledger/blob/master/eras/alonzo/impl/cardano-ledger-alonzo.cabal#L112" target="_blank" rel="noopener">proof</a></span></td><td></td></tr>
-<tr id="vm-aiken-wasm"><td><span class="vml-title"><span class="vsw" style="background:var(--vm-aiken-wasm, var(--vm-other))"></span>Aiken uplc CEK (Rust → WASM / Node V8)</span><span class="vml-sub">Rust → WASM, Node (V8), Interpreter (CEK)</span><span class="vml-tc" data-vm="aiken-wasm"></span></td><td><a href="https://github.com/Anastasia-Labs/lucid-evolution/releases/tag/@lucid-evolution/uplc@0.4.0" target="_blank" rel="noopener">@lucid-evolution/uplc 0.4.0</a></td><td class="vml-links"><span><span class="vml-k">source</span> <a href="https://github.com/Anastasia-Labs/lucid-evolution" target="_blank" rel="noopener">Anastasia-Labs/lucid-evolution</a></span><span><span class="vml-k">home</span> <a href="https://anastasia-labs.github.io/lucid-evolution/" target="_blank" rel="noopener">anastasia-labs.github.io/lucid-evolution</a></span></td><td class="vml-used"><span class="vml-user"><a href="https://github.com/Anastasia-Labs/lucid-evolution" target="_blank" rel="noopener">Lucid Evolution</a> <span class="vml-kind">SDK</span> <a href="https://github.com/Anastasia-Labs/lucid-evolution/blob/main/packages/lucid/package.json#L63" target="_blank" rel="noopener">proof</a></span></td><td><span class="vm-badges"><span class="vm-badge timing" title="The library caches the decoded program by a hash of the flat bytes. After the first call (in the warm-up), the timed loop runs hash + evaluation, without the decode. Its eval-only time is the same loop.">decode cached (by the library)</span></span><div class="vml-note">Built from <a href="https://github.com/colll78/aiken" target="_blank" rel="noopener">colll78/aiken</a> (aiken main plus fixes), which includes the CEK fixes that v1.1.24 lacks.</div></td></tr>
 <tr id="vm-scalus-js"><td><span class="vml-title"><span class="vsw" style="background:var(--vm-scalus-js, var(--vm-other))"></span>Scalus CEK (Scala.js / Node V8)</span><span class="vml-sub">Scala.js, Node (V8), Interpreter (CEK)</span><span class="vml-tc" data-vm="scalus-js"></span></td><td><a href="https://github.com/scalus3/scalus/releases/tag/v1.4.0" target="_blank" rel="noopener">scalus 1.4.0 (npm)</a></td><td class="vml-links"><span><span class="vml-k">source</span> <a href="https://github.com/scalus3/scalus" target="_blank" rel="noopener">scalus3/scalus</a></span><span><span class="vml-k">home</span> <a href="https://scalus.org" target="_blank" rel="noopener">scalus.org</a></span></td><td class="vml-used"><span class="vml-user"><a href="https://github.com/Anastasia-Labs/lucid-evolution" target="_blank" rel="noopener">Lucid Evolution</a> <span class="vml-kind">SDK</span> <a href="https://github.com/Anastasia-Labs/lucid-evolution/blob/main/packages/scalus-uplc/package.json#L39" target="_blank" rel="noopener">proof</a></span><span class="vml-user"><a href="https://github.com/MeshJS/mesh" target="_blank" rel="noopener">MeshJS</a> <span class="vml-kind">SDK</span> <a href="https://github.com/MeshJS/mesh/blob/main/packages/mesh-core-cst/package.json#L56" target="_blank" rel="noopener">proof</a></span><span class="vml-user"><a href="https://github.com/IntersectMBO/evolution-sdk" target="_blank" rel="noopener">Evolution SDK</a> <span class="vml-kind">SDK</span> <a href="https://github.com/IntersectMBO/evolution-sdk/blob/main/packages/scalus-uplc/package.json#L41" target="_blank" rel="noopener">proof</a></span></td><td></td></tr>
 <tr id="vm-aiken"><td><span class="vml-title"><span class="vsw" style="background:var(--vm-aiken, var(--vm-other))"></span>Aiken uplc CEK (Rust)</span><span class="vml-sub">Rust, native, Interpreter (CEK)</span><span class="vml-tc" data-vm="aiken"></span></td><td><a href="https://github.com/aiken-lang/aiken/releases/tag/v1.1.24" target="_blank" rel="noopener">v1.1.24</a></td><td class="vml-links"><span><span class="vml-k">source</span> <a href="https://github.com/aiken-lang/aiken" target="_blank" rel="noopener">aiken-lang/aiken</a></span><span><span class="vml-k">home</span> <a href="https://aiken-lang.org" target="_blank" rel="noopener">aiken-lang.org</a></span></td><td class="vml-used"><span class="vml-user"><a href="https://aiken-lang.org" target="_blank" rel="noopener">Aiken</a> <span class="vml-kind">compiler</span> <a href="https://github.com/aiken-lang/aiken/blob/main/crates/aiken-project/Cargo.toml#L54" target="_blank" rel="noopener">proof</a></span><span class="vml-user"><a href="https://github.com/butaneprotocol/blaze-cardano" target="_blank" rel="noopener">Blaze SDK</a> <span class="vml-kind">SDK</span> <a href="https://github.com/butaneprotocol/blaze-cardano/blob/main/packages/blaze-uplc/wasm/Cargo.toml#L15" target="_blank" rel="noopener">proof</a></span></td><td><div class="vml-note">Aiken v1.1.24 copies the CEK environment on every lambda application (quadratic in recursion depth). aiken main fixes it (PRs <a href="https://github.com/aiken-lang/aiken/pull/1451" target="_blank" rel="noopener">#1451</a>, <a href="https://github.com/aiken-lang/aiken/pull/1452" target="_blank" rel="noopener">#1452</a>: coop-6 92 ms -&gt; 1.2 ms), but no release contains the fix yet.</div></td></tr>
+<tr id="vm-aiken-wasm"><td><span class="vml-title"><span class="vsw" style="background:var(--vm-aiken-wasm, var(--vm-other))"></span>Aiken uplc CEK (Rust → WASM / Node V8)</span><span class="vml-sub">Rust → WASM, Node (V8), Interpreter (CEK)</span><span class="vml-tc" data-vm="aiken-wasm"></span></td><td><a href="https://github.com/Anastasia-Labs/lucid-evolution/releases/tag/@lucid-evolution/uplc@0.4.0" target="_blank" rel="noopener">@lucid-evolution/uplc 0.4.0</a></td><td class="vml-links"><span><span class="vml-k">source</span> <a href="https://github.com/Anastasia-Labs/lucid-evolution" target="_blank" rel="noopener">Anastasia-Labs/lucid-evolution</a></span><span><span class="vml-k">home</span> <a href="https://anastasia-labs.github.io/lucid-evolution/" target="_blank" rel="noopener">anastasia-labs.github.io/lucid-evolution</a></span></td><td class="vml-used"><span class="vml-user"><a href="https://github.com/Anastasia-Labs/lucid-evolution" target="_blank" rel="noopener">Lucid Evolution</a> <span class="vml-kind">SDK</span> <a href="https://github.com/Anastasia-Labs/lucid-evolution/blob/main/packages/lucid/package.json#L63" target="_blank" rel="noopener">proof</a></span></td><td><span class="vm-badges"><span class="vm-badge timing" title="The library caches the decoded program by a hash of the flat bytes. After the first call (in the warm-up), the timed loop runs hash + evaluation, without the decode. Its eval-only time is the same loop.">decode cached (by the library)</span></span><div class="vml-note">Built from <a href="https://github.com/colll78/aiken" target="_blank" rel="noopener">colll78/aiken</a> (aiken main plus fixes), which includes the CEK fixes that v1.1.24 lacks.</div></td></tr>
 <tr class="exp" id="vm-scalus-jit"><td><span class="vml-title"><span class="vsw" style="background:var(--vm-scalus-jit, var(--vm-other))"></span>Scalus UPLC→JVM JIT (Scala / JVM)</span><span class="vml-sub">Scala, GraalVM, JIT compiler (UPLC → JVM bytecode)</span><span class="vml-tc" data-vm="scalus-jit"></span></td><td><a href="https://github.com/scalus3/scalus/releases/tag/v1.4.0" target="_blank" rel="noopener">v1.4.0</a></td><td class="vml-links"><span><span class="vml-k">source</span> <a href="https://github.com/scalus3/scalus" target="_blank" rel="noopener">scalus3/scalus</a></span><span><span class="vml-k">home</span> <a href="https://scalus.org" target="_blank" rel="noopener">scalus.org</a></span></td><td class="vml-used"><span class="vml-none">none yet</span></td><td><span class="vm-badges"><span class="vm-badge exp" title="not ranked: the JIT module is not published as a release artifact and has no downstream users yet (spec D17)">experimental</span><span class="vm-badge compile" title="Each script is decoded and compiled once, before the timed loop">decode and compile excluded</span></span></td></tr>
 <tr class="exp" id="vm-blaze-v8"><td><span class="vml-title"><span class="vsw" style="background:var(--vm-blaze-v8, var(--vm-other))"></span>blaze-plutus CEK (TypeScript / Node V8)</span><span class="vml-sub">TypeScript, Node (V8), Interpreter (CEK)</span><span class="vml-tc" data-vm="blaze-v8"></span></td><td><a href="https://github.com/butaneprotocol/blaze-cardano/releases/tag/@blaze-cardano/plutus@0.1.1" target="_blank" rel="noopener">@blaze-cardano/plutus 0.1.1</a></td><td class="vml-links"><span><span class="vml-k">source</span> <a href="https://github.com/butaneprotocol/blaze-cardano" target="_blank" rel="noopener">butaneprotocol/blaze-cardano</a></span><span><span class="vml-k">home</span> <a href="https://blaze.butane.dev" target="_blank" rel="noopener">blaze.butane.dev</a></span></td><td class="vml-used"><span class="vml-none">none yet</span></td><td><span class="vm-badges"><span class="vm-badge exp" title="not ranked: no released project outside the Blaze repo depends on @blaze-cardano/plutus yet; Blaze itself evaluates scripts with @blaze-cardano/vm (Aiken uplc as WASM) (spec D17)">experimental</span></span></td></tr>
         </tbody>
@@ -783,7 +783,6 @@
 <script>
 const CSV_DATA = `vm,script,mean_ns,median_ns,min_ns,max_ns,stddev_ns,iterations
 aiken,auction_1-1,3019380,3015797,2976216,3079474,18503,100
-aiken-wasm,auction_1-1,365526,366063,363508,367007,1809,3
 blaze-v8,auction_1-1,703794,699790,695595,715995,10773,3
 haskell,auction_1-1,374437,,,,4408,90
 plutigo,auction_1-1,130899,,,,,45834
@@ -791,7 +790,6 @@ scalus-cek,auction_1-1,177446,171132,169763,191441,12139,3
 scalus-js,auction_1-1,1383163,1383878,1376217,1389394,6617,3
 uplc-turbo,auction_1-1,241177,240829,236513,266176,2841,100
 aiken,auction_1-2,12448721,12457575,12133036,12632468,100385,100
-aiken-wasm,auction_1-2,1517993,1517360,1511025,1525593,7304,3
 blaze-v8,auction_1-2,2451074,2440878,2433760,2478585,24089,3
 haskell,auction_1-2,1082016,,,,12637,69
 plutigo,auction_1-2,461849,,,,,12914
@@ -799,7 +797,6 @@ scalus-cek,auction_1-2,687455,688485,683918,689961,3150,3
 scalus-js,auction_1-2,6127577,6114504,5910276,6357953,224124,3
 uplc-turbo,auction_1-2,727475,727053,720155,736801,3220,100
 aiken,auction_1-3,12218779,12218449,11983117,12447988,105840,100
-aiken-wasm,auction_1-3,1550151,1548703,1548580,1553171,2615,3
 blaze-v8,auction_1-3,2456337,2447596,2444642,2476773,17759,3
 haskell,auction_1-3,1113019,,,,11936,69
 plutigo,auction_1-3,456909,,,,,13030
@@ -807,7 +804,6 @@ scalus-cek,auction_1-3,689334,688014,684628,695360,5486,3
 scalus-js,auction_1-3,7415672,7398580,7345087,7503350,80503,3
 uplc-turbo,auction_1-3,727919,728160,719919,736559,3331,100
 aiken,auction_1-4,3526974,3529857,3400096,3586216,36627,100
-aiken-wasm,auction_1-4,496255,495942,495301,497523,1143,3
 blaze-v8,auction_1-4,891641,892590,886180,896153,5053,3
 haskell,auction_1-4,428599,,,,4516,87
 plutigo,auction_1-4,153616,,,,,39208
@@ -815,7 +811,6 @@ scalus-cek,auction_1-4,219356,215211,213356,229502,8835,3
 scalus-js,auction_1-4,1807028,1764707,1750771,1905606,85654,3
 uplc-turbo,auction_1-4,296146,296042,293366,298888,960,100
 aiken,auction_2-1,2964230,2963584,2831670,3026156,31897,100
-aiken-wasm,auction_2-1,374721,374628,374351,375185,424,3
 blaze-v8,auction_2-1,707085,707044,701939,712273,5167,3
 haskell,auction_2-1,376970,,,,5663,90
 plutigo,auction_2-1,131948,,,,,45048
@@ -823,7 +818,6 @@ scalus-cek,auction_2-1,180885,175686,175251,191720,9385,3
 scalus-js,auction_2-1,1368633,1363968,1348383,1393548,22940,3
 uplc-turbo,auction_2-1,238302,237958,236424,247928,1366,100
 aiken,auction_2-2,13334433,13336904,13110705,13620953,98585,100
-aiken-wasm,auction_2-2,1580810,1582388,1575902,1584140,4339,3
 blaze-v8,auction_2-2,2464934,2468712,2454493,2471596,9156,3
 haskell,auction_2-2,1091699,,,,16899,69
 plutigo,auction_2-2,463810,,,,,12886
@@ -831,7 +825,6 @@ scalus-cek,auction_2-2,690324,692502,667302,711168,22014,3
 scalus-js,auction_2-2,7403672,7482962,6852232,7875824,516381,3
 uplc-turbo,auction_2-2,723642,723561,718388,730621,2625,100
 aiken,auction_2-3,15404749,15429185,14966885,15669013,120464,100
-aiken-wasm,auction_2-3,2103690,2102204,2096356,2112512,8179,3
 blaze-v8,auction_2-3,4292627,4244525,4207628,4425728,116736,3
 haskell,auction_2-3,1244779,,,,21231,66
 plutigo,auction_2-3,561389,,,,,10000
@@ -839,7 +832,6 @@ scalus-cek,auction_2-3,840977,839354,832359,851217,9533,3
 scalus-js,auction_2-3,9352290,9523907,8723109,9809854,563331,3
 uplc-turbo,auction_2-3,899047,899076,876417,908421,4165,100
 aiken,auction_2-4,12396617,12402344,12060528,13058146,154341,100
-aiken-wasm,auction_2-4,1548434,1547334,1544817,1553152,4275,3
 blaze-v8,auction_2-4,2452989,2447795,2423724,2487447,32177,3
 haskell,auction_2-4,1118899,,,,15023,68
 plutigo,auction_2-4,452378,,,,,13267
@@ -847,7 +839,6 @@ scalus-cek,auction_2-4,668722,667234,662535,676398,7050,3
 scalus-js,auction_2-4,6165736,6068260,6064053,6364896,172490,3
 uplc-turbo,auction_2-4,728716,728455,722781,740103,2430,100
 aiken,auction_2-5,3524311,3526857,3461333,3574556,22046,100
-aiken-wasm,auction_2-5,513083,512225,510865,516159,2749,3
 blaze-v8,auction_2-5,875243,877368,868385,879977,6081,3
 haskell,auction_2-5,428715,,,,4946,87
 plutigo,auction_2-5,152614,,,,,39511
@@ -855,7 +846,6 @@ scalus-cek,auction_2-5,214996,209061,208376,227551,10878,3
 scalus-js,auction_2-5,1704232,1704372,1698508,1709817,5655,3
 uplc-turbo,auction_2-5,298078,297887,295563,301768,1030,100
 aiken,coop-1,5297465,5273334,5174239,6978796,181059,100
-aiken-wasm,coop-1,420619,420617,420419,420820,200,3
 blaze-v8,coop-1,966577,969440,954818,975472,10620,3
 haskell,coop-1,330801,,,,2440,93
 plutigo,coop-1,147308,,,,,41154
@@ -863,7 +853,6 @@ scalus-cek,coop-1,213843,215954,209407,216169,3843,3
 scalus-js,coop-1,1632194,1630723,1599365,1666492,33587,3
 uplc-turbo,coop-1,257124,257086,253951,260510,1034,100
 aiken,coop-2,113860431,113723384,112475638,116522314,712090,100
-aiken-wasm,coop-2,1502734,1501546,1501094,1505561,2459,3
 blaze-v8,coop-2,4105754,4123238,4040253,4153773,58744,3
 haskell,coop-2,964330,,,,22048,71
 plutigo,coop-2,562859,,,,,10000
@@ -871,7 +860,6 @@ scalus-cek,coop-2,708827,709607,702533,714341,5942,3
 scalus-js,coop-2,6377176,6397246,6035394,6698887,332201,3
 uplc-turbo,coop-2,842722,836807,831611,1037412,28325,100
 aiken,coop-3,146144115,145996841,143918307,149594855,1017748,100
-aiken-wasm,coop-3,5876644,5862048,5857986,5909898,28870,3
 blaze-v8,coop-3,9379826,9373902,9211879,9553697,170985,3
 haskell,coop-3,2097808,,,,19755,56
 plutigo,coop-3,1448129,,,,,4138
@@ -879,7 +867,6 @@ scalus-cek,coop-3,2149586,2144046,2134529,2170183,18461,3
 scalus-js,coop-3,19061929,19024501,18999109,19162178,87741,3
 uplc-turbo,coop-3,1855874,1856200,1804697,1905425,18030,100
 aiken,coop-4,115911078,115958499,113346122,118877335,973365,100
-aiken-wasm,coop-4,2047747,2047011,2044178,2052053,3988,3
 blaze-v8,coop-4,5090800,5194635,4879023,5198744,183416,3
 haskell,coop-4,1156408,,,,7813,68
 plutigo,coop-4,627924,,,,,9416
@@ -887,7 +874,6 @@ scalus-cek,coop-4,863162,860684,854037,874767,10584,3
 scalus-js,coop-4,7648267,7539861,7504934,7900006,218710,3
 uplc-turbo,coop-4,884183,883186,877696,950603,7798,100
 aiken,coop-5,25575236,25582657,25180535,26390696,158593,100
-aiken-wasm,coop-5,860320,866635,839312,875011,18668,3
 blaze-v8,coop-5,1734836,1731529,1727520,1745461,9416,3
 haskell,coop-5,678320,,,,4977,78
 plutigo,coop-5,303085,,,,,19648
@@ -895,7 +881,6 @@ scalus-cek,coop-5,414190,414401,411975,416195,2117,3
 scalus-js,coop-5,3173961,3166921,3155214,3199748,23086,3
 uplc-turbo,coop-5,460083,460124,455127,465314,1765,100
 aiken,coop-6,155642819,155423039,153498523,159074996,1140554,100
-aiken-wasm,coop-6,1285558,1286344,1280187,1290143,5024,3
 blaze-v8,coop-6,3230823,3224811,3215314,3252345,19233,3
 haskell,coop-6,782201,,,,20126,75
 plutigo,coop-6,507646,,,,,11612
@@ -903,7 +888,6 @@ scalus-cek,coop-6,599284,605405,568625,623823,28103,3
 scalus-js,coop-6,4918615,4914811,4906346,4934689,14549,3
 uplc-turbo,coop-6,759401,759401,750223,769756,2987,100
 aiken,coop-7,6416442,6416602,6327679,6534525,33376,100
-aiken-wasm,coop-7,648767,648761,647811,649727,957,3
 blaze-v8,coop-7,1362219,1359941,1351397,1375318,12121,3
 haskell,coop-7,447113,,,,5118,87
 plutigo,coop-7,202727,,,,,29712
@@ -911,7 +895,6 @@ scalus-cek,coop-7,291575,291073,289219,294432,2642,3
 scalus-js,coop-7,2360744,2397672,2236448,2448112,110558,3
 uplc-turbo,coop-7,366122,365895,363502,370691,1507,100
 aiken,crowdfunding-success-1,3531627,3528482,3472311,3600621,32236,100
-aiken-wasm,crowdfunding-success-1,464980,465052,463644,466243,1300,3
 blaze-v8,crowdfunding-success-1,798021,799500,793284,801279,4197,3
 haskell,crowdfunding-success-1,465610,,,,4962,86
 plutigo,crowdfunding-success-1,153509,,,,,39193
@@ -919,7 +902,6 @@ scalus-cek,crowdfunding-success-1,212778,208494,206247,223592,9432,3
 scalus-js,crowdfunding-success-1,1702694,1709214,1672257,1726610,27757,3
 uplc-turbo,crowdfunding-success-1,269349,269273,266092,271626,1020,100
 aiken,crowdfunding-success-2,3475311,3483341,3379769,3554675,41808,100
-aiken-wasm,crowdfunding-success-2,467498,467306,467064,468125,555,3
 blaze-v8,crowdfunding-success-2,806536,808108,802699,808801,3340,3
 haskell,crowdfunding-success-2,464543,,,,5919,86
 plutigo,crowdfunding-success-2,153627,,,,,38989
@@ -927,7 +909,6 @@ scalus-cek,crowdfunding-success-2,208675,204742,202736,218547,8608,3
 scalus-js,crowdfunding-success-2,1646225,1647551,1641303,1649819,4410,3
 uplc-turbo,crowdfunding-success-2,268653,268379,266629,276706,1415,100
 aiken,crowdfunding-success-3,3410244,3409441,3316271,3509298,34038,100
-aiken-wasm,crowdfunding-success-3,471094,471677,469395,472211,1495,3
 blaze-v8,crowdfunding-success-3,793427,790641,787068,802573,8119,3
 haskell,crowdfunding-success-3,460918,,,,8555,86
 plutigo,crowdfunding-success-3,153873,,,,,38260
@@ -935,7 +916,6 @@ scalus-cek,crowdfunding-success-3,210598,206302,202343,223148,11047,3
 scalus-js,crowdfunding-success-3,1763286,1728603,1680736,1880520,104310,3
 uplc-turbo,crowdfunding-success-3,268541,268120,266716,284916,2444,100
 aiken,currency-1,4280826,4259956,4113466,4500866,96055,100
-aiken-wasm,currency-1,629769,629000,628748,631559,1555,3
 blaze-v8,currency-1,889889,887251,885477,896940,6170,3
 haskell,currency-1,471599,,,,3943,85
 plutigo,currency-1,186239,,,,,31818
@@ -943,7 +923,6 @@ scalus-cek,currency-1,255549,254099,252690,259856,3796,3
 scalus-js,currency-1,2109159,2106205,2097408,2123862,13471,3
 uplc-turbo,currency-1,298280,297938,296195,319597,2445,100
 aiken,escrow-redeem_1-1,6012133,6004436,5806547,6190611,65881,100
-aiken-wasm,escrow-redeem_1-1,853070,856466,842466,860278,9378,3
 blaze-v8,escrow-redeem_1-1,1304392,1306526,1294330,1312319,9182,3
 haskell,escrow-redeem_1-1,663364,,,,5787,79
 plutigo,escrow-redeem_1-1,249487,,,,,23974
@@ -951,7 +930,6 @@ scalus-cek,escrow-redeem_1-1,371025,354948,349580,408547,32605,3
 scalus-js,escrow-redeem_1-1,2733379,2698355,2695701,2806080,62975,3
 uplc-turbo,escrow-redeem_1-1,411651,411685,406981,417966,2025,100
 aiken,escrow-redeem_1-2,6052589,6051597,5902197,6228826,66690,100
-aiken-wasm,escrow-redeem_1-2,794563,798823,785737,799128,7645,3
 blaze-v8,escrow-redeem_1-2,1278781,1274578,1274572,1287193,7284,3
 haskell,escrow-redeem_1-2,657419,,,,6345,79
 plutigo,escrow-redeem_1-2,248624,,,,,24127
@@ -959,7 +937,6 @@ scalus-cek,escrow-redeem_1-2,363907,358078,356676,376967,11331,3
 scalus-js,escrow-redeem_1-2,2767679,2819979,2609090,2873966,139968,3
 uplc-turbo,escrow-redeem_1-2,413942,413390,407859,425828,2632,100
 aiken,escrow-redeem_2-1,6833101,6820674,6679832,7007517,72050,100
-aiken-wasm,escrow-redeem_2-1,1085072,1086527,1079457,1089233,5047,3
 blaze-v8,escrow-redeem_2-1,1441863,1440488,1435217,1449885,7429,3
 haskell,escrow-redeem_2-1,702825,,,,12119,78
 plutigo,escrow-redeem_2-1,277559,,,,,21571
@@ -967,7 +944,6 @@ scalus-cek,escrow-redeem_2-1,398160,395540,393984,404956,5936,3
 scalus-js,escrow-redeem_2-1,3352171,3305754,3229616,3521142,151204,3
 uplc-turbo,escrow-redeem_2-1,462300,462419,457937,469217,1639,100
 aiken,escrow-redeem_2-2,6798161,6779918,6637600,7029890,83189,100
-aiken-wasm,escrow-redeem_2-2,995165,993561,991585,1000348,4596,3
 blaze-v8,escrow-redeem_2-2,1444177,1450127,1428278,1454127,13913,3
 haskell,escrow-redeem_2-2,696494,,,,10838,78
 plutigo,escrow-redeem_2-2,279829,,,,,21253
@@ -975,7 +951,6 @@ scalus-cek,escrow-redeem_2-2,400085,400741,396544,402971,3263,3
 scalus-js,escrow-redeem_2-2,3296412,3310083,3199252,3379900,91096,3
 uplc-turbo,escrow-redeem_2-2,459790,459531,454876,467114,1624,100
 aiken,escrow-redeem_2-3,6787982,6791897,6576138,6943333,72650,100
-aiken-wasm,escrow-redeem_2-3,987374,987889,983928,990305,3219,3
 blaze-v8,escrow-redeem_2-3,1452475,1451500,1448892,1457033,4157,3
 haskell,escrow-redeem_2-3,703540,,,,11403,78
 plutigo,escrow-redeem_2-3,277059,,,,,21592
@@ -983,7 +958,6 @@ scalus-cek,escrow-redeem_2-3,400051,404363,389585,406205,9110,3
 scalus-js,escrow-redeem_2-3,3243013,3230331,3209844,3288864,41008,3
 uplc-turbo,escrow-redeem_2-3,462841,462631,457711,468842,1903,100
 aiken,escrow-refund-1,3401977,3403402,3335643,3446263,23516,100
-aiken-wasm,escrow-refund-1,398859,398453,398421,399703,731,3
 blaze-v8,escrow-refund-1,664825,664867,661922,667685,2881,3
 haskell,escrow-refund-1,504083,,,,5018,84
 plutigo,escrow-refund-1,156993,,,,,39657
@@ -991,7 +965,6 @@ scalus-cek,escrow-refund-1,193547,189048,186832,204762,9775,3
 scalus-js,escrow-refund-1,1393253,1395528,1328325,1455908,63821,3
 uplc-turbo,escrow-refund-1,233427,233249,230039,238469,1096,100
 aiken,future-increase-margin-1,4498812,4513765,4285906,4573591,51880,100
-aiken-wasm,future-increase-margin-1,625143,627071,620043,628315,4460,3
 blaze-v8,future-increase-margin-1,898080,899972,887228,907041,10041,3
 haskell,future-increase-margin-1,475114,,,,3845,85
 plutigo,future-increase-margin-1,187117,,,,,31365
@@ -999,7 +972,6 @@ scalus-cek,future-increase-margin-1,251324,249656,246831,257484,5518,3
 scalus-js,future-increase-margin-1,2196889,2162651,2150658,2277358,69945,3
 uplc-turbo,future-increase-margin-1,298498,298520,294658,308664,1616,100
 aiken,future-increase-margin-2,8671341,8674546,8438346,8883585,97473,100
-aiken-wasm,future-increase-margin-2,1312897,1312176,1308811,1317704,4489,3
 blaze-v8,future-increase-margin-2,1845134,1859125,1815321,1860955,25834,3
 haskell,future-increase-margin-2,801922,,,,7515,75
 plutigo,future-increase-margin-2,350780,,,,,17118
@@ -1007,7 +979,6 @@ scalus-cek,future-increase-margin-2,496765,499194,491081,500018,4939,3
 scalus-js,future-increase-margin-2,4172746,4154813,4115557,4247867,67953,3
 uplc-turbo,future-increase-margin-2,587468,587004,582976,602135,3215,100
 aiken,future-increase-margin-3,8715697,8716721,8515322,8915017,64652,100
-aiken-wasm,future-increase-margin-3,1302156,1299844,1296424,1310201,7173,3
 blaze-v8,future-increase-margin-3,1870993,1868378,1841561,1903039,30821,3
 haskell,future-increase-margin-3,802855,,,,9016,75
 plutigo,future-increase-margin-3,351450,,,,,16977
@@ -1015,7 +986,6 @@ scalus-cek,future-increase-margin-3,505707,505273,502743,509105,3203,3
 scalus-js,future-increase-margin-3,4171893,4167169,4030469,4318040,143843,3
 uplc-turbo,future-increase-margin-3,580839,580955,572845,586471,2348,100
 aiken,future-increase-margin-4,10692396,10694234,10274539,11049018,98709,100
-aiken-wasm,future-increase-margin-4,1329674,1328687,1328032,1332303,2300,3
 blaze-v8,future-increase-margin-4,1858350,1857240,1848735,1869075,10215,3
 haskell,future-increase-margin-4,1129869,,,,20076,68
 plutigo,future-increase-margin-4,413870,,,,,14428
@@ -1023,7 +993,6 @@ scalus-cek,future-increase-margin-4,571556,570571,565979,578117,6128,3
 scalus-js,future-increase-margin-4,5345162,5289337,5183651,5562498,195495,3
 uplc-turbo,future-increase-margin-4,640651,640435,635201,648273,2471,100
 aiken,future-increase-margin-5,15653809,15698440,14987787,16026390,219891,100
-aiken-wasm,future-increase-margin-5,2115345,2112090,2107572,2126375,9815,3
 blaze-v8,future-increase-margin-5,5180216,5105685,5067233,5367731,163526,3
 haskell,future-increase-margin-5,1422193,,,,29634,64
 plutigo,future-increase-margin-5,565626,,,,,10000
@@ -1031,7 +1000,6 @@ scalus-cek,future-increase-margin-5,884807,881371,879307,893741,7806,3
 scalus-js,future-increase-margin-5,12763057,12743857,12420077,13125239,352972,3
 uplc-turbo,future-increase-margin-5,965200,965447,947978,973535,3929,100
 aiken,future-pay-out-1,4467572,4473348,4348681,4547310,31127,100
-aiken-wasm,future-pay-out-1,632131,631889,631454,633049,824,3
 blaze-v8,future-pay-out-1,895611,895897,892048,898887,3428,3
 haskell,future-pay-out-1,475808,,,,4587,85
 plutigo,future-pay-out-1,185352,,,,,32488
@@ -1039,7 +1007,6 @@ scalus-cek,future-pay-out-1,256317,256513,254084,258355,2142,3
 scalus-js,future-pay-out-1,2183689,2206701,2135874,2208492,41418,3
 uplc-turbo,future-pay-out-1,296773,296745,293077,300567,1167,100
 aiken,future-pay-out-2,8705130,8709652,8518891,8914749,108481,100
-aiken-wasm,future-pay-out-2,1313502,1313095,1312956,1314454,827,3
 blaze-v8,future-pay-out-2,1908095,1908919,1896709,1918657,10996,3
 haskell,future-pay-out-2,804206,,,,9628,75
 plutigo,future-pay-out-2,348070,,,,,17209
@@ -1047,7 +1014,6 @@ scalus-cek,future-pay-out-2,521583,513459,513054,538236,14423,3
 scalus-js,future-pay-out-2,4207953,4128870,4128050,4366939,137686,3
 uplc-turbo,future-pay-out-2,589130,588656,582654,605153,3072,100
 aiken,future-pay-out-3,8733062,8735238,8473043,8948783,95435,100
-aiken-wasm,future-pay-out-3,1300720,1301204,1297445,1303512,3061,3
 blaze-v8,future-pay-out-3,1863395,1858566,1853683,1877937,12828,3
 haskell,future-pay-out-3,808200,,,,15229,75
 plutigo,future-pay-out-3,347503,,,,,17318
@@ -1055,7 +1021,6 @@ scalus-cek,future-pay-out-3,507722,509934,499330,513903,7534,3
 scalus-js,future-pay-out-3,4365085,4353470,4219273,4522511,151952,3
 uplc-turbo,future-pay-out-3,582251,582230,575406,599039,2649,100
 aiken,future-pay-out-4,15665717,15650372,15149210,16141588,229961,100
-aiken-wasm,future-pay-out-4,2252052,2253377,2248019,2254762,3561,3
 blaze-v8,future-pay-out-4,5943955,5958410,5706847,6166609,230221,3
 haskell,future-pay-out-4,1400595,,,,20663,64
 plutigo,future-pay-out-4,563499,,,,,10604
@@ -1063,7 +1028,6 @@ scalus-cek,future-pay-out-4,918790,920721,912380,923270,5695,3
 scalus-js,future-pay-out-4,11626600,11674806,11485977,11719018,123773,3
 uplc-turbo,future-pay-out-4,967060,966312,952179,988287,5052,100
 aiken,future-settle-early-1,4419604,4421941,4308924,4523120,32824,100
-aiken-wasm,future-settle-early-1,619463,619534,618040,620814,1388,3
 blaze-v8,future-settle-early-1,899394,898924,894656,904601,4989,3
 haskell,future-settle-early-1,475519,,,,5454,85
 plutigo,future-settle-early-1,184475,,,,,32119
@@ -1071,7 +1035,6 @@ scalus-cek,future-settle-early-1,254086,254291,249018,258947,4967,3
 scalus-js,future-settle-early-1,2088561,2088563,2040282,2136837,48277,3
 uplc-turbo,future-settle-early-1,296579,296461,293255,300220,1196,100
 aiken,future-settle-early-2,8866127,8878218,8593151,9114497,109403,100
-aiken-wasm,future-settle-early-2,1299061,1296276,1295030,1305876,5934,3
 blaze-v8,future-settle-early-2,1880525,1879835,1860292,1901449,20587,3
 haskell,future-settle-early-2,804072,,,,16194,75
 plutigo,future-settle-early-2,345995,,,,,17374
@@ -1079,7 +1042,6 @@ scalus-cek,future-settle-early-2,508141,502942,499691,521791,11932,3
 scalus-js,future-settle-early-2,4254162,4285216,4150785,4326485,91874,3
 uplc-turbo,future-settle-early-2,580083,579874,574712,586475,1994,100
 aiken,future-settle-early-3,8872617,8885975,8582136,9073377,83946,100
-aiken-wasm,future-settle-early-3,1278341,1272679,1261890,1300453,19895,3
 blaze-v8,future-settle-early-3,1883590,1877137,1875955,1897679,12215,3
 haskell,future-settle-early-3,804767,,,,9380,75
 plutigo,future-settle-early-3,347402,,,,,17278
@@ -1087,7 +1049,6 @@ scalus-cek,future-settle-early-3,530017,533831,520319,535900,8462,3
 scalus-js,future-settle-early-3,4890383,4877605,4871121,4922422,27935,3
 uplc-turbo,future-settle-early-3,581548,581073,578218,589110,2096,100
 aiken,future-settle-early-4,11873016,11895966,11367286,12198281,154173,100
-aiken-wasm,future-settle-early-4,1665483,1666692,1662211,1667547,2866,3
 blaze-v8,future-settle-early-4,5029156,5044844,4922154,5120471,100085,3
 haskell,future-settle-early-4,1251930,,,,16440,66
 plutigo,future-settle-early-4,475244,,,,,12368
@@ -1095,7 +1056,6 @@ scalus-cek,future-settle-early-4,715984,716648,712018,719287,3679,3
 scalus-js,future-settle-early-4,9753944,9876779,9439622,9945429,274366,3
 uplc-turbo,future-settle-early-4,756382,755760,746874,773000,3703,100
 aiken,game-sm-success_1-1,7703931,7715603,7507379,7816486,60846,100
-aiken-wasm,game-sm-success_1-1,951412,951970,948567,953699,2611,3
 blaze-v8,game-sm-success_1-1,1610976,1612542,1604937,1615449,5428,3
 haskell,game-sm-success_1-1,905670,,,,18594,73
 plutigo,game-sm-success_1-1,330494,,,,,17995
@@ -1103,7 +1063,6 @@ scalus-cek,game-sm-success_1-1,438033,437052,436351,440694,2331,3
 scalus-js,game-sm-success_1-1,3255604,3278200,3148689,3339922,97598,3
 uplc-turbo,game-sm-success_1-1,499842,499784,493826,508418,2238,100
 aiken,game-sm-success_1-2,3212082,3213409,3161814,3271673,20534,100
-aiken-wasm,game-sm-success_1-2,404909,404259,403028,407439,2276,3
 blaze-v8,game-sm-success_1-2,726671,730203,716979,732832,8496,3
 haskell,game-sm-success_1-2,362687,,,,4630,91
 plutigo,game-sm-success_1-2,131492,,,,,45348
@@ -1111,7 +1070,6 @@ scalus-cek,game-sm-success_1-2,190420,182812,182793,205655,13193,3
 scalus-js,game-sm-success_1-2,1477616,1457442,1441926,1533479,48997,3
 uplc-turbo,game-sm-success_1-2,253353,253177,249848,259365,1370,100
 aiken,game-sm-success_1-3,12156110,12164802,11754440,12404376,103370,100
-aiken-wasm,game-sm-success_1-3,1541307,1540844,1535914,1547162,5638,3
 blaze-v8,game-sm-success_1-3,2753852,2807858,2645664,2808035,93693,3
 haskell,game-sm-success_1-3,1081626,,,,16718,69
 plutigo,game-sm-success_1-3,456428,,,,,13188
@@ -1119,7 +1077,6 @@ scalus-cek,game-sm-success_1-3,656764,661415,646463,662416,8935,3
 scalus-js,game-sm-success_1-3,6199749,6018960,5998060,6582226,331399,3
 uplc-turbo,game-sm-success_1-3,724746,724048,717386,747296,4118,100
 aiken,game-sm-success_1-4,3600909,3621699,3512513,3656032,42580,100
-aiken-wasm,game-sm-success_1-4,449513,449789,448604,450146,807,3
 blaze-v8,game-sm-success_1-4,930362,930867,926072,934145,4060,3
 haskell,game-sm-success_1-4,392016,,,,3410,89
 plutigo,game-sm-success_1-4,146281,,,,,41347
@@ -1127,7 +1084,6 @@ scalus-cek,game-sm-success_1-4,212471,207048,204071,226295,12064,3
 scalus-js,game-sm-success_1-4,1830091,1870555,1721456,1898261,95095,3
 uplc-turbo,game-sm-success_1-4,288371,288220,283935,293814,1680,100
 aiken,game-sm-success_2-1,7733215,7736425,7503189,8074018,80961,100
-aiken-wasm,game-sm-success_2-1,948798,948237,947527,950629,1624,3
 blaze-v8,game-sm-success_2-1,1821762,1831084,1765882,1868319,51851,3
 haskell,game-sm-success_2-1,878818,,,,10448,73
 plutigo,game-sm-success_2-1,319738,,,,,18687
@@ -1135,7 +1091,6 @@ scalus-cek,game-sm-success_2-1,443097,446650,434276,448365,7687,3
 scalus-js,game-sm-success_2-1,3846810,3912658,3699469,3928304,127841,3
 uplc-turbo,game-sm-success_2-1,496753,495974,490498,527125,4010,100
 aiken,game-sm-success_2-2,3028445,3028750,2949875,3124543,33508,100
-aiken-wasm,game-sm-success_2-2,381578,381097,380908,382730,1001,3
 blaze-v8,game-sm-success_2-2,808946,808683,799361,818796,9720,3
 haskell,game-sm-success_2-2,361978,,,,3466,91
 plutigo,game-sm-success_2-2,132075,,,,,45363
@@ -1143,7 +1098,6 @@ scalus-cek,game-sm-success_2-2,194026,187631,186813,207633,11791,3
 scalus-js,game-sm-success_2-2,1484471,1496178,1456563,1500673,24273,3
 uplc-turbo,game-sm-success_2-2,253240,253201,249988,255766,1104,100
 aiken,game-sm-success_2-3,11582949,11570050,11290324,11862352,101827,100
-aiken-wasm,game-sm-success_2-3,1605374,1602045,1599860,1614217,7735,3
 blaze-v8,game-sm-success_2-3,2964152,2962637,2911112,3018708,53813,3
 haskell,game-sm-success_2-3,1094588,,,,23956,69
 plutigo,game-sm-success_2-3,464122,,,,,12928
@@ -1151,7 +1105,6 @@ scalus-cek,game-sm-success_2-3,664316,666726,656577,669645,6859,3
 scalus-js,game-sm-success_2-3,6874423,6840371,6821220,6961678,76169,3
 uplc-turbo,game-sm-success_2-3,720338,720463,714556,728918,2688,100
 aiken,game-sm-success_2-4,3555390,3559072,3395552,3688646,40119,100
-aiken-wasm,game-sm-success_2-4,456188,459278,449965,459321,5389,3
 blaze-v8,game-sm-success_2-4,998053,1002157,981956,1010046,14487,3
 haskell,game-sm-success_2-4,392626,,,,2403,89
 plutigo,game-sm-success_2-4,145748,,,,,41024
@@ -1159,7 +1112,6 @@ scalus-cek,game-sm-success_2-4,212372,208652,202459,226003,12204,3
 scalus-js,game-sm-success_2-4,1567225,1568300,1564869,1568507,2043,3
 uplc-turbo,game-sm-success_2-4,288422,288227,284203,293370,1383,100
 aiken,game-sm-success_2-5,11601596,11592447,11303684,12099631,118190,100
-aiken-wasm,game-sm-success_2-5,1555114,1555071,1547188,1563082,7946,3
 blaze-v8,game-sm-success_2-5,3049437,3063183,2994725,3090403,49298,3
 haskell,game-sm-success_2-5,1090095,,,,16029,69
 plutigo,game-sm-success_2-5,453733,,,,,13191
@@ -1167,7 +1119,6 @@ scalus-cek,game-sm-success_2-5,656358,653057,648911,667104,9534,3
 scalus-js,game-sm-success_2-5,6377571,6303003,6165683,6664027,257404,3
 uplc-turbo,game-sm-success_2-5,719531,718857,706710,730499,4795,100
 aiken,game-sm-success_2-6,3547912,3559410,3415981,3601604,38693,100
-aiken-wasm,game-sm-success_2-6,473102,473511,470310,475484,2611,3
 blaze-v8,game-sm-success_2-6,988072,979987,972229,1012001,21082,3
 haskell,game-sm-success_2-6,391054,,,,2948,89
 plutigo,game-sm-success_2-6,148887,,,,,39842
@@ -1175,7 +1126,6 @@ scalus-cek,game-sm-success_2-6,215244,210209,204959,230565,13524,3
 scalus-js,game-sm-success_2-6,1623891,1581042,1576531,1714100,78155,3
 uplc-turbo,game-sm-success_2-6,287775,287697,285582,293844,1104,100
 aiken,guardrail-sorted-large,15717154,15640435,15473671,21367497,580753,100
-aiken-wasm,guardrail-sorted-large,961544,962450,958369,963812,2832,3
 blaze-v8,guardrail-sorted-large,2200132,2172513,2169025,2258859,50888,3
 haskell,guardrail-sorted-large,559810,,,,6564,82
 plutigo,guardrail-sorted-large,762742,,,,,10000
@@ -1183,7 +1133,6 @@ scalus-cek,guardrail-sorted-large,415426,415231,412393,418655,3135,3
 scalus-js,guardrail-sorted-large,3902981,3911969,3853196,3943778,45954,3
 uplc-turbo,guardrail-sorted-large,479404,478085,470479,549511,7688,100
 aiken,guardrail-sorted-small,2910519,2909611,2882015,2946243,14934,100
-aiken-wasm,guardrail-sorted-small,174722,174644,174387,175134,379,3
 blaze-v8,guardrail-sorted-small,402774,405307,387485,415531,14193,3
 haskell,guardrail-sorted-small,177416,,,,1469,105
 plutigo,guardrail-sorted-small,69595,,,,,85174
@@ -1191,7 +1140,6 @@ scalus-cek,guardrail-sorted-small,88262,88654,85951,90181,2142,3
 scalus-js,guardrail-sorted-small,794813,801078,781094,802266,11895,3
 uplc-turbo,guardrail-sorted-small,93113,93071,92033,95367,501,100
 aiken,guardrail-unsorted-large,189110623,189051638,185988176,192762888,1211531,100
-aiken-wasm,guardrail-unsorted-large,1387045,1373393,1369543,1418198,27047,3
 blaze-v8,guardrail-unsorted-large,2835275,2831361,2771513,2902953,65807,3
 haskell,guardrail-unsorted-large,683712,,,,4142,78
 plutigo,guardrail-unsorted-large,772423,,,,,8766
@@ -1199,7 +1147,6 @@ scalus-cek,guardrail-unsorted-large,570816,570098,569347,573003,1930,3
 scalus-js,guardrail-unsorted-large,5573419,5604302,5378137,5737819,181818,3
 uplc-turbo,guardrail-unsorted-large,599740,599518,594323,615428,2766,100
 aiken,guardrail-unsorted-small,3961432,3966669,3836385,4056331,34662,100
-aiken-wasm,guardrail-unsorted-small,167541,167441,167331,167851,274,3
 blaze-v8,guardrail-unsorted-small,389332,389645,378233,400120,10946,3
 haskell,guardrail-unsorted-small,170276,,,,944,106
 plutigo,guardrail-unsorted-small,67449,,,,,90193
@@ -1207,7 +1154,6 @@ scalus-cek,guardrail-unsorted-small,85968,86168,85032,86705,854,3
 scalus-js,guardrail-unsorted-small,803240,807318,789036,813366,12667,3
 uplc-turbo,guardrail-unsorted-small,91715,91737,90404,92937,472,100
 aiken,multisig-sm-01,8773749,8785569,8315650,9073193,125413,100
-aiken-wasm,multisig-sm-01,1056583,1031404,1029295,1109050,45449,3
 blaze-v8,multisig-sm-01,1997584,1995222,1974828,2022703,24024,3
 haskell,multisig-sm-01,961607,,,,13789,71
 plutigo,multisig-sm-01,346297,,,,,17264
@@ -1215,7 +1161,6 @@ scalus-cek,multisig-sm-01,473458,473828,471456,475089,1844,3
 scalus-js,multisig-sm-01,4068740,4032283,4010427,4163511,82797,3
 uplc-turbo,multisig-sm-01,524200,522807,518049,595498,9008,100
 aiken,multisig-sm-02,8434384,8437323,8253306,8637293,93104,100
-aiken-wasm,multisig-sm-02,983419,982925,981883,985449,1833,3
 blaze-v8,multisig-sm-02,1868182,1881152,1830596,1892797,33066,3
 haskell,multisig-sm-02,943385,,,,18347,72
 plutigo,multisig-sm-02,340399,,,,,17538
@@ -1223,7 +1168,6 @@ scalus-cek,multisig-sm-02,467039,467307,464955,468856,1964,3
 scalus-js,multisig-sm-02,3933450,3948743,3882777,3968832,45019,3
 uplc-turbo,multisig-sm-02,513887,513773,510087,519756,1890,100
 aiken,multisig-sm-03,8544808,8555967,8297383,8820295,83838,100
-aiken-wasm,multisig-sm-03,947986,952352,938546,953059,8182,3
 blaze-v8,multisig-sm-03,1868556,1841325,1826042,1938302,60882,3
 haskell,multisig-sm-03,940948,,,,19566,72
 plutigo,multisig-sm-03,345673,,,,,17218
@@ -1231,7 +1175,6 @@ scalus-cek,multisig-sm-03,460342,458528,456642,465858,4868,3
 scalus-js,multisig-sm-03,4123406,3999219,3996050,4374950,217849,3
 uplc-turbo,multisig-sm-03,522241,522040,517415,534567,2390,100
 aiken,multisig-sm-04,8517565,8524229,8302579,8741152,96192,100
-aiken-wasm,multisig-sm-04,954717,953903,952774,957475,2453,3
 blaze-v8,multisig-sm-04,1938741,1981423,1825770,2009029,98804,3
 haskell,multisig-sm-04,957713,,,,11813,71
 plutigo,multisig-sm-04,346725,,,,,17364
@@ -1239,7 +1182,6 @@ scalus-cek,multisig-sm-04,456647,457704,451567,460670,4642,3
 scalus-js,multisig-sm-04,4050552,4141634,3814990,4195034,205743,3
 uplc-turbo,multisig-sm-04,525057,524940,516725,537592,2427,100
 aiken,multisig-sm-05,11589392,11592605,11345947,11902068,91740,100
-aiken-wasm,multisig-sm-05,1424313,1424393,1421377,1427168,2896,3
 blaze-v8,multisig-sm-05,2500937,2530552,2428924,2543335,62692,3
 haskell,multisig-sm-05,1095691,,,,10866,69
 plutigo,multisig-sm-05,426864,,,,,14008
@@ -1247,7 +1189,6 @@ scalus-cek,multisig-sm-05,624304,623970,623388,625554,1120,3
 scalus-js,multisig-sm-05,6530035,6685647,6168173,6736285,314403,3
 uplc-turbo,multisig-sm-05,680286,679984,674312,691493,2395,100
 aiken,multisig-sm-06,8737026,8714087,8395036,9238333,150288,100
-aiken-wasm,multisig-sm-06,1044841,1041595,1032259,1060671,14481,3
 blaze-v8,multisig-sm-06,1920282,1928045,1895430,1937371,22021,3
 haskell,multisig-sm-06,974633,,,,11036,71
 plutigo,multisig-sm-06,343998,,,,,17488
@@ -1255,7 +1196,6 @@ scalus-cek,multisig-sm-06,470953,470306,466888,475665,4424,3
 scalus-js,multisig-sm-06,4449711,4494789,4341747,4512597,93922,3
 uplc-turbo,multisig-sm-06,526203,524747,519070,599040,8021,100
 aiken,multisig-sm-07,8510130,8516239,8254627,8766567,86659,100
-aiken-wasm,multisig-sm-07,991832,991196,990299,994002,1932,3
 blaze-v8,multisig-sm-07,1835734,1835175,1830998,1841028,5038,3
 haskell,multisig-sm-07,947756,,,,13676,72
 plutigo,multisig-sm-07,344006,,,,,17341
@@ -1263,7 +1203,6 @@ scalus-cek,multisig-sm-07,450626,450375,447767,453736,2992,3
 scalus-js,multisig-sm-07,3708043,3632060,3477030,4015040,276936,3
 uplc-turbo,multisig-sm-07,513209,513057,506011,522275,2442,100
 aiken,multisig-sm-08,8412547,8415276,8242165,8615334,75617,100
-aiken-wasm,multisig-sm-08,962535,960925,960007,966673,3613,3
 blaze-v8,multisig-sm-08,1870457,1863929,1809067,1938375,64900,3
 haskell,multisig-sm-08,952241,,,,14160,72
 plutigo,multisig-sm-08,346310,,,,,17230
@@ -1271,7 +1210,6 @@ scalus-cek,multisig-sm-08,456216,459907,446066,462674,8898,3
 scalus-js,multisig-sm-08,4199091,4187919,4180741,4228613,25817,3
 uplc-turbo,multisig-sm-08,519531,518928,513320,537515,3749,100
 aiken,multisig-sm-09,8482749,8484799,8166716,8711571,92249,100
-aiken-wasm,multisig-sm-09,963160,961517,960616,967348,3654,3
 blaze-v8,multisig-sm-09,1838797,1801538,1793678,1921175,71449,3
 haskell,multisig-sm-09,946641,,,,18663,72
 plutigo,multisig-sm-09,351950,,,,,17132
@@ -1279,7 +1217,6 @@ scalus-cek,multisig-sm-09,459385,458207,456586,463362,3538,3
 scalus-js,multisig-sm-09,4328509,4352741,4206108,4426679,112264,3
 uplc-turbo,multisig-sm-09,525803,523416,517629,678242,17209,100
 aiken,multisig-sm-10,11522425,11494923,11030026,15054302,438397,100
-aiken-wasm,multisig-sm-10,1505239,1507631,1500269,1507816,4304,3
 blaze-v8,multisig-sm-10,2633006,2642994,2595332,2660694,33806,3
 haskell,multisig-sm-10,1109286,,,,18036,69
 plutigo,multisig-sm-10,428022,,,,,13980
@@ -1287,7 +1224,6 @@ scalus-cek,multisig-sm-10,628747,632985,611161,642095,15896,3
 scalus-js,multisig-sm-10,6240757,6266923,6121711,6333639,108359,3
 uplc-turbo,multisig-sm-10,670575,670309,663320,680731,3017,100
 aiken,ping-pong-1,7363885,7375877,7213333,7444527,50616,100
-aiken-wasm,ping-pong-1,781379,781806,775628,786702,5549,3
 blaze-v8,ping-pong-1,1506975,1504259,1494691,1521976,13844,3
 haskell,ping-pong-1,823514,,,,7382,74
 plutigo,ping-pong-1,282838,,,,,21075
@@ -1295,7 +1231,6 @@ scalus-cek,ping-pong-1,395659,390116,387100,409761,12305,3
 scalus-js,ping-pong-1,3028505,3036148,3008622,3040746,17372,3
 uplc-turbo,ping-pong-1,433809,433273,429529,471715,4289,100
 aiken,ping-pong-2,7351223,7359739,7148402,7530328,76109,100
-aiken-wasm,ping-pong-2,796808,796833,794771,798819,2024,3
 blaze-v8,ping-pong-2,1505345,1517084,1445660,1553291,54767,3
 haskell,ping-pong-2,827820,,,,7928,74
 plutigo,ping-pong-2,279203,,,,,21506
@@ -1303,7 +1238,6 @@ scalus-cek,ping-pong-2,402673,400275,398709,409036,5565,3
 scalus-js,ping-pong-2,3067861,3070092,3008477,3125015,58301,3
 uplc-turbo,ping-pong-2,431527,431488,427069,435754,1718,100
 aiken,ping-pong_2-1,5237276,5236981,5081321,5329185,47601,100
-aiken-wasm,ping-pong_2-1,476525,476661,475958,476955,511,3
 blaze-v8,ping-pong_2-1,977373,976675,973958,981485,3811,3
 haskell,ping-pong_2-1,710139,,,,16049,77
 plutigo,ping-pong_2-1,214895,,,,,27885
@@ -1311,7 +1245,6 @@ scalus-cek,ping-pong_2-1,306066,306800,302925,308472,2845,3
 scalus-js,ping-pong_2-1,2267531,2271184,2225301,2306110,40528,3
 uplc-turbo,ping-pong_2-1,312242,312072,310249,315543,1055,100
 aiken,prism-1,2689688,2687930,2619066,2735425,24145,100
-aiken-wasm,prism-1,339235,338842,338780,340084,735,3
 blaze-v8,prism-1,703815,703849,696068,711529,7730,3
 haskell,prism-1,328113,,,,3712,93
 plutigo,prism-1,113554,,,,,52959
@@ -1319,7 +1252,6 @@ scalus-cek,prism-1,163637,160646,154522,175744,10922,3
 scalus-js,prism-1,1290471,1285239,1285150,1301025,9140,3
 uplc-turbo,prism-1,212610,212693,210491,214818,804,100
 aiken,prism-2,8640963,8641947,8398931,9025966,83517,100
-aiken-wasm,prism-2,1008425,1006362,1005785,1013126,4082,3
 blaze-v8,prism-2,1920292,1920717,1908903,1931255,11181,3
 haskell,prism-2,911968,,,,21483,72
 plutigo,prism-2,327257,,,,,18264
@@ -1327,7 +1259,6 @@ scalus-cek,prism-2,474173,474567,473103,474849,937,3
 scalus-js,prism-2,3908639,3882222,3795089,4048606,128806,3
 uplc-turbo,prism-2,528330,527778,522643,550110,3484,100
 aiken,prism-3,6206346,6208100,5992734,6302787,50954,100
-aiken-wasm,prism-3,908058,908985,905253,909937,2475,3
 blaze-v8,prism-3,1422413,1419253,1414670,1433317,9716,3
 haskell,prism-3,579574,,,,6584,81
 plutigo,prism-3,240445,,,,,24945
@@ -1335,7 +1266,6 @@ scalus-cek,prism-3,368981,366107,355541,385294,15083,3
 scalus-js,prism-3,2748058,2719089,2696031,2829055,71086,3
 uplc-turbo,prism-3,436760,436609,431734,442875,1663,100
 aiken,pubkey-1,2356409,2360579,2286647,2380506,15786,100
-aiken-wasm,pubkey-1,300376,300583,299633,300911,663,3
 blaze-v8,pubkey-1,600777,600868,593845,607620,6888,3
 haskell,pubkey-1,307953,,,,5074,94
 plutigo,pubkey-1,104728,,,,,56205
@@ -1343,7 +1273,6 @@ scalus-cek,pubkey-1,143442,144753,132807,152766,10043,3
 scalus-js,pubkey-1,1137414,1126282,1123965,1161994,21318,3
 uplc-turbo,pubkey-1,185763,185791,183536,187894,786,100
 aiken,stablecoin_1-1,18238369,18249344,17709549,19015538,233433,100
-aiken-wasm,stablecoin_1-1,2386225,2379734,2374447,2404494,16040,3
 blaze-v8,stablecoin_1-1,8182312,8164089,7874654,8508194,317162,3
 haskell,stablecoin_1-1,1531566,,,,24836,62
 plutigo,stablecoin_1-1,637858,,,,,8402
@@ -1351,7 +1280,6 @@ scalus-cek,stablecoin_1-1,1043858,1048392,1032586,1050596,9824,3
 scalus-js,stablecoin_1-1,15512991,15567056,15248177,15723738,242346,3
 uplc-turbo,stablecoin_1-1,1221904,1219649,1205578,1290245,12376,100
 aiken,stablecoin_1-2,3157966,3155712,3092916,3279612,26301,100
-aiken-wasm,stablecoin_1-2,394945,394452,393909,396473,1351,3
 blaze-v8,stablecoin_1-2,815061,812800,806250,826135,10133,3
 haskell,stablecoin_1-2,363902,,,,3876,91
 plutigo,stablecoin_1-2,129633,,,,,46170
@@ -1359,7 +1287,6 @@ scalus-cek,stablecoin_1-2,191164,184256,181901,207336,14054,3
 scalus-js,stablecoin_1-2,1526322,1526490,1495145,1557331,31093,3
 uplc-turbo,stablecoin_1-2,253648,253204,250823,261217,1752,100
 aiken,stablecoin_1-3,20918253,20907477,20223034,21713130,317961,100
-aiken-wasm,stablecoin_1-3,2677147,2678072,2675187,2678183,1698,3
 blaze-v8,stablecoin_1-3,9186370,9255274,9017907,9285930,146696,3
 haskell,stablecoin_1-3,1813830,,,,15911,59
 plutigo,stablecoin_1-3,716668,,,,,8383
@@ -1367,7 +1294,6 @@ scalus-cek,stablecoin_1-3,1138112,1136286,1121938,1156111,17159,3
 scalus-js,stablecoin_1-3,14141530,14263046,13862977,14298565,241886,3
 uplc-turbo,stablecoin_1-3,1365267,1361095,1351182,1525699,18887,100
 aiken,stablecoin_1-4,3311381,3306558,3198881,3385664,36247,100
-aiken-wasm,stablecoin_1-4,395944,396125,395464,396243,419,3
 blaze-v8,stablecoin_1-4,910316,913350,903700,913898,5735,3
 haskell,stablecoin_1-4,373244,,,,2857,90
 plutigo,stablecoin_1-4,135250,,,,,43647
@@ -1375,7 +1301,6 @@ scalus-cek,stablecoin_1-4,198144,189362,187511,217558,16839,3
 scalus-js,stablecoin_1-4,1502394,1506970,1486539,1513674,14134,3
 uplc-turbo,stablecoin_1-4,268747,268817,264706,275518,1577,100
 aiken,stablecoin_1-5,25263806,25135226,24236579,33883331,1166875,100
-aiken-wasm,stablecoin_1-5,3282623,3252646,3246648,3348575,57194,3
 blaze-v8,stablecoin_1-5,13588318,13731863,13042334,13990757,490234,3
 haskell,stablecoin_1-5,2049586,,,,18201,57
 plutigo,stablecoin_1-5,876111,,,,,6548
@@ -1383,7 +1308,6 @@ scalus-cek,stablecoin_1-5,1458214,1465302,1432864,1476477,22654,3
 scalus-js,stablecoin_1-5,16830593,16856501,16385482,17249797,432739,3
 uplc-turbo,stablecoin_1-5,1770271,1768580,1759661,1826183,9194,100
 aiken,stablecoin_1-6,3912486,3907853,3768263,5400756,155715,100
-aiken-wasm,stablecoin_1-6,515888,514551,514363,518751,2481,3
 blaze-v8,stablecoin_1-6,1013271,1019383,995749,1024680,15404,3
 haskell,stablecoin_1-6,413116,,,,3046,88
 plutigo,stablecoin_1-6,156037,,,,,38592
@@ -1391,7 +1315,6 @@ scalus-cek,stablecoin_1-6,225784,221279,219086,236986,9763,3
 scalus-js,stablecoin_1-6,1793198,1793621,1744675,1841298,48313,3
 uplc-turbo,stablecoin_1-6,318687,318331,314437,325177,1881,100
 aiken,stablecoin_2-1,18132346,18134726,17417690,18776916,270995,100
-aiken-wasm,stablecoin_2-1,2343442,2344617,2338402,2347306,4567,3
 blaze-v8,stablecoin_2-1,10757904,10443854,10409259,11420598,574170,3
 haskell,stablecoin_2-1,1534297,,,,15966,62
 plutigo,stablecoin_2-1,632073,,,,,9510
@@ -1399,7 +1322,6 @@ scalus-cek,stablecoin_2-1,1049689,1049484,1044140,1055443,5653,3
 scalus-js,stablecoin_2-1,15497992,15528771,15207696,15757510,276196,3
 uplc-turbo,stablecoin_2-1,1221267,1219397,1207199,1332851,12632,100
 aiken,stablecoin_2-2,3149975,3147243,3068349,3230281,29684,100
-aiken-wasm,stablecoin_2-2,408022,408163,407317,408586,646,3
 blaze-v8,stablecoin_2-2,813803,808981,802525,829903,14312,3
 haskell,stablecoin_2-2,367650,,,,4201,91
 plutigo,stablecoin_2-2,128643,,,,,46711
@@ -1407,7 +1329,6 @@ scalus-cek,stablecoin_2-2,187164,179463,178668,203361,14032,3
 scalus-js,stablecoin_2-2,1531916,1528221,1480964,1586562,52895,3
 uplc-turbo,stablecoin_2-2,256999,257086,255142,259807,963,100
 aiken,stablecoin_2-3,20680450,20690486,19787303,21253693,256696,100
-aiken-wasm,stablecoin_2-3,2660104,2661916,2656305,2662092,3291,3
 blaze-v8,stablecoin_2-3,12248586,12483808,11668156,12593793,505665,3
 haskell,stablecoin_2-3,1824328,,,,16233,59
 plutigo,stablecoin_2-3,713723,,,,,8337
@@ -1415,7 +1336,6 @@ scalus-cek,stablecoin_2-3,1165164,1164127,1152617,1178747,13095,3
 scalus-js,stablecoin_2-3,14566793,14739423,14019271,14941685,484832,3
 uplc-turbo,stablecoin_2-3,1371387,1370589,1361590,1397692,5866,100
 aiken,stablecoin_2-4,3356137,3353364,3245897,3701625,61098,100
-aiken-wasm,stablecoin_2-4,419997,420076,418410,421504,1548,3
 blaze-v8,stablecoin_2-4,887532,890920,873948,897728,12247,3
 haskell,stablecoin_2-4,374770,,,,2800,90
 plutigo,stablecoin_2-4,134695,,,,,44929
@@ -1423,7 +1343,6 @@ scalus-cek,stablecoin_2-4,197642,189659,187823,215445,15444,3
 scalus-js,stablecoin_2-4,1484074,1466739,1462118,1523364,34104,3
 uplc-turbo,stablecoin_2-4,265447,265302,263568,268291,816,100
 aiken,token-account-1,3804955,3803954,3702748,3879884,20930,100
-aiken-wasm,token-account-1,472417,472880,471444,472927,843,3
 blaze-v8,token-account-1,762032,762375,757616,766104,4254,3
 haskell,token-account-1,432834,,,,5006,87
 plutigo,token-account-1,152788,,,,,39367
@@ -1431,7 +1350,6 @@ scalus-cek,token-account-1,210927,207292,205231,220258,8146,3
 scalus-js,token-account-1,1637116,1592522,1577258,1741569,90780,3
 uplc-turbo,token-account-1,249871,249373,246116,261782,2574,100
 aiken,token-account-2,4592722,4593626,4491901,4731173,32202,100
-aiken-wasm,token-account-2,812292,811453,810232,815193,2584,3
 blaze-v8,token-account-2,1212873,1210475,1207880,1220264,6531,3
 haskell,token-account-2,540202,,,,7080,83
 plutigo,token-account-2,219048,,,,,27585
@@ -1439,7 +1357,6 @@ scalus-cek,token-account-2,346103,363905,309653,364750,31568,3
 scalus-js,token-account-2,2526691,2536370,2492124,2551580,30887,3
 uplc-turbo,token-account-2,370234,369924,366402,377423,1808,100
 aiken,uniswap-1,6072572,6075410,5883710,6180614,42894,100
-aiken-wasm,uniswap-1,1081400,1080333,1077773,1086094,4261,3
 blaze-v8,uniswap-1,1547445,1553060,1513899,1575376,31120,3
 haskell,uniswap-1,578372,,,,6732,81
 plutigo,uniswap-1,272039,,,,,21955
@@ -1447,7 +1364,6 @@ scalus-cek,uniswap-1,395873,392474,391558,403586,6695,3
 scalus-js,uniswap-1,3294102,3277614,3235290,3369403,68560,3
 uplc-turbo,uniswap-1,431189,430809,423001,442825,2376,100
 aiken,uniswap-2,4248098,4238935,4093665,4364212,43674,100
-aiken-wasm,uniswap-2,516880,516903,516583,517154,285,3
 blaze-v8,uniswap-2,968090,967585,958664,978022,9689,3
 haskell,uniswap-2,459557,,,,4900,86
 plutigo,uniswap-2,167299,,,,,35838
@@ -1455,7 +1371,6 @@ scalus-cek,uniswap-2,233474,229803,226311,244307,9542,3
 scalus-js,uniswap-2,2014888,1989812,1980367,2074487,51829,3
 uplc-turbo,uniswap-2,291569,291284,289052,304920,1821,100
 aiken,uniswap-3,24083135,24123714,23383151,24593942,236887,100
-aiken-wasm,uniswap-3,3784795,3783955,3771281,3799149,13952,3
 blaze-v8,uniswap-3,10075916,10166122,9883726,10177899,166545,3
 haskell,uniswap-3,2137201,,,,23657,56
 plutigo,uniswap-3,1058213,,,,,5248
@@ -1463,7 +1378,6 @@ scalus-cek,uniswap-3,1486664,1478513,1470645,1510834,21297,3
 scalus-js,uniswap-3,15810214,15637795,15236255,16556590,676843,3
 uplc-turbo,uniswap-3,1757161,1749929,1714844,1861499,28171,100
 aiken,uniswap-4,4616745,4615459,4542402,4678011,26755,100
-aiken-wasm,uniswap-4,728922,732109,720978,733680,6924,3
 blaze-v8,uniswap-4,1453136,1453755,1450816,1454838,2081,3
 haskell,uniswap-4,494758,,,,8652,84
 plutigo,uniswap-4,198451,,,,,30454
@@ -1471,7 +1385,6 @@ scalus-cek,uniswap-4,335530,336535,320351,349704,14702,3
 scalus-js,uniswap-4,2354680,2331516,2312819,2419705,57084,3
 uplc-turbo,uniswap-4,413707,413598,410044,420707,1622,100
 aiken,uniswap-5,16386050,16386176,15974943,16818116,144484,100
-aiken-wasm,uniswap-5,2571454,2575041,2563361,2575960,7024,3
 blaze-v8,uniswap-5,5660876,5707109,5558869,5716650,88469,3
 haskell,uniswap-5,1702376,,,,15668,60
 plutigo,uniswap-5,741350,,,,,7857
@@ -1479,7 +1392,6 @@ scalus-cek,uniswap-5,1036541,1033775,1026238,1049609,11928,3
 scalus-js,uniswap-5,11456816,11336639,10807264,12226546,717232,3
 uplc-turbo,uniswap-5,1194774,1191266,1184015,1441672,25363,100
 aiken,uniswap-6,4254421,4254839,4092045,4384567,50312,100
-aiken-wasm,uniswap-6,680078,678948,678519,682768,2339,3
 blaze-v8,uniswap-6,1377055,1379811,1368115,1383239,7929,3
 haskell,uniswap-6,501524,,,,4784,84
 plutigo,uniswap-6,191679,,,,,31554
@@ -1487,7 +1399,6 @@ scalus-cek,uniswap-6,336177,334973,332863,340694,4051,3
 scalus-js,uniswap-6,2000818,1995455,1990051,2016949,14228,3
 uplc-turbo,uniswap-6,581412,581392,576212,588011,2366,100
 aiken,vesting-1,5889909,5880996,5803966,6063726,45694,100
-aiken-wasm,vesting-1,891721,892337,888944,893882,2525,3
 blaze-v8,vesting-1,1325637,1311388,1309767,1355756,26096,3
 haskell,vesting-1,641962,,,,11051,79
 plutigo,vesting-1,255145,,,,,23370
@@ -1499,8 +1410,10 @@ uplc-turbo,vesting-1,405651,405458,401518,414503,2198,100`;
 // history: {runs: [dir], series: {vm: [ratio or null]}, eval_only: [vm]}; badges: {vm: {text, title}} (how the VM is timed);
 // experimental: {vm: reason} (shown, not ranked); vms: [vm] (the shown VMs, in order).
 // A VM with compile data compiles each script before timing: its timed loop is eval only, so it has
-// no row in CSV_DATA, its times are in eval, and it is shown only as eval only (isCompiled).
-const REPORT = {"vms": ["haskell", "scalus-jit", "scalus-cek", "scalus-js", "aiken", "aiken-wasm", "uplc-turbo", "plutigo", "blaze-v8"], "gate": {"aiken": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "aiken-wasm": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "blaze-v8": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "haskell": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "plutigo": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "scalus-cek": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "scalus-jit": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "scalus-js": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "uplc-turbo": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}}, "hidden": {}, "compile": {"scalus-jit": {"auction_1-1": 1852696245, "auction_1-2": 4283507735, "auction_1-3": 4237517285, "auction_1-4": 966334447, "auction_2-1": 975993629, "auction_2-2": 4067811952, "auction_2-3": 4067781239, "auction_2-4": 3940552230, "auction_2-5": 1014031253, "coop-1": 313189121, "coop-2": 655531552, "coop-3": 733701571, "coop-4": 771296989, "coop-5": 837108836, "coop-6": 276386960, "coop-7": 303172657, "crowdfunding-success-1": 1054959621, "crowdfunding-success-2": 1049805441, "crowdfunding-success-3": 1076710286, "currency-1": 1212478679, "escrow-redeem_1-1": 1619828629, "escrow-redeem_1-2": 1560864807, "escrow-redeem_2-1": 1479377724, "escrow-redeem_2-2": 1557258266, "escrow-redeem_2-3": 1567833190, "escrow-refund-1": 1570216928, "future-increase-margin-1": 1386137093, "future-increase-margin-2": 1561348662, "future-increase-margin-3": 1551997712, "future-increase-margin-4": 5650320182, "future-increase-margin-5": 6459675629, "future-pay-out-1": 1372331563, "future-pay-out-2": 1648540849, "future-pay-out-3": 1541129202, "future-pay-out-4": 5783505459, "future-settle-early-1": 1252115659, "future-settle-early-2": 1583598680, "future-settle-early-3": 1589115406, "future-settle-early-4": 5602671753, "game-sm-success_1-1": 3767116542, "game-sm-success_1-2": 747468014, "game-sm-success_1-3": 3697488811, "game-sm-success_1-4": 769693766, "game-sm-success_2-1": 3732453472, "game-sm-success_2-2": 789756539, "game-sm-success_2-3": 4082358406, "game-sm-success_2-4": 770671696, "game-sm-success_2-5": 3866071739, "game-sm-success_2-6": 767687530, "guardrail-sorted-large": 311920284, "guardrail-sorted-small": 223773319, "guardrail-unsorted-large": 250160108, "guardrail-unsorted-small": 220547948, "multisig-sm-01": 4867159023, "multisig-sm-02": 4842849334, "multisig-sm-03": 4939463411, "multisig-sm-04": 4921164874, "multisig-sm-05": 4768010154, "multisig-sm-06": 4945329876, "multisig-sm-07": 4919707696, "multisig-sm-08": 4785355973, "multisig-sm-09": 5109831924, "multisig-sm-10": 5249918483, "ping-pong-1": 3522458806, "ping-pong-2": 3250621202, "ping-pong_2-1": 3231645599, "prism-1": 668592762, "prism-2": 3480049463, "prism-3": 1219004954, "pubkey-1": 645349985, "stablecoin_1-1": 6946163399, "stablecoin_1-2": 772893358, "stablecoin_1-3": 7024259007, "stablecoin_1-4": 809988853, "stablecoin_1-5": 6987777574, "stablecoin_1-6": 795907621, "stablecoin_2-1": 8007034218, "stablecoin_2-2": 780999546, "stablecoin_2-3": 7600963156, "stablecoin_2-4": 766439295, "token-account-1": 1359559472, "token-account-2": 982344958, "uniswap-1": 1372696944, "uniswap-2": 1394468506, "uniswap-3": 4466492801, "uniswap-4": 893536093, "uniswap-5": 4394619066, "uniswap-6": 895858098, "vesting-1": 1691515764}}, "eval": {"aiken": {"auction_1-1": 1911171, "auction_1-2": 9871580, "auction_1-3": 9682429, "auction_1-4": 2456553, "auction_2-1": 1918663, "auction_2-2": 10946910, "auction_2-3": 12912812, "auction_2-4": 9693132, "auction_2-5": 2494274, "coop-1": 4594570, "coop-2": 116950189, "coop-3": 148486649, "coop-4": 117863683, "coop-5": 24572959, "coop-6": 161175779, "coop-7": 5574185, "crowdfunding-success-1": 2219432, "crowdfunding-success-2": 2269956, "crowdfunding-success-3": 2297138, "currency-1": 3213580, "escrow-redeem_1-1": 4406062, "escrow-redeem_1-2": 4429646, "escrow-redeem_2-1": 5277462, "escrow-redeem_2-2": 5217005, "escrow-redeem_2-3": 5114471, "escrow-refund-1": 1747930, "future-increase-margin-1": 3275962, "future-increase-margin-2": 7254969, "future-increase-margin-3": 7025361, "future-increase-margin-4": 7509253, "future-increase-margin-5": 12809834, "future-pay-out-1": 3224851, "future-pay-out-2": 7034224, "future-pay-out-3": 7094146, "future-pay-out-4": 12421575, "future-settle-early-1": 3145445, "future-settle-early-2": 7181947, "future-settle-early-3": 7281089, "future-settle-early-4": 8994228, "game-sm-success_1-1": 5104098, "game-sm-success_1-2": 2267618, "game-sm-success_1-3": 9106063, "game-sm-success_1-4": 2691601, "game-sm-success_2-1": 5193223, "game-sm-success_2-2": 2239350, "game-sm-success_2-3": 8943953, "game-sm-success_2-4": 2585725, "game-sm-success_2-5": 9138562, "game-sm-success_2-6": 2628755, "guardrail-sorted-large": 14989340, "guardrail-sorted-small": 2410636, "guardrail-unsorted-large": 194069991, "guardrail-unsorted-small": 3493016, "multisig-sm-01": 5882292, "multisig-sm-02": 5585084, "multisig-sm-03": 5631282, "multisig-sm-04": 5663085, "multisig-sm-05": 8681915, "multisig-sm-06": 5715426, "multisig-sm-07": 5481053, "multisig-sm-08": 5570116, "multisig-sm-09": 5722054, "multisig-sm-10": 8642090, "ping-pong-1": 4846904, "ping-pong-2": 4925093, "ping-pong_2-1": 2745173, "prism-1": 1915561, "prism-2": 6107049, "prism-3": 4912044, "pubkey-1": 1431809, "stablecoin_1-1": 14421403, "stablecoin_1-2": 2241500, "stablecoin_1-3": 17123040, "stablecoin_1-4": 2478062, "stablecoin_1-5": 21384609, "stablecoin_1-6": 3030239, "stablecoin_2-1": 14589682, "stablecoin_2-2": 2233343, "stablecoin_2-3": 16937333, "stablecoin_2-4": 2445461, "token-account-1": 2547877, "token-account-2": 3428700, "uniswap-1": 4911240, "uniswap-2": 3001519, "uniswap-3": 21247092, "uniswap-4": 3572659, "uniswap-5": 12852074, "uniswap-6": 3463209, "vesting-1": 4332110}, "aiken-wasm": {"auction_1-1": 365526, "auction_1-2": 1517993, "auction_1-3": 1550151, "auction_1-4": 496255, "auction_2-1": 374721, "auction_2-2": 1580810, "auction_2-3": 2103690, "auction_2-4": 1548434, "auction_2-5": 513083, "coop-1": 420619, "coop-2": 1502734, "coop-3": 5876644, "coop-4": 2047747, "coop-5": 860320, "coop-6": 1285558, "coop-7": 648767, "crowdfunding-success-1": 464980, "crowdfunding-success-2": 467498, "crowdfunding-success-3": 471094, "currency-1": 629769, "escrow-redeem_1-1": 853070, "escrow-redeem_1-2": 794563, "escrow-redeem_2-1": 1085072, "escrow-redeem_2-2": 995165, "escrow-redeem_2-3": 987374, "escrow-refund-1": 398859, "future-increase-margin-1": 625143, "future-increase-margin-2": 1312897, "future-increase-margin-3": 1302156, "future-increase-margin-4": 1329674, "future-increase-margin-5": 2115345, "future-pay-out-1": 632131, "future-pay-out-2": 1313502, "future-pay-out-3": 1300720, "future-pay-out-4": 2252052, "future-settle-early-1": 619463, "future-settle-early-2": 1299061, "future-settle-early-3": 1278341, "future-settle-early-4": 1665483, "game-sm-success_1-1": 951412, "game-sm-success_1-2": 404909, "game-sm-success_1-3": 1541307, "game-sm-success_1-4": 449513, "game-sm-success_2-1": 948798, "game-sm-success_2-2": 381578, "game-sm-success_2-3": 1605374, "game-sm-success_2-4": 456188, "game-sm-success_2-5": 1555114, "game-sm-success_2-6": 473102, "guardrail-sorted-large": 961544, "guardrail-sorted-small": 174722, "guardrail-unsorted-large": 1387045, "guardrail-unsorted-small": 167541, "multisig-sm-01": 1056583, "multisig-sm-02": 983419, "multisig-sm-03": 947986, "multisig-sm-04": 954717, "multisig-sm-05": 1424313, "multisig-sm-06": 1044841, "multisig-sm-07": 991832, "multisig-sm-08": 962535, "multisig-sm-09": 963160, "multisig-sm-10": 1505239, "ping-pong-1": 781379, "ping-pong-2": 796808, "ping-pong_2-1": 476525, "prism-1": 339235, "prism-2": 1008425, "prism-3": 908058, "pubkey-1": 300376, "stablecoin_1-1": 2386225, "stablecoin_1-2": 394945, "stablecoin_1-3": 2677147, "stablecoin_1-4": 395944, "stablecoin_1-5": 3282623, "stablecoin_1-6": 515888, "stablecoin_2-1": 2343442, "stablecoin_2-2": 408022, "stablecoin_2-3": 2660104, "stablecoin_2-4": 419997, "token-account-1": 472417, "token-account-2": 812292, "uniswap-1": 1081400, "uniswap-2": 516880, "uniswap-3": 3784795, "uniswap-4": 728922, "uniswap-5": 2571454, "uniswap-6": 680078, "vesting-1": 891721}, "blaze-v8": {"auction_1-1": 560701, "auction_1-2": 1817318, "auction_1-3": 1815368, "auction_1-4": 743175, "auction_2-1": 560436, "auction_2-2": 1801129, "auction_2-3": 2311373, "auction_2-4": 1811631, "auction_2-5": 745853, "coop-1": 846744, "coop-2": 2802334, "coop-3": 7122144, "coop-4": 3235249, "coop-5": 1417690, "coop-6": 2647030, "coop-7": 1197154, "crowdfunding-success-1": 637597, "crowdfunding-success-2": 650076, "crowdfunding-success-3": 633219, "currency-1": 718116, "escrow-redeem_1-1": 1034069, "escrow-redeem_1-2": 1018403, "escrow-redeem_2-1": 1177483, "escrow-redeem_2-2": 1159327, "escrow-redeem_2-3": 1180491, "escrow-refund-1": 482610, "future-increase-margin-1": 723312, "future-increase-margin-2": 1626594, "future-increase-margin-3": 1537283, "future-increase-margin-4": 1473047, "future-increase-margin-5": 3752140, "future-pay-out-1": 731373, "future-pay-out-2": 1608836, "future-pay-out-3": 1546371, "future-pay-out-4": 3920539, "future-settle-early-1": 730726, "future-settle-early-2": 1570990, "future-settle-early-3": 1523989, "future-settle-early-4": 3111289, "game-sm-success_1-1": 1172642, "game-sm-success_1-2": 624927, "game-sm-success_1-3": 1985489, "game-sm-success_1-4": 781772, "game-sm-success_2-1": 1247782, "game-sm-success_2-2": 681064, "game-sm-success_2-3": 2074745, "game-sm-success_2-4": 805897, "game-sm-success_2-5": 2203353, "game-sm-success_2-6": 824774, "guardrail-sorted-large": 1820098, "guardrail-sorted-small": 311557, "guardrail-unsorted-large": 2621331, "guardrail-unsorted-small": 293841, "multisig-sm-01": 1318594, "multisig-sm-02": 1271222, "multisig-sm-03": 1352963, "multisig-sm-04": 1270865, "multisig-sm-05": 1958775, "multisig-sm-06": 1275926, "multisig-sm-07": 1356854, "multisig-sm-08": 1229222, "multisig-sm-09": 1304546, "multisig-sm-10": 1875127, "ping-pong-1": 1092074, "ping-pong-2": 1059429, "ping-pong_2-1": 662052, "prism-1": 551179, "prism-2": 1341459, "prism-3": 1231160, "pubkey-1": 479929, "stablecoin_1-1": 6856448, "stablecoin_1-2": 666362, "stablecoin_1-3": 7636434, "stablecoin_1-4": 727408, "stablecoin_1-5": 9154955, "stablecoin_1-6": 890963, "stablecoin_2-1": 6307793, "stablecoin_2-2": 686973, "stablecoin_2-3": 6920074, "stablecoin_2-4": 696770, "token-account-1": 607155, "token-account-2": 1080340, "uniswap-1": 1290532, "uniswap-2": 734456, "uniswap-3": 6195712, "uniswap-4": 1209350, "uniswap-5": 3913361, "uniswap-6": 1130618, "vesting-1": 1064693}, "haskell": {"auction_1-1": 130458, "auction_1-2": 422510, "auction_1-3": 430434, "auction_1-4": 167673, "auction_2-1": 129925, "auction_2-2": 423094, "auction_2-3": 543832, "auction_2-4": 432518, "auction_2-5": 166938, "coop-1": 174373, "coop-2": 570625, "coop-3": 1560518, "coop-4": 690899, "coop-5": 305997, "coop-6": 524966, "coop-7": 252103, "crowdfunding-success-1": 155024, "crowdfunding-success-2": 155356, "crowdfunding-success-3": 155115, "currency-1": 172808, "escrow-redeem_1-1": 244646, "escrow-redeem_1-2": 245744, "escrow-redeem_2-1": 283772, "escrow-redeem_2-2": 285834, "escrow-redeem_2-3": 284929, "escrow-refund-1": 114448, "future-increase-margin-1": 171657, "future-increase-margin-2": 374982, "future-increase-margin-3": 377463, "future-increase-margin-4": 328691, "future-increase-margin-5": 554822, "future-pay-out-1": 172261, "future-pay-out-2": 378442, "future-pay-out-3": 378120, "future-pay-out-4": 550782, "future-settle-early-1": 170471, "future-settle-early-2": 376684, "future-settle-early-3": 377807, "future-settle-early-4": 422879, "game-sm-success_1-1": 277589, "game-sm-success_1-2": 140357, "game-sm-success_1-3": 429916, "game-sm-success_1-4": 167340, "game-sm-success_2-1": 270185, "game-sm-success_2-2": 142533, "game-sm-success_2-3": 432103, "game-sm-success_2-4": 165475, "game-sm-success_2-5": 427459, "game-sm-success_2-6": 165313, "guardrail-sorted-large": 310654, "guardrail-sorted-small": 50068, "guardrail-unsorted-large": 435458, "guardrail-unsorted-small": 48768, "multisig-sm-01": 270273, "multisig-sm-02": 265247, "multisig-sm-03": 267014, "multisig-sm-04": 271819, "multisig-sm-05": 372159, "multisig-sm-06": 272857, "multisig-sm-07": 265549, "multisig-sm-08": 269292, "multisig-sm-09": 270511, "multisig-sm-10": 371121, "ping-pong-1": 228337, "ping-pong-2": 226878, "ping-pong_2-1": 147234, "prism-1": 117982, "prism-2": 283560, "prism-3": 257998, "pubkey-1": 100403, "stablecoin_1-1": 667855, "stablecoin_1-2": 138715, "stablecoin_1-3": 760830, "stablecoin_1-4": 151451, "stablecoin_1-5": 955760, "stablecoin_1-6": 182991, "stablecoin_2-1": 670122, "stablecoin_2-2": 139561, "stablecoin_2-3": 760230, "stablecoin_2-4": 151480, "token-account-1": 135598, "token-account-2": 248208, "uniswap-1": 274792, "uniswap-2": 157771, "uniswap-3": 1192372, "uniswap-4": 240521, "uniswap-5": 791232, "uniswap-6": 251304, "vesting-1": 240181}, "plutigo": {"auction_1-1": 78379, "auction_1-2": 325384, "auction_1-3": 317437, "auction_1-4": 96974, "auction_2-1": 76806, "auction_2-2": 322850, "auction_2-3": 429591, "auction_2-4": 316561, "auction_2-5": 98284, "coop-1": 109418, "coop-2": 389916, "coop-3": 1368324, "coop-4": 477344, "coop-5": 189884, "coop-6": 363244, "coop-7": 146051, "crowdfunding-success-1": 88460, "crowdfunding-success-2": 86823, "crowdfunding-success-3": 86629, "currency-1": 123277, "escrow-redeem_1-1": 159421, "escrow-redeem_1-2": 160381, "escrow-redeem_2-1": 190658, "escrow-redeem_2-2": 191598, "escrow-redeem_2-3": 189044, "escrow-refund-1": 67328, "future-increase-margin-1": 120978, "future-increase-margin-2": 259570, "future-increase-margin-3": 255883, "future-increase-margin-4": 256340, "future-increase-margin-5": 405964, "future-pay-out-1": 121949, "future-pay-out-2": 256629, "future-pay-out-3": 255092, "future-pay-out-4": 415138, "future-settle-early-1": 119905, "future-settle-early-2": 257346, "future-settle-early-3": 266172, "future-settle-early-4": 288295, "game-sm-success_1-1": 187536, "game-sm-success_1-2": 84654, "game-sm-success_1-3": 316646, "game-sm-success_1-4": 97842, "game-sm-success_2-1": 188604, "game-sm-success_2-2": 85836, "game-sm-success_2-3": 327408, "game-sm-success_2-4": 100921, "game-sm-success_2-5": 319639, "game-sm-success_2-6": 102524, "guardrail-sorted-large": 219662, "guardrail-sorted-small": 36893, "guardrail-unsorted-large": 309955, "guardrail-unsorted-small": 35195, "multisig-sm-01": 202161, "multisig-sm-02": 192416, "multisig-sm-03": 195606, "multisig-sm-04": 197787, "multisig-sm-05": 282702, "multisig-sm-06": 197879, "multisig-sm-07": 197995, "multisig-sm-08": 201070, "multisig-sm-09": 200050, "multisig-sm-10": 279887, "ping-pong-1": 156120, "ping-pong-2": 155285, "ping-pong_2-1": 90879, "prism-1": 71307, "prism-2": 193103, "prism-3": 173180, "pubkey-1": 59022, "stablecoin_1-1": 422994, "stablecoin_1-2": 83148, "stablecoin_1-3": 508371, "stablecoin_1-4": 88324, "stablecoin_1-5": 660813, "stablecoin_1-6": 108067, "stablecoin_2-1": 429131, "stablecoin_2-2": 83483, "stablecoin_2-3": 508292, "stablecoin_2-4": 89552, "token-account-1": 88172, "token-account-2": 162282, "uniswap-1": 207154, "uniswap-2": 102573, "uniswap-3": 907353, "uniswap-4": 144851, "uniswap-5": 552449, "uniswap-6": 136606, "vesting-1": 166054}, "scalus-cek": {"auction_1-1": 125812, "auction_1-2": 511838, "auction_1-3": 506359, "auction_1-4": 153431, "auction_2-1": 126637, "auction_2-2": 506917, "auction_2-3": 675958, "auction_2-4": 505346, "auction_2-5": 156430, "coop-1": 169285, "coop-2": 561466, "coop-3": 2019082, "coop-4": 733124, "coop-5": 293758, "coop-6": 519551, "coop-7": 254943, "crowdfunding-success-1": 137288, "crowdfunding-success-2": 137025, "crowdfunding-success-3": 138580, "currency-1": 186498, "escrow-redeem_1-1": 256006, "escrow-redeem_1-2": 247633, "escrow-redeem_2-1": 304162, "escrow-redeem_2-2": 311487, "escrow-redeem_2-3": 306201, "escrow-refund-1": 105676, "future-increase-margin-1": 185427, "future-increase-margin-2": 394387, "future-increase-margin-3": 400121, "future-increase-margin-4": 391320, "future-increase-margin-5": 691340, "future-pay-out-1": 184693, "future-pay-out-2": 400605, "future-pay-out-3": 393963, "future-pay-out-4": 680167, "future-settle-early-1": 189221, "future-settle-early-2": 412070, "future-settle-early-3": 401659, "future-settle-early-4": 522593, "game-sm-success_1-1": 305687, "game-sm-success_1-2": 143354, "game-sm-success_1-3": 529963, "game-sm-success_1-4": 162580, "game-sm-success_2-1": 303460, "game-sm-success_2-2": 137259, "game-sm-success_2-3": 493622, "game-sm-success_2-4": 157504, "game-sm-success_2-5": 515283, "game-sm-success_2-6": 162927, "guardrail-sorted-large": 344578, "guardrail-sorted-small": 54964, "guardrail-unsorted-large": 495772, "guardrail-unsorted-small": 52021, "multisig-sm-01": 323527, "multisig-sm-02": 315872, "multisig-sm-03": 321918, "multisig-sm-04": 318764, "multisig-sm-05": 460702, "multisig-sm-06": 312813, "multisig-sm-07": 300114, "multisig-sm-08": 318533, "multisig-sm-09": 321313, "multisig-sm-10": 457991, "ping-pong-1": 254973, "ping-pong_2-1": 143171, "ping-pong-2": 249313, "prism-1": 114374, "prism-2": 319802, "prism-3": 293109, "pubkey-1": 94474, "stablecoin_1-1": 780030, "stablecoin_1-2": 136877, "stablecoin_1-3": 919700, "stablecoin_1-4": 145637, "stablecoin_1-5": 1164246, "stablecoin_1-6": 171314, "stablecoin_2-1": 801814, "stablecoin_2-2": 135749, "stablecoin_2-3": 928201, "stablecoin_2-4": 142495, "token-account-1": 143243, "token-account-2": 239141, "uniswap-1": 324916, "uniswap-2": 165324, "uniswap-3": 1270811, "uniswap-4": 220029, "uniswap-5": 815104, "uniswap-6": 213985, "vesting-1": 263666}, "scalus-jit": {"auction_1-1": 37909, "auction_1-2": 255405, "auction_1-3": 233759, "auction_1-4": 45525, "auction_2-1": 38393, "auction_2-2": 249198, "auction_2-3": 299909, "auction_2-4": 237892, "auction_2-5": 45655, "coop-1": 42385, "coop-2": 164723, "coop-3": 617442, "coop-4": 246121, "coop-5": 89983, "coop-6": 145482, "coop-7": 57670, "crowdfunding-success-1": 43267, "crowdfunding-success-2": 45767, "crowdfunding-success-3": 44964, "currency-1": 71923, "escrow-redeem_1-1": 92892, "escrow-redeem_1-2": 92928, "escrow-redeem_2-1": 109504, "escrow-redeem_2-2": 108489, "escrow-redeem_2-3": 108339, "escrow-refund-1": 36316, "future-increase-margin-1": 71645, "future-increase-margin-2": 145135, "future-increase-margin-3": 147831, "future-increase-margin-4": 219867, "future-increase-margin-5": 411186, "future-pay-out-1": 72318, "future-pay-out-2": 151408, "future-pay-out-3": 145901, "future-pay-out-4": 403492, "future-settle-early-1": 70988, "future-settle-early-2": 148630, "future-settle-early-3": 147302, "future-settle-early-4": 330207, "game-sm-success_1-1": 155608, "game-sm-success_1-2": 38887, "game-sm-success_1-3": 235572, "game-sm-success_1-4": 45319, "game-sm-success_2-1": 153055, "game-sm-success_2-2": 38977, "game-sm-success_2-3": 235965, "game-sm-success_2-4": 44291, "game-sm-success_2-5": 235104, "game-sm-success_2-6": 43640, "guardrail-sorted-large": 209556, "guardrail-sorted-small": 74586, "guardrail-unsorted-large": 272627, "guardrail-unsorted-small": 73609, "multisig-sm-01": 171208, "multisig-sm-02": 177648, "multisig-sm-03": 180652, "multisig-sm-04": 178536, "multisig-sm-05": 237427, "multisig-sm-06": 173789, "multisig-sm-07": 177477, "multisig-sm-08": 179622, "multisig-sm-09": 179455, "multisig-sm-10": 239510, "ping-pong-1": 131351, "ping-pong-2": 132282, "ping-pong_2-1": 85339, "prism-1": 31482, "prism-2": 164747, "prism-3": 98312, "pubkey-1": 27869, "stablecoin_1-1": 745890, "stablecoin_1-2": 38427, "stablecoin_1-3": 978402, "stablecoin_1-4": 39678, "stablecoin_1-5": 1554036, "stablecoin_1-6": 48295, "stablecoin_2-1": 1220874, "stablecoin_2-2": 37671, "stablecoin_2-3": 1036672, "stablecoin_2-4": 41245, "token-account-1": 55886, "token-account-2": 79524, "uniswap-1": 118925, "uniswap-2": 58839, "uniswap-3": 543499, "uniswap-4": 62590, "uniswap-5": 356506, "uniswap-6": 63573, "vesting-1": 109762}, "uplc-turbo": {"auction_1-1": 181628, "auction_1-2": 595399, "auction_1-3": 596277, "auction_1-4": 235094, "auction_2-1": 180982, "auction_2-2": 593446, "auction_2-3": 766462, "auction_2-4": 603079, "auction_2-5": 232665, "coop-1": 215332, "coop-2": 727667, "coop-3": 1755196, "coop-4": 774227, "coop-5": 359591, "coop-6": 685796, "coop-7": 316488, "crowdfunding-success-1": 200196, "crowdfunding-success-2": 198577, "crowdfunding-success-3": 195675, "currency-1": 234486, "escrow-redeem_1-1": 327121, "escrow-redeem_1-2": 325205, "escrow-redeem_2-1": 373565, "escrow-redeem_2-2": 375488, "escrow-redeem_2-3": 369412, "escrow-refund-1": 145378, "future-increase-margin-1": 228441, "future-increase-margin-2": 499818, "future-increase-margin-3": 488390, "future-increase-margin-4": 477098, "future-increase-margin-5": 796275, "future-pay-out-1": 228286, "future-pay-out-2": 493410, "future-pay-out-3": 494537, "future-pay-out-4": 801261, "future-settle-early-1": 227468, "future-settle-early-2": 492352, "future-settle-early-3": 489927, "future-settle-early-4": 599700, "game-sm-success_1-1": 369352, "game-sm-success_1-2": 199585, "game-sm-success_1-3": 586720, "game-sm-success_1-4": 236763, "game-sm-success_2-1": 372448, "game-sm-success_2-2": 199789, "game-sm-success_2-3": 586095, "game-sm-success_2-4": 234869, "game-sm-success_2-5": 589190, "game-sm-success_2-6": 233121, "guardrail-sorted-large": 357796, "guardrail-sorted-small": 49597, "guardrail-unsorted-large": 478672, "guardrail-unsorted-small": 47792, "multisig-sm-01": 383135, "multisig-sm-02": 379167, "multisig-sm-03": 379421, "multisig-sm-04": 387475, "multisig-sm-05": 536169, "multisig-sm-06": 383986, "multisig-sm-07": 375522, "multisig-sm-08": 382541, "multisig-sm-09": 385766, "multisig-sm-10": 533714, "ping-pong-1": 312848, "ping-pong-2": 310743, "ping-pong_2-1": 192660, "prism-1": 162441, "prism-2": 401293, "prism-3": 362147, "pubkey-1": 135241, "stablecoin_1-1": 986705, "stablecoin_1-2": 199098, "stablecoin_1-3": 1156913, "stablecoin_1-4": 210062, "stablecoin_1-5": 1518084, "stablecoin_1-6": 260098, "stablecoin_2-1": 1005467, "stablecoin_2-2": 204853, "stablecoin_2-3": 1177915, "stablecoin_2-4": 213263, "token-account-1": 181962, "token-account-2": 302608, "uniswap-1": 359735, "uniswap-2": 221749, "uniswap-3": 1545883, "uniswap-4": 348421, "uniswap-5": 1018103, "uniswap-6": 501195, "vesting-1": 318641}}, "history": {"runs": ["2026-10-23"], "series": {"haskell": [1.0], "scalus-jit": [0.4562443152553465], "scalus-cek": [0.5691644506344032], "scalus-js": [5.000311131996127], "aiken": [11.642586516612601], "aiken-wasm": [1.2830594006512337], "uplc-turbo": [0.6669549183107336], "plutigo": [0.4041795874887887], "blaze-v8": [2.469364237938868]}, "eval_only": ["scalus-jit"]}, "noise_band": 0.05, "disclosure": "The 89 scripts are PlutusV1-era programs. Every VM evaluates them as PlutusV3 programs at protocol version 11 with the mainnet cost model, like Plutus's own `validation` CEK benchmark; the node would run them as PlutusV1.", "notes": {"aiken": "Aiken v1.1.24 copies the CEK environment on every lambda application (quadratic in recursion depth). aiken main fixes it (PRs [#1451](https://github.com/aiken-lang/aiken/pull/1451), [#1452](https://github.com/aiken-lang/aiken/pull/1452): coop-6 92 ms -> 1.2 ms), but no release contains the fix yet.", "aiken-wasm": "Built from [colll78/aiken](https://github.com/colll78/aiken) (aiken main plus fixes), which includes the CEK fixes that v1.1.24 lacks."}, "compile_badge": "decode and compile excluded", "badges": {"aiken-wasm": {"text": "decode cached (by the library)", "title": "The library caches the decoded program by a hash of the flat bytes. After the first call (in the warm-up), the timed loop runs hash + evaluation, without the decode. Its eval-only time is the same loop."}}, "experimental": {"scalus-jit": "not ranked: the JIT module is not published as a release artifact and has no downstream users yet (spec D17)", "blaze-v8": "not ranked: no released project outside the Blaze repo depends on @blaze-cardano/plutus yet; Blaze itself evaluates scripts with @blaze-cardano/vm (Aiken uplc as WASM) (spec D17)"}, "no_d3_note": "compiled once before timing, see the compile column", "drift": "Drift (Haskell, end vs start): +0.6 % over 5 scripts. The run timed Haskell again at its end; this is the change of its time.", "drift_percent": 0.6255226229644695, "run": "2026-10-23", "links": {"haskell": {"repo": "https://github.com/IntersectMBO/plutus", "home": "https://plutus.cardano.intersectmbo.org", "release": "https://github.com/IntersectMBO/plutus/releases/tag/1.70.0.0", "version": "1.70.0.0", "used_by": [{"name": "cardano-node", "kind": "node", "url": "https://github.com/IntersectMBO/cardano-node", "proof": "https://github.com/IntersectMBO/cardano-ledger/blob/master/eras/alonzo/impl/cardano-ledger-alonzo.cabal#L112"}]}, "scalus-jit": {"repo": "https://github.com/scalus3/scalus", "home": "https://scalus.org", "release": "https://github.com/scalus3/scalus/releases/tag/v1.4.0", "version": "v1.4.0", "used_by": []}, "scalus-cek": {"repo": "https://github.com/scalus3/scalus", "home": "https://scalus.org", "release": "https://github.com/scalus3/scalus/releases/tag/v1.4.0", "version": "v1.4.0", "used_by": [{"name": "Hydrozoa", "kind": "L2", "url": "https://github.com/cardano-hydrozoa/hydrozoa", "proof": "https://github.com/cardano-hydrozoa/hydrozoa/blob/main/build.sbt#L171"}, {"name": "Bifrost", "kind": "bridge", "url": "https://github.com/FluidTokens/ft-bifrost-bridge", "proof": "https://github.com/lantr-io/binocular/blob/main/build.sbt#L147"}, {"name": "Cardano Client Lib", "kind": "SDK", "url": "https://github.com/bloxbean/cardano-client-lib", "proof": "https://github.com/bloxbean/cardano-client-lib/blob/master/docs/content/integrations/scalus-integration-api.mdx#L35"}, {"name": "Yaci Store", "kind": "indexer", "url": "https://github.com/bloxbean/yaci-store", "proof": "https://github.com/bloxbean/yaci-store/blob/main/gradle/libs.versions.toml#L7"}, {"name": "Yaci DevKit", "kind": "dev tool", "url": "https://github.com/bloxbean/yaci-devkit", "proof": "https://github.com/bloxbean/yaci-devkit/blob/main/docs/pages/services.mdx#L31"}]}, "scalus-js": {"repo": "https://github.com/scalus3/scalus", "home": "https://scalus.org", "release": "https://github.com/scalus3/scalus/releases/tag/v1.4.0", "version": "scalus 1.4.0 (npm)", "used_by": [{"name": "Lucid Evolution", "kind": "SDK", "url": "https://github.com/Anastasia-Labs/lucid-evolution", "proof": "https://github.com/Anastasia-Labs/lucid-evolution/blob/main/packages/scalus-uplc/package.json#L39"}, {"name": "MeshJS", "kind": "SDK", "url": "https://github.com/MeshJS/mesh", "proof": "https://github.com/MeshJS/mesh/blob/main/packages/mesh-core-cst/package.json#L56"}, {"name": "Evolution SDK", "kind": "SDK", "url": "https://github.com/IntersectMBO/evolution-sdk", "proof": "https://github.com/IntersectMBO/evolution-sdk/blob/main/packages/scalus-uplc/package.json#L41"}]}, "aiken": {"repo": "https://github.com/aiken-lang/aiken", "home": "https://aiken-lang.org", "release": "https://github.com/aiken-lang/aiken/releases/tag/v1.1.24", "version": "v1.1.24", "used_by": [{"name": "Aiken", "kind": "compiler", "url": "https://aiken-lang.org", "proof": "https://github.com/aiken-lang/aiken/blob/main/crates/aiken-project/Cargo.toml#L54"}, {"name": "Blaze SDK", "kind": "SDK", "url": "https://github.com/butaneprotocol/blaze-cardano", "proof": "https://github.com/butaneprotocol/blaze-cardano/blob/main/packages/blaze-uplc/wasm/Cargo.toml#L15"}]}, "aiken-wasm": {"repo": "https://github.com/Anastasia-Labs/lucid-evolution", "home": "https://anastasia-labs.github.io/lucid-evolution/", "release": "https://github.com/Anastasia-Labs/lucid-evolution/releases/tag/@lucid-evolution/uplc@0.4.0", "version": "@lucid-evolution/uplc 0.4.0", "used_by": [{"name": "Lucid Evolution", "kind": "SDK", "url": "https://github.com/Anastasia-Labs/lucid-evolution", "proof": "https://github.com/Anastasia-Labs/lucid-evolution/blob/main/packages/lucid/package.json#L63"}]}, "uplc-turbo": {"repo": "https://github.com/pragma-org/uplc", "home": null, "release": "https://github.com/pragma-org/uplc/releases/tag/amaru-uplc-v0.4.0", "version": "amaru-uplc-v0.4.0", "used_by": [{"name": "Amaru", "kind": "node", "url": "https://github.com/pragma-org/amaru", "proof": "https://github.com/pragma-org/amaru/blob/main/Cargo.toml#L147"}]}, "plutigo": {"repo": "https://github.com/blinklabs-io/plutigo", "home": null, "release": "https://github.com/blinklabs-io/plutigo/releases/tag/v0.1.10", "version": "v0.1.10", "used_by": [{"name": "Dingo", "kind": "node", "url": "https://github.com/blinklabs-io/dingo", "proof": "https://github.com/blinklabs-io/dingo/blob/main/go.mod#L24"}]}, "blaze-v8": {"repo": "https://github.com/butaneprotocol/blaze-cardano", "home": "https://blaze.butane.dev", "release": "https://github.com/butaneprotocol/blaze-cardano/releases/tag/@blaze-cardano/plutus@0.1.1", "version": "@blaze-cardano/plutus 0.1.1", "used_by": []}}};
+// no row in CSV_DATA, its times are in eval, and it is shown only as eval only (isEvalOnly).
+// decode_cached: {vm: line}: a ranked VM whose library caches decoded programs. It has no row in
+// CSV_DATA either: ranked on eval only, out of the decode + eval ranking and the penalty rule.
+const REPORT = {"vms": ["haskell", "scalus-jit", "scalus-cek", "scalus-js", "aiken", "aiken-wasm", "uplc-turbo", "plutigo", "blaze-v8"], "gate": {"aiken": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "aiken-wasm": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "blaze-v8": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "haskell": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "plutigo": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "scalus-cek": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "scalus-jit": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "scalus-js": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}, "uplc-turbo": {"verdict": "pass", "mode": "strict", "reason": "status, cpu and mem equal the strict reference"}}, "hidden": {}, "compile": {"scalus-jit": {"auction_1-1": 1852696245, "auction_1-2": 4283507735, "auction_1-3": 4237517285, "auction_1-4": 966334447, "auction_2-1": 975993629, "auction_2-2": 4067811952, "auction_2-3": 4067781239, "auction_2-4": 3940552230, "auction_2-5": 1014031253, "coop-1": 313189121, "coop-2": 655531552, "coop-3": 733701571, "coop-4": 771296989, "coop-5": 837108836, "coop-6": 276386960, "coop-7": 303172657, "crowdfunding-success-1": 1054959621, "crowdfunding-success-2": 1049805441, "crowdfunding-success-3": 1076710286, "currency-1": 1212478679, "escrow-redeem_1-1": 1619828629, "escrow-redeem_1-2": 1560864807, "escrow-redeem_2-1": 1479377724, "escrow-redeem_2-2": 1557258266, "escrow-redeem_2-3": 1567833190, "escrow-refund-1": 1570216928, "future-increase-margin-1": 1386137093, "future-increase-margin-2": 1561348662, "future-increase-margin-3": 1551997712, "future-increase-margin-4": 5650320182, "future-increase-margin-5": 6459675629, "future-pay-out-1": 1372331563, "future-pay-out-2": 1648540849, "future-pay-out-3": 1541129202, "future-pay-out-4": 5783505459, "future-settle-early-1": 1252115659, "future-settle-early-2": 1583598680, "future-settle-early-3": 1589115406, "future-settle-early-4": 5602671753, "game-sm-success_1-1": 3767116542, "game-sm-success_1-2": 747468014, "game-sm-success_1-3": 3697488811, "game-sm-success_1-4": 769693766, "game-sm-success_2-1": 3732453472, "game-sm-success_2-2": 789756539, "game-sm-success_2-3": 4082358406, "game-sm-success_2-4": 770671696, "game-sm-success_2-5": 3866071739, "game-sm-success_2-6": 767687530, "guardrail-sorted-large": 311920284, "guardrail-sorted-small": 223773319, "guardrail-unsorted-large": 250160108, "guardrail-unsorted-small": 220547948, "multisig-sm-01": 4867159023, "multisig-sm-02": 4842849334, "multisig-sm-03": 4939463411, "multisig-sm-04": 4921164874, "multisig-sm-05": 4768010154, "multisig-sm-06": 4945329876, "multisig-sm-07": 4919707696, "multisig-sm-08": 4785355973, "multisig-sm-09": 5109831924, "multisig-sm-10": 5249918483, "ping-pong-1": 3522458806, "ping-pong-2": 3250621202, "ping-pong_2-1": 3231645599, "prism-1": 668592762, "prism-2": 3480049463, "prism-3": 1219004954, "pubkey-1": 645349985, "stablecoin_1-1": 6946163399, "stablecoin_1-2": 772893358, "stablecoin_1-3": 7024259007, "stablecoin_1-4": 809988853, "stablecoin_1-5": 6987777574, "stablecoin_1-6": 795907621, "stablecoin_2-1": 8007034218, "stablecoin_2-2": 780999546, "stablecoin_2-3": 7600963156, "stablecoin_2-4": 766439295, "token-account-1": 1359559472, "token-account-2": 982344958, "uniswap-1": 1372696944, "uniswap-2": 1394468506, "uniswap-3": 4466492801, "uniswap-4": 893536093, "uniswap-5": 4394619066, "uniswap-6": 895858098, "vesting-1": 1691515764}}, "eval": {"aiken": {"auction_1-1": 1911171, "auction_1-2": 9871580, "auction_1-3": 9682429, "auction_1-4": 2456553, "auction_2-1": 1918663, "auction_2-2": 10946910, "auction_2-3": 12912812, "auction_2-4": 9693132, "auction_2-5": 2494274, "coop-1": 4594570, "coop-2": 116950189, "coop-3": 148486649, "coop-4": 117863683, "coop-5": 24572959, "coop-6": 161175779, "coop-7": 5574185, "crowdfunding-success-1": 2219432, "crowdfunding-success-2": 2269956, "crowdfunding-success-3": 2297138, "currency-1": 3213580, "escrow-redeem_1-1": 4406062, "escrow-redeem_1-2": 4429646, "escrow-redeem_2-1": 5277462, "escrow-redeem_2-2": 5217005, "escrow-redeem_2-3": 5114471, "escrow-refund-1": 1747930, "future-increase-margin-1": 3275962, "future-increase-margin-2": 7254969, "future-increase-margin-3": 7025361, "future-increase-margin-4": 7509253, "future-increase-margin-5": 12809834, "future-pay-out-1": 3224851, "future-pay-out-2": 7034224, "future-pay-out-3": 7094146, "future-pay-out-4": 12421575, "future-settle-early-1": 3145445, "future-settle-early-2": 7181947, "future-settle-early-3": 7281089, "future-settle-early-4": 8994228, "game-sm-success_1-1": 5104098, "game-sm-success_1-2": 2267618, "game-sm-success_1-3": 9106063, "game-sm-success_1-4": 2691601, "game-sm-success_2-1": 5193223, "game-sm-success_2-2": 2239350, "game-sm-success_2-3": 8943953, "game-sm-success_2-4": 2585725, "game-sm-success_2-5": 9138562, "game-sm-success_2-6": 2628755, "guardrail-sorted-large": 14989340, "guardrail-sorted-small": 2410636, "guardrail-unsorted-large": 194069991, "guardrail-unsorted-small": 3493016, "multisig-sm-01": 5882292, "multisig-sm-02": 5585084, "multisig-sm-03": 5631282, "multisig-sm-04": 5663085, "multisig-sm-05": 8681915, "multisig-sm-06": 5715426, "multisig-sm-07": 5481053, "multisig-sm-08": 5570116, "multisig-sm-09": 5722054, "multisig-sm-10": 8642090, "ping-pong-1": 4846904, "ping-pong-2": 4925093, "ping-pong_2-1": 2745173, "prism-1": 1915561, "prism-2": 6107049, "prism-3": 4912044, "pubkey-1": 1431809, "stablecoin_1-1": 14421403, "stablecoin_1-2": 2241500, "stablecoin_1-3": 17123040, "stablecoin_1-4": 2478062, "stablecoin_1-5": 21384609, "stablecoin_1-6": 3030239, "stablecoin_2-1": 14589682, "stablecoin_2-2": 2233343, "stablecoin_2-3": 16937333, "stablecoin_2-4": 2445461, "token-account-1": 2547877, "token-account-2": 3428700, "uniswap-1": 4911240, "uniswap-2": 3001519, "uniswap-3": 21247092, "uniswap-4": 3572659, "uniswap-5": 12852074, "uniswap-6": 3463209, "vesting-1": 4332110}, "aiken-wasm": {"auction_1-1": 365526, "auction_1-2": 1517993, "auction_1-3": 1550151, "auction_1-4": 496255, "auction_2-1": 374721, "auction_2-2": 1580810, "auction_2-3": 2103690, "auction_2-4": 1548434, "auction_2-5": 513083, "coop-1": 420619, "coop-2": 1502734, "coop-3": 5876644, "coop-4": 2047747, "coop-5": 860320, "coop-6": 1285558, "coop-7": 648767, "crowdfunding-success-1": 464980, "crowdfunding-success-2": 467498, "crowdfunding-success-3": 471094, "currency-1": 629769, "escrow-redeem_1-1": 853070, "escrow-redeem_1-2": 794563, "escrow-redeem_2-1": 1085072, "escrow-redeem_2-2": 995165, "escrow-redeem_2-3": 987374, "escrow-refund-1": 398859, "future-increase-margin-1": 625143, "future-increase-margin-2": 1312897, "future-increase-margin-3": 1302156, "future-increase-margin-4": 1329674, "future-increase-margin-5": 2115345, "future-pay-out-1": 632131, "future-pay-out-2": 1313502, "future-pay-out-3": 1300720, "future-pay-out-4": 2252052, "future-settle-early-1": 619463, "future-settle-early-2": 1299061, "future-settle-early-3": 1278341, "future-settle-early-4": 1665483, "game-sm-success_1-1": 951412, "game-sm-success_1-2": 404909, "game-sm-success_1-3": 1541307, "game-sm-success_1-4": 449513, "game-sm-success_2-1": 948798, "game-sm-success_2-2": 381578, "game-sm-success_2-3": 1605374, "game-sm-success_2-4": 456188, "game-sm-success_2-5": 1555114, "game-sm-success_2-6": 473102, "guardrail-sorted-large": 961544, "guardrail-sorted-small": 174722, "guardrail-unsorted-large": 1387045, "guardrail-unsorted-small": 167541, "multisig-sm-01": 1056583, "multisig-sm-02": 983419, "multisig-sm-03": 947986, "multisig-sm-04": 954717, "multisig-sm-05": 1424313, "multisig-sm-06": 1044841, "multisig-sm-07": 991832, "multisig-sm-08": 962535, "multisig-sm-09": 963160, "multisig-sm-10": 1505239, "ping-pong-1": 781379, "ping-pong-2": 796808, "ping-pong_2-1": 476525, "prism-1": 339235, "prism-2": 1008425, "prism-3": 908058, "pubkey-1": 300376, "stablecoin_1-1": 2386225, "stablecoin_1-2": 394945, "stablecoin_1-3": 2677147, "stablecoin_1-4": 395944, "stablecoin_1-5": 3282623, "stablecoin_1-6": 515888, "stablecoin_2-1": 2343442, "stablecoin_2-2": 408022, "stablecoin_2-3": 2660104, "stablecoin_2-4": 419997, "token-account-1": 472417, "token-account-2": 812292, "uniswap-1": 1081400, "uniswap-2": 516880, "uniswap-3": 3784795, "uniswap-4": 728922, "uniswap-5": 2571454, "uniswap-6": 680078, "vesting-1": 891721}, "blaze-v8": {"auction_1-1": 560701, "auction_1-2": 1817318, "auction_1-3": 1815368, "auction_1-4": 743175, "auction_2-1": 560436, "auction_2-2": 1801129, "auction_2-3": 2311373, "auction_2-4": 1811631, "auction_2-5": 745853, "coop-1": 846744, "coop-2": 2802334, "coop-3": 7122144, "coop-4": 3235249, "coop-5": 1417690, "coop-6": 2647030, "coop-7": 1197154, "crowdfunding-success-1": 637597, "crowdfunding-success-2": 650076, "crowdfunding-success-3": 633219, "currency-1": 718116, "escrow-redeem_1-1": 1034069, "escrow-redeem_1-2": 1018403, "escrow-redeem_2-1": 1177483, "escrow-redeem_2-2": 1159327, "escrow-redeem_2-3": 1180491, "escrow-refund-1": 482610, "future-increase-margin-1": 723312, "future-increase-margin-2": 1626594, "future-increase-margin-3": 1537283, "future-increase-margin-4": 1473047, "future-increase-margin-5": 3752140, "future-pay-out-1": 731373, "future-pay-out-2": 1608836, "future-pay-out-3": 1546371, "future-pay-out-4": 3920539, "future-settle-early-1": 730726, "future-settle-early-2": 1570990, "future-settle-early-3": 1523989, "future-settle-early-4": 3111289, "game-sm-success_1-1": 1172642, "game-sm-success_1-2": 624927, "game-sm-success_1-3": 1985489, "game-sm-success_1-4": 781772, "game-sm-success_2-1": 1247782, "game-sm-success_2-2": 681064, "game-sm-success_2-3": 2074745, "game-sm-success_2-4": 805897, "game-sm-success_2-5": 2203353, "game-sm-success_2-6": 824774, "guardrail-sorted-large": 1820098, "guardrail-sorted-small": 311557, "guardrail-unsorted-large": 2621331, "guardrail-unsorted-small": 293841, "multisig-sm-01": 1318594, "multisig-sm-02": 1271222, "multisig-sm-03": 1352963, "multisig-sm-04": 1270865, "multisig-sm-05": 1958775, "multisig-sm-06": 1275926, "multisig-sm-07": 1356854, "multisig-sm-08": 1229222, "multisig-sm-09": 1304546, "multisig-sm-10": 1875127, "ping-pong-1": 1092074, "ping-pong-2": 1059429, "ping-pong_2-1": 662052, "prism-1": 551179, "prism-2": 1341459, "prism-3": 1231160, "pubkey-1": 479929, "stablecoin_1-1": 6856448, "stablecoin_1-2": 666362, "stablecoin_1-3": 7636434, "stablecoin_1-4": 727408, "stablecoin_1-5": 9154955, "stablecoin_1-6": 890963, "stablecoin_2-1": 6307793, "stablecoin_2-2": 686973, "stablecoin_2-3": 6920074, "stablecoin_2-4": 696770, "token-account-1": 607155, "token-account-2": 1080340, "uniswap-1": 1290532, "uniswap-2": 734456, "uniswap-3": 6195712, "uniswap-4": 1209350, "uniswap-5": 3913361, "uniswap-6": 1130618, "vesting-1": 1064693}, "haskell": {"auction_1-1": 130458, "auction_1-2": 422510, "auction_1-3": 430434, "auction_1-4": 167673, "auction_2-1": 129925, "auction_2-2": 423094, "auction_2-3": 543832, "auction_2-4": 432518, "auction_2-5": 166938, "coop-1": 174373, "coop-2": 570625, "coop-3": 1560518, "coop-4": 690899, "coop-5": 305997, "coop-6": 524966, "coop-7": 252103, "crowdfunding-success-1": 155024, "crowdfunding-success-2": 155356, "crowdfunding-success-3": 155115, "currency-1": 172808, "escrow-redeem_1-1": 244646, "escrow-redeem_1-2": 245744, "escrow-redeem_2-1": 283772, "escrow-redeem_2-2": 285834, "escrow-redeem_2-3": 284929, "escrow-refund-1": 114448, "future-increase-margin-1": 171657, "future-increase-margin-2": 374982, "future-increase-margin-3": 377463, "future-increase-margin-4": 328691, "future-increase-margin-5": 554822, "future-pay-out-1": 172261, "future-pay-out-2": 378442, "future-pay-out-3": 378120, "future-pay-out-4": 550782, "future-settle-early-1": 170471, "future-settle-early-2": 376684, "future-settle-early-3": 377807, "future-settle-early-4": 422879, "game-sm-success_1-1": 277589, "game-sm-success_1-2": 140357, "game-sm-success_1-3": 429916, "game-sm-success_1-4": 167340, "game-sm-success_2-1": 270185, "game-sm-success_2-2": 142533, "game-sm-success_2-3": 432103, "game-sm-success_2-4": 165475, "game-sm-success_2-5": 427459, "game-sm-success_2-6": 165313, "guardrail-sorted-large": 310654, "guardrail-sorted-small": 50068, "guardrail-unsorted-large": 435458, "guardrail-unsorted-small": 48768, "multisig-sm-01": 270273, "multisig-sm-02": 265247, "multisig-sm-03": 267014, "multisig-sm-04": 271819, "multisig-sm-05": 372159, "multisig-sm-06": 272857, "multisig-sm-07": 265549, "multisig-sm-08": 269292, "multisig-sm-09": 270511, "multisig-sm-10": 371121, "ping-pong-1": 228337, "ping-pong-2": 226878, "ping-pong_2-1": 147234, "prism-1": 117982, "prism-2": 283560, "prism-3": 257998, "pubkey-1": 100403, "stablecoin_1-1": 667855, "stablecoin_1-2": 138715, "stablecoin_1-3": 760830, "stablecoin_1-4": 151451, "stablecoin_1-5": 955760, "stablecoin_1-6": 182991, "stablecoin_2-1": 670122, "stablecoin_2-2": 139561, "stablecoin_2-3": 760230, "stablecoin_2-4": 151480, "token-account-1": 135598, "token-account-2": 248208, "uniswap-1": 274792, "uniswap-2": 157771, "uniswap-3": 1192372, "uniswap-4": 240521, "uniswap-5": 791232, "uniswap-6": 251304, "vesting-1": 240181}, "plutigo": {"auction_1-1": 78379, "auction_1-2": 325384, "auction_1-3": 317437, "auction_1-4": 96974, "auction_2-1": 76806, "auction_2-2": 322850, "auction_2-3": 429591, "auction_2-4": 316561, "auction_2-5": 98284, "coop-1": 109418, "coop-2": 389916, "coop-3": 1368324, "coop-4": 477344, "coop-5": 189884, "coop-6": 363244, "coop-7": 146051, "crowdfunding-success-1": 88460, "crowdfunding-success-2": 86823, "crowdfunding-success-3": 86629, "currency-1": 123277, "escrow-redeem_1-1": 159421, "escrow-redeem_1-2": 160381, "escrow-redeem_2-1": 190658, "escrow-redeem_2-2": 191598, "escrow-redeem_2-3": 189044, "escrow-refund-1": 67328, "future-increase-margin-1": 120978, "future-increase-margin-2": 259570, "future-increase-margin-3": 255883, "future-increase-margin-4": 256340, "future-increase-margin-5": 405964, "future-pay-out-1": 121949, "future-pay-out-2": 256629, "future-pay-out-3": 255092, "future-pay-out-4": 415138, "future-settle-early-1": 119905, "future-settle-early-2": 257346, "future-settle-early-3": 266172, "future-settle-early-4": 288295, "game-sm-success_1-1": 187536, "game-sm-success_1-2": 84654, "game-sm-success_1-3": 316646, "game-sm-success_1-4": 97842, "game-sm-success_2-1": 188604, "game-sm-success_2-2": 85836, "game-sm-success_2-3": 327408, "game-sm-success_2-4": 100921, "game-sm-success_2-5": 319639, "game-sm-success_2-6": 102524, "guardrail-sorted-large": 219662, "guardrail-sorted-small": 36893, "guardrail-unsorted-large": 309955, "guardrail-unsorted-small": 35195, "multisig-sm-01": 202161, "multisig-sm-02": 192416, "multisig-sm-03": 195606, "multisig-sm-04": 197787, "multisig-sm-05": 282702, "multisig-sm-06": 197879, "multisig-sm-07": 197995, "multisig-sm-08": 201070, "multisig-sm-09": 200050, "multisig-sm-10": 279887, "ping-pong-1": 156120, "ping-pong-2": 155285, "ping-pong_2-1": 90879, "prism-1": 71307, "prism-2": 193103, "prism-3": 173180, "pubkey-1": 59022, "stablecoin_1-1": 422994, "stablecoin_1-2": 83148, "stablecoin_1-3": 508371, "stablecoin_1-4": 88324, "stablecoin_1-5": 660813, "stablecoin_1-6": 108067, "stablecoin_2-1": 429131, "stablecoin_2-2": 83483, "stablecoin_2-3": 508292, "stablecoin_2-4": 89552, "token-account-1": 88172, "token-account-2": 162282, "uniswap-1": 207154, "uniswap-2": 102573, "uniswap-3": 907353, "uniswap-4": 144851, "uniswap-5": 552449, "uniswap-6": 136606, "vesting-1": 166054}, "scalus-cek": {"auction_1-1": 125812, "auction_1-2": 511838, "auction_1-3": 506359, "auction_1-4": 153431, "auction_2-1": 126637, "auction_2-2": 506917, "auction_2-3": 675958, "auction_2-4": 505346, "auction_2-5": 156430, "coop-1": 169285, "coop-2": 561466, "coop-3": 2019082, "coop-4": 733124, "coop-5": 293758, "coop-6": 519551, "coop-7": 254943, "crowdfunding-success-1": 137288, "crowdfunding-success-2": 137025, "crowdfunding-success-3": 138580, "currency-1": 186498, "escrow-redeem_1-1": 256006, "escrow-redeem_1-2": 247633, "escrow-redeem_2-1": 304162, "escrow-redeem_2-2": 311487, "escrow-redeem_2-3": 306201, "escrow-refund-1": 105676, "future-increase-margin-1": 185427, "future-increase-margin-2": 394387, "future-increase-margin-3": 400121, "future-increase-margin-4": 391320, "future-increase-margin-5": 691340, "future-pay-out-1": 184693, "future-pay-out-2": 400605, "future-pay-out-3": 393963, "future-pay-out-4": 680167, "future-settle-early-1": 189221, "future-settle-early-2": 412070, "future-settle-early-3": 401659, "future-settle-early-4": 522593, "game-sm-success_1-1": 305687, "game-sm-success_1-2": 143354, "game-sm-success_1-3": 529963, "game-sm-success_1-4": 162580, "game-sm-success_2-1": 303460, "game-sm-success_2-2": 137259, "game-sm-success_2-3": 493622, "game-sm-success_2-4": 157504, "game-sm-success_2-5": 515283, "game-sm-success_2-6": 162927, "guardrail-sorted-large": 344578, "guardrail-sorted-small": 54964, "guardrail-unsorted-large": 495772, "guardrail-unsorted-small": 52021, "multisig-sm-01": 323527, "multisig-sm-02": 315872, "multisig-sm-03": 321918, "multisig-sm-04": 318764, "multisig-sm-05": 460702, "multisig-sm-06": 312813, "multisig-sm-07": 300114, "multisig-sm-08": 318533, "multisig-sm-09": 321313, "multisig-sm-10": 457991, "ping-pong-1": 254973, "ping-pong_2-1": 143171, "ping-pong-2": 249313, "prism-1": 114374, "prism-2": 319802, "prism-3": 293109, "pubkey-1": 94474, "stablecoin_1-1": 780030, "stablecoin_1-2": 136877, "stablecoin_1-3": 919700, "stablecoin_1-4": 145637, "stablecoin_1-5": 1164246, "stablecoin_1-6": 171314, "stablecoin_2-1": 801814, "stablecoin_2-2": 135749, "stablecoin_2-3": 928201, "stablecoin_2-4": 142495, "token-account-1": 143243, "token-account-2": 239141, "uniswap-1": 324916, "uniswap-2": 165324, "uniswap-3": 1270811, "uniswap-4": 220029, "uniswap-5": 815104, "uniswap-6": 213985, "vesting-1": 263666}, "scalus-jit": {"auction_1-1": 37909, "auction_1-2": 255405, "auction_1-3": 233759, "auction_1-4": 45525, "auction_2-1": 38393, "auction_2-2": 249198, "auction_2-3": 299909, "auction_2-4": 237892, "auction_2-5": 45655, "coop-1": 42385, "coop-2": 164723, "coop-3": 617442, "coop-4": 246121, "coop-5": 89983, "coop-6": 145482, "coop-7": 57670, "crowdfunding-success-1": 43267, "crowdfunding-success-2": 45767, "crowdfunding-success-3": 44964, "currency-1": 71923, "escrow-redeem_1-1": 92892, "escrow-redeem_1-2": 92928, "escrow-redeem_2-1": 109504, "escrow-redeem_2-2": 108489, "escrow-redeem_2-3": 108339, "escrow-refund-1": 36316, "future-increase-margin-1": 71645, "future-increase-margin-2": 145135, "future-increase-margin-3": 147831, "future-increase-margin-4": 219867, "future-increase-margin-5": 411186, "future-pay-out-1": 72318, "future-pay-out-2": 151408, "future-pay-out-3": 145901, "future-pay-out-4": 403492, "future-settle-early-1": 70988, "future-settle-early-2": 148630, "future-settle-early-3": 147302, "future-settle-early-4": 330207, "game-sm-success_1-1": 155608, "game-sm-success_1-2": 38887, "game-sm-success_1-3": 235572, "game-sm-success_1-4": 45319, "game-sm-success_2-1": 153055, "game-sm-success_2-2": 38977, "game-sm-success_2-3": 235965, "game-sm-success_2-4": 44291, "game-sm-success_2-5": 235104, "game-sm-success_2-6": 43640, "guardrail-sorted-large": 209556, "guardrail-sorted-small": 74586, "guardrail-unsorted-large": 272627, "guardrail-unsorted-small": 73609, "multisig-sm-01": 171208, "multisig-sm-02": 177648, "multisig-sm-03": 180652, "multisig-sm-04": 178536, "multisig-sm-05": 237427, "multisig-sm-06": 173789, "multisig-sm-07": 177477, "multisig-sm-08": 179622, "multisig-sm-09": 179455, "multisig-sm-10": 239510, "ping-pong-1": 131351, "ping-pong-2": 132282, "ping-pong_2-1": 85339, "prism-1": 31482, "prism-2": 164747, "prism-3": 98312, "pubkey-1": 27869, "stablecoin_1-1": 745890, "stablecoin_1-2": 38427, "stablecoin_1-3": 978402, "stablecoin_1-4": 39678, "stablecoin_1-5": 1554036, "stablecoin_1-6": 48295, "stablecoin_2-1": 1220874, "stablecoin_2-2": 37671, "stablecoin_2-3": 1036672, "stablecoin_2-4": 41245, "token-account-1": 55886, "token-account-2": 79524, "uniswap-1": 118925, "uniswap-2": 58839, "uniswap-3": 543499, "uniswap-4": 62590, "uniswap-5": 356506, "uniswap-6": 63573, "vesting-1": 109762}, "uplc-turbo": {"auction_1-1": 181628, "auction_1-2": 595399, "auction_1-3": 596277, "auction_1-4": 235094, "auction_2-1": 180982, "auction_2-2": 593446, "auction_2-3": 766462, "auction_2-4": 603079, "auction_2-5": 232665, "coop-1": 215332, "coop-2": 727667, "coop-3": 1755196, "coop-4": 774227, "coop-5": 359591, "coop-6": 685796, "coop-7": 316488, "crowdfunding-success-1": 200196, "crowdfunding-success-2": 198577, "crowdfunding-success-3": 195675, "currency-1": 234486, "escrow-redeem_1-1": 327121, "escrow-redeem_1-2": 325205, "escrow-redeem_2-1": 373565, "escrow-redeem_2-2": 375488, "escrow-redeem_2-3": 369412, "escrow-refund-1": 145378, "future-increase-margin-1": 228441, "future-increase-margin-2": 499818, "future-increase-margin-3": 488390, "future-increase-margin-4": 477098, "future-increase-margin-5": 796275, "future-pay-out-1": 228286, "future-pay-out-2": 493410, "future-pay-out-3": 494537, "future-pay-out-4": 801261, "future-settle-early-1": 227468, "future-settle-early-2": 492352, "future-settle-early-3": 489927, "future-settle-early-4": 599700, "game-sm-success_1-1": 369352, "game-sm-success_1-2": 199585, "game-sm-success_1-3": 586720, "game-sm-success_1-4": 236763, "game-sm-success_2-1": 372448, "game-sm-success_2-2": 199789, "game-sm-success_2-3": 586095, "game-sm-success_2-4": 234869, "game-sm-success_2-5": 589190, "game-sm-success_2-6": 233121, "guardrail-sorted-large": 357796, "guardrail-sorted-small": 49597, "guardrail-unsorted-large": 478672, "guardrail-unsorted-small": 47792, "multisig-sm-01": 383135, "multisig-sm-02": 379167, "multisig-sm-03": 379421, "multisig-sm-04": 387475, "multisig-sm-05": 536169, "multisig-sm-06": 383986, "multisig-sm-07": 375522, "multisig-sm-08": 382541, "multisig-sm-09": 385766, "multisig-sm-10": 533714, "ping-pong-1": 312848, "ping-pong-2": 310743, "ping-pong_2-1": 192660, "prism-1": 162441, "prism-2": 401293, "prism-3": 362147, "pubkey-1": 135241, "stablecoin_1-1": 986705, "stablecoin_1-2": 199098, "stablecoin_1-3": 1156913, "stablecoin_1-4": 210062, "stablecoin_1-5": 1518084, "stablecoin_1-6": 260098, "stablecoin_2-1": 1005467, "stablecoin_2-2": 204853, "stablecoin_2-3": 1177915, "stablecoin_2-4": 213263, "token-account-1": 181962, "token-account-2": 302608, "uniswap-1": 359735, "uniswap-2": 221749, "uniswap-3": 1545883, "uniswap-4": 348421, "uniswap-5": 1018103, "uniswap-6": 501195, "vesting-1": 318641}}, "history": {"runs": ["2026-10-23"], "series": {"haskell": [1.0], "scalus-jit": [0.4562443152553465], "scalus-cek": [0.5691644506344032], "scalus-js": [5.000311131996127], "aiken": [11.642586516612601], "aiken-wasm": [3.317924869758875], "uplc-turbo": [0.6669549183107336], "plutigo": [0.4041795874887887], "blaze-v8": [2.469364237938868]}, "eval_only": ["aiken-wasm", "scalus-jit"]}, "noise_band": 0.05, "disclosure": "The 89 scripts are PlutusV1-era programs. Every VM evaluates them as PlutusV3 programs at protocol version 11 with the mainnet cost model, like Plutus's own `validation` CEK benchmark; the node would run them as PlutusV1.", "notes": {"aiken": "Aiken v1.1.24 copies the CEK environment on every lambda application (quadratic in recursion depth). aiken main fixes it (PRs [#1451](https://github.com/aiken-lang/aiken/pull/1451), [#1452](https://github.com/aiken-lang/aiken/pull/1452): coop-6 92 ms -> 1.2 ms), but no release contains the fix yet.", "aiken-wasm": "Built from [colll78/aiken](https://github.com/colll78/aiken) (aiken main plus fixes), which includes the CEK fixes that v1.1.24 lacks."}, "compile_badge": "decode and compile excluded", "badges": {"aiken-wasm": {"text": "decode cached (by the library)", "title": "The library caches the decoded program by a hash of the flat bytes. After the first call (in the warm-up), the timed loop runs hash + evaluation, without the decode. Its eval-only time is the same loop."}}, "experimental": {"scalus-jit": "not ranked: the JIT module is not published as a release artifact and has no downstream users yet (spec D17)", "blaze-v8": "not ranked: no released project outside the Blaze repo depends on @blaze-cardano/plutus yet; Blaze itself evaluates scripts with @blaze-cardano/vm (Aiken uplc as WASM) (spec D17)"}, "no_d3_note": "compiled once before timing, see the compile column", "decode_cached": {"aiken-wasm": "Aiken WASM caches decoded programs inside the library, so its time is shown as eval only."}, "no_d3_cached_note": "the library caches decoded programs, so only an eval-only time", "drift": "Drift (Haskell, end vs start): +0.6 % over 5 scripts. The run timed Haskell again at its end; this is the change of its time.", "drift_percent": 0.6255226229644695, "run": "2026-10-23", "links": {"haskell": {"repo": "https://github.com/IntersectMBO/plutus", "home": "https://plutus.cardano.intersectmbo.org", "release": "https://github.com/IntersectMBO/plutus/releases/tag/1.70.0.0", "version": "1.70.0.0", "used_by": [{"name": "cardano-node", "kind": "node", "url": "https://github.com/IntersectMBO/cardano-node", "proof": "https://github.com/IntersectMBO/cardano-ledger/blob/master/eras/alonzo/impl/cardano-ledger-alonzo.cabal#L112"}]}, "scalus-jit": {"repo": "https://github.com/scalus3/scalus", "home": "https://scalus.org", "release": "https://github.com/scalus3/scalus/releases/tag/v1.4.0", "version": "v1.4.0", "used_by": []}, "scalus-cek": {"repo": "https://github.com/scalus3/scalus", "home": "https://scalus.org", "release": "https://github.com/scalus3/scalus/releases/tag/v1.4.0", "version": "v1.4.0", "used_by": [{"name": "Hydrozoa", "kind": "L2", "url": "https://github.com/cardano-hydrozoa/hydrozoa", "proof": "https://github.com/cardano-hydrozoa/hydrozoa/blob/main/build.sbt#L171"}, {"name": "Bifrost", "kind": "bridge", "url": "https://github.com/FluidTokens/ft-bifrost-bridge", "proof": "https://github.com/lantr-io/binocular/blob/main/build.sbt#L147"}, {"name": "Cardano Client Lib", "kind": "SDK", "url": "https://github.com/bloxbean/cardano-client-lib", "proof": "https://github.com/bloxbean/cardano-client-lib/blob/master/docs/content/integrations/scalus-integration-api.mdx#L35"}, {"name": "Yaci Store", "kind": "indexer", "url": "https://github.com/bloxbean/yaci-store", "proof": "https://github.com/bloxbean/yaci-store/blob/main/gradle/libs.versions.toml#L7"}, {"name": "Yaci DevKit", "kind": "dev tool", "url": "https://github.com/bloxbean/yaci-devkit", "proof": "https://github.com/bloxbean/yaci-devkit/blob/main/docs/pages/services.mdx#L31"}]}, "scalus-js": {"repo": "https://github.com/scalus3/scalus", "home": "https://scalus.org", "release": "https://github.com/scalus3/scalus/releases/tag/v1.4.0", "version": "scalus 1.4.0 (npm)", "used_by": [{"name": "Lucid Evolution", "kind": "SDK", "url": "https://github.com/Anastasia-Labs/lucid-evolution", "proof": "https://github.com/Anastasia-Labs/lucid-evolution/blob/main/packages/scalus-uplc/package.json#L39"}, {"name": "MeshJS", "kind": "SDK", "url": "https://github.com/MeshJS/mesh", "proof": "https://github.com/MeshJS/mesh/blob/main/packages/mesh-core-cst/package.json#L56"}, {"name": "Evolution SDK", "kind": "SDK", "url": "https://github.com/IntersectMBO/evolution-sdk", "proof": "https://github.com/IntersectMBO/evolution-sdk/blob/main/packages/scalus-uplc/package.json#L41"}]}, "aiken": {"repo": "https://github.com/aiken-lang/aiken", "home": "https://aiken-lang.org", "release": "https://github.com/aiken-lang/aiken/releases/tag/v1.1.24", "version": "v1.1.24", "used_by": [{"name": "Aiken", "kind": "compiler", "url": "https://aiken-lang.org", "proof": "https://github.com/aiken-lang/aiken/blob/main/crates/aiken-project/Cargo.toml#L54"}, {"name": "Blaze SDK", "kind": "SDK", "url": "https://github.com/butaneprotocol/blaze-cardano", "proof": "https://github.com/butaneprotocol/blaze-cardano/blob/main/packages/blaze-uplc/wasm/Cargo.toml#L15"}]}, "aiken-wasm": {"repo": "https://github.com/Anastasia-Labs/lucid-evolution", "home": "https://anastasia-labs.github.io/lucid-evolution/", "release": "https://github.com/Anastasia-Labs/lucid-evolution/releases/tag/@lucid-evolution/uplc@0.4.0", "version": "@lucid-evolution/uplc 0.4.0", "used_by": [{"name": "Lucid Evolution", "kind": "SDK", "url": "https://github.com/Anastasia-Labs/lucid-evolution", "proof": "https://github.com/Anastasia-Labs/lucid-evolution/blob/main/packages/lucid/package.json#L63"}]}, "uplc-turbo": {"repo": "https://github.com/pragma-org/uplc", "home": null, "release": "https://github.com/pragma-org/uplc/releases/tag/amaru-uplc-v0.4.0", "version": "amaru-uplc-v0.4.0", "used_by": [{"name": "Amaru", "kind": "node", "url": "https://github.com/pragma-org/amaru", "proof": "https://github.com/pragma-org/amaru/blob/main/Cargo.toml#L147"}]}, "plutigo": {"repo": "https://github.com/blinklabs-io/plutigo", "home": null, "release": "https://github.com/blinklabs-io/plutigo/releases/tag/v0.1.10", "version": "v0.1.10", "used_by": [{"name": "Dingo", "kind": "node", "url": "https://github.com/blinklabs-io/dingo", "proof": "https://github.com/blinklabs-io/dingo/blob/main/go.mod#L24"}]}, "blaze-v8": {"repo": "https://github.com/butaneprotocol/blaze-cardano", "home": "https://blaze.butane.dev", "release": "https://github.com/butaneprotocol/blaze-cardano/releases/tag/@blaze-cardano/plutus@0.1.1", "version": "@blaze-cardano/plutus 0.1.1", "used_by": []}}};
 
 // One fixed colour per VM, the same in every run and every chart (the colour follows the VM, never
 // its rank). The values are CSS custom properties (--vm-<key>) with a light and a dark step per
@@ -1551,6 +1464,9 @@ shownVMs.forEach(vm => { if (!VM_META[vm]) VM_META[vm] = { label: vm, lang: '', 
 // Experimental VMs are shown in their own section and the per-script table, never ranked.
 const EXPERIMENTAL = REPORT.experimental || {};
 const presentVMs = shownVMs.filter(vm => !(vm in EXPERIMENTAL));
+const DECODE_CACHED = REPORT.decode_cached || {};
+// The ranked VMs with a decode + eval time: the decode + eval ranking and the penalty competitors.
+const d3VMs = presentVMs.filter(vm => !(vm in DECODE_CACHED));
 const experimentalVMs = shownVMs.filter(vm => vm in EXPERIMENTAL);
 
 // Badges: what a reader needs to know about how a VM is timed. No "check passed" badge: the gate
@@ -1568,12 +1484,13 @@ function badges(vm) {
   return out.length ? '<div class="vm-badges">' + out.join('') + '</div>' : '';
 }
 const EVAL = REPORT.eval || {};
-// A compiling VM: only an eval-only time (see REPORT above).
-const isCompiled = vm => !!REPORT.compile[vm];
+// A compiling or decode-cached VM: only an eval-only time (see REPORT above).
+const isEvalOnly = vm => !!REPORT.compile[vm] || vm in DECODE_CACHED;
+const noD3Note = vm => vm in DECODE_CACHED ? REPORT.no_d3_cached_note : REPORT.no_d3_note;
 const evalGeoAll = vm => geoMean(Object.values(EVAL[vm] || {}));
 // "N/M scripts passed", only when N < M: a warning with what the gap does to the geometric mean.
 function scriptsWarning(vm) {
-  const comp = isCompiled(vm);
+  const comp = isEvalOnly(vm);
   const pass = comp ? scripts.filter(sc => EVAL[vm]?.[sc] > 0).length : scripts.filter(sc => data[sc]?.[vm] > 0).length;
   if (pass >= scripts.length) return '';
   const fail = scripts.filter(sc => data[sc]?.[vm] < 0).length;
@@ -1591,14 +1508,14 @@ function evalLine(vm, common) {
 // and the notes. A compiling VM's headline is its eval-only geometric mean.
 function cardHtml(vm, rank, geo, ratio, common, extra) {
   const m = VM_META[vm];
-  const comp = isCompiled(vm);
+  const comp = isEvalOnly(vm);
   const warn = scriptsWarning(vm);
   const ratioHtml = ratio === null ? ''
     : ratio === 1 ? '<div class="ratio">Fastest in its category</div>'
     : '<div class="ratio" title="Geometric mean time divided by the fastest VM of the category">' + ratio.toFixed(2) + '× the fastest time</div>';
   return '<div class="card' + (rank === '#1' ? ' first' : '') + '">'
     + '<div class="card-head"><div><div class="vm-name">' + vmLink(vm, m.label) + '</div><div class="lang">' + langLine(m) + '</div></div><div class="rank"' + (rank === 'exp' ? ' title="Experimental, not ranked">–' : '>' + rank) + '</div></div>'
-    + (comp ? '<div class="metric-label" title="' + REPORT.no_d3_note + '">Eval only, geometric mean</div>'
+    + (comp ? '<div class="metric-label" title="' + esc(noD3Note(vm)) + '">Eval only, geometric mean</div>'
             : '<div class="metric-label">Decode + eval, geometric mean</div>')
     + '<div class="geo-mean">' + (geo > 0 ? fmtNs(Math.round(geo)) : '–') + '</div>' + ratioHtml
     + (comp ? '' : evalLine(vm, common))
@@ -1663,8 +1580,8 @@ function penalized(vms, timeOf) {
   return out;
 }
 const d3Of = (vm, s) => data[s]?.[vm] || 0;
-const penalizedGeoMeans = penalized(presentVMs, d3Of);
-const sortedPenalized = [...presentVMs].sort((a,b) => penalizedGeoMeans[a]-penalizedGeoMeans[b]);
+const penalizedGeoMeans = penalized(d3VMs, d3Of);
+const sortedPenalized = [...d3VMs].sort((a,b) => penalizedGeoMeans[a]-penalizedGeoMeans[b]);
 // Geometric mean of an experimental VM: a failed or missing script gets the slowest ranked VM's time
 // (the penalty rule, against the ranked VMs only).
 function experimentalGeo(vm) {
@@ -1672,7 +1589,7 @@ function experimentalGeo(vm) {
     const t = data[s]?.[vm] || 0;
     if (t > 0) return t;
     let worst = 0;
-    presentVMs.forEach(o => { const ot = data[s]?.[o] || 0; if (ot > worst) worst = ot; });
+    d3VMs.forEach(o => { const ot = data[s]?.[o] || 0; if (ot > worst) worst = ot; });
     return worst;
   }));
 }
@@ -1721,7 +1638,8 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const swatch = (vm, cls) => '<span class="vsw' + (cls ? ' ' + cls : '') + '" style="background-color:' + VM_META[vm].color + '" aria-hidden="true"></span>';
 const state = { mode: 'd3', script: '', cat: '' };
 const catVMs = cat => cat ? presentVMs.filter(vm => CATS.find(c => c.key === cat).matches.includes(vmCategory(vm))) : presentVMs;
-const NO_D3 = 'compiles each script before timing: only an eval-only time';
+const noD3 = vm => vm in DECODE_CACHED ? 'caches decoded programs in the library: only an eval-only time'
+  : 'compiles each script before timing: only an eval-only time';
 
 function viewOf(st) {
   const ranked = catVMs(st.cat), exps = st.cat ? [] : experimentalVMs;
@@ -1729,9 +1647,9 @@ function viewOf(st) {
   if (!st.script) {
     if (st.mode === 'd3') {
       // The headline: penalty rule within the shown set (all VMs: the summary table numbers).
-      const g = st.cat ? penalized(ranked, d3Of) : penalizedGeoMeans;
-      ranked.forEach(vm => { time[vm] = g[vm]; });
-      exps.forEach(vm => { if (isCompiled(vm)) why[vm] = NO_D3; else time[vm] = experimentalGeo(vm); });
+      const g = st.cat ? penalized(ranked.filter(vm => !isEvalOnly(vm)), d3Of) : penalizedGeoMeans;
+      ranked.forEach(vm => { if (isEvalOnly(vm)) why[vm] = noD3(vm); else time[vm] = g[vm]; });
+      exps.forEach(vm => { if (isEvalOnly(vm)) why[vm] = noD3(vm); else time[vm] = experimentalGeo(vm); });
     } else {
       // Eval only: the geometric mean of the VM's eval-only times (generate_report.eval_geo).
       ranked.concat(exps).forEach(vm => { const g = evalGeoAll(vm); if (g > 0) time[vm] = g; else why[vm] = 'no eval-only time in this run'; });
@@ -1740,7 +1658,7 @@ function viewOf(st) {
     const s = st.script;
     ranked.concat(exps).forEach(vm => {
       if (st.mode === 'd3') {
-        if (isCompiled(vm)) { why[vm] = NO_D3; return; }
+        if (isEvalOnly(vm)) { why[vm] = noD3(vm); return; }
         const t = data[s]?.[vm];
         if (t > 0) time[vm] = t; else why[vm] = t < 0 ? 'failed on this script' : 'no time for this script';
       } else {
@@ -1781,16 +1699,16 @@ function rowEl(vm) {
 }
 // Details of a selected row: what D's VM card held, for the current view.
 function detailHtml(vm) {
-  const m = VM_META[vm], comp = isCompiled(vm), out = [];
+  const m = VM_META[vm], comp = isEvalOnly(vm), out = [];
   const item = (k, val, wide) => out.push('<div' + (wide ? ' class="wide"' : '') + '><dt>' + k + '</dt><dd>' + val + '</dd></div>');
   if (state.script) {
     item('Script', '<code>' + esc(state.script) + '</code>');
-    item('Decode + eval', comp ? 'not timed (compiled before timing)' : (data[state.script]?.[vm] > 0 ? fmtNs(data[state.script][vm]) : data[state.script]?.[vm] < 0 ? 'failed' : 'no time'));
+    item('Decode + eval', comp ? 'not timed (' + noD3Note(vm) + ')' : (data[state.script]?.[vm] > 0 ? fmtNs(data[state.script][vm]) : data[state.script]?.[vm] < 0 ? 'failed' : 'no time'));
     item('Eval only', EVAL[vm]?.[state.script] > 0 ? fmtNs(EVAL[vm][state.script]) : 'no time');
     if (comp && REPORT.compile[vm][state.script]) item('Compile, not in the timing', fmtNs(REPORT.compile[vm][state.script]));
   } else {
-    const d3 = comp ? 0 : (vm in EXPERIMENTAL ? experimentalGeo(vm) : penalizedGeoMeans[vm]);
-    item('Decode + eval, geo mean', d3 > 0 ? fmtNs(Math.round(d3)) : 'not timed (compiled before timing)');
+    const d3 = comp ? 0 : (vm in EXPERIMENTAL ? experimentalGeo(vm) : penalizedGeoMeans[vm] || 0);
+    item('Decode + eval, geo mean', d3 > 0 ? fmtNs(Math.round(d3)) : 'not timed (' + noD3Note(vm) + ')');
     item('Eval only, geo mean', evalGeoAll(vm) > 0 ? fmtNs(Math.round(evalGeoAll(vm))) + ' (decode excluded)' : 'no eval-only time');
     const cg = compileGeo(vm);
     if (cg > 0) item('Compile, geo mean', fmtNs(Math.round(cg)) + ' (not in the timing)');
@@ -1908,13 +1826,18 @@ function renderCaption(v) {
   if (v.timed.some(vm => vm in EXPERIMENTAL)) t += ' A hatched bar is an experimental VM. It is not ranked.';
   document.getElementById('board-caption').innerHTML = t;
   // Compiling VMs: out of every decode + eval view.
-  const ex = shownVMs.filter(isCompiled), el = document.getElementById('bar-excluded');
-  if (ex.length && state.mode === 'd3') {
-    const names = ex.map(vm => VM_META[vm].label);
-    const list = names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
-    const one = ex.length === 1;
-    el.textContent = list + (one ? ' compiles' : ' compile') + ' each script once before timing, so ' + (one ? 'it has' : 'they have')
-      + ' only an eval-only time. Choose “eval only” to see ' + (one ? 'it' : 'them') + ' with a bar.';
+  const ex = shownVMs.filter(vm => !!REPORT.compile[vm]), el = document.getElementById('bar-excluded');
+  const cached = shownVMs.filter(vm => vm in DECODE_CACHED);
+  if ((ex.length || cached.length) && state.mode === 'd3') {
+    const parts = cached.map(vm => DECODE_CACHED[vm]);
+    if (ex.length) {
+      const names = ex.map(vm => VM_META[vm].label);
+      const list = names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+      const one = ex.length === 1;
+      parts.push(list + (one ? ' compiles' : ' compile') + ' each script once before timing, so ' + (one ? 'it has' : 'they have')
+        + ' only an eval-only time.');
+    }
+    el.textContent = parts.join(' ') + ' Choose “eval only” to see ' + (ex.length + cached.length === 1 ? 'it' : 'them') + ' with a bar.';
     el.style.display = '';
   } else el.style.display = 'none';
 }
@@ -2016,7 +1939,7 @@ document.querySelectorAll('.vml-tc[data-vm]').forEach(el => { const m = VM_META[
 // the buttons hide and show VMs; the headers sort; a script name loads the script into Figure 1.
 // ---------------------------------------------------------------------------------------------
 const barGeo = Object.assign({}, penalizedGeoMeans);
-experimentalVMs.forEach(vm => { if (!isCompiled(vm)) { const g = experimentalGeo(vm); if (g > 0) barGeo[vm] = g; } });
+experimentalVMs.forEach(vm => { if (!isEvalOnly(vm)) { const g = experimentalGeo(vm); if (g > 0) barGeo[vm] = g; } });
 const barVMs = Object.keys(barGeo).filter(vm => barGeo[vm] > 0).sort((a, b) => barGeo[a] - barGeo[b]);
 const tableVMs = barVMs.concat(presentVMs.concat(experimentalVMs).filter(vm => !barVMs.includes(vm)));
 let activeVMs = new Set(tableVMs);
@@ -2050,9 +1973,9 @@ function renderTable() {
   // VM has only its eval-only column, never marked as the fastest.
   const sub = vm => { const m = VM_META[vm]; return m.runtime + (vm in EXPERIMENTAL ? ', experimental' : ''); };
   document.getElementById('table-head').innerHTML = '<tr><th rowspan="2" class="script-col">' + sortBtn('script', 'Script') + '</th>'
-    + vms.map(vm => `<th class="vm-head g"${EVAL[vm] && !isCompiled(vm) ? ' colspan="2"' : ''}>${vmLink(vm, VM_META[vm].label)}<span class="th-lang">${sub(vm)}</span></th>`).join('')
+    + vms.map(vm => `<th class="vm-head g"${EVAL[vm] && !isEvalOnly(vm) ? ' colspan="2"' : ''}>${vmLink(vm, VM_META[vm].label)}<span class="th-lang">${sub(vm)}</span></th>`).join('')
     + compVMs.map(vm => `<th rowspan="2" class="compile-col g">${sortBtn(vm + ':compile', VM_META[vm].label + ' compile')}<span class="th-lang">not in the timing</span></th>`).join('') + '</tr>'
-    + '<tr class="sub-head">' + vms.map(vm => (isCompiled(vm) ? `<th class="eval-col g" title="${REPORT.no_d3_note}">${sortBtn(vm + ':eval', 'eval only')}</th>`
+    + '<tr class="sub-head">' + vms.map(vm => (isEvalOnly(vm) ? `<th class="eval-col g" title="${esc(noD3Note(vm))}">${sortBtn(vm + ':eval', 'eval only')}</th>`
       : EVAL[vm] ? `<th class="eval-col g">${sortBtn(vm + ':eval', 'eval only')}</th><th>${sortBtn(vm + ':d3', 'decode + eval')}</th>`
       : `<th class="g">${sortBtn(vm + ':d3', 'decode + eval')}</th>`)).join('') + '</tr>';
   const order = [...scripts].sort((a, b) => {
@@ -2064,12 +1987,12 @@ function renderTable() {
     // The fastest is taken over the ranked VMs only.
     vms.forEach(vm => { const t = data[script]?.[vm] || 0; times[vm] = t; if (t > 0 && t < min && !(vm in EXPERIMENTAL)) min = t; });
     // The fastest eval-only time, also over the ranked VMs only.
-    const evalVMs = vms.filter(vm => EVAL[vm] && EVAL[vm][script] > 0 && !(vm in EXPERIMENTAL) && !isCompiled(vm));
+    const evalVMs = vms.filter(vm => EVAL[vm] && EVAL[vm][script] > 0 && !(vm in EXPERIMENTAL));
     const minEval = Math.min(...evalVMs.map(vm => EVAL[vm][script]));
     const evalCell = vm => { if (!EVAL[vm]) return ''; const e = EVAL[vm][script]; if (!(e > 0)) return '<td class="missing g">–</td>'; const best = e === minEval && evalVMs.includes(vm) && evalVMs.length > 1; return `<td class="eval-col g${best ? ' fastest' : ''}">${fmtNs(e)}</td>`; };
     const g = vm => EVAL[vm] ? '' : ' g';
     return '<tr data-script="' + esc(script) + '"><td class="script-col"><button type="button" title="Rank this script in Figure 1">' + esc(script) + '</button></td>' + vms.map(vm => {
-      if (isCompiled(vm)) return evalCell(vm) || '<td class="missing g">–</td>';
+      if (isEvalOnly(vm)) return evalCell(vm) || '<td class="missing g">–</td>';
       const t = times[vm];
       if (t === undefined || t === 0) return evalCell(vm) + '<td class="missing' + g(vm) + '">–</td>';
       if (t < 0) return evalCell(vm) + '<td class="failed' + g(vm) + '">FAIL</td>';
@@ -2102,7 +2025,7 @@ if (experimentalVMs.length) {
   document.getElementById('experimental-section').style.display = '';
   document.getElementById('experimental-cards').innerHTML = experimentalVMs.map(vm => {
     const reason = String(EXPERIMENTAL[vm]).replace(/&/g,'&amp;').replace(/</g,'&lt;');
-    return cardHtml(vm, 'exp', isCompiled(vm) ? evalGeoAll(vm) : experimentalGeo(vm), null, scripts, '<div class="exp-reason">' + reason + '</div>');
+    return cardHtml(vm, 'exp', isEvalOnly(vm) ? evalGeoAll(vm) : experimentalGeo(vm), null, scripts, '<div class="exp-reason">' + reason + '</div>');
   }).join('');
 }
 
