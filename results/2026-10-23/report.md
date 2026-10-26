@@ -83,7 +83,7 @@ Run, gated and shown, but not ranked: not in the table above, not a competitor i
 
 | VM | Language | Geo Mean | Eval only | Compile | Check | Reason |
 |---|---|---|---|---|---|---|
-| **Scalus UPLC→JVM JIT (Scala / JVM)** | Scala / JVM | – | 123.96 us | 1.74 s (decode and compile excluded) | pass | not ranked: the JIT module is not published as a release artifact and has no downstream users yet (spec D17) |
+| **Scalus UPLC→JVM JIT (Scala / JVM)** | Scala / JVM | – | 123.96 us | 1.74 s (decode and compile excluded) | pass | not ranked: the JIT module is published (Maven, since Scalus 1.4.1) but has no downstream users yet (spec D17) |
 | **blaze-plutus CEK (TypeScript / Node V8)** | TypeScript / Node V8 | 1.73 ms | 1.33 ms | - | pass | not ranked: no released project outside the Blaze repo depends on @blaze-cardano/plutus yet; Blaze itself evaluates scripts with @blaze-cardano/vm (Aiken uplc as WASM) (spec D17) |
 
 ### Notes
