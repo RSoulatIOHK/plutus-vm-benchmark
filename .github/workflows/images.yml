@@ -172,20 +172,6 @@ jobs:
           python3 check/gate.py --reference check/reference/haskell-check.csv \
             --json "$RUNNER_TEMP/check/gate.json" "${args[@]}" "$RUNNER_TEMP/check/$VM-check.csv"
 
-      # TEMPORARY (owner OK 2026-10-26, PR #1): proves the BenchmarkDotNet loop runs inside the
-      # NativeAOT binary. One script, quick timing; the numbers are thrown away, never published.
-      # Remove before merge.
-      - name: Timing smoke (chrysalis-aot only, numbers discarded)
-        if: github.event_name == 'pull_request' && matrix.vm == 'chrysalis-aot'
-        env:
-          IMAGE: ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:${{ matrix.tag }}
-          VM: ${{ matrix.vm }}
-        run: |
-          mkdir -p "$RUNNER_TEMP/check/smoke"
-          docker run --rm -e BENCH_SCRIPTS=auction_1-1 -e BENCH_LOOPS=d3,eval -e BENCH_TIMING=quick \
-            -v "$PWD/data:/bench/data:ro" -v "$RUNNER_TEMP/check/smoke:/results" "$IMAGE" "$VM"
-          head -n 5 "$RUNNER_TEMP"/check/smoke/*.csv
-
       - name: Upload check CSVs
         if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
