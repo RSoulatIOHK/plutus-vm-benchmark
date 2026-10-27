@@ -1,40 +1,18 @@
+# check=skip=InvalidDefaultArgInFrom
 # Julc, CEK interpreter (Java / JVM / JMH). docs/IMAGE_CONTRACT.md.
 #
 # Our own JMH harness (images/julc-java/harness) on the released Julc JULC_VERSION
-# (org.julclang:julc-vm-java from Maven Central). Julc is Java 25 bytecode. JMH and the forked
-# benchmark JVM both run on Oracle GraalVM GRAALVM_VERSION at /opt/jdk-25, the JVM of the Scalus
-# rows, with no tuning flags (scripts/run-julc-java.sh, spec D16).
+# (org.julclang:julc-vm-java from Maven Central). Julc is Java 25 bytecode. Built FROM the JVM base
+# (images/jvm-base): Oracle GraalVM runs Maven, the JMH launcher and the forked benchmark JVM, the
+# JVM of the Scalus rows, with no tuning flags (scripts/run-julc-java.sh, spec D16); JMH JMH_VERSION.
 
-FROM ubuntu:22.04
+ARG JVM_BASE
+
+FROM ${JVM_BASE}
 
 ARG JULC_VERSION
-ARG GRAALVM_VERSION
+ARG JMH_VERSION
 ARG MAVEN_VERSION=3.9.11
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates curl python3 procps \
-    && rm -rf /var/lib/apt/lists/*
-
-# Oracle GraalVM, checked against Oracle's sha256: the same download as images/scalus/Dockerfile.
-RUN set -eu; \
-    case "${GRAALVM_VERSION}/$(uname -m)" in \
-      25.4.4/x86_64) \
-        url="https://gds.oracle.com/api/20220101/artifacts/3D7BF49A7CBE4E8CBC2A5226914FA3D1/content"; \
-        sha=4fcc632cfc68e98f49f9316f8a3588bafe4f5289f120104e2d290a75cf33e28e ;; \
-      25.4.4/aarch64) \
-        url="https://gds.oracle.com/api/20220101/artifacts/6337E95696F94C1F9D562556BB29BCE1/content"; \
-        sha=780d5784d3db9bbcff77775c4d026e4a0e21a041ba9dba7c59135949ea5234a4 ;; \
-      *) echo "no download for GraalVM ${GRAALVM_VERSION} on $(uname -m)"; exit 1 ;; \
-    esac; \
-    curl -fsSL -o /tmp/graal.tgz "$url"; \
-    echo "$sha  /tmp/graal.tgz" | sha256sum -c -; \
-    mkdir -p /opt/jdk-25; \
-    tar -xzf /tmp/graal.tgz -C /opt/jdk-25 --strip-components 1; \
-    rm /tmp/graal.tgz; \
-    /opt/jdk-25/bin/java -version
-ENV JAVA_HOME=/opt/jdk-25
 
 # Maven, checked against Apache's sha512. Build time only.
 RUN set -eu; \
@@ -56,11 +34,11 @@ WORKDIR /bench/julc
 
 # Compile the harness (the JMH annotation processor writes the benchmark list), then save the
 # runtime classpath. The run script calls org.openjdk.jmh.Main on it directly, without Maven.
-RUN /opt/maven/bin/mvn -B -q -Djulc.version="${JULC_VERSION}" compile \
-    && /opt/maven/bin/mvn -B -q -Djulc.version="${JULC_VERSION}" dependency:build-classpath \
+RUN /opt/maven/bin/mvn -B -q -Djulc.version="${JULC_VERSION}" -Djmh.version="${JMH_VERSION}" compile \
+    && /opt/maven/bin/mvn -B -q -Djulc.version="${JULC_VERSION}" -Djmh.version="${JMH_VERSION}" dependency:build-classpath \
        -Dmdep.includeScope=runtime -Dmdep.outputFile=/tmp/deps.txt \
     && echo "/bench/julc/target/classes:$(cat /tmp/deps.txt)" > /bench/julc/jmh-classpath.txt \
-    && grep -q jmh-core /bench/julc/jmh-classpath.txt \
+    && grep -q "jmh-core-${JMH_VERSION}.jar" /bench/julc/jmh-classpath.txt \
     && grep -q "julc-vm-java-${JULC_VERSION}.jar" /bench/julc/jmh-classpath.txt \
     && test -f target/classes/META-INF/BenchmarkList
 

@@ -19,34 +19,16 @@ loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 
 echo "Julc Java CEK (Java / JVM / JMH)"
 
-# JMH timing as the Scalus rows (scripts/run-scalus-cek.sh, METHODOLOGY.md, D13): one 30 s warm-up
-# iteration, then 3 measurement iterations of 5 s each. BENCH_TRACE=1: the 30 s of warm-up as
-# 30 iterations of 1 s. BENCH_TIMING=quick: one 1 s iteration each.
-WARMUP=30s
-WARMUP_ITERATIONS=1
-MEASURE=5s
-ITERATIONS=3
-if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
-    WARMUP=1s
-    WARMUP_ITERATIONS=30
-fi
-if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
-    WARMUP=1s
-    WARMUP_ITERATIONS=1
-    MEASURE=1s
-    ITERATIONS=1
-fi
-# Heap of the benchmark JVM (pre-touched). Lower it only on small machines.
-HEAP="${JULC_BENCH_HEAP:-4g}"
+# JMH timing, heap and java binary: scripts/jmh-run.sh (images/jvm-base), shared with the Scalus
+# rows. The JVM is Oracle GraalVM at /opt/jdk-25. Julc documents no JVM settings, so no tuning
+# flags (spec D16): only the heap flags.
+# shellcheck source=jmh-run.sh
+source /bench/scripts/jmh-run.sh
 
 # The benchmarks read $BENCH_DATA_DIR/<file> and the cost model next to the harness.
 export BENCH_DATA_DIR="$DATA_DIR"
 export JULC_COST_MODEL="$BENCH_DIR/mainnet-plutusv3-costmodel.json"
 CP="$(cat "$BENCH_DIR/jmh-classpath.txt")"
-
-# Oracle GraalVM at /opt/jdk-25 (images/julc-java/Dockerfile), the JVM of the Scalus rows. Julc
-# documents no JVM settings, so no tuning flags (spec D16): only the heap flags.
-JAVA=/opt/jdk-25/bin/java
 
 # JMH methods of the requested loops: bench (d3), benchEval (eval).
 PATTERN=""
@@ -67,9 +49,8 @@ if [[ -n "$PATTERN" ]]; then
     for f in $(cd "$DATA_DIR" && ls -- *.flat | LC_ALL=C sort); do
         # $BASHPID is the pid of the subshell, which exec turns into the JMH launcher of this script.
         ( echo "--- ${f%.flat}: process $BASHPID"
-          exec "$JAVA" -Xmx4g -cp "$CP" org.openjdk.jmh.Main \
-              -i "$ITERATIONS" -wi "$WARMUP_ITERATIONS" -w "$WARMUP" -r "$MEASURE" -f 1 -t 1 \
-              -jvm "$JAVA" -jvmArgsAppend "-XX:+AlwaysPreTouch -Xms$HEAP" \
+          jmh_command "" ""
+          exec "${JMH_CMD[@]}" \
               -rf json -rff "$jsons/${f%.flat}.json" -p "file=$f" "$PATTERN" ) \
             2>&1 | tee -a "$RAW" || true
     done
