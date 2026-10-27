@@ -1,8 +1,8 @@
 # scalus-js
 
 The Scalus CEK machine compiled with Scala.js, as published on npm as
-[`scalus`](https://www.npmjs.com/package/scalus). It runs on Node.js 22 (V8), the same Node major
-and the same timing loop as the `blaze-v8` harness, run by plain `node`. The image follows
+[`scalus`](https://www.npmjs.com/package/scalus). It runs on Node.js 24 LTS (V8) of the Node base
+image (`images/node-base`), with the timing loop of every JS row, run by plain `node`. The image follows
 `docs/IMAGE_CONTRACT.md`.
 
 Pin in `.env`: `SCALUS_JS_VERSION` (the npm version).

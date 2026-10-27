@@ -164,13 +164,14 @@ Since 2026-10-27 the JVM rows and the JS rows each build on one base image:
   launcher and the forked benchmark JVM, JMH is 1.37 (`JMH_VERSION`), and one runner script
   (`scripts/jmh-run.sh`) holds the JMH options. `-Xss64m` stays only in scalus-jit. Before, the
   Scalus rows launched JMH on Temurin 21.
-- `images/node-base` (blaze-v8, scalus-js, aiken-wasm): one Node.js patch version
-  (`NODE_VERSION`, 22.23.4) and one timing loop (`time.mjs`). Each row gives only its operation
+- `images/node-base` (blaze-v8, scalus-js, aiken-wasm): one Node.js, Node 24 LTS "Krypton"
+  24.22.1 (`NODE_VERSION`, pinned by image digest), and one timing loop (`time.mjs`). Each row gives only its operation
   (`vm.mjs`; blaze: `pvb-vm.ts`, bundled with bun). Before, blaze-v8 ran its own copy of the loop
-  under Vitest on the Node.js of NodeSource, and the other two used the newest `node:22` image.
+  under Vitest on the Node 22 of NodeSource, and the other two used the newest `node:22` image.
+  So the JS rows also moved from Node 22 to Node 24: a newer V8.
 
 So the numbers of these six rows can change from the run of 2026-10-27 on, with no change in
-the VMs. Compare their history across that date with care.
+the VMs: a shared runtime and runner, and for the JS rows Node 24 instead of Node 22. Compare their history across that date with care.
 
 ### Warm-up of the JIT rows
 
@@ -231,7 +232,7 @@ row runs it under Vitest. blaze has no built package in the image, so Vitest loa
 sources (`src/cek`, `src/flat`) and transforms them. A bundle would give a different module shape
 than the one blaze has been timed with so far.
 
-There is no JSC row: every JS row runs on Node 22 (V8), the common runtime for Cardano off-chain
+There is no JSC row: every JS row runs on Node 24 LTS (V8), the common runtime for Cardano off-chain
 code; one engine keeps the JS rows comparable.
 
 ## Fairness Rules

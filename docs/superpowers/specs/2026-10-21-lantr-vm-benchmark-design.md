@@ -56,7 +56,7 @@ Dropped:
 - OpShin uplc: rule 3. It fails the correctness gate at its latest release 1.3.3 (no `case` on
   builtin values, a protocol version 11 feature).
 - blaze-jsc (blaze on Bun / JavaScriptCore), removed 2026-10-22: not a separate evaluator. Every JS
-  row runs on Node 22 (V8), the common runtime for Cardano off-chain code; one engine keeps the JS
+  row runs on Node 24 LTS (V8), the common runtime for Cardano off-chain code; one engine keeps the JS
   rows comparable. The row also cost about 1.8 h per run.
 
 Aiken WASM returned 2026-10-22. It was removed on 2026-10-21, because `@lucid-evolution/uplc`

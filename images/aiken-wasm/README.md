@@ -3,8 +3,8 @@
 Aiken's UPLC evaluator compiled to WASM, as published on npm as
 [`@lucid-evolution/uplc`](https://www.npmjs.com/package/@lucid-evolution/uplc) (the package Lucid
 Evolution evaluates scripts with). The image uses the package as it is: no own WASM build
-(spec D17). It runs on Node.js 22 (V8), with the same timing loop as the `scalus-js`
-and `blaze-v8` harnesses. The image follows `docs/IMAGE_CONTRACT.md`.
+(spec D17). It runs on Node.js 24 LTS (V8) of the Node base image (`images/node-base`),
+with the timing loop of every JS row. The image follows `docs/IMAGE_CONTRACT.md`.
 
 Pin in `.env`: `LUCID_UPLC_VERSION` (the npm version).
 
