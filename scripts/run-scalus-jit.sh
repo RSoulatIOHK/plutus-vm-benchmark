@@ -45,7 +45,11 @@ JIT_STACK="-Xss64m"
 case "${SCALUS_JVM_FLAGS:-none}" in
     none) JVM_FLAGS="" ;;
     tuned) JVM_FLAGS="--enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -XX:+UseCompactObjectHeaders -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxInlineLevel=15 -XX:MaxInlineSize=270 -XX:ReservedCodeCacheSize=512m -XX:InitialCodeCacheSize=64m" ;;
-    *) echo "ERROR: SCALUS_JVM_FLAGS=$SCALUS_JVM_FLAGS: expected none or tuned" >&2; exit 1 ;;
+    # Diagnostics of the JIT warm-up (stablecoin_* on Hetzner): log every JVM compile and the
+    # code cache at exit; c2 runs the C2 compiler instead of Graal. Not for published runs.
+    diag) JVM_FLAGS="-XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+PrintCodeCache" ;;
+    c2diag) JVM_FLAGS="-XX:-UseJVMCICompiler -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+PrintCodeCache" ;;
+    *) echo "ERROR: SCALUS_JVM_FLAGS=$SCALUS_JVM_FLAGS: expected none, tuned, diag or c2diag" >&2; exit 1 ;;
 esac
 JVM_FLAGS="$JIT_STACK${JVM_FLAGS:+ $JVM_FLAGS}"
 

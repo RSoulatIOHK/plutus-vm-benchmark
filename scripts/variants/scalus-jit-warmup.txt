@@ -1,0 +1,5 @@
+# scripts/run-variants.sh: why the Scalus JIT does not warm up on stablecoin_* on Hetzner.
+# G = Graal (the default compiler of the GraalVM image), C2 = HotSpot C2. Both log every JVM
+# compile (-XX:+PrintCompilation) and the code cache at exit. Not for published runs.
+G   SCALUS_JVM_FLAGS=diag
+C2  SCALUS_JVM_FLAGS=c2diag
