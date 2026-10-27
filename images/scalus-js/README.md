@@ -1,8 +1,8 @@
 # scalus-js
 
 The Scalus CEK machine compiled with Scala.js, as published on npm as
-[`scalus`](https://www.npmjs.com/package/scalus). It runs on Node.js 22 (V8), the same Node major
-and the same timing loop as the `blaze-v8` harness, run by plain `node`. The image follows
+[`scalus`](https://www.npmjs.com/package/scalus). It runs on Node.js 24 LTS (V8) of the Node base
+image (`images/node-base`), with the timing loop of every JS row, run by plain `node`. The image follows
 `docs/IMAGE_CONTRACT.md`.
 
 Pin in `.env`: `SCALUS_JS_VERSION` (the npm version).
@@ -32,7 +32,7 @@ every call; a `PlutusVM` builds it once, as a downstream user evaluating many sc
 
 ## Timing
 
-`time.mjs` uses the JMH shape of the JVM rows (`-wi 1 -w 20s -i 3 -r 5s`): one 20 s warm-up
+The timing loop is the shared `images/node-base/time.mjs` with `vm.mjs`. It uses the JMH shape of the JVM rows (`-wi 1 -w 20s -i 3 -r 5s`): one 20 s warm-up
 round, then 3 measured rounds of 5 s. A round calls `evaluateScript` back to back until its time
 is up; its score is elapsed time / calls, as in JMH `avgt`. The CSV has the mean of the 3 round
 scores and their median, min, max and standard deviation; `iterations` is the number of rounds.

@@ -22,40 +22,41 @@ Status: approved 2026-10-21.
 | D14 | Process model | A fresh process per script for every VM. No JIT profile, heap or allocator state carries over between scripts. The d3 and eval loops of a script share that process (d3 first, each loop with its own warm-up and measurement), except JMH, which forks a JVM per loop |
 | D15 | Scalus JIT badge | "decode and compile excluded": the timed loop runs the compiled script; the decode and the compile run once per script, before timing. Its time is an eval-only time (D21) |
 | D16 | Runtime settings | Each VM runs with the settings its project documents for production use, else with the runtime defaults. Scalus must document its JVM flags in public |
-| D17 | Inclusion rules | A ranked row needs (1) a published release: a stable version on a package registry, or a release tag; pre-releases such as `-alpha` or `0.1.0-preNN` do not count; (2) a downstream user today: a released project outside the VM's own repo that depends on it, default evaluator or not, listed with a proof link (`USED_BY`); (3) a pass of the correctness gate. A library that caches the decoded program or compiles it ahead gets a badge: Scalus JIT style "decode and compile excluded"; Aiken WASM "decode cached (by the library)". Such a VM is ranked only on eval only (D21). An unranked "Experimental" section shows rows that have a release tag and pass the gate but miss rule (2) or publish no artifact; today that is the Scalus JIT (the `scalus-uplc-jit-compiler` module is on Maven since Scalus 1.4.1, 2026-10-26, but has no downstream users yet) and blaze-plutus (2026-10-24: no project outside the Blaze repo depends on `@blaze-cardano/plutus`; Blaze uses `@blaze-cardano/vm`, Aiken uplc as WASM). Aiken WASM is ranked: the published npm package `@lucid-evolution/uplc` 0.4.0 used as is, built from colll78/aiken (aiken main plus fixes) |
+| D17 | Inclusion rules | A ranked row needs (1) a published release: a stable version on a package registry, or a release tag; pre-releases such as `-alpha` or `0.1.0-preNN` do not count; (2) a downstream user today: a released project outside the VM's own repo that depends on it, default evaluator or not, listed with a proof link (`USED_BY`); (3) a pass of the correctness gate. A library that caches the decoded program or compiles it ahead gets a badge: Scalus JIT style "decode and compile excluded"; Aiken WASM "decode cached (by the library)". Such a VM is ranked only on eval only (D21). An unranked "Experimental" section (D22) shows rows that miss rule (1) or rule (2); among them are the Scalus JIT (the `scalus-uplc-jit-compiler` module is on Maven since Scalus 1.4.1, 2026-10-26, but has no downstream users yet) and blaze-plutus (2026-10-24: no project outside the Blaze repo depends on `@blaze-cardano/plutus`; Blaze uses `@blaze-cardano/vm`, Aiken uplc as WASM). Aiken WASM is ranked: the published npm package `@lucid-evolution/uplc` 0.4.0 used as is, built from colll78/aiken (aiken main plus fixes) |
 | D18 | Server qualification | Servers of one Hetzner type differ: one ccx43 ran every VM 2.1x slower than another ccx43 (same CPU model AMD EPYC-Milan, 0 % steal); two good ccx33 servers agreed within 0.3 % on Haskell. So each run times the Haskell image on 3 scripts (`auction_1-1`, `coop-6`, `uniswap-1`; d3, normal timing, the run's docker flags and CPU set) right after the server install. It compares the geometric mean with the reference of the server type (`check/reference/host-reference.json`, harness b0d8a22, measured 2026-10-22). A ratio above 1.15 deletes the server and creates a new one, at most 3 servers, then the run fails. A faster server passes. No reference for the type: skip with a warning. The result goes to `environment.txt` and the job summary. Refresh the reference with `scripts/hetzner/qualify.py reference` when the Haskell harness changes |
 | D19 | Full-run hardware | `ccx43` (16 dedicated vCPUs) with 3 lanes. Measured on one ccx43: with 3 lanes the geometric mean of each VM moved by -2.4 % to +0.9 % against one lane, within the noise; only the experimental Scalus JIT moved by +7 %. Run time on 5 scripts: 31 min to 12 min, about 3.6 h projected for 89 scripts. A full run has every VM, script and loop, normal timing, no trace, and 1 lane or the default 3 lanes; a comma list (A/B test) is always partial. A ccx33 with 1 lane stays possible. The Hetzner project limit must allow a ccx43 (16 vCPUs) |
 | D20 | History noise band | The ratio of a VM to Haskell varies by up to about 5 % between two good servers. The history chart shows a change below 5 % as no change |
 | D21 | Eval-only VMs | (2026-10-26) A VM whose decode runs outside its timed loop has only an eval-only time: one that compiles each script before timing (D15), and one whose library caches decoded programs with no off switch. It is never in the decode + eval ranking, is not a competitor in the penalty rule there, and is ranked only on eval only (if it meets D17). Its history ratio uses Haskell's eval-only time. Reason: `@lucid-evolution/uplc` caches decoded programs (`ProgramCache`, keyed by a hash of the bytes) and the cache cannot be turned off, so its "decode + eval" time is really hash + eval (`aiken-wasm.csv` equals `aiken-wasm-eval.csv`). It cannot be timed on decode + eval without changing the inputs, which D17 ("used as it is") forbids. One rule for every VM whose decode runs outside the timed loop. The page says so next to the decode + eval ranking |
+| D22 | Experimental scope | (2026-10-26) The Experimental section shows a VM of the original SAIB line-up (a VM with a `scripts/run-<vm>.sh` on branch `saib-main`) that misses D17 rule 1 (no stable release) or rule 2 (no downstream user). Its pin is its newest pre-release tag; without one, the newest `main` commit. The page shows the reason next to the row: "pre-release only", "no release", "no downstream user" or "outdated". An experimental row never gets a rank. It is never a competitor in the penalty rule. It has no line in the history chart. The gate checks each script of an experimental row. A script that fails the gate is marked "failed check" on its cell, and its time is left out of the row's geometric mean. The row itself stays. A row with no passing script, or without `<vm>-check.csv`, is listed as "failed check" (D4). A VM whose built-in cost model is outdated and that has no API for a cost model is shown with the D10 badge "outdated cost model" and the reason "outdated". Today: Chrysalis (`chrysalis`, `chrysalis-aot`), Julc (`julc-java`), Plutuz (`plutuz`), amaru-uplc bytecode mode (`uplc-turbo-bc`, a commit of the fork jonathanlim222/uplc), Scalus JIT and blaze-plutus. llvm-uplc (`llvm-uplc-jit`, outdated: variant C cost model, last commit 2026-04-16). Not OpShin (it fails rule 3) and not blaze-jsc. Reason: the SAIB benchmark showed these VMs, and their authors and users want to see them. The ranking stays for VMs that meet D17 |
 
 ### Line-up (rules: D17)
 
-10 images. 8 are ranked, 2 are experimental:
+15 VMs. 7 are ranked, 8 are experimental (D22). The page calls `uplc-turbo` "amaru-uplc", the name of the pragma-org/uplc crate; the image ids stay:
 
 | VM (image) | Language | Runtime | Status |
 |---|---|---|---|
 | Haskell plutus-core (`haskell`) | Haskell | GHC | Ranked |
 | Scalus CEK (`scalus-cek`) | Scala | JVM (GraalVM) | Ranked |
-| Scalus JIT (`scalus-jit`) | Scala | JVM (GraalVM) | Experimental, badge "decode and compile excluded" |
+| Scalus JIT (`scalus-jit`) | Scala | JVM (GraalVM) | Experimental: no downstream user yet; badge "decode and compile excluded" |
 | Scalus.js (`scalus-js`) | Scala.js | Node (V8) | Ranked |
 | Aiken (`aiken`) | Rust | native | Ranked |
 | Aiken WASM, `@lucid-evolution/uplc` 0.4.0 (`aiken-wasm`) | Rust → WASM | Node (V8) | Ranked, badge "decode cached (by the library)" |
-| uplc-turbo, Amaru (`uplc-turbo`) | Rust | native | Ranked |
+| amaru-uplc, Amaru (`uplc-turbo`) | Rust | native | Ranked |
 | plutigo, Dingo (`plutigo`) | Go | native | Ranked |
 | blaze-plutus (`blaze-v8`) | TypeScript | Node (V8) | Experimental: no downstream user yet |
+| Chrysalis (`chrysalis`) | C# | .NET (JIT) | Experimental: pre-release only (NuGet `Chrysalis.Plutus` 1.7.14-alpha or newer) |
+| Chrysalis AOT (`chrysalis-aot`) | C# | .NET (native AOT) | Experimental: pre-release only |
+| Julc (`julc-java`) | Java | JVM | Experimental: pre-release only (`0.1.0-preNN`) |
+| Plutuz (`plutuz`) | Zig | native | Experimental: no release (`main` commit) |
+| amaru-uplc bytecode, fork jonathanlim222/uplc (`uplc-turbo-bc`) | Rust | native | Experimental: no release with the bytecode mode |
+| llvm-uplc (`llvm-uplc-jit`) | C++ | native (LLVM JIT) | Experimental: outdated (variant C cost model, no cost-model API, last commit 2026-04-16); badges "outdated cost model", "decode and compile excluded" |
 
-Dropped, each with the D17 rule that fails:
+Dropped:
 
-- Chrysalis: rule 1. Only pre-releases: NuGet `Chrysalis.Plutus` goes up to 1.7.14-alpha; the one
-  stable version, 1.7.1, is unlisted.
-- Plutuz: rule 1. No release: no tags or releases on GitHub.
-- llvm-uplc: rule 1. No release: no tags or releases on GitHub.
-- Julc: rule 1. Only pre-releases (0.1.0-preNN).
 - OpShin uplc: rule 3. It fails the correctness gate at its latest release 1.3.3 (no `case` on
   builtin values, a protocol version 11 feature).
-- uplc-turbo-bc: rule 1. The released `uplc-turbo` crate has no bytecode mode.
 - blaze-jsc (blaze on Bun / JavaScriptCore), removed 2026-10-22: not a separate evaluator. Every JS
-  row runs on Node 22 (V8), the common runtime for Cardano off-chain code; one engine keeps the JS
+  row runs on Node 24 LTS (V8), the common runtime for Cardano off-chain code; one engine keeps the JS
   rows comparable. The row also cost about 1.8 h per run.
 
 Aiken WASM returned 2026-10-22. It was removed on 2026-10-21, because `@lucid-evolution/uplc`
@@ -69,7 +70,7 @@ Repo `lantr-io/plutus-vm-benchmark`:
 
 | Unit | Does | Change from today |
 |---|---|---|
-| `harness/<vm>/` + `scripts/run-<vm>.sh` | One harness per VM | Add `aiken`, `aiken-wasm`, `scalus-js`. Remove chrysalis, plutuz, llvm-uplc |
+| `harness/<vm>/` + `scripts/run-<vm>.sh` | One harness per VM | Add `aiken`, `aiken-wasm`, `scalus-js`. Chrysalis, Julc, Plutuz, llvm-uplc and uplc-turbo-bc return as experimental (D22) |
 | `.env` | Pins each VM to a SHA or tag | Haskell pinned to the plutus tag of the production node (today 1.63.0.0) |
 | `images/` | One Docker image per VM, pushed to GHCR | Replaces the single image: a bump rebuilds one VM only |
 | `check/` | Correctness gate: each VM writes result + ExUnits per script; the gate diffs them against Haskell | New |

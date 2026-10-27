@@ -33,6 +33,8 @@ BENCH_TO_VM = {
     "CekJVMBenchmark.bench": ("scalus-cek", "d3"),
     "CekJVMBenchmark.benchEval": ("scalus-cek", "eval"),
     "JITBenchmark.benchJIT": ("scalus-jit", "d3"),
+    "CekJavaBenchmark.bench": ("julc-java", "d3"),
+    "CekJavaBenchmark.benchEval": ("julc-java", "eval"),
 }
 
 # Unit conversion to nanoseconds

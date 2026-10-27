@@ -1,0 +1,15 @@
+
+    // pvb harness (inserted by images/plutuz/Dockerfile): bench/pvb_bench.zig, same settings
+    // as the upstream bench executable (ReleaseFast), installed to zig-out/bin/pvb-bench.
+    const pvb_exe = b.addExecutable(.{
+        .name = "pvb-bench",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("bench/pvb_bench.zig"),
+            .target = target,
+            .optimize = .ReleaseFast,
+            .imports = &.{
+                .{ .name = "plutuz", .module = mod },
+            },
+        }),
+    });
+    b.installArtifact(pvb_exe);

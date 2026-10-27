@@ -25,7 +25,7 @@ if loop check; then
 fi
 
 # Timing (spec D3, D13): the JMH shape of the JVM rows, the adaptive warm-up and 3 measured rounds
-# of 5 s (time.mjs). Adaptive: rounds of 1 s until at least 5 s have passed and the last 5 are
+# of 5 s (the shared timing loop /bench/node/time.mjs of images/node-base, with vm.mjs). Adaptive: rounds of 1 s until at least 5 s have passed and the last 5 are
 # within 3 % of their median, 30 s at most. BENCH_TIMING=quick: a fixed 0.5 s warm-up, one 0.5 s
 # round.
 # A new node process per script (spec D14), so no JIT profile or GC state carries over from
@@ -43,10 +43,10 @@ time_loop() {
         name="${f%.flat}"
         # $BASHPID is the pid of the subshell, which exec turns into the node process.
         ( echo "--- $name: process $BASHPID"
-          DATA_DIR="$DATA_DIR" PVB_SCRIPT="$name" PVB_LOOP="$1" exec node time.mjs ) 2>&1 | tee -a "$RAW" || true
+          DATA_DIR="$DATA_DIR" PVB_SCRIPT="$name" PVB_LOOPS="$1" exec node /bench/node/time.mjs ) 2>&1 | tee -a "$RAW" || true
     done
     python3 /bench/parsers/parse_vitest.py "$VM" "$RAW" "$1" > "$csv"
-    python3 /bench/parsers/fill_failures.py "$csv" "$DATA_DIR" "$VM" "$RAW"
+    python3 /bench/parsers/fill_failures.py "$csv" "$DATA_DIR" "$VM" "$RAW" --loop "$1"
 }
 if loop d3; then time_loop d3; fi
 if loop eval; then time_loop eval; fi

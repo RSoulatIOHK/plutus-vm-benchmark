@@ -21,31 +21,15 @@ loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 
 echo "Scalus JIT (Scala / JVM / JMH)"
 
-# JMH timing (METHODOLOGY.md, D13): one 30 s warm-up iteration, then 3 measurement iterations of
-# 5 s each, so the CSV has a standard deviation over the iteration means. The JS rows use an
-# adaptive warm-up with a 30 s cap; the JMH rows keep JMH's own warm-up iterations at that cap.
-# BENCH_TIMING=quick shortens warm-up and measurement to one 1 s iteration each.
-WARMUP=30s
-WARMUP_ITERATIONS=1
-MEASURE=5s
-ITERATIONS=3
-# BENCH_TRACE=1: the same 30 s of warm-up as 30 iterations of 1 s (-wi 30 -w 1s), so the log has
-# a score per second; parse_warmup.py writes them to $VM-warmup.csv. The measurement settings stay
-# the same (the measured time can differ, METHODOLOGY.md).
-if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
-    WARMUP=1s
-    WARMUP_ITERATIONS=30
-fi
+# JMH timing, heap and java binary: scripts/jmh-run.sh (images/jvm-base), shared with the other
+# JMH rows. The JVM is Oracle GraalVM at /opt/jdk-25, or the java binary at the path SCALUS_JAVA.
+JAVA="${SCALUS_JAVA:-}"
+# shellcheck source=jmh-run.sh
+source /bench/scripts/jmh-run.sh
 if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
-    WARMUP=1s
-    WARMUP_ITERATIONS=1
-    MEASURE=1s
-    ITERATIONS=1
     # The check compiles every selected script: one compile each instead of the median of 3.
     export SCALUS_JIT_COMPILE_RUNS="${SCALUS_JIT_COMPILE_RUNS:-1}"
 fi
-# Heap of the forked benchmark JVM (pre-touched). Lower it only on small machines.
-HEAP="${SCALUS_BENCH_HEAP:-4g}"
 
 # The benchmarks read $BENCH_DATA_DIR/<file> and the cost model next to the harness.
 export BENCH_DATA_DIR="$DATA_DIR"
@@ -53,10 +37,6 @@ export SCALUS_COST_MODEL="$BENCH_DIR/mainnet-plutusv3-costmodel.json"
 FILE_LIST=$(for f in "$DATA_DIR"/*.flat; do basename "$f"; done | LC_ALL=C sort | paste -sd, -)
 CP="$(cat "$BENCH_DIR/jmh-classpath.txt")"
 
-# The forked benchmark JVM: Oracle GraalVM at /opt/jdk-25 (images/scalus/Dockerfile), or the java
-# binary at the path SCALUS_JAVA.
-JAVA="${SCALUS_JAVA:-/opt/jdk-25/bin/java}"
-[[ -x "$JAVA" ]] || { echo "ERROR: SCALUS_JAVA=$SCALUS_JAVA: $JAVA is not there" >&2; exit 1; }
 # JVM flags (spec D16): none by default, only the heap flags (-Xmx, -Xms, -XX:+AlwaysPreTouch).
 # SCALUS_JVM_FLAGS=tuned adds the flags used before 2026-10-24, for comparisons. On GraalVM 25 they
 # gave no speed-up: CEK within +-2 %, JIT 2-5 % slower (results/partial-2026-10-24T1302).
@@ -77,10 +57,8 @@ echo "scalus: $(grep -o "scalus_3-[^/]*\.jar" "$BENCH_DIR/jmh-classpath.txt")" |
 echo "jvm: $JAVA ($("$JAVA" -version 2>&1 | sed -n 2p)), flags ${SCALUS_JVM_FLAGS:-none}: ${JVM_FLAGS:-<none>}" \
     | tee -a "$RUN_DIR/$VM-raw.log"
 if loop d3 || loop eval; then
-    java -Xss64m -Xmx4g -cp "$CP" org.openjdk.jmh.Main \
-        -i "$ITERATIONS" -wi "$WARMUP_ITERATIONS" -w "$WARMUP" -r "$MEASURE" -f 1 -t 1 \
-        -jvm "$JAVA" \
-        -jvmArgsAppend "$JVM_FLAGS -XX:+AlwaysPreTouch -Xms$HEAP" \
+    jmh_command "$JIT_STACK" "$JVM_FLAGS"
+    "${JMH_CMD[@]}" \
         -rf json -rff "$RUN_DIR/$VM-jmh.json" -p "file=$FILE_LIST" 'pvb.scalus.JITBenchmark' \
         2>&1 | tee -a "$RUN_DIR/$VM-raw.log" || true
 

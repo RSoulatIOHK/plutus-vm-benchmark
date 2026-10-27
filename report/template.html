@@ -747,18 +747,24 @@ const REPORT = {{REPORT_JSON}};
 // tables). plutus-core is the reference and takes a neutral grey; the experimental Scalus JIT is a
 // light neutral, dashed / hatched.
 const VM_META = {
-  'uplc-turbo':     { label: 'uplc-turbo AST', lang: 'Rust',        runtime: 'AST walker',     engine: 'AST walker',                   color: 'var(--vm-uplc-turbo)', compiler: 'rustc 1.94' },
+  'uplc-turbo':     { label: 'amaru-uplc',     lang: 'Rust',        runtime: 'AST walker',     engine: 'AST walker',                   color: 'var(--vm-uplc-turbo)', compiler: 'rustc 1.94' },
   'plutigo':        { label: 'Plutigo',        lang: 'Go',          runtime: 'CEK',            engine: 'CEK interpreter',              color: 'var(--vm-plutigo)', compiler: 'Go 1.26' },
   'blaze-jsc':      { label: 'blaze-plutus',   lang: 'TypeScript',  runtime: 'Bun (JSC)',      engine: 'CEK interpreter',              color: 'var(--vm-blaze-jsc)', compiler: 'Bun 1.3.10' },
-  'blaze-v8':       { label: 'blaze-plutus',   lang: 'TypeScript',  runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: 'var(--vm-blaze-v8)', compiler: 'Node.js 22' },
+  'blaze-v8':       { label: 'blaze-plutus',   lang: 'TypeScript',  runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: 'var(--vm-blaze-v8)', compiler: 'Node.js 24' },
   'haskell':        { label: 'plutus-core',    lang: 'Haskell',     runtime: 'GHC',            engine: 'CEK interpreter',              color: 'var(--vm-haskell)', compiler: 'GHC 9.6.4' },
   'scalus-cek':     { label: 'Scalus CEK',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'CEK interpreter',              color: 'var(--vm-scalus-cek)', compiler: 'GraalVM JDK 25 / Scala 3' },
   'scalus-jit':     { label: 'Scalus JIT',     lang: 'Scala',       runtime: 'GraalVM',        engine: 'UPLC → JVM bytecode JIT',      color: 'var(--vm-scalus-jit)', compiler: 'GraalVM JDK 25 / Scala 3' },
-  'scalus-js':      { label: 'Scalus.js CEK',  lang: 'Scala.js',    runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: 'var(--vm-scalus-js)', compiler: 'scalus npm / Node.js 22' },
+  'scalus-js':      { label: 'Scalus.js CEK',  lang: 'Scala.js',    runtime: 'Node (V8)',      engine: 'CEK interpreter',              color: 'var(--vm-scalus-js)', compiler: 'scalus npm / Node.js 24' },
   'aiken':          { label: 'Aiken uplc',     lang: 'Rust',        runtime: 'native',         engine: 'CEK interpreter',              color: 'var(--vm-aiken)', compiler: 'rustc 1.94' },
-  'aiken-wasm':     { label: 'Aiken uplc WASM', lang: 'Rust → WASM', runtime: 'Node (V8)',     engine: 'CEK interpreter',              color: 'var(--vm-aiken-wasm)', compiler: '@lucid-evolution/uplc npm / Node.js 22' },
+  'aiken-wasm':     { label: 'Aiken uplc WASM', lang: 'Rust → WASM', runtime: 'Node (V8)',     engine: 'CEK interpreter',              color: 'var(--vm-aiken-wasm)', compiler: '@lucid-evolution/uplc npm / Node.js 24' },
+  'julc-java':      { label: 'Julc Java CEK',  lang: 'Java',        runtime: 'GraalVM',        engine: 'CEK interpreter',              color: 'var(--vm-julc-java, var(--vm-other))', compiler: 'GraalVM JDK 25 / Java' },
+  'chrysalis':      { label: 'Chrysalis',      lang: 'C#',          runtime: '.NET JIT',       engine: 'CEK interpreter',              color: 'var(--vm-chrysalis, var(--vm-other))', compiler: '.NET 10' },
+  'chrysalis-aot':  { label: 'Chrysalis AOT',  lang: 'C#',          runtime: '.NET NativeAOT', engine: 'CEK interpreter',              color: 'var(--vm-chrysalis-aot, var(--vm-other))', compiler: '.NET 10 NativeAOT' },
+  'plutuz':         { label: 'Plutuz',         lang: 'Zig',         runtime: 'native',         engine: 'CEK interpreter',              color: 'var(--vm-plutuz, var(--vm-other))', compiler: 'Zig 0.15.2' },
+  'uplc-turbo-bc':  { label: 'amaru-uplc BC (fork)', lang: 'Rust',        runtime: 'bytecode VM',    engine: 'UPLC → bytecode VM',           color: 'var(--vm-uplc-turbo-bc, var(--vm-other))', compiler: 'rustc 1.94' },
+  'llvm-uplc-jit':  { label: 'llvm-uplc JIT',  lang: 'C / C++',     runtime: 'native',         engine: 'UPLC → native code JIT',       color: 'var(--vm-llvm-uplc-jit, var(--vm-other))', compiler: 'LLVM 22' },
 };
-const VM_ORDER = ['haskell','scalus-jit','scalus-cek','scalus-js','aiken','aiken-wasm','uplc-turbo','blaze-v8','blaze-jsc','plutigo'];
+const VM_ORDER = ['haskell','scalus-jit','scalus-cek','scalus-js','aiken','aiken-wasm','uplc-turbo','blaze-v8','blaze-jsc','plutigo','chrysalis','chrysalis-aot','julc-java','plutuz','llvm-uplc-jit','uplc-turbo-bc'];
 
 function parseCSV(csv) {
   const lines = csv.trim().split('\n'), header = lines[0].split(',');
@@ -788,6 +794,9 @@ const shownVMs = REPORT.vms || VM_ORDER.filter(vm => rows.some(r => r.vm===vm))
 shownVMs.forEach(vm => { if (!VM_META[vm]) VM_META[vm] = { label: vm, lang: '', runtime: '', engine: 'CEK interpreter', color: 'var(--vm-other)', compiler: '' }; });
 // Experimental VMs are shown in their own section and the per-script table, never ranked.
 const EXPERIMENTAL = REPORT.experimental || {};
+// The short visible reason of an experimental VM (spec D22), e.g. "pre-release only".
+const EXP_TAG = REPORT.experimental_tag || {};
+const expBadge = vm => EXP_TAG[vm] ? 'experimental: ' + EXP_TAG[vm] : 'experimental';
 const presentVMs = shownVMs.filter(vm => !(vm in EXPERIMENTAL));
 const DECODE_CACHED = REPORT.decode_cached || {};
 // The ranked VMs with a decode + eval time: the decode + eval ranking and the penalty competitors.
@@ -805,7 +814,7 @@ function badges(vm) {
   const b = (REPORT.badges || {})[vm];
   if (b) out.push('<span class="vm-badge timing" title="' + esc(b.title) + '">' + b.text + '</span>');
   if (REPORT.compile[vm]) out.push('<span class="vm-badge compile" title="Each script is decoded and compiled once, before the timed loop; the timed loop runs the compiled script, so neither the decode nor the compile is in the geometric mean">' + REPORT.compile_badge + '</span>');
-  if (vm in EXPERIMENTAL) out.push('<span class="vm-badge exp">experimental, not ranked</span>');
+  if (vm in EXPERIMENTAL) out.push('<span class="vm-badge exp" title="' + esc(EXPERIMENTAL[vm]) + '">' + esc(expBadge(vm)) + ', not ranked</span>');
   return out.length ? '<div class="vm-badges">' + out.join('') + '</div>' : '';
 }
 const EVAL = REPORT.eval || {};
@@ -1015,7 +1024,7 @@ function rowEl(vm) {
   li.style.setProperty('--c', m.color);
   li.innerHTML = '<span class="rank"></span>'
     + '<span class="bname"><span class="n">' + swatch(vm, exp ? 'exp' : '') + vmLink(vm, m.label)
-    + (exp ? ' <span class="tag">experimental</span>' : '') + '</span><span class="l">' + langLine(m) + '</span></span>'
+    + (exp ? ' <span class="tag" title="' + esc(EXPERIMENTAL[vm]) + '">' + esc(expBadge(vm)) + '</span>' : '') + '</span><span class="l">' + langLine(m) + '</span></span>'
     + '<span class="track"><span class="grid-host"></span><span class="bfill"></span></span>'
     + '<span class="btime"></span><span class="bratio"></span><span class="bmove"></span>'
     + '<dl class="bdetail"></dl>';

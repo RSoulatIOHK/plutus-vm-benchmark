@@ -19,39 +19,17 @@ loop() { [[ ",${BENCH_LOOPS:-d3,eval,check}," == *",$1,"* ]]; }
 
 echo "Scalus CEK (Scala / JVM / JMH)"
 
-# JMH timing (METHODOLOGY.md, D13): one 30 s warm-up iteration, then 3 measurement iterations of
-# 5 s each, so the CSV has a standard deviation over the iteration means. The JS rows use an
-# adaptive warm-up with a 30 s cap; the JMH rows keep JMH's own warm-up iterations at that cap.
-# BENCH_TIMING=quick shortens warm-up and measurement to one 1 s iteration each.
-WARMUP=30s
-WARMUP_ITERATIONS=1
-MEASURE=5s
-ITERATIONS=3
-# BENCH_TRACE=1: the same 30 s of warm-up as 30 iterations of 1 s (-wi 30 -w 1s), so the log has
-# a score per second; parse_warmup.py writes them to $VM-warmup.csv. The measurement settings stay
-# the same (the measured time can differ, METHODOLOGY.md).
-if [[ "${BENCH_TRACE:-0}" == 1 ]]; then
-    WARMUP=1s
-    WARMUP_ITERATIONS=30
-fi
-if [[ "${BENCH_TIMING:-normal}" == quick ]]; then
-    WARMUP=1s
-    WARMUP_ITERATIONS=1
-    MEASURE=1s
-    ITERATIONS=1
-fi
-# Heap of the benchmark JVM (pre-touched). Lower it only on small machines.
-HEAP="${SCALUS_BENCH_HEAP:-4g}"
+# JMH timing, heap and java binary: scripts/jmh-run.sh (images/jvm-base), shared with the other
+# JMH rows. The JVM is Oracle GraalVM at /opt/jdk-25, or the java binary at the path SCALUS_JAVA.
+JAVA="${SCALUS_JAVA:-}"
+# shellcheck source=jmh-run.sh
+source /bench/scripts/jmh-run.sh
 
 # The benchmarks read $BENCH_DATA_DIR/<file> and the cost model next to the harness.
 export BENCH_DATA_DIR="$DATA_DIR"
 export SCALUS_COST_MODEL="$BENCH_DIR/mainnet-plutusv3-costmodel.json"
 CP="$(cat "$BENCH_DIR/jmh-classpath.txt")"
 
-# The forked benchmark JVM: Oracle GraalVM at /opt/jdk-25 (images/scalus/Dockerfile), or the java
-# binary at the path SCALUS_JAVA.
-JAVA="${SCALUS_JAVA:-/opt/jdk-25/bin/java}"
-[[ -x "$JAVA" ]] || { echo "ERROR: SCALUS_JAVA=$SCALUS_JAVA: $JAVA is not there" >&2; exit 1; }
 # JVM flags (spec D16): none by default, only the heap flags (-Xmx, -Xms, -XX:+AlwaysPreTouch).
 # SCALUS_JVM_FLAGS=tuned adds the flags used before 2026-10-24, for comparisons. On GraalVM 25 they
 # gave no speed-up: CEK within +-2 %, JIT 2-5 % slower (results/partial-2026-10-24T1302).
@@ -85,9 +63,8 @@ if [[ -n "$PATTERN" ]]; then
         # $BASHPID is the pid of the subshell, which exec turns into the JMH launcher of this script.
         # shellcheck disable=SC2086
         ( echo "--- ${f%.flat}: process $BASHPID"
-          exec java -Xmx4g -cp "$CP" org.openjdk.jmh.Main \
-              -i "$ITERATIONS" -wi "$WARMUP_ITERATIONS" -w "$WARMUP" -r "$MEASURE" -f 1 -t 1 \
-              -jvm "$JAVA" -jvmArgsAppend "$JVM_FLAGS -XX:+AlwaysPreTouch -Xms$HEAP" \
+          jmh_command "" "$JVM_FLAGS"
+          exec "${JMH_CMD[@]}" \
               -rf json -rff "$jsons/${f%.flat}.json" -p "file=$f" "$PATTERN" ) \
             2>&1 | tee -a "$RAW" || true
     done

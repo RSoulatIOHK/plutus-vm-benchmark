@@ -13,6 +13,8 @@ lazy val root = project
     .enablePlugins(JmhPlugin)
     .settings(
       name := "pvb-scalus",
+      // JMH_VERSION of .env: the same JMH as the other JMH rows (images/jvm-base).
+      Jmh / version := sys.env.getOrElse("JMH_VERSION", "1.37"),
       libraryDependencies ++= Seq(
         "org.scalus" %% "scalus" % scalusVersion,
         "org.scalus" %% "scalus-uplc-jit-compiler" % scalusVersion

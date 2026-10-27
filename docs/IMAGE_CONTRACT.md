@@ -80,7 +80,7 @@ How the image applies them:
 | `<vm>-raw.log` | Raw tool output of the timed loops (both loops, one process per script), for debugging |
 | `<vm>-eval.csv` | Eval-only timing, same schema as `<vm>.csv`: evaluation of a program decoded once outside the timed loop. Shown as a second column next to the D3 time |
 | `<vm>-compile.csv` | Only for VMs that compile before they run (Scalus JIT): `vm,script,compile_ns` |
-| `<vm>-warmup-used.csv` | Only for the JIT rows (scalus-cek, scalus-jit, blaze-v8, scalus-js, aiken-wasm), when a timed loop runs: `vm,script,loop,seconds,capped`. One row per script and loop: the length of the warm-up in seconds (one decimal), and `capped` = `1` when an adaptive warm-up stopped at the 30 s cap, `0` when it stopped because the time was steady, `fixed` for a warm-up of fixed length (the JMH rows: 30 s; and `BENCH_TIMING=quick`). A VM with one timed loop (scalus-jit, aiken-wasm, scalus-js) writes `loop` = `d3` |
+| `<vm>-warmup-used.csv` | Only for the JIT rows (scalus-cek, scalus-jit, julc-java, blaze-v8, scalus-js, aiken-wasm), when a timed loop runs: `vm,script,loop,seconds,capped`. One row per script and loop: the length of the warm-up in seconds (one decimal), and `capped` = `1` when an adaptive warm-up stopped at the 30 s cap, `0` when it stopped because the time was steady, `fixed` for a warm-up of fixed length (the JMH rows: scalus-cek, scalus-jit, julc-java: 30 s; and `BENCH_TIMING=quick`). A VM with one timed loop (scalus-jit, aiken-wasm, scalus-js) writes `loop` = `d3` |
 | `<vm>-warmup.csv` | Only with `BENCH_TRACE=1`, for the JIT rows: `vm,script,loop,second,ns_per_op`, the warm-up in slices of 1 s |
 
 ## What the timed loops do (spec D3, D11)

@@ -4,7 +4,18 @@
 # and its .env pins. A VM whose tag is already in the registry is not rebuilt; on main, its
 # :latest is moved to that tag.
 #
-# Pull requests build the changed images for linux/amd64 and push nothing; they use no secrets.
+# Base images (scripts/images.sh bases: jvm-base, node-base) are built first, in the job "bases",
+# and pushed to ghcr.io/lantr-io/pvb-<base>:<tag>. A VM names its base by tag in a build arg
+# (JVM_BASE, NODE_BASE), so the base tag is part of the VM tag.
+#
+# Pull requests build the changed VM images for linux/amd64 and push no VM image. They push a
+# changed base image, because the VM builds pull it from the registry; so a pull request from a
+# fork, which gets no write token, cannot change a base image.
+#
+# Every built VM image runs the check loop on all 89 scripts, and check/gate.py compares the result
+# with the Haskell reference (mode from check/modes.conf). A gate failure fails the job, and on main
+# the image is pushed only after the gate passes. The check CSVs are uploaded as an artifact. No
+# timing runs here.
 name: images
 
 on:
@@ -34,6 +45,8 @@ concurrency:
 
 env:
   REGISTRY_PREFIX: ghcr.io/lantr-io/pvb-
+  # A write token for the registry: every event except a pull request from a fork.
+  CAN_PUSH: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
 
 jobs:
   plan:
@@ -45,10 +58,12 @@ jobs:
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
       count: ${{ steps.plan.outputs.count }}
+      bases: ${{ steps.plan.outputs.bases }}
+      bases_count: ${{ steps.plan.outputs.bases_count }}
     steps:
       - uses: actions/checkout@v5
 
-      - if: github.event_name != 'pull_request'
+      - if: env.CAN_PUSH == 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -59,6 +74,19 @@ jobs:
         env:
           PUSH: ${{ github.event_name != 'pull_request' }}
         run: |
+          json_list() { if [[ $# -eq 0 ]]; then echo '[]'; else printf '%s\n' "$@" | jq -cs .; fi; }
+          bases=()
+          for base in $(scripts/images.sh bases); do
+            tag=$(scripts/images.sh tag "$base")
+            image="${REGISTRY_PREFIX}${base}"
+            if docker buildx imagetools inspect "${image}:${tag}" >/dev/null 2>&1; then
+              echo "base ${base}: ${image}:${tag} exists, not rebuilt"
+              continue
+            fi
+            echo "base ${base}: build ${image}:${tag}"
+            bases+=("$(jq -cn --arg vm "$base" --arg dir "images/$base" --arg tag "$tag" \
+              '{vm: $vm, dir: $dir, tag: $tag, cache: $vm}')")
+          done
           entries=()
           for vm in $(scripts/images.sh list); do
             dir=$(scripts/images.sh dir "$vm")
@@ -75,17 +103,70 @@ jobs:
             entries+=("$(jq -cn --arg vm "$vm" --arg dir "$dir" --arg tag "$tag" \
               '{vm: $vm, dir: $dir, tag: $tag, cache: ($dir | split("/") | last)}')")
           done
-          if [[ ${#entries[@]} -eq 0 ]]; then
-            matrix='[]'
-          else
-            matrix=$(printf '%s\n' "${entries[@]}" | jq -cs .)
-          fi
-          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
+          echo "bases=$(json_list ${bases[@]+"${bases[@]}"})" >> "$GITHUB_OUTPUT"
+          echo "bases_count=${#bases[@]}" >> "$GITHUB_OUTPUT"
+          echo "matrix=$(json_list ${entries[@]+"${entries[@]}"})" >> "$GITHUB_OUTPUT"
           echo "count=${#entries[@]}" >> "$GITHUB_OUTPUT"
 
-  build:
+  bases:
     needs: plan
-    if: needs.plan.outputs.count != '0'
+    if: needs.plan.outputs.bases_count != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.plan.outputs.bases) }}
+    name: base ${{ matrix.vm }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - if: env.CAN_PUSH != 'true'
+        run: |
+          echo "::error::${{ matrix.vm }} changed, but a pull request from a fork cannot push a base image"
+          exit 1
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: args
+        env:
+          VM: ${{ matrix.vm }}
+        run: |
+          {
+            echo "build_args<<BUILD_ARGS_EOF"
+            scripts/images.sh build-args "$VM"
+            echo "BUILD_ARGS_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dir }}/Dockerfile
+          platforms: linux/amd64
+          build-args: ${{ steps.args.outputs.build_args }}
+          push: true
+          tags: ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:${{ matrix.tag }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.cache }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.cache }}
+
+  build:
+    needs: [plan, bases]
+    # Runs when the bases job succeeded or had nothing to build.
+    if: >-
+      always() && needs.plan.result == 'success' && needs.plan.outputs.count != '0'
+      && (needs.bases.result == 'success' || needs.bases.result == 'skipped')
     runs-on: ubuntu-latest
     # The Haskell build alone takes 25+ minutes on a laptop; GitHub runners have 4 vCPUs.
     timeout-minutes: 240
@@ -108,7 +189,8 @@ jobs:
 
       - uses: docker/setup-buildx-action@v3
 
-      - if: github.event_name != 'pull_request'
+      # Also on pull requests from this repository: the build pulls the base images.
+      - if: env.CAN_PUSH == 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -131,7 +213,8 @@ jobs:
           file: ${{ matrix.dir }}/Dockerfile
           platforms: linux/amd64
           build-args: ${{ steps.args.outputs.build_args }}
-          push: ${{ github.event_name != 'pull_request' }}
+          # Into the local image store for the check; pushed below only after the gate passes.
+          load: true
           tags: |
             ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:${{ matrix.tag }}
             ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:latest
@@ -141,3 +224,77 @@ jobs:
           # VMs that share a Dockerfile (scalus-cek/scalus-jit) share a cache scope.
           cache-from: type=gha,scope=${{ matrix.cache }}
           cache-to: type=gha,mode=max,scope=${{ matrix.cache }}
+
+      # The check loop on all 89 scripts, then the gate (check/README.md).
+      - name: Check (all scripts)
+        env:
+          IMAGE: ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:${{ matrix.tag }}
+          VM: ${{ matrix.vm }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/check"
+          docker run --rm -e BENCH_LOOPS=check -e PVB_VM="$VM" \
+            -v "$PWD/data:/bench/data:ro" -v "$RUNNER_TEMP/check:/results" "$IMAGE" "$VM"
+
+      - name: Gate
+        env:
+          VM: ${{ matrix.vm }}
+        run: |
+          mode=$(awk -v vm="$VM" '$1 == vm { print $2 }' check/modes.conf)
+          args=()
+          case "$mode" in
+            badge:*) args=(--mode "$VM=badge:${mode#badge:}") ;;
+            "" | strict) ;;
+            *) args=(--mode "$VM=$mode") ;;
+          esac
+          python3 check/gate.py --reference check/reference/haskell-check.csv \
+            --json "$RUNNER_TEMP/check/gate.json" "${args[@]}" "$RUNNER_TEMP/check/$VM-check.csv"
+
+      # Proves that the timed loops run (one script, quick timing). The numbers are thrown away and
+      # never published: a GitHub runner is no bench server.
+      - name: Timing smoke (numbers discarded)
+        env:
+          IMAGE: ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:${{ matrix.tag }}
+          VM: ${{ matrix.vm }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/check/smoke"
+          docker run --rm -e BENCH_SCRIPTS=auction_1-1 -e BENCH_LOOPS=d3,eval -e BENCH_TIMING=quick \
+            -v "$PWD/data:/bench/data:ro" -v "$RUNNER_TEMP/check/smoke:/results" "$IMAGE" "$VM"
+          for f in "$RUNNER_TEMP/check/smoke/$VM.csv" "$RUNNER_TEMP/check/smoke/$VM-eval.csv"; do
+            # Every VM writes the d3 file; a VM without an eval loop writes no eval file.
+            [[ -f "$f" || "$f" == *-eval.csv ]] || { echo "::error::no $(basename "$f")"; exit 1; }
+            [[ -f "$f" ]] || continue
+            echo "== $(basename "$f")"; cat "$f"
+            # The mean_ns column of the script row must be a positive time, not -1.
+            python3 - "$f" <<'PY'
+          import csv, sys
+          rows = list(csv.DictReader(open(sys.argv[1])))
+          bad = [r for r in rows if float(r.get("mean_ns") or -1) <= 0]
+          sys.exit(f"no timed row in {sys.argv[1]}: {bad or 'empty'}" if bad or not rows else 0)
+          PY
+          done
+
+      - name: Upload check CSVs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: check-${{ matrix.vm }}
+          path: ${{ runner.temp }}/check/
+          if-no-files-found: warn
+
+      # Main: push the checked image. The same build again, all from the cache.
+      - name: Push
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dir }}/Dockerfile
+          platforms: linux/amd64
+          build-args: ${{ steps.args.outputs.build_args }}
+          push: true
+          tags: |
+            ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:${{ matrix.tag }}
+            ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:latest
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.cache }}

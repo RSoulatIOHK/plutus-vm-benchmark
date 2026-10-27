@@ -3,8 +3,8 @@
 
 Usage: parse_vitest.py <vm-name> <raw-log> [loop]
 
-The harnesses (images/blaze/pvb-time.test.ts under vitest; images/scalus-js/time.mjs and
-images/aiken-wasm/time.mjs under plain node) run one script per process, with the JMH shape of
+The shared JS timing loop (images/node-base/time.mjs under plain node, for blaze-v8, scalus-js and
+aiken-wasm; also the Chrysalis harness) runs one script per process, with the JMH shape of
 the JVM rows: one warm-up round, then measured rounds. Each round runs operations back to back
 for a fixed time and scores elapsed / ops (JMH avgt). Per script they print one line
 

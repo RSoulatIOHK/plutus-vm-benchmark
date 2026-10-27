@@ -77,11 +77,20 @@ eval only (D21: its decode runs outside the timed loop):
 | decode and compile excluded | The decode and the compile run once per script, before timing | Scalus JIT |
 | decode cached (by the library) | The library caches the decoded program; the harness cannot turn the cache off | Aiken WASM (`@lucid-evolution/uplc` 0.4.0) |
 
-The page shows an unranked "Experimental" section. It holds VMs that have a release tag and pass
-the gate, but miss rule 2 or publish no artifact. Today these are the Scalus JIT (since Scalus
-1.4.1, 2026-10-26, the `scalus-uplc-jit-compiler` module is published to Maven, so it meets rule 1;
-it has no downstream users yet, so it misses rule 2) and
-blaze-plutus (no released project outside the Blaze repo depends on `@blaze-cardano/plutus`).
+The page shows an unranked "Experimental" section (spec D22). It holds VMs of the original SAIB
+line-up that miss rule 1 or rule 2. Each row shows its reason:
+
+| Reason | Meaning | Example |
+|---|---|---|
+| pre-release only | Only `-alpha` or `-preNN` versions; pinned to the newest pre-release tag | Chrysalis, Julc |
+| no release | No tag or release; pinned to a `main` commit | Plutuz, amaru-uplc bytecode (fork) |
+| no downstream user | A release, but no released project outside its repo depends on it | Scalus JIT, blaze-plutus |
+| outdated | A built-in cost model from before protocol version 11 and no API for a cost model; badge "outdated cost model" (its ExUnits equal Haskell with that model) | llvm-uplc |
+
+An experimental row never gets a rank. It is never a competitor in the penalty rule, and it has no
+line in the history chart. The gate checks each of its scripts. A script that fails is marked
+"failed check", and its time is left out of the row's geometric mean. A row with no passing
+script, or without a check file, is listed as "failed check".
 
 The README lists the VMs that are not included and the rule that each one fails.
 
@@ -141,13 +150,28 @@ and the runner is `scripts/run-<vm>.sh`.
 | VM | Framework | Warm-up and measurement (normal timing) |
 |---|---|---|
 | haskell | Criterion | Criterion's warm-up; about 5 s per script, Criterion's default (`timeLimit = 5`) |
-| scalus-cek, scalus-jit | JMH | One 30 s warm-up iteration, three 5 s measurement iterations (`-wi 1 -w 30s -i 3 -r 5s`). One fork per method and script (`-f 1`) |
+| scalus-cek, scalus-jit, julc-java | JMH 1.37, shared runner (`scripts/jmh-run.sh`) | One 30 s warm-up iteration, three 5 s measurement iterations (`-wi 1 -w 30s -i 3 -r 5s`). One fork per method and script (`-f 1`) |
 | aiken | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
-| blaze-v8 | Own loop (JMH shape), launched by Vitest | Adaptive warm-up (5 to 30 s), three 5 s measurements |
-| aiken-wasm | Own loop (JMH shape), plain Node.js | Adaptive warm-up (5 to 30 s), three 5 s measurements (a JIT runtime, V8) |
-| scalus-js | Own loop (JMH shape), plain Node.js | Adaptive warm-up (5 to 30 s), three 5 s measurements (the same loop as blaze-v8) |
+| blaze-v8, scalus-js, aiken-wasm | One shared loop (JMH shape, `images/node-base/time.mjs`), plain Node.js | Adaptive warm-up (5 to 30 s), three 5 s measurements (a JIT runtime, V8) |
+
+### Shared base images of the JIT rows
+
+Since 2026-10-27 the JVM rows and the JS rows each build on one base image:
+
+- `images/jvm-base` (scalus-cek, scalus-jit, julc-java): Oracle GraalVM 25.4.4 is the JMH
+  launcher and the forked benchmark JVM, JMH is 1.37 (`JMH_VERSION`), and one runner script
+  (`scripts/jmh-run.sh`) holds the JMH options. `-Xss64m` stays only in scalus-jit. Before, the
+  Scalus rows launched JMH on Temurin 21.
+- `images/node-base` (blaze-v8, scalus-js, aiken-wasm): one Node.js, Node 24 LTS "Krypton"
+  24.22.1 (`NODE_VERSION`, pinned by image digest), and one timing loop (`time.mjs`). Each row gives only its operation
+  (`vm.mjs`; blaze: `pvb-vm.ts`, bundled with bun). Before, blaze-v8 ran its own copy of the loop
+  under Vitest on the Node 22 of NodeSource, and the other two used the newest `node:22` image.
+  So the JS rows also moved from Node 22 to Node 24: a newer V8.
+
+So the numbers of these six rows can change from the run of 2026-10-27 on, with no change in
+the VMs: a shared runtime and runner, and for the JS rows Node 24 instead of Node 22. Compare their history across that date with care.
 
 ### Warm-up of the JIT rows
 
@@ -163,7 +187,7 @@ The JS rows (blaze-v8, scalus-js, aiken-wasm) use an adaptive warm-up:
    ±3 % of their median.
 3. Stop at 30 s at the latest (the cap), steady or not.
 
-The JMH rows (scalus-cek, scalus-jit) use one JMH warm-up iteration of 30 s, the cap
+The JMH rows (scalus-cek, scalus-jit, julc-java) use one JMH warm-up iteration of 30 s, the cap
 (`-wi 1 -w 30s`). The JMH rows keep JMH's own warm-up iterations, at the 30 s cap. This change
 from 20 s to 30 s (2026-10-23) made the Scalus CEK decode + eval time about 7 % faster: the JVM
 settles on one of two speed levels for this row, and a 20 s warm-up often stopped on the slower one. JMH cannot
@@ -208,7 +232,7 @@ row runs it under Vitest. blaze has no built package in the image, so Vitest loa
 sources (`src/cek`, `src/flat`) and transforms them. A bundle would give a different module shape
 than the one blaze has been timed with so far.
 
-There is no JSC row: every JS row runs on Node 22 (V8), the common runtime for Cardano off-chain
+There is no JSC row: every JS row runs on Node 24 LTS (V8), the common runtime for Cardano off-chain
 code; one engine keeps the JS rows comparable.
 
 ## Fairness Rules

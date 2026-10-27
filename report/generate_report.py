@@ -59,6 +59,7 @@ VM_ORDER = [
     "haskell", "scalus-jit", "scalus-cek", "scalus-js",
     "aiken", "aiken-wasm", "uplc-turbo",
     "plutigo", "blaze-jsc", "blaze-v8",
+    "chrysalis", "chrysalis-aot", "julc-java", "plutuz", "llvm-uplc-jit", "uplc-turbo-bc",
 ]
 
 # The header logo in report/template.html, a file in docs/.
@@ -104,7 +105,39 @@ EXPERIMENTAL = {
                  "yet; Blaze itself evaluates scripts with @blaze-cardano/vm (Aiken uplc as WASM) (spec D17)",
     "scalus-jit": "not ranked: the JIT module is published (Maven, since Scalus 1.4.1) but has no "
                   "downstream users yet (spec D17)",
+    "julc-java": "not ranked: only pre-releases (0.1.0-preNN), and no downstream users yet (spec D22)",
+    "chrysalis": "not ranked: only pre-releases on NuGet (Chrysalis.Plutus -alpha); the one stable "
+                 "version, 1.7.1, is unlisted (spec D22)",
+    "chrysalis-aot": "not ranked: only pre-releases on NuGet (Chrysalis.Plutus -alpha); the one stable "
+                     "version, 1.7.1, is unlisted (spec D22)",
+    "plutuz": "not ranked: no release (no tags or releases on GitHub), pinned to a main commit (spec D22)",
+    "uplc-turbo-bc": "not ranked: no release has the bytecode mode; it is in the fork jonathanlim222/uplc "
+                     "(closed PR pragma-org/uplc#47), pinned to a commit (spec D22)",
+    "llvm-uplc-jit": "not ranked: outdated. Its built-in cost model is variant C (before protocol "
+                     "version 11; divideInteger c11 549, mainnet 960), no API takes a cost model, and "
+                     "its last commit is from 2026-04-16. No release (spec D22)",
 }
+
+# The short visible reason of each EXPERIMENTAL VM (spec D22): next to its "experimental" badge,
+# in the summary table and the VM list. The long reason above is the tooltip and the card text.
+EXPERIMENTAL_TAG = {
+    "blaze-v8": "no downstream user",
+    "blaze-jsc": "no downstream user",
+    "scalus-jit": "no downstream user",
+    "julc-java": "pre-release only",
+    "chrysalis": "pre-release only",
+    "chrysalis-aot": "pre-release only",
+    "plutuz": "no release",
+    "uplc-turbo-bc": "no release",
+    "llvm-uplc-jit": "outdated",
+}
+
+
+def experimental_badge(vm: str) -> str:
+    """The text of the experimental badge: "experimental: <short reason>"."""
+    tag = EXPERIMENTAL_TAG.get(vm)
+    return f"experimental: {tag}" if tag else "experimental"
+
 
 # Run-to-run noise of a ratio to Haskell (spec D20): two good servers of the same type gave ratios
 # up to ~5 % apart per VM (geometric mean over the scripts). A smaller change between two runs is
@@ -140,7 +173,7 @@ def d3_ranked(present_vms) -> list[str]:
     return [vm for vm in present_vms if vm not in DECODE_CACHED]
 
 VM_LABELS = {
-    "uplc-turbo": "uplc-turbo AST walker (Rust)",
+    "uplc-turbo": "amaru-uplc AST walker (Rust)",
     "plutigo": "Plutigo CEK (Go)",
     "blaze-jsc": "blaze-plutus CEK (TypeScript / Bun JSC)",
     "blaze-v8": "blaze-plutus CEK (TypeScript / Node V8)",
@@ -150,6 +183,12 @@ VM_LABELS = {
     "scalus-js": "Scalus CEK (Scala.js / Node V8)",
     "aiken": "Aiken uplc CEK (Rust)",
     "aiken-wasm": "Aiken uplc CEK (Rust → WASM / Node V8)",
+    "julc-java": "Julc Java CEK (Java / JVM)",
+    "chrysalis": "Chrysalis CEK (C# / .NET JIT)",
+    "chrysalis-aot": "Chrysalis CEK (C# / .NET AOT)",
+    "plutuz": "Plutuz CEK (Zig)",
+    "uplc-turbo-bc": "amaru-uplc bytecode VM, fork jonathanlim222/uplc (Rust)",
+    "llvm-uplc-jit": "llvm-uplc UPLC→native JIT (C++ / LLVM)",
 }
 
 
@@ -166,6 +205,12 @@ VM_FACTS = {
     "plutigo": {"lang": "Go", "runtime": "native", "model": "Interpreter (CEK)"},
     "blaze-jsc": {"lang": "TypeScript", "runtime": "Bun (JSC)", "model": "Interpreter (CEK)"},
     "blaze-v8": {"lang": "TypeScript", "runtime": "Node (V8)", "model": "Interpreter (CEK)"},
+    "julc-java": {"lang": "Java", "runtime": "GraalVM", "model": "Interpreter (CEK)"},
+    "chrysalis": {"lang": "C#", "runtime": ".NET 10 (JIT)", "model": "Interpreter (CEK)"},
+    "chrysalis-aot": {"lang": "C#", "runtime": ".NET 10 (NativeAOT)", "model": "Interpreter (CEK)"},
+    "plutuz": {"lang": "Zig", "runtime": "native", "model": "Interpreter (CEK)"},
+    "uplc-turbo-bc": {"lang": "Rust", "runtime": "native", "model": "Bytecode VM (UPLC → bytecode)"},
+    "llvm-uplc-jit": {"lang": "C / C++", "runtime": "native (LLVM 22 LLJIT)", "model": "JIT compiler (UPLC → native code)"},
 }
 
 # Where each VM comes from. The pinned version is read from .env at the repo root (env: the .env
@@ -218,6 +263,31 @@ VM_SOURCES = {
         "env": "BLAZE_SHA", "pattern": r"@blaze-cardano/plutus (\d+(?:\.\d+)+)", "tag": "0.1.1",
         "version": "@blaze-cardano/plutus {tag}",
         "release": _BLAZE_REPO + "/releases/tag/@blaze-cardano/plutus@{tag}"},
+    "julc-java": {
+        "repo": "https://github.com/bloxbean/julc", "home": None,
+        "env": "JULC_VERSION", "pattern": r"^(\d+\.\d+\.\d+-pre\d+)", "tag": "0.1.0-pre19", "version": "v{tag}",
+        "release": "https://github.com/bloxbean/julc/releases/tag/v{tag}"},
+    "chrysalis": {
+        "repo": "https://github.com/SAIB-Inc/Chrysalis", "home": None,
+        "env": "CHRYSALIS_VERSION", "pattern": r"^(\S+)", "tag": "1.7.14-alpha", "version": "Chrysalis.Plutus {tag} (NuGet)",
+        "release": "https://www.nuget.org/packages/Chrysalis.Plutus/{tag}"},
+    "chrysalis-aot": {
+        "repo": "https://github.com/SAIB-Inc/Chrysalis", "home": None,
+        "env": "CHRYSALIS_VERSION", "pattern": r"^(\S+)", "tag": "1.7.14-alpha", "version": "Chrysalis.Plutus {tag} (NuGet)",
+        "release": "https://www.nuget.org/packages/Chrysalis.Plutus/{tag}"},
+    # No release: the pin is a main commit; the version is its short SHA, linked to the commit.
+    "plutuz": {
+        "repo": "https://github.com/utxo-company/plutuz", "home": None,
+        "env": "PLUTUZ_SHA", "pattern": r"^([0-9a-f]{7})", "tag": "33b812d", "version": "main {tag}",
+        "release": "https://github.com/utxo-company/plutuz/commit/{tag}"},
+    "uplc-turbo-bc": {
+        "repo": "https://github.com/jonathanlim222/uplc", "home": None,
+        "env": "UPLC_TURBO_BC_SHA", "pattern": r"^([0-9a-f]{7})", "tag": "069cef5", "version": "fork {tag}",
+        "release": "https://github.com/jonathanlim222/uplc/commit/{tag}"},
+    "llvm-uplc-jit": {
+        "repo": "https://github.com/SeungheonOh/llvm-uplc", "home": None,
+        "env": "LLVM_UPLC_SHA", "pattern": r"^([0-9a-f]{7})", "tag": "6bcef67", "version": "main {tag}",
+        "release": "https://github.com/SeungheonOh/llvm-uplc/commit/{tag}"},
 }
 
 # The downstream users of each VM (spec D17): released projects outside the VM's own repo that
@@ -321,7 +391,7 @@ def vm_list_badges(vm: str, gate: dict | None, hidden: dict[str, str], compile_n
         out.append(("outdated", "outdated cost model",
                     "The VM cannot load the mainnet cost model; its ExUnits equal Haskell with the model the VM ships"))
     if vm in EXPERIMENTAL:
-        out.append(("exp", "experimental", EXPERIMENTAL[vm]))
+        out.append(("exp", experimental_badge(vm), EXPERIMENTAL[vm]))
     if vm in VM_BADGES:
         out.append(("timing", VM_BADGES[vm]["text"], VM_BADGES[vm]["title"]))
     if vm in compile_ns:
@@ -626,6 +696,12 @@ def experimental_geo_mean(data, scripts, ranked: list[str], vm: str) -> float:
     return compute_geo_means(data, scripts, ranked + [vm])[vm]
 
 
+def exp_reason_md(vm: str) -> str:
+    """The Reason cell of report.md: the short reason in bold, then the long one."""
+    tag = EXPERIMENTAL_TAG.get(vm)
+    return (f"**{tag}**. " if tag else "") + unranked_reason(vm)
+
+
 def unranked_reason(vm: str) -> str:
     """Why a shown VM is not ranked: its EXPERIMENTAL reason, else the compiling-VM reason."""
     return EXPERIMENTAL.get(vm, COMPILING_REASON)
@@ -734,7 +810,7 @@ def generate_markdown(run_dir: str, data, scripts, present_vms, experimental, en
                 geo = experimental_geo_mean(data, scripts, d3_vms, vm)
                 geo_cell = fmt_ns(int(geo)) if geo > 0 else "-"
             lines.append(f"| **{label}**{badge_text(vm)} | {lang} | {geo_cell} | {eval_cell} | {comp_cell} | "
-                         f"{check_label(gate, vm)} | {unranked_reason(vm)} |")
+                         f"{check_label(gate, vm)} | {exp_reason_md(vm)} |")
 
     if hidden:
         lines.append("")
@@ -947,6 +1023,7 @@ def generate_html(run_dir: str, env_info: str, data, scripts, present_vms, exper
         "compile_badge": COMPILE_BADGE,
         "badges": {vm: b for vm, b in VM_BADGES.items() if vm in shown},
         "experimental": {vm: unranked_reason(vm) for vm in experimental},
+        "experimental_tag": {vm: EXPERIMENTAL_TAG[vm] for vm in experimental if vm in EXPERIMENTAL_TAG},
         "no_d3_note": NO_D3_NOTE,
         # {vm: the visible line}: ranked on eval only, no decode + eval time (DECODE_CACHED).
         "decode_cached": {vm: t for vm, t in DECODE_CACHED.items() if vm in shown},
@@ -1034,7 +1111,7 @@ OG_SIZE = (1200, 630)
 KEYWORDS = [
     "Cardano", "Plutus", "UPLC", "Untyped Plutus Core", "Plutus VM", "smart contract",
     "CEK machine", "evaluator", "benchmark", "performance", "plutus-core", "Aiken", "Scalus",
-    "blaze-plutus", "Plutigo", "uplc-turbo",
+    "blaze-plutus", "Plutigo", "amaru-uplc", "Chrysalis", "Julc", "Plutuz",
 ]
 
 
@@ -1101,7 +1178,7 @@ def summary_html(rows: list[dict], n_scripts: int) -> str:
         rank = "–" if r["rank"] is None else str(r["rank"])
         ratio = ("not ranked" if r["experimental"] else "eval only" if r["eval_only_ranked"]
                  else f"{r['ratio']:.2f}×" if r["ratio"] else "-")
-        name = escape(r["name"]) + (" (experimental)" if r["experimental"] else "")
+        name = escape(r["name"]) + (f" ({experimental_badge(r['vm'])})" if r["experimental"] else "")
         tr = '<tr class="exp">' if r["experimental"] else "<tr>"
         # A compiling VM: no decode + eval time ("–" with the reason as a tooltip).
         d3 = (f'<td title="{escape(no_d3_note(r["vm"]))}">–</td>' if r["compiled"]
