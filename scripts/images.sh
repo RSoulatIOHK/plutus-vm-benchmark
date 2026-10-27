@@ -2,6 +2,8 @@
 # Facts about the per-VM images (docs/IMAGE_CONTRACT.md), shared by local builds and CI.
 #
 #   scripts/images.sh list               every VM that has an image, one per line
+#   scripts/images.sh bases              every base image (images/<base>/Dockerfile with a line
+#                                        "# pvb-base"), one per line
 #   scripts/images.sh dir <vm>           images/<dir> that holds the VM's Dockerfile
 #   scripts/images.sh build-args <vm>    KEY=VALUE lines to pass as --build-arg (an ARG with a
 #                                        default in the Dockerfile may be absent from .env)
@@ -13,6 +15,11 @@
 # "# pvb-vms: <vm> <vm>..." (one build shared by several VMs, for example scalus-cek and
 # scalus-jit). Such a Dockerfile takes the build arg VM, which selects the default command.
 #
+# A base image (header line "# pvb-base", for example images/jvm-base) serves no VM. A VM
+# Dockerfile uses it with "ARG JVM_BASE" + "FROM ${JVM_BASE}": the build arg <NAME>_BASE is the
+# image of images/<name>-base, ${IMAGE_PREFIX}<name>-base:<tag>. The base tag is a build arg of
+# the VM, so it is in the VM's tag: a change of the base rebuilds the VMs that use it.
+#
 # Written for bash 3.2 (macOS /bin/bash): no associative arrays, no mapfile.
 set -euo pipefail
 
@@ -21,10 +28,13 @@ IMAGE_PREFIX="${IMAGE_PREFIX:-ghcr.io/lantr-io/pvb-}"
 
 die() { echo "images.sh: $*" >&2; exit 1; }
 
-# VMs served by images/<dir>/Dockerfile.
+is_base() { grep -q '^# pvb-base' "$REPO_ROOT/images/$1/Dockerfile"; }
+
+# VMs served by images/<dir>/Dockerfile; none for a base image.
 vms_of_dir() {
     local dockerfile="$REPO_ROOT/images/$1/Dockerfile"
     local declared
+    is_base "$1" && return 0
     declared=$(sed -n 's/^# pvb-vms:[[:space:]]*//p' "$dockerfile" | head -1)
     if [[ -n "$declared" ]]; then echo "$declared" | tr ' ' '\n' | grep -v '^$'; else echo "$1"; fi
 }
@@ -36,8 +46,20 @@ cmd_list() {
     done
 }
 
+cmd_bases() {
+    local d
+    for d in "$REPO_ROOT"/images/*/Dockerfile; do
+        d=$(basename "$(dirname "$d")")
+        if is_base "$d"; then echo "$d"; fi
+    done
+}
+
+# The base image a <NAME>_BASE build arg names: JVM_BASE -> jvm-base.
+base_of_arg() { echo "$1" | tr 'A-Z_' 'a-z-'; }
+
 cmd_dir() {
     local vm="$1" d
+    if [[ -f "$REPO_ROOT/images/$vm/Dockerfile" ]] && is_base "$vm"; then echo "images/$vm"; return; fi
     for d in "$REPO_ROOT"/images/*/Dockerfile; do
         d=$(basename "$(dirname "$d")")
         if vms_of_dir "$d" | grep -qx "$vm"; then echo "images/$d"; return; fi
@@ -58,6 +80,10 @@ cmd_build_args() {
     for arg in $(sed -n 's/^ARG[[:space:]]\{1,\}\([A-Z0-9_]\{1,\}\).*/\1/p' "$REPO_ROOT/$dir/Dockerfile" | sort -u); do
         if [[ "$arg" == VM ]]; then
             echo "VM=$vm"
+            continue
+        fi
+        if [[ "$arg" == *_BASE ]]; then
+            echo "$arg=${IMAGE_PREFIX}$(base_of_arg "$arg"):$(cmd_tag "$(base_of_arg "$arg")")"
             continue
         fi
         value=$(env_value "$arg")
@@ -107,7 +133,16 @@ cmd_build() {
     local dir tag args=() line
     dir=$(cmd_dir "$vm")
     tag=$(cmd_tag "$vm")
-    while IFS= read -r line; do args+=(--build-arg "$line"); done < <(cmd_build_args "$vm")
+    while IFS= read -r line; do
+        args+=(--build-arg "$line")
+        # Build a base image first when it is not here yet.
+        case "$line" in
+            *_BASE=*)
+                docker image inspect "${line#*=}" >/dev/null 2>&1 \
+                    || cmd_build "$(base_of_arg "${line%%=*}")"
+                ;;
+        esac
+    done < <(cmd_build_args "$vm")
     echo "Building ${IMAGE_PREFIX}${vm}:${tag} from $dir/Dockerfile" >&2
     docker build ${args[@]+"${args[@]}"} "$@" \
         -f "$REPO_ROOT/$dir/Dockerfile" \
@@ -115,9 +150,10 @@ cmd_build() {
         "$REPO_ROOT"
 }
 
-[[ $# -ge 1 ]] || die "usage: $0 list | dir <vm> | build-args <vm> | tag <vm> | build <vm> [options]"
+[[ $# -ge 1 ]] || die "usage: $0 list | bases | dir <vm> | build-args <vm> | tag <vm> | build <vm> [options]"
 case "$1" in
     list) cmd_list ;;
+    bases) cmd_bases ;;
     dir) cmd_dir "${2:?vm}" ;;
     build-args) cmd_build_args "${2:?vm}" ;;
     tag) cmd_tag "${2:?vm}" ;;
