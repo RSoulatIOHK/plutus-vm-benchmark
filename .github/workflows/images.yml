@@ -249,6 +249,30 @@ jobs:
           python3 check/gate.py --reference check/reference/haskell-check.csv \
             --json "$RUNNER_TEMP/check/gate.json" "${args[@]}" "$RUNNER_TEMP/check/$VM-check.csv"
 
+      # Proves that the timed loops run (one script, quick timing). The numbers are thrown away and
+      # never published: a GitHub runner is no bench server.
+      - name: Timing smoke (numbers discarded)
+        env:
+          IMAGE: ${{ env.REGISTRY_PREFIX }}${{ matrix.vm }}:${{ matrix.tag }}
+          VM: ${{ matrix.vm }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/check/smoke"
+          docker run --rm -e BENCH_SCRIPTS=auction_1-1 -e BENCH_LOOPS=d3,eval -e BENCH_TIMING=quick \
+            -v "$PWD/data:/bench/data:ro" -v "$RUNNER_TEMP/check/smoke:/results" "$IMAGE" "$VM"
+          for f in "$RUNNER_TEMP/check/smoke/$VM.csv" "$RUNNER_TEMP/check/smoke/$VM-eval.csv"; do
+            # Every VM writes the d3 file; a VM without an eval loop writes no eval file.
+            [[ -f "$f" || "$f" == *-eval.csv ]] || { echo "::error::no $(basename "$f")"; exit 1; }
+            [[ -f "$f" ]] || continue
+            echo "== $(basename "$f")"; cat "$f"
+            # The mean_ns column of the script row must be a positive time, not -1.
+            python3 - "$f" <<'PY'
+          import csv, sys
+          rows = list(csv.DictReader(open(sys.argv[1])))
+          bad = [r for r in rows if float(r.get("mean_ns") or -1) <= 0]
+          sys.exit(f"no timed row in {sys.argv[1]}: {bad or 'empty'}" if bad or not rows else 0)
+          PY
+          done
+
       - name: Upload check CSVs
         if: always()
         uses: actions/upload-artifact@v4
