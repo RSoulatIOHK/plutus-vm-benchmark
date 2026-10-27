@@ -173,22 +173,22 @@ def d3_ranked(present_vms) -> list[str]:
     return [vm for vm in present_vms if vm not in DECODE_CACHED]
 
 VM_LABELS = {
-    "uplc-turbo": "amaru-uplc AST walker (Rust)",
-    "plutigo": "Plutigo CEK (Go)",
-    "blaze-jsc": "blaze-plutus CEK (TypeScript / Bun JSC)",
-    "blaze-v8": "blaze-plutus CEK (TypeScript / Node V8)",
-    "haskell": "plutus-core CEK (Haskell / GHC)",
+    "uplc-turbo": "amaru-uplc (Rust)",
+    "plutigo": "Plutigo (Go)",
+    "blaze-jsc": "blaze-plutus (TypeScript / Bun JSC)",
+    "blaze-v8": "blaze-plutus (TypeScript / Node V8)",
+    "haskell": "plutus-core (Haskell / GHC)",
     "scalus-cek": "Scalus CEK (Scala / JVM)",
-    "scalus-jit": "Scalus UPLC→JVM JIT (Scala / JVM)",
-    "scalus-js": "Scalus CEK (Scala.js / Node V8)",
-    "aiken": "Aiken uplc CEK (Rust)",
-    "aiken-wasm": "Aiken uplc CEK (Rust → WASM / Node V8)",
+    "scalus-jit": "Scalus JIT (Scala / JVM)",
+    "scalus-js": "Scalus.js CEK (Scala.js / Node V8)",
+    "aiken": "Aiken uplc (Rust)",
+    "aiken-wasm": "Aiken uplc WASM (Rust → WASM / Node V8)",
     "julc-java": "Julc Java CEK (Java / JVM)",
-    "chrysalis": "Chrysalis CEK (C# / .NET JIT)",
-    "chrysalis-aot": "Chrysalis CEK (C# / .NET AOT)",
-    "plutuz": "Plutuz CEK (Zig)",
-    "uplc-turbo-bc": "amaru-uplc bytecode VM, fork jonathanlim222/uplc (Rust)",
-    "llvm-uplc-jit": "llvm-uplc UPLC→native JIT (C++ / LLVM)",
+    "chrysalis": "Chrysalis (C# / .NET JIT)",
+    "chrysalis-aot": "Chrysalis AOT (C# / .NET AOT)",
+    "plutuz": "Plutuz (Zig)",
+    "uplc-turbo-bc": "amaru-uplc BC (fork) (Rust)",
+    "llvm-uplc-jit": "llvm-uplc JIT (C++ / LLVM)",
 }
 
 
@@ -1387,12 +1387,16 @@ def og_card_html(rows: list[dict], date: str, n_scripts: int) -> str:
     bars = ""
     if ranked:
         fastest = ranked[0]["geo"]
+        # Time relative to the fastest on a log axis, as the page's ranking draws it: longer is
+        # slower, and the fastest VM keeps a short bar.
+        lo = -0.3
+        hi = math.log10(max(1.5, max(r["geo"] / fastest for r in ranked))) + 0.04
         for r in ranked:
-            w = max(4.0, 100 * fastest / r["geo"])  # speed relative to the fastest: longer is faster
+            w = 100 * (math.log10(r["geo"] / fastest) - lo) / (hi - lo)
             bars += (f'<div class="row"><div class="n">{escape(r["name"])}<span>{escape(r["lang"])}</span></div>'
                      f'<div class="t"><div class="b" style="width:{w:.1f}%"></div></div>'
                      f'<div class="v">{fmt_ns_html(r["geo"])}</div></div>')
-        sub = f"Decode + eval geometric mean, {n_scripts} scripts, run {date}. Longer bar = faster."
+        sub = f"Decode + eval geometric mean, {n_scripts} scripts, run {date}. Shorter bar = faster."
     else:
         sub = "Cardano smart contract evaluators: decode + eval time, checked against plutus-core."
     logo = "file://" + os.path.join(DOCS_DIR, LOGO)
