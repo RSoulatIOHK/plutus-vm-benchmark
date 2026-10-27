@@ -77,17 +77,17 @@ drift (haskell, end vs start): +1.2 % over 5 scripts
 *A compiling VM's timed loop runs the compiled script ("decode and compile excluded": the decode and the compile run once per script, before timing). So it has only an eval-only time: its Geo Mean (decode + eval) is "–" and it is not ranked. The Compile column is the geometric mean of the compile time over the scripts.*
 *Geo Mean: flat decode + evaluation (the ranking). Eval only: evaluation of a program decoded before the timed loop, geometric mean over its scripts.*
 *Aiken WASM caches decoded programs inside the library, so its time is shown as eval only. It is not in the decode + eval ranking; it is ranked on eval only (Geo Mean "–").*
-*Aiken uplc CEK (Rust → WASM / Node V8), "decode cached (by the library)": The library caches the decoded program by a hash of the flat bytes. After the first call (in the warm-up), the timed loop runs hash + evaluation, without the decode. Its eval-only time is the same loop.*
+*Aiken uplc WASM (Rust → WASM / Node V8), "decode cached (by the library)": The library caches the decoded program by a hash of the flat bytes. After the first call (in the warm-up), the timed loop runs hash + evaluation, without the decode. Its eval-only time is the same loop.*
 
 | VM | Language | Geo Mean | vs Fastest | Eval only | Compile | Check |
 |---|---|---|---|---|---|---|
 | **Scalus CEK (Scala / JVM)** | Scala / JVM | 268.19 us | 1.00x | 170.83 us | - | pass |
-| **Plutigo CEK (Go)** | Go | 306.48 us | 1.14x | 204.65 us | - | pass |
-| **amaru-uplc AST walker (Rust)** | Rust | 467.01 us | 1.74x | 365.22 us | - | pass |
-| **plutus-core CEK (Haskell / GHC)** | Haskell / GHC | 710.63 us | 2.65x | 276.06 us | - | pass |
-| **Scalus CEK (Scala.js / Node V8)** | Scala.js / Node V8 | 1.46 ms | 5.46x | 980.88 us | - | pass |
-| **Aiken uplc CEK (Rust)** | Rust | 8.22 ms | 30.66x | 6.21 ms | - | pass |
-| **Aiken uplc CEK (Rust → WASM / Node V8)** (decode cached (by the library)) | Rust → WASM / Node V8 | – | eval only | 884.88 us | - | pass |
+| **Plutigo (Go)** | Go | 306.48 us | 1.14x | 204.65 us | - | pass |
+| **amaru-uplc (Rust)** | Rust | 467.01 us | 1.74x | 365.22 us | - | pass |
+| **plutus-core (Haskell / GHC)** | Haskell / GHC | 710.63 us | 2.65x | 276.06 us | - | pass |
+| **Scalus.js CEK (Scala.js / Node V8)** | Scala.js / Node V8 | 1.46 ms | 5.46x | 980.88 us | - | pass |
+| **Aiken uplc (Rust)** | Rust | 8.22 ms | 30.66x | 6.21 ms | - | pass |
+| **Aiken uplc WASM (Rust → WASM / Node V8)** (decode cached (by the library)) | Rust → WASM / Node V8 | – | eval only | 884.88 us | - | pass |
 
 ### Experimental
 
@@ -95,39 +95,39 @@ Run, gated and shown, but not ranked: not in the table above, not a competitor i
 
 | VM | Language | Geo Mean | Eval only | Compile | Check | Reason |
 |---|---|---|---|---|---|---|
-| **Scalus UPLC→JVM JIT (Scala / JVM)** | Scala / JVM | – | 94.41 us | 1.71 s (decode and compile excluded) | pass | **no downstream user**. not ranked: the JIT module is published (Maven, since Scalus 1.4.1) but has no downstream users yet (spec D17) |
-| **blaze-plutus CEK (TypeScript / Node V8)** | TypeScript / Node V8 | 1.29 ms | 1.06 ms | - | pass | **no downstream user**. not ranked: no released project outside the Blaze repo depends on @blaze-cardano/plutus yet; Blaze itself evaluates scripts with @blaze-cardano/vm (Aiken uplc as WASM) (spec D17) |
-| **Chrysalis CEK (C# / .NET JIT)** | C# / .NET JIT | 536.58 us | 401.63 us | - | pass | **pre-release only**. not ranked: only pre-releases on NuGet (Chrysalis.Plutus -alpha); the one stable version, 1.7.1, is unlisted (spec D22) |
-| **Chrysalis CEK (C# / .NET AOT)** | C# / .NET AOT | 586.35 us | 447.74 us | - | pass | **pre-release only**. not ranked: only pre-releases on NuGet (Chrysalis.Plutus -alpha); the one stable version, 1.7.1, is unlisted (spec D22) |
+| **Scalus JIT (Scala / JVM)** | Scala / JVM | – | 94.41 us | 1.71 s (decode and compile excluded) | pass | **no downstream user**. not ranked: the JIT module is published (Maven, since Scalus 1.4.1) but has no downstream users yet (spec D17) |
+| **blaze-plutus (TypeScript / Node V8)** | TypeScript / Node V8 | 1.29 ms | 1.06 ms | - | pass | **no downstream user**. not ranked: no released project outside the Blaze repo depends on @blaze-cardano/plutus yet; Blaze itself evaluates scripts with @blaze-cardano/vm (Aiken uplc as WASM) (spec D17) |
+| **Chrysalis (C# / .NET JIT)** | C# / .NET JIT | 536.58 us | 401.63 us | - | pass | **pre-release only**. not ranked: only pre-releases on NuGet (Chrysalis.Plutus -alpha); the one stable version, 1.7.1, is unlisted (spec D22) |
+| **Chrysalis AOT (C# / .NET AOT)** | C# / .NET AOT | 586.35 us | 447.74 us | - | pass | **pre-release only**. not ranked: only pre-releases on NuGet (Chrysalis.Plutus -alpha); the one stable version, 1.7.1, is unlisted (spec D22) |
 | **Julc Java CEK (Java / JVM)** | Java / JVM | 487.78 us | 392.40 us | - | pass | **pre-release only**. not ranked: only pre-releases (0.1.0-preNN), and no downstream users yet (spec D22) |
-| **Plutuz CEK (Zig)** | Zig | 517.88 us | 335.45 us | - | pass | **no release**. not ranked: no release (no tags or releases on GitHub), pinned to a main commit (spec D22) |
-| **llvm-uplc UPLC→native JIT (C++ / LLVM)** | C++ / LLVM | – | 111.08 us | 8.19 s (decode and compile excluded) | outdated cost model | **outdated**. not ranked: outdated. Its built-in cost model is variant C (before protocol version 11; divideInteger c11 549, mainnet 960), no API takes a cost model, and its last commit is from 2026-04-16. No release (spec D22) |
-| **amaru-uplc bytecode VM, fork jonathanlim222/uplc (Rust)** | Rust | 340.86 us | 220.89 us | - | pass | **no release**. not ranked: no release has the bytecode mode; it is in the fork jonathanlim222/uplc (closed PR pragma-org/uplc#47), pinned to a commit (spec D22) |
+| **Plutuz (Zig)** | Zig | 517.88 us | 335.45 us | - | pass | **no release**. not ranked: no release (no tags or releases on GitHub), pinned to a main commit (spec D22) |
+| **llvm-uplc JIT (C++ / LLVM)** | C++ / LLVM | – | 111.08 us | 8.19 s (decode and compile excluded) | outdated cost model | **outdated**. not ranked: outdated. Its built-in cost model is variant C (before protocol version 11; divideInteger c11 549, mainnet 960), no API takes a cost model, and its last commit is from 2026-04-16. No release (spec D22) |
+| **amaru-uplc BC (fork) (Rust)** | Rust | 340.86 us | 220.89 us | - | pass | **no release**. not ranked: no release has the bytecode mode; it is in the fork jonathanlim222/uplc (closed PR pragma-org/uplc#47), pinned to a commit (spec D22) |
 
 ### Notes
 
-- **Aiken uplc CEK (Rust)**: Aiken v1.1.24 copies the CEK environment on every lambda application (quadratic in recursion depth). aiken main fixes it (PRs [#1451](https://github.com/aiken-lang/aiken/pull/1451), [#1452](https://github.com/aiken-lang/aiken/pull/1452): coop-6 92 ms -> 1.2 ms), but no release contains the fix yet.
-- **Aiken uplc CEK (Rust → WASM / Node V8)**: Built from [colll78/aiken](https://github.com/colll78/aiken) (aiken main plus fixes), which includes the CEK fixes that v1.1.24 lacks.
+- **Aiken uplc (Rust)**: Aiken v1.1.24 copies the CEK environment on every lambda application (quadratic in recursion depth). aiken main fixes it (PRs [#1451](https://github.com/aiken-lang/aiken/pull/1451), [#1452](https://github.com/aiken-lang/aiken/pull/1452): coop-6 92 ms -> 1.2 ms), but no release contains the fix yet.
+- **Aiken uplc WASM (Rust → WASM / Node V8)**: Built from [colll78/aiken](https://github.com/colll78/aiken) (aiken main plus fixes), which includes the CEK fixes that v1.1.24 lacks.
 
 ### History (speed relative to Haskell plutus-core, same run; higher is faster)
 
 | VM | 2026-10-23 | 2026-10-26 | 2026-10-27 | Change vs previous run |
 |---|---|---|---|---|
-| plutus-core CEK (Haskell / GHC) | 1x (Haskell) | 1x (Haskell) | 1x (Haskell) | reference |
-| Scalus UPLC→JVM JIT (Scala / JVM) (experimental, eval only) | 2.2x faster | 2.6x faster | 2.9x faster | +13 % |
+| plutus-core (Haskell / GHC) | 1x (Haskell) | 1x (Haskell) | 1x (Haskell) | reference |
+| Scalus JIT (Scala / JVM) (experimental, eval only) | 2.2x faster | 2.6x faster | 2.9x faster | +13 % |
 | Scalus CEK (Scala / JVM) | 1.8x faster | 3.0x faster | 2.6x faster | -12 % |
-| Scalus CEK (Scala.js / Node V8) | 5.0x slower | 2.1x slower | 2.1x slower | no change (within ±5 % noise) |
-| Aiken uplc CEK (Rust) | 11.6x slower | 10.2x slower | 11.6x slower | -12 % |
-| Aiken uplc CEK (Rust → WASM / Node V8) (eval only) | 3.3x slower | 3.2x slower | 3.2x slower | no change (within ±5 % noise) |
-| amaru-uplc AST walker (Rust) | 1.5x faster | 1.5x faster | 1.5x faster | no change (within ±5 % noise) |
-| Plutigo CEK (Go) | 2.5x faster | 2.6x faster | 2.3x faster | -10 % |
-| blaze-plutus CEK (TypeScript / Node V8) (experimental) | 2.5x slower | 2.1x slower | 1.8x slower | +16 % |
-| Chrysalis CEK (C# / .NET JIT) (experimental) | - | - | 1.3x faster | - |
-| Chrysalis CEK (C# / .NET AOT) (experimental) | - | - | 1.2x faster | - |
+| Scalus.js CEK (Scala.js / Node V8) | 5.0x slower | 2.1x slower | 2.1x slower | no change (within ±5 % noise) |
+| Aiken uplc (Rust) | 11.6x slower | 10.2x slower | 11.6x slower | -12 % |
+| Aiken uplc WASM (Rust → WASM / Node V8) (eval only) | 3.3x slower | 3.2x slower | 3.2x slower | no change (within ±5 % noise) |
+| amaru-uplc (Rust) | 1.5x faster | 1.5x faster | 1.5x faster | no change (within ±5 % noise) |
+| Plutigo (Go) | 2.5x faster | 2.6x faster | 2.3x faster | -10 % |
+| blaze-plutus (TypeScript / Node V8) (experimental) | 2.5x slower | 2.1x slower | 1.8x slower | +16 % |
+| Chrysalis (C# / .NET JIT) (experimental) | - | - | 1.3x faster | - |
+| Chrysalis AOT (C# / .NET AOT) (experimental) | - | - | 1.2x faster | - |
 | Julc Java CEK (Java / JVM) (experimental) | - | - | 1.5x faster | - |
-| Plutuz CEK (Zig) (experimental) | - | - | 1.4x faster | - |
-| llvm-uplc UPLC→native JIT (C++ / LLVM) (experimental, eval only) | - | - | 2.5x faster | - |
-| amaru-uplc bytecode VM, fork jonathanlim222/uplc (Rust) (experimental) | - | - | 2.1x faster | - |
+| Plutuz (Zig) (experimental) | - | - | 1.4x faster | - |
+| llvm-uplc JIT (C++ / LLVM) (experimental, eval only) | - | - | 2.5x faster | - |
+| amaru-uplc BC (fork) (Rust) (experimental) | - | - | 2.1x faster | - |
 
 A VM marked "eval only" has no decode + eval time (it compiles each script before timing, or its library caches the decode): its ratio is its eval-only time divided by Haskell's eval-only time.
 
@@ -138,24 +138,24 @@ Servers of the same type differ: ratios to Haskell move up to about 5 % between 
 | VM | Passed | Failed | Missing | Total |
 |---|---|---|---|---|
 | Scalus CEK (Scala / JVM) | 89 | 0 | 0 | 89 |
-| Plutigo CEK (Go) | 89 | 0 | 0 | 89 |
-| amaru-uplc AST walker (Rust) | 89 | 0 | 0 | 89 |
-| plutus-core CEK (Haskell / GHC) | 89 | 0 | 0 | 89 |
-| Scalus CEK (Scala.js / Node V8) | 89 | 0 | 0 | 89 |
-| Aiken uplc CEK (Rust) | 89 | 0 | 0 | 89 |
-| Aiken uplc CEK (Rust → WASM / Node V8) | 89 | 0 | 0 | 89 |
-| Scalus UPLC→JVM JIT (Scala / JVM) (experimental) | 89 | 0 | 0 | 89 |
-| blaze-plutus CEK (TypeScript / Node V8) (experimental) | 89 | 0 | 0 | 89 |
-| Chrysalis CEK (C# / .NET JIT) (experimental) | 89 | 0 | 0 | 89 |
-| Chrysalis CEK (C# / .NET AOT) (experimental) | 89 | 0 | 0 | 89 |
+| Plutigo (Go) | 89 | 0 | 0 | 89 |
+| amaru-uplc (Rust) | 89 | 0 | 0 | 89 |
+| plutus-core (Haskell / GHC) | 89 | 0 | 0 | 89 |
+| Scalus.js CEK (Scala.js / Node V8) | 89 | 0 | 0 | 89 |
+| Aiken uplc (Rust) | 89 | 0 | 0 | 89 |
+| Aiken uplc WASM (Rust → WASM / Node V8) | 89 | 0 | 0 | 89 |
+| Scalus JIT (Scala / JVM) (experimental) | 89 | 0 | 0 | 89 |
+| blaze-plutus (TypeScript / Node V8) (experimental) | 89 | 0 | 0 | 89 |
+| Chrysalis (C# / .NET JIT) (experimental) | 89 | 0 | 0 | 89 |
+| Chrysalis AOT (C# / .NET AOT) (experimental) | 89 | 0 | 0 | 89 |
 | Julc Java CEK (Java / JVM) (experimental) | 89 | 0 | 0 | 89 |
-| Plutuz CEK (Zig) (experimental) | 89 | 0 | 0 | 89 |
-| llvm-uplc UPLC→native JIT (C++ / LLVM) (experimental) | 89 | 0 | 0 | 89 |
-| amaru-uplc bytecode VM, fork jonathanlim222/uplc (Rust) (experimental) | 89 | 0 | 0 | 89 |
+| Plutuz (Zig) (experimental) | 89 | 0 | 0 | 89 |
+| llvm-uplc JIT (C++ / LLVM) (experimental) | 89 | 0 | 0 | 89 |
+| amaru-uplc BC (fork) (Rust) (experimental) | 89 | 0 | 0 | 89 |
 
 ## Per-Script Results
 
-| Script | plutus-core CEK (Haskell / GHC) | plutus-core CEK (Haskell / GHC) (eval only) | Scalus CEK (Scala / JVM) | Scalus CEK (Scala / JVM) (eval only) | Scalus CEK (Scala.js / Node V8) | Scalus CEK (Scala.js / Node V8) (eval only) | Aiken uplc CEK (Rust) | Aiken uplc CEK (Rust) (eval only) | Aiken uplc CEK (Rust → WASM / Node V8) (eval only) | amaru-uplc AST walker (Rust) | amaru-uplc AST walker (Rust) (eval only) | Plutigo CEK (Go) | Plutigo CEK (Go) (eval only) | Scalus UPLC→JVM JIT (Scala / JVM) (experimental) (eval only) | blaze-plutus CEK (TypeScript / Node V8) (experimental) | blaze-plutus CEK (TypeScript / Node V8) (experimental) (eval only) | Chrysalis CEK (C# / .NET JIT) (experimental) | Chrysalis CEK (C# / .NET JIT) (experimental) (eval only) | Chrysalis CEK (C# / .NET AOT) (experimental) | Chrysalis CEK (C# / .NET AOT) (experimental) (eval only) | Julc Java CEK (Java / JVM) (experimental) | Julc Java CEK (Java / JVM) (experimental) (eval only) | Plutuz CEK (Zig) (experimental) | Plutuz CEK (Zig) (experimental) (eval only) | llvm-uplc UPLC→native JIT (C++ / LLVM) (experimental) (eval only) | amaru-uplc bytecode VM, fork jonathanlim222/uplc (Rust) (experimental) | amaru-uplc bytecode VM, fork jonathanlim222/uplc (Rust) (experimental) (eval only) |
+| Script | plutus-core (Haskell / GHC) | plutus-core (Haskell / GHC) (eval only) | Scalus CEK (Scala / JVM) | Scalus CEK (Scala / JVM) (eval only) | Scalus.js CEK (Scala.js / Node V8) | Scalus.js CEK (Scala.js / Node V8) (eval only) | Aiken uplc (Rust) | Aiken uplc (Rust) (eval only) | Aiken uplc WASM (Rust → WASM / Node V8) (eval only) | amaru-uplc (Rust) | amaru-uplc (Rust) (eval only) | Plutigo (Go) | Plutigo (Go) (eval only) | Scalus JIT (Scala / JVM) (experimental) (eval only) | blaze-plutus (TypeScript / Node V8) (experimental) | blaze-plutus (TypeScript / Node V8) (experimental) (eval only) | Chrysalis (C# / .NET JIT) (experimental) | Chrysalis (C# / .NET JIT) (experimental) (eval only) | Chrysalis AOT (C# / .NET AOT) (experimental) | Chrysalis AOT (C# / .NET AOT) (experimental) (eval only) | Julc Java CEK (Java / JVM) (experimental) | Julc Java CEK (Java / JVM) (experimental) (eval only) | Plutuz (Zig) (experimental) | Plutuz (Zig) (experimental) (eval only) | llvm-uplc JIT (C++ / LLVM) (experimental) (eval only) | amaru-uplc BC (fork) (Rust) (experimental) | amaru-uplc BC (fork) (Rust) (experimental) (eval only) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | auction_1-1 | 379.57 us | 132.39 us | **127.12 us** | 73.05 us | 696.91 us | 433.80 us | 2.99 ms | 1.92 ms | 363.91 us | 245.03 us | 184.97 us | 145.26 us | 90.84 us | 28.55 us | 600.51 us | 463.29 us | 246.77 us | 175.42 us | 265.14 us | 193.88 us | 233.77 us | 181.64 us | 264.67 us | 154.96 us | 43.48 us | 169.35 us | 102.04 us |
 | auction_1-2 | 1.20 ms | 462.91 us | **423.48 us** | 273.84 us | 2.10 ms | 1.40 ms | 12.41 ms | 9.88 ms | 1.56 ms | 723.85 us | 586.92 us | 487.62 us | 352.46 us | 187.44 us | 1.94 ms | 1.61 ms | 913.07 us | 721.00 us | 1.01 ms | 805.77 us | 787.46 us | 645.08 us | 836.67 us | 556.30 us | 195.54 us | 528.80 us | 353.86 us |
@@ -252,20 +252,20 @@ Servers of the same type differ: ratios to Haskell move up to about 5 % between 
 | VM | Language | Runtime | Execution model | Version | Source | Home | Used by | Badges | Note |
 |---|---|---|---|---|---|---|---|---|---|
 | Scalus CEK (Scala / JVM) | Scala | GraalVM | Interpreter (CEK) | [v1.4.1](https://github.com/scalus3/scalus/releases/tag/v1.4.1) | [scalus3/scalus](https://github.com/scalus3/scalus) | [scalus.org](https://scalus.org) | [Hydrozoa](https://github.com/cardano-hydrozoa/hydrozoa) (L2), [Bifrost](https://github.com/FluidTokens/ft-bifrost-bridge) (bridge), [Cardano Client Lib](https://github.com/bloxbean/cardano-client-lib) (SDK), [Yaci Store](https://github.com/bloxbean/yaci-store) (indexer), [Yaci DevKit](https://github.com/bloxbean/yaci-devkit) (dev tool) | - | - |
-| Plutigo CEK (Go) | Go | native | Interpreter (CEK) | [v0.1.10](https://github.com/blinklabs-io/plutigo/releases/tag/v0.1.10) | [blinklabs-io/plutigo](https://github.com/blinklabs-io/plutigo) | - | [Dingo](https://github.com/blinklabs-io/dingo) (node) | - | - |
-| amaru-uplc AST walker (Rust) | Rust | native | Interpreter (AST walker) | [amaru-uplc-v0.4.0](https://github.com/pragma-org/uplc/releases/tag/amaru-uplc-v0.4.0) | [pragma-org/uplc](https://github.com/pragma-org/uplc) | - | [Amaru](https://github.com/pragma-org/amaru) (node) | - | - |
-| plutus-core CEK (Haskell / GHC) | Haskell | GHC | Interpreter (CEK) | [1.70.0.0](https://github.com/IntersectMBO/plutus/releases/tag/1.70.0.0) | [IntersectMBO/plutus](https://github.com/IntersectMBO/plutus) | [plutus.cardano.intersectmbo.org](https://plutus.cardano.intersectmbo.org) | [cardano-node](https://github.com/IntersectMBO/cardano-node) (node) | - | - |
-| Scalus CEK (Scala.js / Node V8) | Scala.js | Node (V8) | Interpreter (CEK) | [scalus 1.4.1 (npm)](https://github.com/scalus3/scalus/releases/tag/v1.4.1) | [scalus3/scalus](https://github.com/scalus3/scalus) | [scalus.org](https://scalus.org) | [Lucid Evolution](https://github.com/Anastasia-Labs/lucid-evolution) (SDK), [MeshJS](https://github.com/MeshJS/mesh) (SDK), [Evolution SDK](https://github.com/IntersectMBO/evolution-sdk) (SDK) | - | - |
-| Aiken uplc CEK (Rust) | Rust | native | Interpreter (CEK) | [v1.1.24](https://github.com/aiken-lang/aiken/releases/tag/v1.1.24) | [aiken-lang/aiken](https://github.com/aiken-lang/aiken) | [aiken-lang.org](https://aiken-lang.org) | [Aiken](https://aiken-lang.org) (compiler), [Blaze SDK](https://github.com/butaneprotocol/blaze-cardano) (SDK) | - | Aiken v1.1.24 copies the CEK environment on every lambda application (quadratic in recursion depth). aiken main fixes it (PRs [#1451](https://github.com/aiken-lang/aiken/pull/1451), [#1452](https://github.com/aiken-lang/aiken/pull/1452): coop-6 92 ms -> 1.2 ms), but no release contains the fix yet. |
-| Aiken uplc CEK (Rust → WASM / Node V8) | Rust → WASM | Node (V8) | Interpreter (CEK) | [@lucid-evolution/uplc 0.4.0](https://github.com/Anastasia-Labs/lucid-evolution/releases/tag/@lucid-evolution/uplc@0.4.0) | [Anastasia-Labs/lucid-evolution](https://github.com/Anastasia-Labs/lucid-evolution) | [anastasia-labs.github.io/lucid-evolution](https://anastasia-labs.github.io/lucid-evolution/) | [Lucid Evolution](https://github.com/Anastasia-Labs/lucid-evolution) (SDK) | decode cached (by the library) | Built from [colll78/aiken](https://github.com/colll78/aiken) (aiken main plus fixes), which includes the CEK fixes that v1.1.24 lacks. |
-| Scalus UPLC→JVM JIT (Scala / JVM) | Scala | GraalVM | JIT compiler (UPLC → JVM bytecode) | [v1.4.1](https://github.com/scalus3/scalus/releases/tag/v1.4.1) | [scalus3/scalus](https://github.com/scalus3/scalus) | [scalus.org](https://scalus.org) | - | experimental: no downstream user, decode and compile excluded | - |
-| blaze-plutus CEK (TypeScript / Node V8) | TypeScript | Node (V8) | Interpreter (CEK) | [@blaze-cardano/plutus 0.1.1](https://github.com/butaneprotocol/blaze-cardano/releases/tag/@blaze-cardano/plutus@0.1.1) | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) | [blaze.butane.dev](https://blaze.butane.dev) | - | experimental: no downstream user | - |
-| Chrysalis CEK (C# / .NET JIT) | C# | .NET 10 (JIT) | Interpreter (CEK) | [Chrysalis.Plutus 1.7.14-alpha (NuGet)](https://www.nuget.org/packages/Chrysalis.Plutus/1.7.14-alpha) | [SAIB-Inc/Chrysalis](https://github.com/SAIB-Inc/Chrysalis) | - | - | experimental: pre-release only | - |
-| Chrysalis CEK (C# / .NET AOT) | C# | .NET 10 (NativeAOT) | Interpreter (CEK) | [Chrysalis.Plutus 1.7.14-alpha (NuGet)](https://www.nuget.org/packages/Chrysalis.Plutus/1.7.14-alpha) | [SAIB-Inc/Chrysalis](https://github.com/SAIB-Inc/Chrysalis) | - | - | experimental: pre-release only | - |
+| Plutigo (Go) | Go | native | Interpreter (CEK) | [v0.1.10](https://github.com/blinklabs-io/plutigo/releases/tag/v0.1.10) | [blinklabs-io/plutigo](https://github.com/blinklabs-io/plutigo) | - | [Dingo](https://github.com/blinklabs-io/dingo) (node) | - | - |
+| amaru-uplc (Rust) | Rust | native | Interpreter (AST walker) | [amaru-uplc-v0.4.0](https://github.com/pragma-org/uplc/releases/tag/amaru-uplc-v0.4.0) | [pragma-org/uplc](https://github.com/pragma-org/uplc) | - | [Amaru](https://github.com/pragma-org/amaru) (node) | - | - |
+| plutus-core (Haskell / GHC) | Haskell | GHC | Interpreter (CEK) | [1.70.0.0](https://github.com/IntersectMBO/plutus/releases/tag/1.70.0.0) | [IntersectMBO/plutus](https://github.com/IntersectMBO/plutus) | [plutus.cardano.intersectmbo.org](https://plutus.cardano.intersectmbo.org) | [cardano-node](https://github.com/IntersectMBO/cardano-node) (node) | - | - |
+| Scalus.js CEK (Scala.js / Node V8) | Scala.js | Node (V8) | Interpreter (CEK) | [scalus 1.4.1 (npm)](https://github.com/scalus3/scalus/releases/tag/v1.4.1) | [scalus3/scalus](https://github.com/scalus3/scalus) | [scalus.org](https://scalus.org) | [Lucid Evolution](https://github.com/Anastasia-Labs/lucid-evolution) (SDK), [MeshJS](https://github.com/MeshJS/mesh) (SDK), [Evolution SDK](https://github.com/IntersectMBO/evolution-sdk) (SDK) | - | - |
+| Aiken uplc (Rust) | Rust | native | Interpreter (CEK) | [v1.1.24](https://github.com/aiken-lang/aiken/releases/tag/v1.1.24) | [aiken-lang/aiken](https://github.com/aiken-lang/aiken) | [aiken-lang.org](https://aiken-lang.org) | [Aiken](https://aiken-lang.org) (compiler), [Blaze SDK](https://github.com/butaneprotocol/blaze-cardano) (SDK) | - | Aiken v1.1.24 copies the CEK environment on every lambda application (quadratic in recursion depth). aiken main fixes it (PRs [#1451](https://github.com/aiken-lang/aiken/pull/1451), [#1452](https://github.com/aiken-lang/aiken/pull/1452): coop-6 92 ms -> 1.2 ms), but no release contains the fix yet. |
+| Aiken uplc WASM (Rust → WASM / Node V8) | Rust → WASM | Node (V8) | Interpreter (CEK) | [@lucid-evolution/uplc 0.4.0](https://github.com/Anastasia-Labs/lucid-evolution/releases/tag/@lucid-evolution/uplc@0.4.0) | [Anastasia-Labs/lucid-evolution](https://github.com/Anastasia-Labs/lucid-evolution) | [anastasia-labs.github.io/lucid-evolution](https://anastasia-labs.github.io/lucid-evolution/) | [Lucid Evolution](https://github.com/Anastasia-Labs/lucid-evolution) (SDK) | decode cached (by the library) | Built from [colll78/aiken](https://github.com/colll78/aiken) (aiken main plus fixes), which includes the CEK fixes that v1.1.24 lacks. |
+| Scalus JIT (Scala / JVM) | Scala | GraalVM | JIT compiler (UPLC → JVM bytecode) | [v1.4.1](https://github.com/scalus3/scalus/releases/tag/v1.4.1) | [scalus3/scalus](https://github.com/scalus3/scalus) | [scalus.org](https://scalus.org) | - | experimental: no downstream user, decode and compile excluded | - |
+| blaze-plutus (TypeScript / Node V8) | TypeScript | Node (V8) | Interpreter (CEK) | [@blaze-cardano/plutus 0.1.1](https://github.com/butaneprotocol/blaze-cardano/releases/tag/@blaze-cardano/plutus@0.1.1) | [butaneprotocol/blaze-cardano](https://github.com/butaneprotocol/blaze-cardano) | [blaze.butane.dev](https://blaze.butane.dev) | - | experimental: no downstream user | - |
+| Chrysalis (C# / .NET JIT) | C# | .NET 10 (JIT) | Interpreter (CEK) | [Chrysalis.Plutus 1.7.14-alpha (NuGet)](https://www.nuget.org/packages/Chrysalis.Plutus/1.7.14-alpha) | [SAIB-Inc/Chrysalis](https://github.com/SAIB-Inc/Chrysalis) | - | - | experimental: pre-release only | - |
+| Chrysalis AOT (C# / .NET AOT) | C# | .NET 10 (NativeAOT) | Interpreter (CEK) | [Chrysalis.Plutus 1.7.14-alpha (NuGet)](https://www.nuget.org/packages/Chrysalis.Plutus/1.7.14-alpha) | [SAIB-Inc/Chrysalis](https://github.com/SAIB-Inc/Chrysalis) | - | - | experimental: pre-release only | - |
 | Julc Java CEK (Java / JVM) | Java | GraalVM | Interpreter (CEK) | [v0.1.0-pre19](https://github.com/bloxbean/julc/releases/tag/v0.1.0-pre19) | [bloxbean/julc](https://github.com/bloxbean/julc) | - | - | experimental: pre-release only | - |
-| Plutuz CEK (Zig) | Zig | native | Interpreter (CEK) | [main 33b812d](https://github.com/utxo-company/plutuz/commit/33b812d) | [utxo-company/plutuz](https://github.com/utxo-company/plutuz) | - | - | experimental: no release | - |
-| llvm-uplc UPLC→native JIT (C++ / LLVM) | C / C++ | native (LLVM 22 LLJIT) | JIT compiler (UPLC → native code) | [main 6bcef67](https://github.com/SeungheonOh/llvm-uplc/commit/6bcef67) | [SeungheonOh/llvm-uplc](https://github.com/SeungheonOh/llvm-uplc) | - | - | outdated cost model, experimental: outdated, decode and compile excluded | - |
-| amaru-uplc bytecode VM, fork jonathanlim222/uplc (Rust) | Rust | native | Bytecode VM (UPLC → bytecode) | [fork 069cef5](https://github.com/jonathanlim222/uplc/commit/069cef5) | [jonathanlim222/uplc](https://github.com/jonathanlim222/uplc) | - | - | experimental: no release | - |
+| Plutuz (Zig) | Zig | native | Interpreter (CEK) | [main 33b812d](https://github.com/utxo-company/plutuz/commit/33b812d) | [utxo-company/plutuz](https://github.com/utxo-company/plutuz) | - | - | experimental: no release | - |
+| llvm-uplc JIT (C++ / LLVM) | C / C++ | native (LLVM 22 LLJIT) | JIT compiler (UPLC → native code) | [main 6bcef67](https://github.com/SeungheonOh/llvm-uplc/commit/6bcef67) | [SeungheonOh/llvm-uplc](https://github.com/SeungheonOh/llvm-uplc) | - | - | outdated cost model, experimental: outdated, decode and compile excluded | - |
+| amaru-uplc BC (fork) (Rust) | Rust | native | Bytecode VM (UPLC → bytecode) | [fork 069cef5](https://github.com/jonathanlim222/uplc/commit/069cef5) | [jonathanlim222/uplc](https://github.com/jonathanlim222/uplc) | - | - | experimental: no release | - |
 
 ---
 Harness commit: [`256b6aafc`](https://github.com/lantr-io/plutus-vm-benchmark/commit/256b6aafce0f44faa876a9b24ed586c11bc385d3)
