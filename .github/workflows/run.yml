@@ -246,8 +246,10 @@ jobs:
           # shellcheck disable=SC2086
           scripts/hetzner/run-remote.sh start "$RUN_ID" "$NAME" $VMS
 
+      # Only when the create step started: a run that stops earlier (e.g. at "Check images") has
+      # no server, and nix is not installed yet.
       - name: Delete server after a failed start
-        if: (failure() || cancelled()) && steps.plan.outputs.run_id != ''
+        if: (failure() || cancelled()) && steps.plan.outputs.run_id != '' && steps.up.outcome != '' && steps.up.outcome != 'skipped'
         env:
           RUN_ID: ${{ steps.plan.outputs.run_id }}
         run: nix shell nixpkgs#hcloud --command scripts/hetzner/down.sh "$RUN_ID"
