@@ -32,7 +32,7 @@ every call; a `PlutusVM` builds it once, as a downstream user evaluating many sc
 
 ## Timing
 
-`time.mjs` uses the JMH shape of the JVM rows (`-wi 1 -w 20s -i 3 -r 5s`): one 20 s warm-up
+The timing loop is the shared `images/node-base/time.mjs` with `vm.mjs`. It uses the JMH shape of the JVM rows (`-wi 1 -w 20s -i 3 -r 5s`): one 20 s warm-up
 round, then 3 measured rounds of 5 s. A round calls `evaluateScript` back to back until its time
 is up; its score is elapsed time / calls, as in JMH `avgt`. The CSV has the mean of the 3 round
 scores and their median, min, max and standard deviation; `iterations` is the number of rounds.

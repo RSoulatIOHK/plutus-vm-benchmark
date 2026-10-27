@@ -56,7 +56,8 @@ serves another.
 
 ## Timing
 
-`time.mjs` is the loop of `images/scalus-js/time.mjs`: the JMH shape of the JVM rows
+The timing loop is the shared `images/node-base/time.mjs` with `vm.mjs` (one operation:
+`eval_program_raw`): the JMH shape of the JVM rows
 (`-wi 1 -w 20s -i 3 -r 5s`). One 20 s warm-up round, then 3 measured rounds of 5 s. A round calls
 `eval_program_raw` back to back until its time is up; its score is elapsed time / calls, as in JMH
 `avgt`. `BENCH_TIMING=quick`: 0.5 s warm-up, one 0.5 s round.

@@ -150,13 +150,27 @@ and the runner is `scripts/run-<vm>.sh`.
 | VM | Framework | Warm-up and measurement (normal timing) |
 |---|---|---|
 | haskell | Criterion | Criterion's warm-up; about 5 s per script, Criterion's default (`timeLimit = 5`) |
-| scalus-cek, scalus-jit | JMH | One 30 s warm-up iteration, three 5 s measurement iterations (`-wi 1 -w 30s -i 3 -r 5s`). One fork per method and script (`-f 1`) |
+| scalus-cek, scalus-jit, julc-java | JMH 1.37, shared runner (`scripts/jmh-run.sh`) | One 30 s warm-up iteration, three 5 s measurement iterations (`-wi 1 -w 30s -i 3 -r 5s`). One fork per method and script (`-f 1`) |
 | aiken | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | uplc-turbo | Criterion.rs | Criterion.rs default warm-up, 5 s measurement |
 | plutigo | Go testing.B | Automatic `b.N` scaling, `-test.benchtime=5s` |
-| blaze-v8 | Own loop (JMH shape), launched by Vitest | Adaptive warm-up (5 to 30 s), three 5 s measurements |
-| aiken-wasm | Own loop (JMH shape), plain Node.js | Adaptive warm-up (5 to 30 s), three 5 s measurements (a JIT runtime, V8) |
-| scalus-js | Own loop (JMH shape), plain Node.js | Adaptive warm-up (5 to 30 s), three 5 s measurements (the same loop as blaze-v8) |
+| blaze-v8, scalus-js, aiken-wasm | One shared loop (JMH shape, `images/node-base/time.mjs`), plain Node.js | Adaptive warm-up (5 to 30 s), three 5 s measurements (a JIT runtime, V8) |
+
+### Shared base images of the JIT rows
+
+Since 2026-10-27 the JVM rows and the JS rows each build on one base image:
+
+- `images/jvm-base` (scalus-cek, scalus-jit, julc-java): Oracle GraalVM 25.4.4 is the JMH
+  launcher and the forked benchmark JVM, JMH is 1.37 (`JMH_VERSION`), and one runner script
+  (`scripts/jmh-run.sh`) holds the JMH options. `-Xss64m` stays only in scalus-jit. Before, the
+  Scalus rows launched JMH on Temurin 21.
+- `images/node-base` (blaze-v8, scalus-js, aiken-wasm): one Node.js patch version
+  (`NODE_VERSION`, 22.23.4) and one timing loop (`time.mjs`). Each row gives only its operation
+  (`vm.mjs`; blaze: `pvb-vm.ts`, bundled with bun). Before, blaze-v8 ran its own copy of the loop
+  under Vitest on the Node.js of NodeSource, and the other two used the newest `node:22` image.
+
+So the numbers of these six rows can change from the run of 2026-10-27 on, with no change in
+the VMs. Compare their history across that date with care.
 
 ### Warm-up of the JIT rows
 
@@ -172,7 +186,7 @@ The JS rows (blaze-v8, scalus-js, aiken-wasm) use an adaptive warm-up:
    ±3 % of their median.
 3. Stop at 30 s at the latest (the cap), steady or not.
 
-The JMH rows (scalus-cek, scalus-jit) use one JMH warm-up iteration of 30 s, the cap
+The JMH rows (scalus-cek, scalus-jit, julc-java) use one JMH warm-up iteration of 30 s, the cap
 (`-wi 1 -w 30s`). The JMH rows keep JMH's own warm-up iterations, at the 30 s cap. This change
 from 20 s to 30 s (2026-10-23) made the Scalus CEK decode + eval time about 7 % faster: the JVM
 settles on one of two speed levels for this row, and a 20 s warm-up often stopped on the slower one. JMH cannot
