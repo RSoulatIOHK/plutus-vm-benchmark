@@ -643,7 +643,7 @@
         <p class="cap" data-kind="Figure"><span class="cap-n"></span><span class="cap-t">History: speed relative to Haskell plutus-core in the same run</span> &ndash; higher is faster, log scale</p>
         <div class="prose">
           <p class="cap">Each point divides Haskell's geometric mean time by the VM's, from the same run. 2&times; faster means the VM needs half of Haskell's time. Ratios remove most of the hardware and run-to-run drift, so runs on different servers compare. The ratio uses only the scripts where both the VM and Haskell have a time.</p>
-          <p class="cap">The solid line labelled &ldquo;Haskell 1&times;&rdquo; is the reference. A dashed line is an experimental VM. A line marked &ldquo;eval only&rdquo; is a VM that compiles each script before timing: its ratio is its eval-only time divided by Haskell's eval-only time. Servers of the same type differ by up to <span class="noise-pct">5</span>&nbsp;%, so a change under <span class="noise-pct">5</span>&nbsp;% shows as no change. The end label and the tooltip give the change against the VM's previous run.</p>
+          <p class="cap">The solid line labelled &ldquo;Haskell 1&times;&rdquo; is the reference. A dashed line is an experimental VM. A line marked &ldquo;eval only&rdquo; in the legend is a VM that compiles each script before timing: its ratio is its eval-only time divided by Haskell's eval-only time. Servers of the same type differ by up to <span class="noise-pct">5</span>&nbsp;%, so a change under <span class="noise-pct">5</span>&nbsp;% shows as no change. The end label names the VM; the tooltip gives the change against the VM's previous run.</p>
         </div>
         <div class="history-chart" id="history-chart" style="margin-top:1rem"></div>
         <div class="history-legend" id="history-legend"></div>
@@ -1436,8 +1436,10 @@ renderBoard(false);
   // no end labels (the legend and the tooltip name the lines).
   function draw() {
     const W = Math.max(300, host.clientWidth), narrow = W < 640;
-    // Room for the longest end label (~6 px per character at 11 px), at most 45 % of the width.
-    const longest = Math.max(...vms.map(vm => (histLabel(vm) + ' 10.0× faster (+100 %, within noise)').length));
+    // Room for the longest end label (~6 px per character at 11 px), at most 45 % of the width. The
+    // end label is the VM name only; the tooltip and the legend give runtime, speed and change.
+    const endLabel = vm => (VM_META[vm] || { label: vm }).label;
+    const longest = Math.max(...vms.map(vm => endLabel(vm).length));
     const H = narrow ? 260 : 320, L = 78, R = narrow ? 40 : Math.min(W * 0.45, 32 + longest * 6), T = 14, B = 34;
     const x = i => runs.length === 1 ? L + (W - L - R) / 2 : L + i * (W - L - R) / (runs.length - 1);
     const y = v => T + (hi - Math.log10(v)) * (H - T - B) / (hi - lo);
@@ -1466,18 +1468,21 @@ renderBoard(false);
       svg += '</g>';
       const last = pts.map((v, i) => [v, i]).filter(p => p[0] > 0).pop();
       if (last) {
-        const d = changeOf(vm, last[1]);
-        labels.push({ vm, y0: y(last[0]), y: y(last[0]), x: x(last[1]), text: histLabel(vm) + ' ' + fmtSpeed(last[0]),
-          chg: d === null ? '' : ' (' + fmtChange(d) + ')' });
+        labels.push({ vm, y0: y(last[0]), y: y(last[0]), x: x(last[1]), text: endLabel(vm) });
       }
     });
     if (!narrow) {
-      // Keep end labels 13 px apart; a label moved off its line end gets a leader line.
+      // Keep end labels 13 px apart, then pull the stack back up if it ran past the plot bottom; a
+      // label moved off its line end gets a leader line.
       labels.sort((a, b) => a.y - b.y).forEach((l, i, a) => { if (i && l.y - a[i - 1].y < 13) l.y = a[i - 1].y + 13; });
+      for (let i = labels.length - 1; i >= 0; i--) {
+        const max = i === labels.length - 1 ? H - B : labels[i + 1].y - 13;
+        if (labels[i].y > max) labels[i].y = max;
+      }
       labels.forEach(l => {
         svg += `<g class="end-label" data-vm="${l.vm}">`;
         if (Math.abs(l.y - l.y0) > 1.5) svg += `<polyline class="leader" points="${l.x + 6},${l.y0} ${l.x + 14},${l.y0} ${l.x + 22},${l.y}"/>`;
-        svg += `<text class="line-label" x="${l.x + 26}" y="${l.y + 4}">${l.text}<tspan class="chg">${l.chg}</tspan></text></g>`;
+        svg += `<text class="line-label" x="${l.x + 26}" y="${l.y + 4}">${l.text}</text></g>`;
       });
     }
     // Hover: one column per run, the crosshair snaps to the run.
