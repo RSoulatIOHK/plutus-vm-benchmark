@@ -33,17 +33,23 @@
     --fail: #b91c1c;
     --warn: #a16207;
 
-    /* One colour per VM (dataviz categorical palette, light steps on #ffffff). */
-    --vm-scalus-cek: #2a78d6;
-    --vm-blaze-jsc: #eb6834;
-    --vm-uplc-turbo: #1baf7a;
-    --vm-aiken-wasm: #eda100;
-    --vm-aiken: #e87ba4;
-    --vm-blaze-v8: #008300;
-    --vm-scalus-js: #4a3aa7;
-    --vm-plutigo: #e34948;
-    --vm-haskell: #525252;
-    --vm-scalus-jit: #a3a3a3;
+    /* One colour per VM, from its project brand (logo or site colour; a parent org where the project has none). A project with several rows shares a hue and differs in lightness. Light steps on #ffffff. */
+    --vm-scalus-cek: #E0322F;
+    --vm-scalus-jit: #A8262B;
+    --vm-scalus-js: #F07A86;
+    --vm-haskell: #1A8DB5;
+    --vm-aiken: #AB31E4;
+    --vm-aiken-wasm: #6A3DE8;
+    --vm-chrysalis: #C0168C;
+    --vm-chrysalis-aot: #E36FC1;
+    --vm-uplc-turbo: #0E9F6E;
+    --vm-uplc-turbo-bc: #14978F;
+    --vm-plutigo: #D2581A;
+    --vm-plutuz: #B89600;
+    --vm-blaze-v8: #2E5CFF;
+    --vm-blaze-jsc: #2E5CFF;
+    --vm-julc-java: #18181B;
+    --vm-llvm-uplc-jit: #8A8A8A;
     --vm-other: #737373;
 
     /* Names the generated HTML still uses. */
@@ -62,9 +68,11 @@
       --paper: #000000; --ink: #ffffff; --graphite: #a3a3a3; --muted: #8a8a8a;
       --rule: #404040; --rule-strong: #737373; --band: #171717;
       --pass: #4ade80; --fail: #f87171; --warn: #facc15;
-      --vm-scalus-cek: #3987e5; --vm-blaze-jsc: #d95926; --vm-uplc-turbo: #199e70; --vm-aiken-wasm: #c98500;
-      --vm-aiken: #d55181; --vm-blaze-v8: #008300; --vm-scalus-js: #9085e9; --vm-plutigo: #e66767;
-      --vm-haskell: #a3a3a3; --vm-scalus-jit: #6b6b6b; --vm-other: #8a8a8a;
+      --vm-scalus-cek: #F0504C; --vm-scalus-jit: #C9373B; --vm-scalus-js: #F28B95; --vm-haskell: #4BB4D5;
+      --vm-aiken: #B65CEB; --vm-aiken-wasm: #8F6BFF; --vm-chrysalis: #E04AB0; --vm-chrysalis-aot: #F29AD6;
+      --vm-uplc-turbo: #2BC48D; --vm-uplc-turbo-bc: #3CC9B8; --vm-plutigo: #EE7A3C; --vm-plutuz: #F2C230;
+      --vm-blaze-v8: #5B82FF; --vm-blaze-jsc: #5B82FF; --vm-julc-java: #F4F4F5;
+      --vm-llvm-uplc-jit: #737373; --vm-other: #8a8a8a;
     }
   }
   :root[data-theme="dark"] {
@@ -72,9 +80,11 @@
     --paper: #000000; --ink: #ffffff; --graphite: #a3a3a3; --muted: #8a8a8a;
     --rule: #404040; --rule-strong: #737373; --band: #171717;
     --pass: #4ade80; --fail: #f87171; --warn: #facc15;
-    --vm-scalus-cek: #3987e5; --vm-blaze-jsc: #d95926; --vm-uplc-turbo: #199e70; --vm-aiken-wasm: #c98500;
-    --vm-aiken: #d55181; --vm-blaze-v8: #008300; --vm-scalus-js: #9085e9; --vm-plutigo: #e66767;
-    --vm-haskell: #a3a3a3; --vm-scalus-jit: #6b6b6b; --vm-other: #8a8a8a;
+    --vm-scalus-cek: #F0504C; --vm-scalus-jit: #C9373B; --vm-scalus-js: #F28B95; --vm-haskell: #4BB4D5;
+    --vm-aiken: #B65CEB; --vm-aiken-wasm: #8F6BFF; --vm-chrysalis: #E04AB0; --vm-chrysalis-aot: #F29AD6;
+    --vm-uplc-turbo: #2BC48D; --vm-uplc-turbo-bc: #3CC9B8; --vm-plutigo: #EE7A3C; --vm-plutuz: #F2C230;
+    --vm-blaze-v8: #5B82FF; --vm-blaze-jsc: #5B82FF; --vm-julc-java: #F4F4F5;
+    --vm-llvm-uplc-jit: #737373; --vm-other: #8a8a8a;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
