@@ -1,0 +1,61 @@
+date: 2026-10-27T15:30:25+00:00
+kernel: Linux 6.18.57
+cpu: AMD EPYC-Milan Processor
+cores: 16
+memory: 61Gi
+cpu flags (selected): hypervisor sse4_2 avx avx2 bmi2 fma sha_ni
+topology: Model name AMD EPYC-Milan Processor; Thread(s) per core 2; Core(s) per socket 8; Socket(s) 1; Hypervisor vendor KVM; Virtualization type full; NUMA node(s) 1
+lscpu mhz: n/a
+cpufreq: none (no cpufreq driver, for example a KVM guest)
+thp: enabled madvise, defrag madvise
+kernel cmdline: BOOT_IMAGE=(hd0,gpt2)//kernels/ipabfanvi3crlh1zf18ss5fzh6lk1glg-linux-6.18.57-bzImage init=/nix/store/1nhkfsbcc9qy7g29vp49w4kxybwmiap0-nixos-system-bench-runner-26.05.20261020.cd4ea8d/init transparent_hugepage=madvise root=fstab loglevel=4 lsm=landlock,yama,bpf
+timers: bench-selfdestruct.timer systemd-tmpfiles-clean.timer
+load avg at start: 0.65 0.16 0.05
+docker: 29.9.1 (linux/amd64)
+docker cpus: 16
+docker memory: 62786 MiB
+docker run flags: --rm --cap-add SYS_NICE --network none
+lanes: 3 (lane0 2,3,4,5; lane1 6,7,8,9; lane2 10,11,12,13; idle cores 14,15)
+parallel: yes (up to 3 VMs at once; haskell and the drift probe run alone on lane0)
+harness: 256b6aafce0f44faa876a9b24ed586c11bc385d3
+vm order: haskell scalus-cek scalus-jit scalus-js blaze-v8 aiken aiken-wasm uplc-turbo plutigo chrysalis chrysalis-aot julc-java llvm-uplc-jit plutuz uplc-turbo-bc
+bench_quick: 0
+bench_scripts: <all> (89 of 89 scripts)
+bench_loops: d3,eval,check
+bench_timing: normal
+bench_trace: 0
+host cpus: 0,1,14,15
+server qualification: pass, ratio 1.122, attempt 1 of 3, nbg1; rejected: none; haskell geo ratio 1.122 <= 1.15 vs ccx43 reference (harness b0d8a22, 2026-10-22): auction_1-1 1.05, coop-6 1.18, uniswap-1 1.13
+image haskell: ghcr.io/lantr-io/pvb-haskell:cf0113e362e9 ghcr.io/lantr-io/pvb-haskell@sha256:293da049bd7c65ee6e058bb0d782625f89ecf38ca8e80f6fcf3468740e503c8c
+noise haskell: load avg before 1.62 0.52 0.18, steal during run 0.00 % (0 of 1475757 ticks) lane0
+image scalus-cek: ghcr.io/lantr-io/pvb-scalus-cek:e518f535d996 ghcr.io/lantr-io/pvb-scalus-cek@sha256:b817c3c0b2e18a38507e3040981c48956d7129f30d0d1020c1445d898d38234f
+image scalus-jit: ghcr.io/lantr-io/pvb-scalus-jit:1aca35514d4c ghcr.io/lantr-io/pvb-scalus-jit@sha256:4a192b7e735b7b8ffed9ec96cff07113ad7de7282621252efbe011d7dc5ebd7b
+image scalus-js: ghcr.io/lantr-io/pvb-scalus-js:9e63edfb374a ghcr.io/lantr-io/pvb-scalus-js@sha256:4eb32b92df051e2d3116e7e43fd10f4c522c2f28534df82e7ef7c1efddb431d4
+noise scalus-js: load avg before 1.00 1.00 0.73, steal during run 0.00 % (0 of 6580644 ticks) lane2
+image blaze-v8: ghcr.io/lantr-io/pvb-blaze-v8:c743ca940f93 ghcr.io/lantr-io/pvb-blaze-v8@sha256:3ba639f3d830d8e94d4d89eb945f38fdd382a7503352ed5882e2eec7c2925b84
+noise scalus-jit: load avg before 1.00 1.00 0.73, steal during run 0.00 % (0 of 8872262 ticks) lane1
+image aiken: ghcr.io/lantr-io/pvb-aiken:553af555815c ghcr.io/lantr-io/pvb-aiken@sha256:b1328c3825f56f452b1f7de6b156b45729d56979ab8afb122e9223fad02a5660
+noise aiken: load avg before 3.18 3.29 3.46, steal during run 0.00 % (0 of 2982318 ticks) lane1
+image aiken-wasm: ghcr.io/lantr-io/pvb-aiken-wasm:0770cbcc5dd3 ghcr.io/lantr-io/pvb-aiken-wasm@sha256:8251a1aae91e85e8add5850bff0be3ad6bab70c681f38e22b721b019a4ea86df
+noise blaze-v8: load avg before 3.83 3.75 3.67, steal during run 0.00 % (0 of 6160554 ticks) lane2
+image uplc-turbo: ghcr.io/lantr-io/pvb-uplc-turbo:f50174b9cf91 ghcr.io/lantr-io/pvb-uplc-turbo@sha256:3368eb649ecd8ec3efcdbe0aedd5f730840b81f6e4c680d6e24fc5ee4b156e9c
+noise scalus-cek: load avg before 1.00 1.00 0.73, steal during run 0.00 % (0 of 13278833 ticks) lane0
+image plutigo: ghcr.io/lantr-io/pvb-plutigo:9329d975a97e ghcr.io/lantr-io/pvb-plutigo@sha256:729c0d1a52503c93527d273de4883050c4760ac3b9f3d770c21e733cf08f3087
+noise aiken-wasm: load avg before 3.27 3.23 3.22, steal during run 0.00 % (0 of 3080482 ticks) lane1
+image chrysalis: ghcr.io/lantr-io/pvb-chrysalis:e2b8b3ae047a ghcr.io/lantr-io/pvb-chrysalis@sha256:765e67d6392301a2b977cbc3ed5d3d1481132dfab5c7346294900c8127eb278d
+noise plutigo: load avg before 3.13 3.14 3.16, steal during run 0.00 % (0 of 1711951 ticks) lane0
+image chrysalis-aot: ghcr.io/lantr-io/pvb-chrysalis-aot:0b6b2579dcee ghcr.io/lantr-io/pvb-chrysalis-aot@sha256:5ddb9793c4e53f6b32bf6c3a8b9e6d4ade92efc0cc9bfedfd38634c76d5cbe4d
+noise uplc-turbo: load avg before 3.02 3.12 3.16, steal during run 0.00 % (0 of 3032616 ticks) lane2
+image julc-java: ghcr.io/lantr-io/pvb-julc-java:5d99bb6a10a8 ghcr.io/lantr-io/pvb-julc-java@sha256:681c5af463f8c54960935ae618b789ff4e54fcfe57db025775cbd5c75edadeaa
+noise chrysalis-aot: load avg before 3.04 3.06 3.08, steal during run 0.00 % (0 of 5284875 ticks) lane0
+image llvm-uplc-jit: ghcr.io/lantr-io/pvb-llvm-uplc-jit:4f3d33826b1d ghcr.io/lantr-io/pvb-llvm-uplc-jit@sha256:af55d767e44000db5ce5848545fe8f4833b0aac7b65dde84cdbbaa23cfc4b3ba
+noise llvm-uplc-jit: load avg before 3.26 3.21 3.13, steal during run 0.00 % (0 of 3667144 ticks) lane0
+image plutuz: ghcr.io/lantr-io/pvb-plutuz:78e70bdbc120 ghcr.io/lantr-io/pvb-plutuz@sha256:3f145d66b434529cc15320f0081ee9c12b177c5bd9eceb1a141f44ce6da8d1af
+noise plutuz: load avg before 3.35 3.18 3.12, steal during run 0.00 % (0 of 1429123 ticks) lane0
+image uplc-turbo-bc: ghcr.io/lantr-io/pvb-uplc-turbo-bc:04b6cc170f17 ghcr.io/lantr-io/pvb-uplc-turbo-bc@sha256:97678a9fa315fd3b9c935237f85ac0dbf551d6a1b3b8f4f7cfaad876448e6133
+noise uplc-turbo-bc: load avg before 3.21 3.16 3.11, steal during run 0.00 % (0 of 2919949 ticks) lane0
+noise julc-java: load avg before 3.24 3.08 3.07, steal during run 0.00 % (0 of 13216180 ticks) lane2
+noise chrysalis: load avg before 3.06 3.06 3.08, steal during run 0.00 % (0 of 21825760 ticks) lane1
+steal during the whole run: 0.00 % (0 of 38368068 ticks)
+load avg at end: 1.00 1.00 1.00
+drift (haskell, end vs start): +1.2 % over 5 scripts

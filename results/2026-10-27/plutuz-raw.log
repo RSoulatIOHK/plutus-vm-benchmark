@@ -1,0 +1,982 @@
+Plutuz (Zig) utxo-company/plutuz@33b812dbcf88f6851286e54cb93a4a443353f94c
+BENCH_LOOPS=d3,eval,check BENCH_TIMING=normal
+Plutuz bench: 5 warm-up iterations, >= 50 iterations, >= 5000 ms
+--- auction_1-1: process 124
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 auction_1-1
+PVB_RESULT {"name":"auction_1-1","loop":"d3","iterations":18892,"mean_ns":264667,"median_ns":261544,"min_ns":249698,"max_ns":449087,"stddev_ns":17920}
+PVB_LOOP eval auction_1-1
+PVB_RESULT {"name":"auction_1-1","loop":"eval","iterations":32266,"mean_ns":154963,"median_ns":151669,"min_ns":148389,"max_ns":244178,"stddev_ns":6355}
+--- auction_1-2: process 128
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 auction_1-2
+PVB_RESULT {"name":"auction_1-2","loop":"d3","iterations":5977,"mean_ns":836670,"median_ns":828975,"min_ns":800705,"max_ns":2091226,"stddev_ns":52778}
+PVB_LOOP eval auction_1-2
+PVB_RESULT {"name":"auction_1-2","loop":"eval","iterations":8988,"mean_ns":556304,"median_ns":554317,"min_ns":529727,"max_ns":798985,"stddev_ns":14037}
+--- auction_1-3: process 132
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 auction_1-3
+PVB_RESULT {"name":"auction_1-3","loop":"d3","iterations":6192,"mean_ns":807603,"median_ns":805930,"min_ns":778835,"max_ns":1034414,"stddev_ns":14304}
+PVB_LOOP eval auction_1-3
+PVB_RESULT {"name":"auction_1-3","loop":"eval","iterations":9132,"mean_ns":547558,"median_ns":540847,"min_ns":515276,"max_ns":828675,"stddev_ns":22857}
+--- auction_1-4: process 136
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 auction_1-4
+PVB_RESULT {"name":"auction_1-4","loop":"d3","iterations":16146,"mean_ns":309685,"median_ns":307914,"min_ns":294928,"max_ns":969343,"stddev_ns":24334}
+PVB_LOOP eval auction_1-4
+PVB_RESULT {"name":"auction_1-4","loop":"eval","iterations":24895,"mean_ns":200852,"median_ns":197209,"min_ns":192708,"max_ns":305598,"stddev_ns":6895}
+--- auction_2-1: process 140
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 auction_2-1
+PVB_RESULT {"name":"auction_2-1","loop":"d3","iterations":18903,"mean_ns":264515,"median_ns":262439,"min_ns":251418,"max_ns":738865,"stddev_ns":21630}
+PVB_LOOP eval auction_2-1
+PVB_RESULT {"name":"auction_2-1","loop":"eval","iterations":31544,"mean_ns":158513,"median_ns":154449,"min_ns":150159,"max_ns":311988,"stddev_ns":8826}
+--- auction_2-2: process 144
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 auction_2-2
+PVB_RESULT {"name":"auction_2-2","loop":"d3","iterations":5993,"mean_ns":834309,"median_ns":829964,"min_ns":802855,"max_ns":1190483,"stddev_ns":26408}
+PVB_LOOP eval auction_2-2
+PVB_RESULT {"name":"auction_2-2","loop":"eval","iterations":8945,"mean_ns":558991,"median_ns":554777,"min_ns":529796,"max_ns":969074,"stddev_ns":22064}
+--- auction_2-3: process 148
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 auction_2-3
+PVB_RESULT {"name":"auction_2-3","loop":"d3","iterations":5010,"mean_ns":998087,"median_ns":984814,"min_ns":949974,"max_ns":2619743,"stddev_ns":120814}
+PVB_LOOP eval auction_2-3
+PVB_RESULT {"name":"auction_2-3","loop":"eval","iterations":6969,"mean_ns":717523,"median_ns":715526,"min_ns":689586,"max_ns":1043513,"stddev_ns":16923}
+--- auction_2-4: process 152
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 auction_2-4
+PVB_RESULT {"name":"auction_2-4","loop":"d3","iterations":6203,"mean_ns":806082,"median_ns":805155,"min_ns":780335,"max_ns":1293112,"stddev_ns":14368}
+PVB_LOOP eval auction_2-4
+PVB_RESULT {"name":"auction_2-4","loop":"eval","iterations":9283,"mean_ns":538635,"median_ns":536997,"min_ns":519436,"max_ns":801405,"stddev_ns":10819}
+--- auction_2-5: process 156
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 auction_2-5
+PVB_RESULT {"name":"auction_2-5","loop":"d3","iterations":16224,"mean_ns":308200,"median_ns":307888,"min_ns":294868,"max_ns":475437,"stddev_ns":8080}
+PVB_LOOP eval auction_2-5
+PVB_RESULT {"name":"auction_2-5","loop":"eval","iterations":25094,"mean_ns":199258,"median_ns":195569,"min_ns":191119,"max_ns":323948,"stddev_ns":8556}
+--- coop-1: process 160
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 coop-1
+PVB_RESULT {"name":"coop-1","loop":"d3","iterations":20064,"mean_ns":249211,"median_ns":246948,"min_ns":235268,"max_ns":415938,"stddev_ns":15568}
+PVB_LOOP eval coop-1
+PVB_RESULT {"name":"coop-1","loop":"eval","iterations":27034,"mean_ns":184954,"median_ns":181059,"min_ns":175889,"max_ns":299808,"stddev_ns":8120}
+--- coop-2: process 164
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 coop-2
+PVB_RESULT {"name":"coop-2","loop":"d3","iterations":6893,"mean_ns":725471,"median_ns":712636,"min_ns":689116,"max_ns":1147362,"stddev_ns":54454}
+PVB_LOOP eval coop-2
+PVB_RESULT {"name":"coop-2","loop":"eval","iterations":8843,"mean_ns":565421,"median_ns":561657,"min_ns":542286,"max_ns":933324,"stddev_ns":23351}
+--- coop-3: process 168
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 coop-3
+PVB_RESULT {"name":"coop-3","loop":"d3","iterations":2759,"mean_ns":1812580,"median_ns":1800479,"min_ns":1744148,"max_ns":2953681,"stddev_ns":64727}
+PVB_LOOP eval coop-3
+PVB_RESULT {"name":"coop-3","loop":"eval","iterations":3058,"mean_ns":1635287,"median_ns":1625820,"min_ns":1583440,"max_ns":2839882,"stddev_ns":67521}
+--- coop-4: process 172
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 coop-4
+PVB_RESULT {"name":"coop-4","loop":"d3","iterations":5877,"mean_ns":850918,"median_ns":849665,"min_ns":824035,"max_ns":1190033,"stddev_ns":15008}
+PVB_LOOP eval coop-4
+PVB_RESULT {"name":"coop-4","loop":"eval","iterations":7294,"mean_ns":685548,"median_ns":683521,"min_ns":664355,"max_ns":1009754,"stddev_ns":17290}
+--- coop-5: process 176
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 coop-5
+PVB_RESULT {"name":"coop-5","loop":"d3","iterations":10777,"mean_ns":463991,"median_ns":462857,"min_ns":444407,"max_ns":690165,"stddev_ns":11653}
+PVB_LOOP eval coop-5
+PVB_RESULT {"name":"coop-5","loop":"eval","iterations":16308,"mean_ns":306606,"median_ns":305958,"min_ns":294109,"max_ns":442877,"stddev_ns":8535}
+--- coop-6: process 180
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 coop-6
+PVB_RESULT {"name":"coop-6","loop":"d3","iterations":8038,"mean_ns":622067,"median_ns":620156,"min_ns":596777,"max_ns":914254,"stddev_ns":11602}
+PVB_LOOP eval coop-6
+PVB_RESULT {"name":"coop-6","loop":"eval","iterations":9288,"mean_ns":538361,"median_ns":535336,"min_ns":515097,"max_ns":960714,"stddev_ns":19607}
+--- coop-7: process 184
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 coop-7
+PVB_RESULT {"name":"coop-7","loop":"d3","iterations":14971,"mean_ns":333995,"median_ns":333248,"min_ns":317078,"max_ns":540066,"stddev_ns":9393}
+PVB_LOOP eval coop-7
+PVB_RESULT {"name":"coop-7","loop":"eval","iterations":19090,"mean_ns":261926,"median_ns":260789,"min_ns":248408,"max_ns":422217,"stddev_ns":8990}
+--- crowdfunding-success-1: process 188
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 crowdfunding-success-1
+PVB_RESULT {"name":"crowdfunding-success-1","loop":"d3","iterations":16583,"mean_ns":301517,"median_ns":300268,"min_ns":287588,"max_ns":480617,"stddev_ns":13463}
+PVB_LOOP eval crowdfunding-success-1
+PVB_RESULT {"name":"crowdfunding-success-1","loop":"eval","iterations":28878,"mean_ns":173142,"median_ns":170039,"min_ns":164759,"max_ns":291388,"stddev_ns":7503}
+--- crowdfunding-success-2: process 192
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 crowdfunding-success-2
+PVB_RESULT {"name":"crowdfunding-success-2","loop":"d3","iterations":16624,"mean_ns":300780,"median_ns":300038,"min_ns":286928,"max_ns":478647,"stddev_ns":8786}
+PVB_LOOP eval crowdfunding-success-2
+PVB_RESULT {"name":"crowdfunding-success-2","loop":"eval","iterations":29050,"mean_ns":172118,"median_ns":167969,"min_ns":164209,"max_ns":339128,"stddev_ns":8634}
+--- crowdfunding-success-3: process 196
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 crowdfunding-success-3
+PVB_RESULT {"name":"crowdfunding-success-3","loop":"d3","iterations":16634,"mean_ns":300592,"median_ns":299898,"min_ns":286938,"max_ns":788155,"stddev_ns":9597}
+PVB_LOOP eval crowdfunding-success-3
+PVB_RESULT {"name":"crowdfunding-success-3","loop":"eval","iterations":28832,"mean_ns":173424,"median_ns":170079,"min_ns":164919,"max_ns":300578,"stddev_ns":6566}
+--- currency-1: process 200
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 currency-1
+PVB_RESULT {"name":"currency-1","loop":"d3","iterations":14896,"mean_ns":335682,"median_ns":335748,"min_ns":320638,"max_ns":394928,"stddev_ns":7005}
+PVB_LOOP eval currency-1
+PVB_RESULT {"name":"currency-1","loop":"eval","iterations":23988,"mean_ns":208440,"median_ns":204888,"min_ns":199119,"max_ns":307068,"stddev_ns":6684}
+--- escrow-redeem_1-1: process 204
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 escrow-redeem_1-1
+PVB_RESULT {"name":"escrow-redeem_1-1","loop":"d3","iterations":10993,"mean_ns":454855,"median_ns":453637,"min_ns":436637,"max_ns":701505,"stddev_ns":9686}
+PVB_LOOP eval escrow-redeem_1-1
+PVB_RESULT {"name":"escrow-redeem_1-1","loop":"eval","iterations":17447,"mean_ns":286594,"median_ns":284018,"min_ns":270989,"max_ns":444377,"stddev_ns":15645}
+--- escrow-redeem_1-2: process 208
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 escrow-redeem_1-2
+PVB_RESULT {"name":"escrow-redeem_1-2","loop":"d3","iterations":11049,"mean_ns":452538,"median_ns":452097,"min_ns":434388,"max_ns":497467,"stddev_ns":7640}
+PVB_LOOP eval escrow-redeem_1-2
+PVB_RESULT {"name":"escrow-redeem_1-2","loop":"eval","iterations":17615,"mean_ns":283860,"median_ns":283888,"min_ns":270569,"max_ns":461927,"stddev_ns":7543}
+--- escrow-redeem_2-1: process 212
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 escrow-redeem_2-1
+PVB_RESULT {"name":"escrow-redeem_2-1","loop":"d3","iterations":9903,"mean_ns":504933,"median_ns":501147,"min_ns":480407,"max_ns":728625,"stddev_ns":17630}
+PVB_LOOP eval escrow-redeem_2-1
+PVB_RESULT {"name":"escrow-redeem_2-1","loop":"eval","iterations":15091,"mean_ns":331344,"median_ns":330028,"min_ns":316048,"max_ns":541797,"stddev_ns":12715}
+--- escrow-redeem_2-2: process 216
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 escrow-redeem_2-2
+PVB_RESULT {"name":"escrow-redeem_2-2","loop":"d3","iterations":9941,"mean_ns":503000,"median_ns":499787,"min_ns":480427,"max_ns":764175,"stddev_ns":18351}
+PVB_LOOP eval escrow-redeem_2-2
+PVB_RESULT {"name":"escrow-redeem_2-2","loop":"eval","iterations":15008,"mean_ns":333178,"median_ns":330188,"min_ns":315338,"max_ns":570686,"stddev_ns":24614}
+--- escrow-redeem_2-3: process 220
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 escrow-redeem_2-3
+PVB_RESULT {"name":"escrow-redeem_2-3","loop":"d3","iterations":9981,"mean_ns":500973,"median_ns":499986,"min_ns":479777,"max_ns":641165,"stddev_ns":9509}
+PVB_LOOP eval escrow-redeem_2-3
+PVB_RESULT {"name":"escrow-redeem_2-3","loop":"eval","iterations":15118,"mean_ns":330739,"median_ns":330168,"min_ns":314548,"max_ns":715486,"stddev_ns":9315}
+--- escrow-refund-1: process 224
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 escrow-refund-1
+PVB_RESULT {"name":"escrow-refund-1","loop":"d3","iterations":17000,"mean_ns":294122,"median_ns":293819,"min_ns":282248,"max_ns":409197,"stddev_ns":8034}
+PVB_LOOP eval escrow-refund-1
+PVB_RESULT {"name":"escrow-refund-1","loop":"eval","iterations":38916,"mean_ns":128483,"median_ns":125550,"min_ns":122389,"max_ns":214399,"stddev_ns":6087}
+--- future-increase-margin-1: process 228
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-increase-margin-1
+PVB_RESULT {"name":"future-increase-margin-1","loop":"d3","iterations":14774,"mean_ns":338449,"median_ns":338398,"min_ns":323368,"max_ns":444467,"stddev_ns":7491}
+PVB_LOOP eval future-increase-margin-1
+PVB_RESULT {"name":"future-increase-margin-1","loop":"eval","iterations":23947,"mean_ns":208802,"median_ns":205869,"min_ns":197989,"max_ns":586206,"stddev_ns":8654}
+--- future-increase-margin-2: process 232
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-increase-margin-2
+PVB_RESULT {"name":"future-increase-margin-2","loop":"d3","iterations":8185,"mean_ns":610899,"median_ns":604836,"min_ns":581287,"max_ns":998664,"stddev_ns":35846}
+PVB_LOOP eval future-increase-margin-2
+PVB_RESULT {"name":"future-increase-margin-2","loop":"eval","iterations":11536,"mean_ns":433437,"median_ns":431657,"min_ns":413507,"max_ns":988304,"stddev_ns":16576}
+--- future-increase-margin-3: process 236
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-increase-margin-3
+PVB_RESULT {"name":"future-increase-margin-3","loop":"d3","iterations":8154,"mean_ns":613272,"median_ns":606011,"min_ns":582166,"max_ns":1023703,"stddev_ns":43269}
+PVB_LOOP eval future-increase-margin-3
+PVB_RESULT {"name":"future-increase-margin-3","loop":"eval","iterations":11523,"mean_ns":433918,"median_ns":433667,"min_ns":417697,"max_ns":761365,"stddev_ns":8445}
+--- future-increase-margin-4: process 240
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-increase-margin-4
+PVB_RESULT {"name":"future-increase-margin-4","loop":"d3","iterations":6345,"mean_ns":788040,"median_ns":783865,"min_ns":760985,"max_ns":1154402,"stddev_ns":24700}
+PVB_LOOP eval future-increase-margin-4
+PVB_RESULT {"name":"future-increase-margin-4","loop":"eval","iterations":10824,"mean_ns":461954,"median_ns":458477,"min_ns":438047,"max_ns":778395,"stddev_ns":20224}
+--- future-increase-margin-5: process 244
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-increase-margin-5
+PVB_RESULT {"name":"future-increase-margin-5","loop":"d3","iterations":4039,"mean_ns":1238235,"median_ns":1234232,"min_ns":1190912,"max_ns":1647720,"stddev_ns":24191}
+PVB_LOOP eval future-increase-margin-5
+PVB_RESULT {"name":"future-increase-margin-5","loop":"eval","iterations":5514,"mean_ns":906928,"median_ns":904544,"min_ns":868914,"max_ns":1286292,"stddev_ns":16585}
+--- future-pay-out-1: process 248
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-pay-out-1
+PVB_RESULT {"name":"future-pay-out-1","loop":"d3","iterations":14756,"mean_ns":338855,"median_ns":336828,"min_ns":320768,"max_ns":518537,"stddev_ns":17449}
+PVB_LOOP eval future-pay-out-1
+PVB_RESULT {"name":"future-pay-out-1","loop":"eval","iterations":23537,"mean_ns":212438,"median_ns":208988,"min_ns":198039,"max_ns":632706,"stddev_ns":14424}
+--- future-pay-out-2: process 252
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-pay-out-2
+PVB_RESULT {"name":"future-pay-out-2","loop":"d3","iterations":8157,"mean_ns":613000,"median_ns":610196,"min_ns":584317,"max_ns":927254,"stddev_ns":15802}
+PVB_LOOP eval future-pay-out-2
+PVB_RESULT {"name":"future-pay-out-2","loop":"eval","iterations":11475,"mean_ns":435766,"median_ns":433997,"min_ns":414377,"max_ns":1151383,"stddev_ns":16934}
+--- future-pay-out-3: process 256
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-pay-out-3
+PVB_RESULT {"name":"future-pay-out-3","loop":"d3","iterations":8213,"mean_ns":608859,"median_ns":606446,"min_ns":583646,"max_ns":866425,"stddev_ns":11041}
+PVB_LOOP eval future-pay-out-3
+PVB_RESULT {"name":"future-pay-out-3","loop":"eval","iterations":11510,"mean_ns":434439,"median_ns":433558,"min_ns":418177,"max_ns":554376,"stddev_ns":9246}
+--- future-pay-out-4: process 260
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-pay-out-4
+PVB_RESULT {"name":"future-pay-out-4","loop":"d3","iterations":4051,"mean_ns":1234391,"median_ns":1231792,"min_ns":1190382,"max_ns":1482700,"stddev_ns":16333}
+PVB_LOOP eval future-pay-out-4
+PVB_RESULT {"name":"future-pay-out-4","loop":"eval","iterations":5468,"mean_ns":914504,"median_ns":912440,"min_ns":872104,"max_ns":1313201,"stddev_ns":17246}
+--- future-settle-early-1: process 264
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-settle-early-1
+PVB_RESULT {"name":"future-settle-early-1","loop":"d3","iterations":14883,"mean_ns":335966,"median_ns":335428,"min_ns":320758,"max_ns":502217,"stddev_ns":9054}
+PVB_LOOP eval future-settle-early-1
+PVB_RESULT {"name":"future-settle-early-1","loop":"eval","iterations":23827,"mean_ns":209848,"median_ns":204719,"min_ns":198259,"max_ns":372588,"stddev_ns":17196}
+--- future-settle-early-2: process 268
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-settle-early-2
+PVB_RESULT {"name":"future-settle-early-2","loop":"d3","iterations":8073,"mean_ns":619396,"median_ns":615356,"min_ns":589846,"max_ns":858384,"stddev_ns":16097}
+PVB_LOOP eval future-settle-early-2
+PVB_RESULT {"name":"future-settle-early-2","loop":"eval","iterations":11112,"mean_ns":449983,"median_ns":444622,"min_ns":423637,"max_ns":890434,"stddev_ns":35110}
+--- future-settle-early-3: process 272
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-settle-early-3
+PVB_RESULT {"name":"future-settle-early-3","loop":"d3","iterations":8156,"mean_ns":613105,"median_ns":604836,"min_ns":580357,"max_ns":1662529,"stddev_ns":51162}
+PVB_LOOP eval future-settle-early-3
+PVB_RESULT {"name":"future-settle-early-3","loop":"eval","iterations":11332,"mean_ns":441240,"median_ns":435698,"min_ns":414857,"max_ns":710525,"stddev_ns":21961}
+--- future-settle-early-4: process 276
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 future-settle-early-4
+PVB_RESULT {"name":"future-settle-early-4","loop":"d3","iterations":5000,"mean_ns":1000002,"median_ns":995305,"min_ns":961845,"max_ns":1433383,"stddev_ns":25526}
+PVB_LOOP eval future-settle-early-4
+PVB_RESULT {"name":"future-settle-early-4","loop":"eval","iterations":7555,"mean_ns":661892,"median_ns":655657,"min_ns":625447,"max_ns":1182414,"stddev_ns":38001}
+--- game-sm-success_1-1: process 280
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 game-sm-success_1-1
+PVB_RESULT {"name":"game-sm-success_1-1","loop":"d3","iterations":8014,"mean_ns":623922,"median_ns":611767,"min_ns":586367,"max_ns":990096,"stddev_ns":55771}
+PVB_LOOP eval game-sm-success_1-1
+PVB_RESULT {"name":"game-sm-success_1-1","loop":"eval","iterations":14135,"mean_ns":353747,"median_ns":346618,"min_ns":329328,"max_ns":600627,"stddev_ns":35408}
+--- game-sm-success_1-2: process 284
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 game-sm-success_1-2
+PVB_RESULT {"name":"game-sm-success_1-2","loop":"d3","iterations":18814,"mean_ns":265767,"median_ns":263889,"min_ns":252149,"max_ns":441528,"stddev_ns":13029}
+PVB_LOOP eval game-sm-success_1-2
+PVB_RESULT {"name":"game-sm-success_1-2","loop":"eval","iterations":28846,"mean_ns":173335,"median_ns":167619,"min_ns":163659,"max_ns":435528,"stddev_ns":15227}
+--- game-sm-success_1-3: process 288
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 game-sm-success_1-3
+PVB_RESULT {"name":"game-sm-success_1-3","loop":"d3","iterations":6135,"mean_ns":815049,"median_ns":813936,"min_ns":787346,"max_ns":1111305,"stddev_ns":15139}
+PVB_LOOP eval game-sm-success_1-3
+PVB_RESULT {"name":"game-sm-success_1-3","loop":"eval","iterations":9069,"mean_ns":551337,"median_ns":550017,"min_ns":528267,"max_ns":1090815,"stddev_ns":11577}
+--- game-sm-success_1-4: process 292
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 game-sm-success_1-4
+PVB_RESULT {"name":"game-sm-success_1-4","loop":"d3","iterations":16725,"mean_ns":298961,"median_ns":295489,"min_ns":278129,"max_ns":479908,"stddev_ns":18768}
+PVB_LOOP eval game-sm-success_1-4
+PVB_RESULT {"name":"game-sm-success_1-4","loop":"eval","iterations":25200,"mean_ns":198419,"median_ns":195129,"min_ns":190009,"max_ns":280519,"stddev_ns":7417}
+--- game-sm-success_2-1: process 296
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 game-sm-success_2-1
+PVB_RESULT {"name":"game-sm-success_2-1","loop":"d3","iterations":8092,"mean_ns":617944,"median_ns":610692,"min_ns":583897,"max_ns":816156,"stddev_ns":26435}
+PVB_LOOP eval game-sm-success_2-1
+PVB_RESULT {"name":"game-sm-success_2-1","loop":"eval","iterations":14405,"mean_ns":347104,"median_ns":346209,"min_ns":329218,"max_ns":535587,"stddev_ns":10849}
+--- game-sm-success_2-2: process 300
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 game-sm-success_2-2
+PVB_RESULT {"name":"game-sm-success_2-2","loop":"d3","iterations":18762,"mean_ns":266505,"median_ns":263748,"min_ns":252059,"max_ns":684306,"stddev_ns":23040}
+PVB_LOOP eval game-sm-success_2-2
+PVB_RESULT {"name":"game-sm-success_2-2","loop":"eval","iterations":29030,"mean_ns":172240,"median_ns":168689,"min_ns":163900,"max_ns":622597,"stddev_ns":8674}
+--- game-sm-success_2-3: process 304
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 game-sm-success_2-3
+PVB_RESULT {"name":"game-sm-success_2-3","loop":"d3","iterations":6136,"mean_ns":814908,"median_ns":811431,"min_ns":785076,"max_ns":1159604,"stddev_ns":20364}
+PVB_LOOP eval game-sm-success_2-3
+PVB_RESULT {"name":"game-sm-success_2-3","loop":"eval","iterations":9064,"mean_ns":551664,"median_ns":550212,"min_ns":525877,"max_ns":743286,"stddev_ns":13893}
+--- game-sm-success_2-4: process 308
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 game-sm-success_2-4
+PVB_RESULT {"name":"game-sm-success_2-4","loop":"d3","iterations":17056,"mean_ns":293166,"median_ns":290859,"min_ns":278698,"max_ns":1328123,"stddev_ns":16074}
+PVB_LOOP eval game-sm-success_2-4
+PVB_RESULT {"name":"game-sm-success_2-4","loop":"eval","iterations":25296,"mean_ns":197662,"median_ns":193799,"min_ns":189389,"max_ns":353829,"stddev_ns":7816}
+--- game-sm-success_2-5: process 312
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 game-sm-success_2-5
+PVB_RESULT {"name":"game-sm-success_2-5","loop":"d3","iterations":6138,"mean_ns":814694,"median_ns":812946,"min_ns":785776,"max_ns":1077615,"stddev_ns":14860}
+PVB_LOOP eval game-sm-success_2-5
+PVB_RESULT {"name":"game-sm-success_2-5","loop":"eval","iterations":9044,"mean_ns":552885,"median_ns":551857,"min_ns":526867,"max_ns":785906,"stddev_ns":14820}
+--- game-sm-success_2-6: process 316
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 game-sm-success_2-6
+PVB_RESULT {"name":"game-sm-success_2-6","loop":"d3","iterations":17176,"mean_ns":291114,"median_ns":289114,"min_ns":278508,"max_ns":378728,"stddev_ns":8666}
+PVB_LOOP eval game-sm-success_2-6
+PVB_RESULT {"name":"game-sm-success_2-6","loop":"eval","iterations":25415,"mean_ns":196736,"median_ns":193009,"min_ns":189279,"max_ns":305298,"stddev_ns":6873}
+--- guardrail-sorted-large: process 320
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 guardrail-sorted-large
+PVB_RESULT {"name":"guardrail-sorted-large","loop":"d3","iterations":11818,"mean_ns":423106,"median_ns":421498,"min_ns":400928,"max_ns":624817,"stddev_ns":10809}
+PVB_LOOP eval guardrail-sorted-large
+PVB_RESULT {"name":"guardrail-sorted-large","loop":"eval","iterations":15667,"mean_ns":319151,"median_ns":316978,"min_ns":305598,"max_ns":537938,"stddev_ns":11277}
+--- guardrail-sorted-small: process 324
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 guardrail-sorted-small
+PVB_RESULT {"name":"guardrail-sorted-small","loop":"d3","iterations":41806,"mean_ns":119602,"median_ns":116550,"min_ns":112969,"max_ns":251489,"stddev_ns":7362}
+PVB_LOOP eval guardrail-sorted-small
+PVB_RESULT {"name":"guardrail-sorted-small","loop":"eval","iterations":90810,"mean_ns":55060,"median_ns":53870,"min_ns":52650,"max_ns":146979,"stddev_ns":3567}
+--- guardrail-unsorted-large: process 328
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 guardrail-unsorted-large
+PVB_RESULT {"name":"guardrail-unsorted-large","loop":"d3","iterations":9035,"mean_ns":553462,"median_ns":553818,"min_ns":530087,"max_ns":785986,"stddev_ns":11790}
+PVB_LOOP eval guardrail-unsorted-large
+PVB_RESULT {"name":"guardrail-unsorted-large","loop":"eval","iterations":10995,"mean_ns":454791,"median_ns":453758,"min_ns":438278,"max_ns":540567,"stddev_ns":10097}
+--- guardrail-unsorted-small: process 332
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 guardrail-unsorted-small
+PVB_RESULT {"name":"guardrail-unsorted-small","loop":"d3","iterations":42509,"mean_ns":117624,"median_ns":114799,"min_ns":111120,"max_ns":175479,"stddev_ns":6142}
+PVB_LOOP eval guardrail-unsorted-small
+PVB_RESULT {"name":"guardrail-unsorted-small","loop":"eval","iterations":92347,"mean_ns":54144,"median_ns":52820,"min_ns":51680,"max_ns":93849,"stddev_ns":3756}
+--- multisig-sm-01: process 336
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 multisig-sm-01
+PVB_RESULT {"name":"multisig-sm-01","loop":"d3","iterations":7638,"mean_ns":654687,"median_ns":656092,"min_ns":628337,"max_ns":738806,"stddev_ns":12276}
+PVB_LOOP eval multisig-sm-01
+PVB_RESULT {"name":"multisig-sm-01","loop":"eval","iterations":13803,"mean_ns":362244,"median_ns":359968,"min_ns":345298,"max_ns":465397,"stddev_ns":11131}
+--- multisig-sm-02: process 340
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 multisig-sm-02
+PVB_RESULT {"name":"multisig-sm-02","loop":"d3","iterations":7712,"mean_ns":648373,"median_ns":649462,"min_ns":619337,"max_ns":819236,"stddev_ns":13330}
+PVB_LOOP eval multisig-sm-02
+PVB_RESULT {"name":"multisig-sm-02","loop":"eval","iterations":14121,"mean_ns":354090,"median_ns":351588,"min_ns":337638,"max_ns":440357,"stddev_ns":11119}
+--- multisig-sm-03: process 344
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 multisig-sm-03
+PVB_RESULT {"name":"multisig-sm-03","loop":"d3","iterations":7757,"mean_ns":644588,"median_ns":645777,"min_ns":617297,"max_ns":891025,"stddev_ns":14145}
+PVB_LOOP eval multisig-sm-03
+PVB_RESULT {"name":"multisig-sm-03","loop":"eval","iterations":13704,"mean_ns":364871,"median_ns":358508,"min_ns":342978,"max_ns":626117,"stddev_ns":29623}
+--- multisig-sm-04: process 348
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 multisig-sm-04
+PVB_RESULT {"name":"multisig-sm-04","loop":"d3","iterations":7557,"mean_ns":661712,"median_ns":663667,"min_ns":633777,"max_ns":762136,"stddev_ns":13973}
+PVB_LOOP eval multisig-sm-04
+PVB_RESULT {"name":"multisig-sm-04","loop":"eval","iterations":13765,"mean_ns":363261,"median_ns":359208,"min_ns":345119,"max_ns":575647,"stddev_ns":13367}
+--- multisig-sm-05: process 352
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 multisig-sm-05
+PVB_RESULT {"name":"multisig-sm-05","loop":"d3","iterations":6273,"mean_ns":797135,"median_ns":794625,"min_ns":758976,"max_ns":1228823,"stddev_ns":28436}
+PVB_LOOP eval multisig-sm-05
+PVB_RESULT {"name":"multisig-sm-05","loop":"eval","iterations":9898,"mean_ns":505155,"median_ns":506327,"min_ns":482637,"max_ns":650737,"stddev_ns":12125}
+--- multisig-sm-06: process 356
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 multisig-sm-06
+PVB_RESULT {"name":"multisig-sm-06","loop":"d3","iterations":7504,"mean_ns":666394,"median_ns":661241,"min_ns":628667,"max_ns":913095,"stddev_ns":25547}
+PVB_LOOP eval multisig-sm-06
+PVB_RESULT {"name":"multisig-sm-06","loop":"eval","iterations":13775,"mean_ns":362988,"median_ns":358788,"min_ns":346238,"max_ns":631887,"stddev_ns":16489}
+--- multisig-sm-07: process 360
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 multisig-sm-07
+PVB_RESULT {"name":"multisig-sm-07","loop":"d3","iterations":7672,"mean_ns":651756,"median_ns":653637,"min_ns":621147,"max_ns":886555,"stddev_ns":15882}
+PVB_LOOP eval multisig-sm-07
+PVB_RESULT {"name":"multisig-sm-07","loop":"eval","iterations":13852,"mean_ns":360966,"median_ns":354758,"min_ns":339588,"max_ns":626856,"stddev_ns":23438}
+--- multisig-sm-08: process 364
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 multisig-sm-08
+PVB_RESULT {"name":"multisig-sm-08","loop":"d3","iterations":7735,"mean_ns":646475,"median_ns":648087,"min_ns":619227,"max_ns":990684,"stddev_ns":17379}
+PVB_LOOP eval multisig-sm-08
+PVB_RESULT {"name":"multisig-sm-08","loop":"eval","iterations":13977,"mean_ns":357749,"median_ns":352209,"min_ns":340118,"max_ns":517208,"stddev_ns":13300}
+--- multisig-sm-09: process 368
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 multisig-sm-09
+PVB_RESULT {"name":"multisig-sm-09","loop":"d3","iterations":7592,"mean_ns":658650,"median_ns":658737,"min_ns":626787,"max_ns":957995,"stddev_ns":18620}
+PVB_LOOP eval multisig-sm-09
+PVB_RESULT {"name":"multisig-sm-09","loop":"eval","iterations":13772,"mean_ns":363065,"median_ns":357003,"min_ns":344248,"max_ns":539297,"stddev_ns":14656}
+--- multisig-sm-10: process 372
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 multisig-sm-10
+PVB_RESULT {"name":"multisig-sm-10","loop":"d3","iterations":6295,"mean_ns":794352,"median_ns":794096,"min_ns":762106,"max_ns":1063985,"stddev_ns":14726}
+PVB_LOOP eval multisig-sm-10
+PVB_RESULT {"name":"multisig-sm-10","loop":"eval","iterations":9810,"mean_ns":509708,"median_ns":511127,"min_ns":485347,"max_ns":712946,"stddev_ns":15823}
+--- ping-pong-1: process 376
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 ping-pong-1
+PVB_RESULT {"name":"ping-pong-1","loop":"d3","iterations":9119,"mean_ns":548325,"median_ns":548217,"min_ns":520097,"max_ns":684306,"stddev_ns":16444}
+PVB_LOOP eval ping-pong-1
+PVB_RESULT {"name":"ping-pong-1","loop":"eval","iterations":16679,"mean_ns":299781,"median_ns":292828,"min_ns":281589,"max_ns":440818,"stddev_ns":14489}
+--- ping-pong-2: process 380
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 ping-pong-2
+PVB_RESULT {"name":"ping-pong-2","loop":"d3","iterations":9126,"mean_ns":547934,"median_ns":547317,"min_ns":518507,"max_ns":716457,"stddev_ns":17789}
+PVB_LOOP eval ping-pong-2
+PVB_RESULT {"name":"ping-pong-2","loop":"eval","iterations":16613,"mean_ns":300975,"median_ns":293698,"min_ns":282758,"max_ns":583737,"stddev_ns":17189}
+--- ping-pong_2-1: process 384
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 ping-pong_2-1
+PVB_RESULT {"name":"ping-pong_2-1","loop":"d3","iterations":11945,"mean_ns":418607,"median_ns":414078,"min_ns":401778,"max_ns":677316,"stddev_ns":12486}
+PVB_LOOP eval ping-pong_2-1
+PVB_RESULT {"name":"ping-pong_2-1","loop":"eval","iterations":28924,"mean_ns":172868,"median_ns":169129,"min_ns":164729,"max_ns":289789,"stddev_ns":8327}
+--- prism-1: process 388
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 prism-1
+PVB_RESULT {"name":"prism-1","loop":"d3","iterations":21666,"mean_ns":230781,"median_ns":225529,"min_ns":219489,"max_ns":634577,"stddev_ns":11983}
+PVB_LOOP eval prism-1
+PVB_RESULT {"name":"prism-1","loop":"eval","iterations":34444,"mean_ns":145166,"median_ns":140440,"min_ns":137529,"max_ns":255369,"stddev_ns":10034}
+--- prism-2: process 392
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 prism-2
+PVB_RESULT {"name":"prism-2","loop":"d3","iterations":7736,"mean_ns":646365,"median_ns":639577,"min_ns":605737,"max_ns":885225,"stddev_ns":30215}
+PVB_LOOP eval prism-2
+PVB_RESULT {"name":"prism-2","loop":"eval","iterations":13122,"mean_ns":381068,"median_ns":373333,"min_ns":355918,"max_ns":665926,"stddev_ns":28218}
+--- prism-3: process 396
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 prism-3
+PVB_RESULT {"name":"prism-3","loop":"d3","iterations":10968,"mean_ns":455889,"median_ns":452753,"min_ns":433318,"max_ns":733056,"stddev_ns":23427}
+PVB_LOOP eval prism-3
+PVB_RESULT {"name":"prism-3","loop":"eval","iterations":15351,"mean_ns":325717,"median_ns":320619,"min_ns":310888,"max_ns":515168,"stddev_ns":11611}
+--- pubkey-1: process 400
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 pubkey-1
+PVB_RESULT {"name":"pubkey-1","loop":"d3","iterations":24041,"mean_ns":207984,"median_ns":203189,"min_ns":198209,"max_ns":346798,"stddev_ns":9874}
+PVB_LOOP eval pubkey-1
+PVB_RESULT {"name":"pubkey-1","loop":"eval","iterations":42568,"mean_ns":117460,"median_ns":114700,"min_ns":112369,"max_ns":191729,"stddev_ns":7163}
+--- stablecoin_1-1: process 404
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 stablecoin_1-1
+PVB_RESULT {"name":"stablecoin_1-1","loop":"d3","iterations":3330,"mean_ns":1501807,"median_ns":1498747,"min_ns":1452552,"max_ns":1952179,"stddev_ns":30347}
+PVB_LOOP eval stablecoin_1-1
+PVB_RESULT {"name":"stablecoin_1-1","loop":"eval","iterations":4653,"mean_ns":1074606,"median_ns":1069825,"min_ns":1043644,"max_ns":1478062,"stddev_ns":25745}
+--- stablecoin_1-2: process 408
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 stablecoin_1-2
+PVB_RESULT {"name":"stablecoin_1-2","loop":"d3","iterations":19240,"mean_ns":259877,"median_ns":254889,"min_ns":247248,"max_ns":481187,"stddev_ns":12453}
+PVB_LOOP eval stablecoin_1-2
+PVB_RESULT {"name":"stablecoin_1-2","loop":"eval","iterations":29884,"mean_ns":167319,"median_ns":163569,"min_ns":159959,"max_ns":335468,"stddev_ns":9031}
+--- stablecoin_1-3: process 412
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 stablecoin_1-3
+PVB_RESULT {"name":"stablecoin_1-3","loop":"d3","iterations":3029,"mean_ns":1651043,"median_ns":1648471,"min_ns":1603331,"max_ns":1962609,"stddev_ns":25490}
+PVB_LOOP eval stablecoin_1-3
+PVB_RESULT {"name":"stablecoin_1-3","loop":"eval","iterations":4006,"mean_ns":1248380,"median_ns":1246023,"min_ns":1216073,"max_ns":1446272,"stddev_ns":15533}
+--- stablecoin_1-4: process 416
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 stablecoin_1-4
+PVB_RESULT {"name":"stablecoin_1-4","loop":"d3","iterations":18152,"mean_ns":275455,"median_ns":269504,"min_ns":258258,"max_ns":389068,"stddev_ns":15576}
+PVB_LOOP eval stablecoin_1-4
+PVB_RESULT {"name":"stablecoin_1-4","loop":"eval","iterations":28068,"mean_ns":178144,"median_ns":172669,"min_ns":168489,"max_ns":329068,"stddev_ns":11189}
+--- stablecoin_1-5: process 420
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 stablecoin_1-5
+PVB_RESULT {"name":"stablecoin_1-5","loop":"d3","iterations":2444,"mean_ns":2046058,"median_ns":2041229,"min_ns":2002518,"max_ns":2767385,"stddev_ns":31570}
+PVB_LOOP eval stablecoin_1-5
+PVB_RESULT {"name":"stablecoin_1-5","loop":"eval","iterations":3123,"mean_ns":1601216,"median_ns":1600481,"min_ns":1560321,"max_ns":1781800,"stddev_ns":18561}
+--- stablecoin_1-6: process 424
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 stablecoin_1-6
+PVB_RESULT {"name":"stablecoin_1-6","loop":"d3","iterations":16065,"mean_ns":311250,"median_ns":306479,"min_ns":296699,"max_ns":515168,"stddev_ns":12278}
+PVB_LOOP eval stablecoin_1-6
+PVB_RESULT {"name":"stablecoin_1-6","loop":"eval","iterations":23057,"mean_ns":216859,"median_ns":211549,"min_ns":207309,"max_ns":429028,"stddev_ns":11472}
+--- stablecoin_2-1: process 428
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 stablecoin_2-1
+PVB_RESULT {"name":"stablecoin_2-1","loop":"d3","iterations":3345,"mean_ns":1494971,"median_ns":1477702,"min_ns":1442682,"max_ns":2258518,"stddev_ns":99401}
+PVB_LOOP eval stablecoin_2-1
+PVB_RESULT {"name":"stablecoin_2-1","loop":"eval","iterations":4685,"mean_ns":1067445,"median_ns":1062704,"min_ns":1041564,"max_ns":1464152,"stddev_ns":25844}
+--- stablecoin_2-2: process 432
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 stablecoin_2-2
+PVB_RESULT {"name":"stablecoin_2-2","loop":"d3","iterations":19021,"mean_ns":262880,"median_ns":255999,"min_ns":248609,"max_ns":432648,"stddev_ns":19719}
+PVB_LOOP eval stablecoin_2-2
+PVB_RESULT {"name":"stablecoin_2-2","loop":"eval","iterations":29343,"mean_ns":170401,"median_ns":166829,"min_ns":163589,"max_ns":261338,"stddev_ns":7266}
+--- stablecoin_2-3: process 436
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 stablecoin_2-3
+PVB_RESULT {"name":"stablecoin_2-3","loop":"d3","iterations":2979,"mean_ns":1678533,"median_ns":1660621,"min_ns":1610551,"max_ns":2330627,"stddev_ns":68140}
+PVB_LOOP eval stablecoin_2-3
+PVB_RESULT {"name":"stablecoin_2-3","loop":"eval","iterations":3945,"mean_ns":1267689,"median_ns":1253773,"min_ns":1221923,"max_ns":2067128,"stddev_ns":53829}
+--- stablecoin_2-4: process 440
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 stablecoin_2-4
+PVB_RESULT {"name":"stablecoin_2-4","loop":"d3","iterations":18337,"mean_ns":272682,"median_ns":268258,"min_ns":259398,"max_ns":448707,"stddev_ns":10266}
+PVB_LOOP eval stablecoin_2-4
+PVB_RESULT {"name":"stablecoin_2-4","loop":"eval","iterations":28183,"mean_ns":177417,"median_ns":173509,"min_ns":170439,"max_ns":380578,"stddev_ns":7653}
+--- token-account-1: process 444
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 token-account-1
+PVB_RESULT {"name":"token-account-1","loop":"d3","iterations":17238,"mean_ns":290060,"median_ns":285134,"min_ns":277008,"max_ns":527317,"stddev_ns":12095}
+PVB_LOOP eval token-account-1
+PVB_RESULT {"name":"token-account-1","loop":"eval","iterations":30844,"mean_ns":162106,"median_ns":158259,"min_ns":154319,"max_ns":394247,"stddev_ns":8741}
+--- token-account-2: process 448
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 token-account-2
+PVB_RESULT {"name":"token-account-2","loop":"d3","iterations":12806,"mean_ns":390447,"median_ns":388897,"min_ns":371228,"max_ns":631057,"stddev_ns":12470}
+PVB_LOOP eval token-account-2
+PVB_RESULT {"name":"token-account-2","loop":"eval","iterations":18475,"mean_ns":270645,"median_ns":266568,"min_ns":256459,"max_ns":564796,"stddev_ns":12273}
+--- uniswap-1: process 452
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 uniswap-1
+PVB_RESULT {"name":"uniswap-1","loop":"d3","iterations":10804,"mean_ns":462812,"median_ns":461807,"min_ns":445147,"max_ns":648977,"stddev_ns":11432}
+PVB_LOOP eval uniswap-1
+PVB_RESULT {"name":"uniswap-1","loop":"eval","iterations":15134,"mean_ns":330394,"median_ns":327608,"min_ns":312518,"max_ns":493997,"stddev_ns":10848}
+--- uniswap-2: process 456
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 uniswap-2
+PVB_RESULT {"name":"uniswap-2","loop":"d3","iterations":15563,"mean_ns":321288,"median_ns":318798,"min_ns":307909,"max_ns":453458,"stddev_ns":9617}
+PVB_LOOP eval uniswap-2
+PVB_RESULT {"name":"uniswap-2","loop":"eval","iterations":25455,"mean_ns":196430,"median_ns":192799,"min_ns":186779,"max_ns":338918,"stddev_ns":8010}
+--- uniswap-3: process 460
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 uniswap-3
+PVB_RESULT {"name":"uniswap-3","loop":"d3","iterations":2659,"mean_ns":1880420,"median_ns":1875679,"min_ns":1832170,"max_ns":2741914,"stddev_ns":35216}
+PVB_LOOP eval uniswap-3
+PVB_RESULT {"name":"uniswap-3","loop":"eval","iterations":3266,"mean_ns":1531245,"median_ns":1526401,"min_ns":1477921,"max_ns":2302027,"stddev_ns":36411}
+--- uniswap-4: process 464
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 uniswap-4
+PVB_RESULT {"name":"uniswap-4","loop":"d3","iterations":12790,"mean_ns":390938,"median_ns":388798,"min_ns":372928,"max_ns":670916,"stddev_ns":15513}
+PVB_LOOP eval uniswap-4
+PVB_RESULT {"name":"uniswap-4","loop":"eval","iterations":17099,"mean_ns":292430,"median_ns":284849,"min_ns":273908,"max_ns":533437,"stddev_ns":31814}
+--- uniswap-5: process 468
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 uniswap-5
+PVB_RESULT {"name":"uniswap-5","loop":"d3","iterations":3890,"mean_ns":1285548,"median_ns":1279583,"min_ns":1244733,"max_ns":1804989,"stddev_ns":33770}
+PVB_LOOP eval uniswap-5
+PVB_RESULT {"name":"uniswap-5","loop":"eval","iterations":5318,"mean_ns":940236,"median_ns":928025,"min_ns":899805,"max_ns":1527601,"stddev_ns":67497}
+--- uniswap-6: process 472
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 uniswap-6
+PVB_RESULT {"name":"uniswap-6","loop":"d3","iterations":13288,"mean_ns":376289,"median_ns":374668,"min_ns":358638,"max_ns":628687,"stddev_ns":14653}
+PVB_LOOP eval uniswap-6
+PVB_RESULT {"name":"uniswap-6","loop":"eval","iterations":18179,"mean_ns":275049,"median_ns":272949,"min_ns":263379,"max_ns":493837,"stddev_ns":10307}
+--- vesting-1: process 476
+cost model: keep the built-in numbers of valueContains: its Plutuz shape (cpu const_above_diagonal, mem constant) needs a parameter that the mainnet model lacks
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-intercept
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope1
+cost model: unused mainnet parameter valueContains-cpu-arguments-model-arguments-slope2
+cost model: unused mainnet parameter valueContains-memory-arguments
+cost model: 350 mainnet parameters, 100 builtins loaded, 1 kept built-in, 4 parameters unused
+PVB_LOOP d3 vesting-1
+PVB_RESULT {"name":"vesting-1","loop":"d3","iterations":10949,"mean_ns":456670,"median_ns":454907,"min_ns":435638,"max_ns":685996,"stddev_ns":15784}
+PVB_LOOP eval vesting-1
+PVB_RESULT {"name":"vesting-1","loop":"eval","iterations":17643,"mean_ns":283412,"median_ns":281508,"min_ns":268158,"max_ns":508617,"stddev_ns":11062}

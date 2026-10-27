@@ -1,0 +1,1928 @@
+aiken uplc (Rust / Criterion) aiken-lang/aiken@bacbeb35fbc9f1db93cd2e1e93fb1d93053acb4a
+BENCH_LOOPS=d3,eval,check BENCH_TIMING=normal
+Criterion options: --warm-up-time 3 --measurement-time 5 --noplot
+--- auction_1-1: process 129
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 auction_1-1
+Benchmarking auction_1-1
+Benchmarking auction_1-1: Warming up for 3.0000 s
+Benchmarking auction_1-1: Collecting 100 samples in estimated 5.0818 s (1700 iterations)
+Benchmarking auction_1-1: Analyzing
+auction_1-1             time:   [2.9841 ms 2.9886 ms 2.9930 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low mild
+
+PVB_LOOP eval auction_1-1
+Benchmarking eval/auction_1-1
+Benchmarking eval/auction_1-1: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 9.8s, enable flat sampling, or reduce sample count to 50.
+Benchmarking eval/auction_1-1: Collecting 100 samples in estimated 9.7918 s (5050 iterations)
+Benchmarking eval/auction_1-1: Analyzing
+eval/auction_1-1        time:   [1.9180 ms 1.9248 ms 1.9314 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+
+--- auction_1-2: process 140
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 auction_1-2
+Benchmarking auction_1-2
+Benchmarking auction_1-2: Warming up for 3.0000 s
+Benchmarking auction_1-2: Collecting 100 samples in estimated 6.2255 s (500 iterations)
+Benchmarking auction_1-2: Analyzing
+auction_1-2             time:   [12.380 ms 12.405 ms 12.431 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+PVB_LOOP eval auction_1-2
+Benchmarking eval/auction_1-2
+Benchmarking eval/auction_1-2: Warming up for 3.0000 s
+Benchmarking eval/auction_1-2: Collecting 100 samples in estimated 5.9420 s (600 iterations)
+Benchmarking eval/auction_1-2: Analyzing
+eval/auction_1-2        time:   [9.8621 ms 9.8847 ms 9.9080 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+
+--- auction_1-3: process 151
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 auction_1-3
+Benchmarking auction_1-3
+Benchmarking auction_1-3: Warming up for 3.0000 s
+Benchmarking auction_1-3: Collecting 100 samples in estimated 6.1597 s (500 iterations)
+Benchmarking auction_1-3: Analyzing
+auction_1-3             time:   [12.679 ms 12.723 ms 12.770 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  6 (6.00%) high mild
+
+PVB_LOOP eval auction_1-3
+Benchmarking eval/auction_1-3
+Benchmarking eval/auction_1-3: Warming up for 3.0000 s
+Benchmarking eval/auction_1-3: Collecting 100 samples in estimated 5.8212 s (600 iterations)
+Benchmarking eval/auction_1-3: Analyzing
+eval/auction_1-3        time:   [9.6466 ms 9.6659 ms 9.6850 ms]
+
+--- auction_1-4: process 162
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 auction_1-4
+Benchmarking auction_1-4
+Benchmarking auction_1-4: Warming up for 3.0000 s
+Benchmarking auction_1-4: Collecting 100 samples in estimated 5.1910 s (1500 iterations)
+Benchmarking auction_1-4: Analyzing
+auction_1-4             time:   [3.4437 ms 3.4562 ms 3.4703 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  2 (2.00%) low mild
+  4 (4.00%) high mild
+  2 (2.00%) high severe
+
+PVB_LOOP eval auction_1-4
+Benchmarking eval/auction_1-4
+Benchmarking eval/auction_1-4: Warming up for 3.0000 s
+Benchmarking eval/auction_1-4: Collecting 100 samples in estimated 5.0280 s (2100 iterations)
+Benchmarking eval/auction_1-4: Analyzing
+eval/auction_1-4        time:   [2.4098 ms 2.4149 ms 2.4200 ms]
+
+--- auction_2-1: process 173
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 auction_2-1
+Benchmarking auction_2-1
+Benchmarking auction_2-1: Warming up for 3.0000 s
+Benchmarking auction_2-1: Collecting 100 samples in estimated 5.1639 s (1700 iterations)
+Benchmarking auction_2-1: Analyzing
+auction_2-1             time:   [3.0295 ms 3.0449 ms 3.0620 ms]
+Found 11 outliers among 100 measurements (11.00%)
+  2 (2.00%) high mild
+  9 (9.00%) high severe
+
+PVB_LOOP eval auction_2-1
+Benchmarking eval/auction_2-1
+Benchmarking eval/auction_2-1: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 9.8s, enable flat sampling, or reduce sample count to 50.
+Benchmarking eval/auction_2-1: Collecting 100 samples in estimated 9.8148 s (5050 iterations)
+Benchmarking eval/auction_2-1: Analyzing
+eval/auction_2-1        time:   [1.9528 ms 1.9607 ms 1.9686 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low mild
+
+--- auction_2-2: process 184
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 auction_2-2
+Benchmarking auction_2-2
+Benchmarking auction_2-2: Warming up for 3.0000 s
+Benchmarking auction_2-2: Collecting 100 samples in estimated 5.1667 s (400 iterations)
+Benchmarking auction_2-2: Analyzing
+auction_2-2             time:   [12.854 ms 12.893 ms 12.931 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low severe
+
+PVB_LOOP eval auction_2-2
+Benchmarking eval/auction_2-2
+Benchmarking eval/auction_2-2: Warming up for 3.0000 s
+Benchmarking eval/auction_2-2: Collecting 100 samples in estimated 5.8805 s (600 iterations)
+Benchmarking eval/auction_2-2: Analyzing
+eval/auction_2-2        time:   [9.8385 ms 9.8722 ms 9.9060 ms]
+
+--- auction_2-3: process 195
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 auction_2-3
+Benchmarking auction_2-3
+Benchmarking auction_2-3: Warming up for 3.0000 s
+Benchmarking auction_2-3: Collecting 100 samples in estimated 6.1265 s (400 iterations)
+Benchmarking auction_2-3: Analyzing
+auction_2-3             time:   [15.159 ms 15.193 ms 15.226 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) low mild
+  2 (2.00%) high mild
+
+PVB_LOOP eval auction_2-3
+Benchmarking eval/auction_2-3
+Benchmarking eval/auction_2-3: Warming up for 3.0000 s
+Benchmarking eval/auction_2-3: Collecting 100 samples in estimated 6.2324 s (500 iterations)
+Benchmarking eval/auction_2-3: Analyzing
+eval/auction_2-3        time:   [12.639 ms 12.692 ms 12.744 ms]
+
+--- auction_2-4: process 206
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 auction_2-4
+Benchmarking auction_2-4
+Benchmarking auction_2-4: Warming up for 3.0000 s
+Benchmarking auction_2-4: Collecting 100 samples in estimated 6.1816 s (500 iterations)
+Benchmarking auction_2-4: Analyzing
+auction_2-4             time:   [12.316 ms 12.337 ms 12.358 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) low mild
+  1 (1.00%) high mild
+
+PVB_LOOP eval auction_2-4
+Benchmarking eval/auction_2-4
+Benchmarking eval/auction_2-4: Warming up for 3.0000 s
+Benchmarking eval/auction_2-4: Collecting 100 samples in estimated 5.7613 s (600 iterations)
+Benchmarking eval/auction_2-4: Analyzing
+eval/auction_2-4        time:   [9.6536 ms 9.6762 ms 9.6990 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) low mild
+  1 (1.00%) high mild
+
+--- auction_2-5: process 217
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 auction_2-5
+Benchmarking auction_2-5
+Benchmarking auction_2-5: Warming up for 3.0000 s
+Benchmarking auction_2-5: Collecting 100 samples in estimated 5.2540 s (1500 iterations)
+Benchmarking auction_2-5: Analyzing
+auction_2-5             time:   [3.4542 ms 3.4634 ms 3.4727 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  3 (3.00%) low mild
+  4 (4.00%) high mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval auction_2-5
+Benchmarking eval/auction_2-5
+Benchmarking eval/auction_2-5: Warming up for 3.0000 s
+Benchmarking eval/auction_2-5: Collecting 100 samples in estimated 5.0579 s (2100 iterations)
+Benchmarking eval/auction_2-5: Analyzing
+eval/auction_2-5        time:   [2.4286 ms 2.4458 ms 2.4658 ms]
+Found 13 outliers among 100 measurements (13.00%)
+  1 (1.00%) low mild
+  1 (1.00%) high mild
+  11 (11.00%) high severe
+
+--- coop-1: process 228
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 coop-1
+Benchmarking coop-1
+Benchmarking coop-1: Warming up for 3.0000 s
+Benchmarking coop-1: Collecting 100 samples in estimated 5.2334 s (1000 iterations)
+Benchmarking coop-1: Analyzing
+coop-1                  time:   [5.2325 ms 5.2426 ms 5.2535 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) high mild
+  2 (2.00%) high severe
+
+PVB_LOOP eval coop-1
+Benchmarking eval/coop-1
+Benchmarking eval/coop-1: Warming up for 3.0000 s
+Benchmarking eval/coop-1: Collecting 100 samples in estimated 5.4117 s (1200 iterations)
+Benchmarking eval/coop-1: Analyzing
+eval/coop-1             time:   [4.5131 ms 4.5341 ms 4.5591 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  1 (1.00%) high mild
+  6 (6.00%) high severe
+
+--- coop-2: process 239
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 coop-2
+Benchmarking coop-2
+Benchmarking coop-2: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 11.4s, or reduce sample count to 40.
+Benchmarking coop-2: Collecting 100 samples in estimated 11.374 s (100 iterations)
+Benchmarking coop-2: Analyzing
+coop-2                  time:   [113.50 ms 113.74 ms 113.99 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  7 (7.00%) high mild
+  2 (2.00%) high severe
+
+PVB_LOOP eval coop-2
+Benchmarking eval/coop-2
+Benchmarking eval/coop-2: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 11.6s, or reduce sample count to 40.
+Benchmarking eval/coop-2: Collecting 100 samples in estimated 11.559 s (100 iterations)
+Benchmarking eval/coop-2: Analyzing
+eval/coop-2             time:   [115.66 ms 116.05 ms 116.53 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  2 (2.00%) high mild
+  6 (6.00%) high severe
+
+--- coop-3: process 250
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 coop-3
+Benchmarking coop-3
+Benchmarking coop-3: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 14.6s, or reduce sample count to 30.
+Benchmarking coop-3: Collecting 100 samples in estimated 14.554 s (100 iterations)
+Benchmarking coop-3: Analyzing
+coop-3                  time:   [145.30 ms 145.81 ms 146.48 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high severe
+
+PVB_LOOP eval coop-3
+Benchmarking eval/coop-3
+Benchmarking eval/coop-3: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 15.0s, or reduce sample count to 30.
+Benchmarking eval/coop-3: Collecting 100 samples in estimated 15.046 s (100 iterations)
+Benchmarking eval/coop-3: Analyzing
+eval/coop-3             time:   [150.07 ms 151.17 ms 152.69 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  4 (4.00%) high mild
+  2 (2.00%) high severe
+
+--- coop-4: process 261
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 coop-4
+Benchmarking coop-4
+Benchmarking coop-4: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 11.7s, or reduce sample count to 40.
+Benchmarking coop-4: Collecting 100 samples in estimated 11.663 s (100 iterations)
+Benchmarking coop-4: Analyzing
+coop-4                  time:   [116.69 ms 117.22 ms 117.95 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  4 (4.00%) high mild
+  2 (2.00%) high severe
+
+PVB_LOOP eval coop-4
+Benchmarking eval/coop-4
+Benchmarking eval/coop-4: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 11.8s, or reduce sample count to 40.
+Benchmarking eval/coop-4: Collecting 100 samples in estimated 11.811 s (100 iterations)
+Benchmarking eval/coop-4: Analyzing
+eval/coop-4             time:   [117.63 ms 118.17 ms 118.78 ms]
+Found 11 outliers among 100 measurements (11.00%)
+  7 (7.00%) high mild
+  4 (4.00%) high severe
+
+--- coop-5: process 272
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 coop-5
+Benchmarking coop-5
+Benchmarking coop-5: Warming up for 3.0000 s
+Benchmarking coop-5: Collecting 100 samples in estimated 5.5785 s (200 iterations)
+Benchmarking coop-5: Analyzing
+coop-5                  time:   [27.893 ms 27.925 ms 27.960 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval coop-5
+Benchmarking eval/coop-5
+Benchmarking eval/coop-5: Warming up for 3.0000 s
+Benchmarking eval/coop-5: Collecting 100 samples in estimated 5.4017 s (200 iterations)
+Benchmarking eval/coop-5: Analyzing
+eval/coop-5             time:   [27.078 ms 27.216 ms 27.380 ms]
+Found 12 outliers among 100 measurements (12.00%)
+  1 (1.00%) low mild
+  4 (4.00%) high mild
+  7 (7.00%) high severe
+
+--- coop-6: process 283
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 coop-6
+Benchmarking coop-6
+Benchmarking coop-6: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 15.6s, or reduce sample count to 30.
+Benchmarking coop-6: Collecting 100 samples in estimated 15.615 s (100 iterations)
+Benchmarking coop-6: Analyzing
+coop-6                  time:   [155.72 ms 155.90 ms 156.08 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+PVB_LOOP eval coop-6
+Benchmarking eval/coop-6
+Benchmarking eval/coop-6: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 16.0s, or reduce sample count to 30.
+Benchmarking eval/coop-6: Collecting 100 samples in estimated 16.011 s (100 iterations)
+Benchmarking eval/coop-6: Analyzing
+eval/coop-6             time:   [160.45 ms 160.65 ms 160.86 ms]
+
+--- coop-7: process 294
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 coop-7
+Benchmarking coop-7
+Benchmarking coop-7: Warming up for 3.0000 s
+Benchmarking coop-7: Collecting 100 samples in estimated 5.1102 s (800 iterations)
+Benchmarking coop-7: Analyzing
+coop-7                  time:   [6.3636 ms 6.3732 ms 6.3836 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  3 (3.00%) high mild
+  3 (3.00%) high severe
+
+PVB_LOOP eval coop-7
+Benchmarking eval/coop-7
+Benchmarking eval/coop-7: Warming up for 3.0000 s
+Benchmarking eval/coop-7: Collecting 100 samples in estimated 5.4970 s (1000 iterations)
+Benchmarking eval/coop-7: Analyzing
+eval/coop-7             time:   [5.5395 ms 5.5640 ms 5.5971 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  4 (4.00%) high mild
+  5 (5.00%) high severe
+
+--- crowdfunding-success-1: process 305
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 crowdfunding-success-1
+Benchmarking crowdfunding-success-1
+Benchmarking crowdfunding-success-1: Warming up for 3.0000 s
+Benchmarking crowdfunding-success-1: Collecting 100 samples in estimated 5.2113 s (1500 iterations)
+Benchmarking crowdfunding-success-1: Analyzing
+crowdfunding-success-1  time:   [3.4723 ms 3.4779 ms 3.4835 ms]
+Found 14 outliers among 100 measurements (14.00%)
+  1 (1.00%) low severe
+  4 (4.00%) low mild
+  8 (8.00%) high mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval crowdfunding-success-1
+Benchmarking eval/crowdfunding-success-1
+Benchmarking eval/crowdfunding-success-1: Warming up for 3.0000 s
+Benchmarking eval/crowdfunding-success-1: Collecting 100 samples in estimated 5.1565 s (2300 iterations)
+Benchmarking eval/crowdfunding-success-1: Analyzing
+eval/crowdfunding-success-1
+                        time:   [2.2225 ms 2.2313 ms 2.2402 ms]
+
+--- crowdfunding-success-2: process 316
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 crowdfunding-success-2
+Benchmarking crowdfunding-success-2
+Benchmarking crowdfunding-success-2: Warming up for 3.0000 s
+Benchmarking crowdfunding-success-2: Collecting 100 samples in estimated 5.2903 s (1500 iterations)
+Benchmarking crowdfunding-success-2: Analyzing
+crowdfunding-success-2  time:   [3.5022 ms 3.5091 ms 3.5162 ms]
+
+PVB_LOOP eval crowdfunding-success-2
+Benchmarking eval/crowdfunding-success-2
+Benchmarking eval/crowdfunding-success-2: Warming up for 3.0000 s
+Benchmarking eval/crowdfunding-success-2: Collecting 100 samples in estimated 5.0859 s (2300 iterations)
+Benchmarking eval/crowdfunding-success-2: Analyzing
+eval/crowdfunding-success-2
+                        time:   [2.1844 ms 2.1917 ms 2.1989 ms]
+
+--- crowdfunding-success-3: process 327
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 crowdfunding-success-3
+Benchmarking crowdfunding-success-3
+Benchmarking crowdfunding-success-3: Warming up for 3.0000 s
+Benchmarking crowdfunding-success-3: Collecting 100 samples in estimated 5.2631 s (1500 iterations)
+Benchmarking crowdfunding-success-3: Analyzing
+crowdfunding-success-3  time:   [3.5057 ms 3.5127 ms 3.5204 ms]
+Found 10 outliers among 100 measurements (10.00%)
+  6 (6.00%) high mild
+  4 (4.00%) high severe
+
+PVB_LOOP eval crowdfunding-success-3
+Benchmarking eval/crowdfunding-success-3
+Benchmarking eval/crowdfunding-success-3: Warming up for 3.0000 s
+Benchmarking eval/crowdfunding-success-3: Collecting 100 samples in estimated 5.1568 s (2300 iterations)
+Benchmarking eval/crowdfunding-success-3: Analyzing
+eval/crowdfunding-success-3
+                        time:   [2.2670 ms 2.2695 ms 2.2719 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  3 (3.00%) low mild
+  2 (2.00%) high mild
+
+--- currency-1: process 338
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 currency-1
+Benchmarking currency-1
+Benchmarking currency-1: Warming up for 3.0000 s
+Benchmarking currency-1: Collecting 100 samples in estimated 5.3212 s (1200 iterations)
+Benchmarking currency-1: Analyzing
+currency-1              time:   [4.4310 ms 4.4402 ms 4.4494 ms]
+
+PVB_LOOP eval currency-1
+Benchmarking eval/currency-1
+Benchmarking eval/currency-1: Warming up for 3.0000 s
+Benchmarking eval/currency-1: Collecting 100 samples in estimated 5.1533 s (1600 iterations)
+Benchmarking eval/currency-1: Analyzing
+eval/currency-1         time:   [3.2000 ms 3.2298 ms 3.2723 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  1 (1.00%) low mild
+  5 (5.00%) high severe
+
+--- escrow-redeem_1-1: process 349
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 escrow-redeem_1-1
+Benchmarking escrow-redeem_1-1
+Benchmarking escrow-redeem_1-1: Warming up for 3.0000 s
+Benchmarking escrow-redeem_1-1: Collecting 100 samples in estimated 5.3567 s (900 iterations)
+Benchmarking escrow-redeem_1-1: Analyzing
+escrow-redeem_1-1       time:   [5.9951 ms 6.0649 ms 6.1550 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  1 (1.00%) low mild
+  6 (6.00%) high severe
+
+PVB_LOOP eval escrow-redeem_1-1
+Benchmarking eval/escrow-redeem_1-1
+Benchmarking eval/escrow-redeem_1-1: Warming up for 3.0000 s
+Benchmarking eval/escrow-redeem_1-1: Collecting 100 samples in estimated 5.1858 s (1200 iterations)
+Benchmarking eval/escrow-redeem_1-1: Analyzing
+eval/escrow-redeem_1-1  time:   [4.3673 ms 4.3778 ms 4.3894 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  3 (3.00%) high mild
+  2 (2.00%) high severe
+
+--- escrow-redeem_1-2: process 360
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 escrow-redeem_1-2
+Benchmarking escrow-redeem_1-2
+Benchmarking escrow-redeem_1-2: Warming up for 3.0000 s
+Benchmarking escrow-redeem_1-2: Collecting 100 samples in estimated 5.4311 s (900 iterations)
+Benchmarking escrow-redeem_1-2: Analyzing
+escrow-redeem_1-2       time:   [6.0239 ms 6.0314 ms 6.0389 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) low mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval escrow-redeem_1-2
+Benchmarking eval/escrow-redeem_1-2
+Benchmarking eval/escrow-redeem_1-2: Warming up for 3.0000 s
+Benchmarking eval/escrow-redeem_1-2: Collecting 100 samples in estimated 5.3524 s (1200 iterations)
+Benchmarking eval/escrow-redeem_1-2: Analyzing
+eval/escrow-redeem_1-2  time:   [4.3950 ms 4.4046 ms 4.4145 ms]
+
+--- escrow-redeem_2-1: process 371
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 escrow-redeem_2-1
+Benchmarking escrow-redeem_2-1
+Benchmarking escrow-redeem_2-1: Warming up for 3.0000 s
+Benchmarking escrow-redeem_2-1: Collecting 100 samples in estimated 5.5003 s (800 iterations)
+Benchmarking escrow-redeem_2-1: Analyzing
+escrow-redeem_2-1       time:   [6.8034 ms 6.8261 ms 6.8480 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low mild
+
+PVB_LOOP eval escrow-redeem_2-1
+Benchmarking eval/escrow-redeem_2-1
+Benchmarking eval/escrow-redeem_2-1: Warming up for 3.0000 s
+Benchmarking eval/escrow-redeem_2-1: Collecting 100 samples in estimated 5.3052 s (1000 iterations)
+Benchmarking eval/escrow-redeem_2-1: Analyzing
+eval/escrow-redeem_2-1  time:   [5.3199 ms 5.3295 ms 5.3389 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low mild
+
+--- escrow-redeem_2-2: process 382
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 escrow-redeem_2-2
+Benchmarking escrow-redeem_2-2
+Benchmarking escrow-redeem_2-2: Warming up for 3.0000 s
+Benchmarking escrow-redeem_2-2: Collecting 100 samples in estimated 5.3971 s (800 iterations)
+Benchmarking escrow-redeem_2-2: Analyzing
+escrow-redeem_2-2       time:   [6.7570 ms 6.7966 ms 6.8503 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  3 (3.00%) high mild
+  3 (3.00%) high severe
+
+PVB_LOOP eval escrow-redeem_2-2
+Benchmarking eval/escrow-redeem_2-2
+Benchmarking eval/escrow-redeem_2-2: Warming up for 3.0000 s
+Benchmarking eval/escrow-redeem_2-2: Collecting 100 samples in estimated 5.1326 s (1000 iterations)
+Benchmarking eval/escrow-redeem_2-2: Analyzing
+eval/escrow-redeem_2-2  time:   [5.1223 ms 5.1384 ms 5.1550 ms]
+
+--- escrow-redeem_2-3: process 393
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 escrow-redeem_2-3
+Benchmarking escrow-redeem_2-3
+Benchmarking escrow-redeem_2-3: Warming up for 3.0000 s
+Benchmarking escrow-redeem_2-3: Collecting 100 samples in estimated 5.4024 s (800 iterations)
+Benchmarking escrow-redeem_2-3: Analyzing
+escrow-redeem_2-3       time:   [6.6515 ms 6.6635 ms 6.6762 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high severe
+
+PVB_LOOP eval escrow-redeem_2-3
+Benchmarking eval/escrow-redeem_2-3
+Benchmarking eval/escrow-redeem_2-3: Warming up for 3.0000 s
+Benchmarking eval/escrow-redeem_2-3: Collecting 100 samples in estimated 5.0883 s (1000 iterations)
+Benchmarking eval/escrow-redeem_2-3: Analyzing
+eval/escrow-redeem_2-3  time:   [5.0400 ms 5.0525 ms 5.0651 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+--- escrow-refund-1: process 404
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 escrow-refund-1
+Benchmarking escrow-refund-1
+Benchmarking escrow-refund-1: Warming up for 3.0000 s
+Benchmarking escrow-refund-1: Collecting 100 samples in estimated 5.1472 s (1500 iterations)
+Benchmarking escrow-refund-1: Analyzing
+escrow-refund-1         time:   [3.4347 ms 3.4444 ms 3.4557 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  4 (4.00%) high mild
+  3 (3.00%) high severe
+
+PVB_LOOP eval escrow-refund-1
+Benchmarking eval/escrow-refund-1
+Benchmarking eval/escrow-refund-1: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 8.9s, enable flat sampling, or reduce sample count to 50.
+Benchmarking eval/escrow-refund-1: Collecting 100 samples in estimated 8.9340 s (5050 iterations)
+Benchmarking eval/escrow-refund-1: Analyzing
+eval/escrow-refund-1    time:   [1.7841 ms 1.7917 ms 1.7997 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  1 (1.00%) low severe
+  1 (1.00%) low mild
+  1 (1.00%) high mild
+  5 (5.00%) high severe
+
+--- future-increase-margin-1: process 415
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-increase-margin-1
+Benchmarking future-increase-margin-1
+Benchmarking future-increase-margin-1: Warming up for 3.0000 s
+Benchmarking future-increase-margin-1: Collecting 100 samples in estimated 5.3130 s (1200 iterations)
+Benchmarking future-increase-margin-1: Analyzing
+future-increase-margin-1
+                        time:   [4.4044 ms 4.4250 ms 4.4579 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  1 (1.00%) low mild
+  3 (3.00%) high mild
+  2 (2.00%) high severe
+
+PVB_LOOP eval future-increase-margin-1
+Benchmarking eval/future-increase-margin-1
+Benchmarking eval/future-increase-margin-1: Warming up for 3.0000 s
+Benchmarking eval/future-increase-margin-1: Collecting 100 samples in estimated 5.0633 s (1600 iterations)
+Benchmarking eval/future-increase-margin-1: Analyzing
+eval/future-increase-margin-1
+                        time:   [3.2226 ms 3.2276 ms 3.2330 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  3 (3.00%) low mild
+  1 (1.00%) high mild
+  1 (1.00%) high severe
+
+--- future-increase-margin-2: process 426
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-increase-margin-2
+Benchmarking future-increase-margin-2
+Benchmarking future-increase-margin-2: Warming up for 3.0000 s
+Benchmarking future-increase-margin-2: Collecting 100 samples in estimated 5.4129 s (600 iterations)
+Benchmarking future-increase-margin-2: Analyzing
+future-increase-margin-2
+                        time:   [8.8755 ms 8.9388 ms 9.0176 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  1 (1.00%) low mild
+  1 (1.00%) high mild
+  6 (6.00%) high severe
+
+PVB_LOOP eval future-increase-margin-2
+Benchmarking eval/future-increase-margin-2
+Benchmarking eval/future-increase-margin-2: Warming up for 3.0000 s
+Benchmarking eval/future-increase-margin-2: Collecting 100 samples in estimated 5.0280 s (700 iterations)
+Benchmarking eval/future-increase-margin-2: Analyzing
+eval/future-increase-margin-2
+                        time:   [7.2792 ms 7.3172 ms 7.3561 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+--- future-increase-margin-3: process 437
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-increase-margin-3
+Benchmarking future-increase-margin-3
+Benchmarking future-increase-margin-3: Warming up for 3.0000 s
+Benchmarking future-increase-margin-3: Collecting 100 samples in estimated 5.2680 s (600 iterations)
+Benchmarking future-increase-margin-3: Analyzing
+future-increase-margin-3
+                        time:   [8.8074 ms 8.8350 ms 8.8645 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+
+PVB_LOOP eval future-increase-margin-3
+Benchmarking eval/future-increase-margin-3
+Benchmarking eval/future-increase-margin-3: Warming up for 3.0000 s
+Benchmarking eval/future-increase-margin-3: Collecting 100 samples in estimated 5.0608 s (700 iterations)
+Benchmarking eval/future-increase-margin-3: Analyzing
+eval/future-increase-margin-3
+                        time:   [7.2033 ms 7.2217 ms 7.2412 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  1 (1.00%) low mild
+  7 (7.00%) high mild
+  1 (1.00%) high severe
+
+--- future-increase-margin-4: process 448
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-increase-margin-4
+Benchmarking future-increase-margin-4
+Benchmarking future-increase-margin-4: Warming up for 3.0000 s
+Benchmarking future-increase-margin-4: Collecting 100 samples in estimated 5.4682 s (500 iterations)
+Benchmarking future-increase-margin-4: Analyzing
+future-increase-margin-4
+                        time:   [10.792 ms 10.822 ms 10.853 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+
+PVB_LOOP eval future-increase-margin-4
+Benchmarking eval/future-increase-margin-4
+Benchmarking eval/future-increase-margin-4: Warming up for 3.0000 s
+Benchmarking eval/future-increase-margin-4: Collecting 100 samples in estimated 5.2438 s (700 iterations)
+Benchmarking eval/future-increase-margin-4: Analyzing
+eval/future-increase-margin-4
+                        time:   [7.5511 ms 7.5691 ms 7.5873 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+
+--- future-increase-margin-5: process 459
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-increase-margin-5
+Benchmarking future-increase-margin-5
+Benchmarking future-increase-margin-5: Warming up for 3.0000 s
+Benchmarking future-increase-margin-5: Collecting 100 samples in estimated 6.4186 s (400 iterations)
+Benchmarking future-increase-margin-5: Analyzing
+future-increase-margin-5
+                        time:   [16.126 ms 16.171 ms 16.216 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+PVB_LOOP eval future-increase-margin-5
+Benchmarking eval/future-increase-margin-5
+Benchmarking eval/future-increase-margin-5: Warming up for 3.0000 s
+Benchmarking eval/future-increase-margin-5: Collecting 100 samples in estimated 5.2218 s (400 iterations)
+Benchmarking eval/future-increase-margin-5: Analyzing
+eval/future-increase-margin-5
+                        time:   [13.274 ms 13.370 ms 13.468 ms]
+
+--- future-pay-out-1: process 470
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-pay-out-1
+Benchmarking future-pay-out-1
+Benchmarking future-pay-out-1: Warming up for 3.0000 s
+Benchmarking future-pay-out-1: Collecting 100 samples in estimated 5.2657 s (1200 iterations)
+Benchmarking future-pay-out-1: Analyzing
+future-pay-out-1        time:   [4.4128 ms 4.4311 ms 4.4519 ms]
+Found 10 outliers among 100 measurements (10.00%)
+  6 (6.00%) high mild
+  4 (4.00%) high severe
+
+PVB_LOOP eval future-pay-out-1
+Benchmarking eval/future-pay-out-1
+Benchmarking eval/future-pay-out-1: Warming up for 3.0000 s
+Benchmarking eval/future-pay-out-1: Collecting 100 samples in estimated 5.0128 s (1600 iterations)
+Benchmarking eval/future-pay-out-1: Analyzing
+eval/future-pay-out-1   time:   [3.1880 ms 3.2098 ms 3.2373 ms]
+Found 13 outliers among 100 measurements (13.00%)
+  8 (8.00%) high mild
+  5 (5.00%) high severe
+
+--- future-pay-out-2: process 481
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-pay-out-2
+Benchmarking future-pay-out-2
+Benchmarking future-pay-out-2: Warming up for 3.0000 s
+Benchmarking future-pay-out-2: Collecting 100 samples in estimated 5.3474 s (600 iterations)
+Benchmarking future-pay-out-2: Analyzing
+future-pay-out-2        time:   [8.8995 ms 8.9329 ms 8.9679 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+
+PVB_LOOP eval future-pay-out-2
+Benchmarking eval/future-pay-out-2
+Benchmarking eval/future-pay-out-2: Warming up for 3.0000 s
+Benchmarking eval/future-pay-out-2: Collecting 100 samples in estimated 5.0531 s (700 iterations)
+Benchmarking eval/future-pay-out-2: Analyzing
+eval/future-pay-out-2   time:   [7.3051 ms 7.3420 ms 7.3824 ms]
+Found 15 outliers among 100 measurements (15.00%)
+  9 (9.00%) high mild
+  6 (6.00%) high severe
+
+--- future-pay-out-3: process 492
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-pay-out-3
+Benchmarking future-pay-out-3
+Benchmarking future-pay-out-3: Warming up for 3.0000 s
+Benchmarking future-pay-out-3: Collecting 100 samples in estimated 5.2501 s (600 iterations)
+Benchmarking future-pay-out-3: Analyzing
+future-pay-out-3        time:   [8.7279 ms 8.7455 ms 8.7629 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) low mild
+  1 (1.00%) high mild
+
+PVB_LOOP eval future-pay-out-3
+Benchmarking eval/future-pay-out-3
+Benchmarking eval/future-pay-out-3: Warming up for 3.0000 s
+Benchmarking eval/future-pay-out-3: Collecting 100 samples in estimated 5.6106 s (800 iterations)
+Benchmarking eval/future-pay-out-3: Analyzing
+eval/future-pay-out-3   time:   [7.0099 ms 7.0215 ms 7.0338 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
+
+--- future-pay-out-4: process 503
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-pay-out-4
+Benchmarking future-pay-out-4
+Benchmarking future-pay-out-4: Warming up for 3.0000 s
+Benchmarking future-pay-out-4: Collecting 100 samples in estimated 6.4135 s (400 iterations)
+Benchmarking future-pay-out-4: Analyzing
+future-pay-out-4        time:   [15.980 ms 16.017 ms 16.056 ms]
+
+PVB_LOOP eval future-pay-out-4
+Benchmarking eval/future-pay-out-4
+Benchmarking eval/future-pay-out-4: Warming up for 3.0000 s
+Benchmarking eval/future-pay-out-4: Collecting 100 samples in estimated 5.1115 s (400 iterations)
+Benchmarking eval/future-pay-out-4: Analyzing
+eval/future-pay-out-4   time:   [12.862 ms 12.914 ms 12.964 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  8 (8.00%) low mild
+
+--- future-settle-early-1: process 514
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-settle-early-1
+Benchmarking future-settle-early-1
+Benchmarking future-settle-early-1: Warming up for 3.0000 s
+Benchmarking future-settle-early-1: Collecting 100 samples in estimated 5.2349 s (1200 iterations)
+Benchmarking future-settle-early-1: Analyzing
+future-settle-early-1   time:   [4.3934 ms 4.4051 ms 4.4167 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low mild
+
+PVB_LOOP eval future-settle-early-1
+Benchmarking eval/future-settle-early-1
+Benchmarking eval/future-settle-early-1: Warming up for 3.0000 s
+Benchmarking eval/future-settle-early-1: Collecting 100 samples in estimated 5.1577 s (1600 iterations)
+Benchmarking eval/future-settle-early-1: Analyzing
+eval/future-settle-early-1
+                        time:   [3.2481 ms 3.2555 ms 3.2638 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  5 (5.00%) high mild
+  3 (3.00%) high severe
+
+--- future-settle-early-2: process 525
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-settle-early-2
+Benchmarking future-settle-early-2
+Benchmarking future-settle-early-2: Warming up for 3.0000 s
+Benchmarking future-settle-early-2: Collecting 100 samples in estimated 5.2545 s (600 iterations)
+Benchmarking future-settle-early-2: Analyzing
+future-settle-early-2   time:   [8.6738 ms 8.6941 ms 8.7150 ms]
+
+PVB_LOOP eval future-settle-early-2
+Benchmarking eval/future-settle-early-2
+Benchmarking eval/future-settle-early-2: Warming up for 3.0000 s
+Benchmarking eval/future-settle-early-2: Collecting 100 samples in estimated 5.0915 s (700 iterations)
+Benchmarking eval/future-settle-early-2: Analyzing
+eval/future-settle-early-2
+                        time:   [7.1163 ms 7.1375 ms 7.1590 ms]
+
+--- future-settle-early-3: process 536
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-settle-early-3
+Benchmarking future-settle-early-3
+Benchmarking future-settle-early-3: Warming up for 3.0000 s
+Benchmarking future-settle-early-3: Collecting 100 samples in estimated 5.2382 s (600 iterations)
+Benchmarking future-settle-early-3: Analyzing
+future-settle-early-3   time:   [8.7359 ms 8.7523 ms 8.7691 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+
+PVB_LOOP eval future-settle-early-3
+Benchmarking eval/future-settle-early-3
+Benchmarking eval/future-settle-early-3: Warming up for 3.0000 s
+Benchmarking eval/future-settle-early-3: Collecting 100 samples in estimated 5.6944 s (800 iterations)
+Benchmarking eval/future-settle-early-3: Analyzing
+eval/future-settle-early-3
+                        time:   [7.2841 ms 7.3416 ms 7.4078 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+
+--- future-settle-early-4: process 547
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 future-settle-early-4
+Benchmarking future-settle-early-4
+Benchmarking future-settle-early-4: Warming up for 3.0000 s
+Benchmarking future-settle-early-4: Collecting 100 samples in estimated 5.1343 s (400 iterations)
+Benchmarking future-settle-early-4: Analyzing
+future-settle-early-4   time:   [12.759 ms 12.807 ms 12.854 ms]
+Found 11 outliers among 100 measurements (11.00%)
+  1 (1.00%) low severe
+  5 (5.00%) low mild
+  5 (5.00%) high mild
+
+PVB_LOOP eval future-settle-early-4
+Benchmarking eval/future-settle-early-4
+Benchmarking eval/future-settle-early-4: Warming up for 3.0000 s
+Benchmarking eval/future-settle-early-4: Collecting 100 samples in estimated 5.6666 s (600 iterations)
+Benchmarking eval/future-settle-early-4: Analyzing
+eval/future-settle-early-4
+                        time:   [9.2613 ms 9.2920 ms 9.3254 ms]
+Found 11 outliers among 100 measurements (11.00%)
+  5 (5.00%) low mild
+  4 (4.00%) high mild
+  2 (2.00%) high severe
+
+--- game-sm-success_1-1: process 558
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 game-sm-success_1-1
+Benchmarking game-sm-success_1-1
+Benchmarking game-sm-success_1-1: Warming up for 3.0000 s
+Benchmarking game-sm-success_1-1: Collecting 100 samples in estimated 5.4750 s (700 iterations)
+Benchmarking game-sm-success_1-1: Analyzing
+game-sm-success_1-1     time:   [7.8708 ms 7.8964 ms 7.9222 ms]
+
+PVB_LOOP eval game-sm-success_1-1
+Benchmarking eval/game-sm-success_1-1
+Benchmarking eval/game-sm-success_1-1: Warming up for 3.0000 s
+Benchmarking eval/game-sm-success_1-1: Collecting 100 samples in estimated 5.1724 s (1000 iterations)
+Benchmarking eval/game-sm-success_1-1: Analyzing
+eval/game-sm-success_1-1
+                        time:   [5.1264 ms 5.1420 ms 5.1585 ms]
+Found 16 outliers among 100 measurements (16.00%)
+  2 (2.00%) low mild
+  12 (12.00%) high mild
+  2 (2.00%) high severe
+
+--- game-sm-success_1-2: process 569
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 game-sm-success_1-2
+Benchmarking game-sm-success_1-2
+Benchmarking game-sm-success_1-2: Warming up for 3.0000 s
+Benchmarking game-sm-success_1-2: Collecting 100 samples in estimated 5.1075 s (1600 iterations)
+Benchmarking game-sm-success_1-2: Analyzing
+game-sm-success_1-2     time:   [3.1988 ms 3.2062 ms 3.2133 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) low mild
+
+PVB_LOOP eval game-sm-success_1-2
+Benchmarking eval/game-sm-success_1-2
+Benchmarking eval/game-sm-success_1-2: Warming up for 3.0000 s
+Benchmarking eval/game-sm-success_1-2: Collecting 100 samples in estimated 5.0444 s (2200 iterations)
+Benchmarking eval/game-sm-success_1-2: Analyzing
+eval/game-sm-success_1-2
+                        time:   [2.3018 ms 2.3229 ms 2.3508 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) low mild
+  2 (2.00%) high severe
+
+--- game-sm-success_1-3: process 580
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 game-sm-success_1-3
+Benchmarking game-sm-success_1-3
+Benchmarking game-sm-success_1-3: Warming up for 3.0000 s
+Benchmarking game-sm-success_1-3: Collecting 100 samples in estimated 5.7971 s (500 iterations)
+Benchmarking game-sm-success_1-3: Analyzing
+game-sm-success_1-3     time:   [11.542 ms 11.556 ms 11.570 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) low mild
+  1 (1.00%) high mild
+
+PVB_LOOP eval game-sm-success_1-3
+Benchmarking eval/game-sm-success_1-3
+Benchmarking eval/game-sm-success_1-3: Warming up for 3.0000 s
+Benchmarking eval/game-sm-success_1-3: Collecting 100 samples in estimated 5.3711 s (600 iterations)
+Benchmarking eval/game-sm-success_1-3: Analyzing
+eval/game-sm-success_1-3
+                        time:   [9.0346 ms 9.0506 ms 9.0672 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+
+--- game-sm-success_1-4: process 591
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 game-sm-success_1-4
+Benchmarking game-sm-success_1-4
+Benchmarking game-sm-success_1-4: Warming up for 3.0000 s
+Benchmarking game-sm-success_1-4: Collecting 100 samples in estimated 5.2625 s (1500 iterations)
+Benchmarking game-sm-success_1-4: Analyzing
+game-sm-success_1-4     time:   [3.5093 ms 3.5166 ms 3.5233 ms]
+Found 10 outliers among 100 measurements (10.00%)
+  2 (2.00%) low severe
+  7 (7.00%) low mild
+  1 (1.00%) high mild
+
+PVB_LOOP eval game-sm-success_1-4
+Benchmarking eval/game-sm-success_1-4
+Benchmarking eval/game-sm-success_1-4: Warming up for 3.0000 s
+Benchmarking eval/game-sm-success_1-4: Collecting 100 samples in estimated 5.0165 s (1900 iterations)
+Benchmarking eval/game-sm-success_1-4: Analyzing
+eval/game-sm-success_1-4
+                        time:   [2.6563 ms 2.6641 ms 2.6721 ms]
+
+--- game-sm-success_2-1: process 602
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 game-sm-success_2-1
+Benchmarking game-sm-success_2-1
+Benchmarking game-sm-success_2-1: Warming up for 3.0000 s
+Benchmarking game-sm-success_2-1: Collecting 100 samples in estimated 5.3688 s (700 iterations)
+Benchmarking game-sm-success_2-1: Analyzing
+game-sm-success_2-1     time:   [7.6596 ms 7.7234 ms 7.8145 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  2 (2.00%) low mild
+  2 (2.00%) high mild
+  4 (4.00%) high severe
+
+PVB_LOOP eval game-sm-success_2-1
+Benchmarking eval/game-sm-success_2-1
+Benchmarking eval/game-sm-success_2-1: Warming up for 3.0000 s
+Benchmarking eval/game-sm-success_2-1: Collecting 100 samples in estimated 5.0732 s (1000 iterations)
+Benchmarking eval/game-sm-success_2-1: Analyzing
+eval/game-sm-success_2-1
+                        time:   [5.0650 ms 5.0771 ms 5.0895 ms]
+
+--- game-sm-success_2-2: process 613
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 game-sm-success_2-2
+Benchmarking game-sm-success_2-2
+Benchmarking game-sm-success_2-2: Warming up for 3.0000 s
+Benchmarking game-sm-success_2-2: Collecting 100 samples in estimated 5.0621 s (1600 iterations)
+Benchmarking game-sm-success_2-2: Analyzing
+game-sm-success_2-2     time:   [3.1523 ms 3.1653 ms 3.1794 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  1 (1.00%) low mild
+  5 (5.00%) high mild
+  2 (2.00%) high severe
+
+PVB_LOOP eval game-sm-success_2-2
+Benchmarking eval/game-sm-success_2-2
+Benchmarking eval/game-sm-success_2-2: Warming up for 3.0000 s
+Benchmarking eval/game-sm-success_2-2: Collecting 100 samples in estimated 5.0672 s (2200 iterations)
+Benchmarking eval/game-sm-success_2-2: Analyzing
+eval/game-sm-success_2-2
+                        time:   [2.2794 ms 2.2874 ms 2.2964 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  2 (2.00%) low mild
+  1 (1.00%) high mild
+  2 (2.00%) high severe
+
+--- game-sm-success_2-3: process 624
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 game-sm-success_2-3
+Benchmarking game-sm-success_2-3
+Benchmarking game-sm-success_2-3: Warming up for 3.0000 s
+Benchmarking game-sm-success_2-3: Collecting 100 samples in estimated 5.9359 s (500 iterations)
+Benchmarking game-sm-success_2-3: Analyzing
+game-sm-success_2-3     time:   [11.698 ms 11.731 ms 11.768 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  8 (8.00%) high mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval game-sm-success_2-3
+Benchmarking eval/game-sm-success_2-3
+Benchmarking eval/game-sm-success_2-3: Warming up for 3.0000 s
+Benchmarking eval/game-sm-success_2-3: Collecting 100 samples in estimated 5.4212 s (600 iterations)
+Benchmarking eval/game-sm-success_2-3: Analyzing
+eval/game-sm-success_2-3
+                        time:   [8.9707 ms 8.9902 ms 9.0101 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+--- game-sm-success_2-4: process 635
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 game-sm-success_2-4
+Benchmarking game-sm-success_2-4
+Benchmarking game-sm-success_2-4: Warming up for 3.0000 s
+Benchmarking game-sm-success_2-4: Collecting 100 samples in estimated 5.1361 s (1500 iterations)
+Benchmarking game-sm-success_2-4: Analyzing
+game-sm-success_2-4     time:   [3.5677 ms 3.6822 ms 3.8146 ms]
+Found 16 outliers among 100 measurements (16.00%)
+  1 (1.00%) low mild
+  15 (15.00%) high severe
+
+PVB_LOOP eval game-sm-success_2-4
+Benchmarking eval/game-sm-success_2-4
+Benchmarking eval/game-sm-success_2-4: Warming up for 3.0000 s
+Benchmarking eval/game-sm-success_2-4: Collecting 100 samples in estimated 5.0843 s (1700 iterations)
+Benchmarking eval/game-sm-success_2-4: Analyzing
+eval/game-sm-success_2-4
+                        time:   [2.6258 ms 2.6458 ms 2.6689 ms]
+Found 15 outliers among 100 measurements (15.00%)
+  6 (6.00%) low mild
+  1 (1.00%) high mild
+  8 (8.00%) high severe
+
+--- game-sm-success_2-5: process 646
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 game-sm-success_2-5
+Benchmarking game-sm-success_2-5
+Benchmarking game-sm-success_2-5: Warming up for 3.0000 s
+Benchmarking game-sm-success_2-5: Collecting 100 samples in estimated 6.0417 s (500 iterations)
+Benchmarking game-sm-success_2-5: Analyzing
+game-sm-success_2-5     time:   [11.996 ms 12.047 ms 12.099 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+
+PVB_LOOP eval game-sm-success_2-5
+Benchmarking eval/game-sm-success_2-5
+Benchmarking eval/game-sm-success_2-5: Warming up for 3.0000 s
+Benchmarking eval/game-sm-success_2-5: Collecting 100 samples in estimated 5.5758 s (600 iterations)
+Benchmarking eval/game-sm-success_2-5: Analyzing
+eval/game-sm-success_2-5
+                        time:   [9.3975 ms 9.4743 ms 9.5831 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) high mild
+  2 (2.00%) high severe
+
+--- game-sm-success_2-6: process 657
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 game-sm-success_2-6
+Benchmarking game-sm-success_2-6
+Benchmarking game-sm-success_2-6: Warming up for 3.0000 s
+Benchmarking game-sm-success_2-6: Collecting 100 samples in estimated 5.2310 s (1500 iterations)
+Benchmarking game-sm-success_2-6: Analyzing
+game-sm-success_2-6     time:   [3.4710 ms 3.4853 ms 3.5026 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  1 (1.00%) low mild
+  4 (4.00%) high mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval game-sm-success_2-6
+Benchmarking eval/game-sm-success_2-6
+Benchmarking eval/game-sm-success_2-6: Warming up for 3.0000 s
+Benchmarking eval/game-sm-success_2-6: Collecting 100 samples in estimated 5.1090 s (1900 iterations)
+Benchmarking eval/game-sm-success_2-6: Analyzing
+eval/game-sm-success_2-6
+                        time:   [2.6901 ms 2.7020 ms 2.7140 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+--- guardrail-sorted-large: process 668
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 guardrail-sorted-large
+Benchmarking guardrail-sorted-large
+Benchmarking guardrail-sorted-large: Warming up for 3.0000 s
+Benchmarking guardrail-sorted-large: Collecting 100 samples in estimated 6.2510 s (400 iterations)
+Benchmarking guardrail-sorted-large: Analyzing
+guardrail-sorted-large  time:   [15.702 ms 15.722 ms 15.743 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) low mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval guardrail-sorted-large
+Benchmarking eval/guardrail-sorted-large
+Benchmarking eval/guardrail-sorted-large: Warming up for 3.0000 s
+Benchmarking eval/guardrail-sorted-large: Collecting 100 samples in estimated 5.9710 s (400 iterations)
+Benchmarking eval/guardrail-sorted-large: Analyzing
+eval/guardrail-sorted-large
+                        time:   [14.894 ms 14.908 ms 14.922 ms]
+
+--- guardrail-sorted-small: process 679
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 guardrail-sorted-small
+Benchmarking guardrail-sorted-small
+Benchmarking guardrail-sorted-small: Warming up for 3.0000 s
+Benchmarking guardrail-sorted-small: Collecting 100 samples in estimated 5.2082 s (1800 iterations)
+Benchmarking guardrail-sorted-small: Analyzing
+guardrail-sorted-small  time:   [2.8954 ms 2.9006 ms 2.9065 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) high mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval guardrail-sorted-small
+Benchmarking eval/guardrail-sorted-small
+Benchmarking eval/guardrail-sorted-small: Warming up for 3.0000 s
+Benchmarking eval/guardrail-sorted-small: Collecting 100 samples in estimated 5.1571 s (2100 iterations)
+Benchmarking eval/guardrail-sorted-small: Analyzing
+eval/guardrail-sorted-small
+                        time:   [2.4023 ms 2.4080 ms 2.4142 ms]
+Found 11 outliers among 100 measurements (11.00%)
+  6 (6.00%) high mild
+  5 (5.00%) high severe
+
+--- guardrail-unsorted-large: process 690
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 guardrail-unsorted-large
+Benchmarking guardrail-unsorted-large
+Benchmarking guardrail-unsorted-large: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 19.2s, or reduce sample count to 20.
+Benchmarking guardrail-unsorted-large: Collecting 100 samples in estimated 19.157 s (100 iterations)
+Benchmarking guardrail-unsorted-large: Analyzing
+guardrail-unsorted-large
+                        time:   [190.47 ms 190.77 ms 191.06 ms]
+
+PVB_LOOP eval guardrail-unsorted-large
+Benchmarking eval/guardrail-unsorted-large
+Benchmarking eval/guardrail-unsorted-large: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 19.4s, or reduce sample count to 20.
+Benchmarking eval/guardrail-unsorted-large: Collecting 100 samples in estimated 19.417 s (100 iterations)
+Benchmarking eval/guardrail-unsorted-large: Analyzing
+eval/guardrail-unsorted-large
+                        time:   [196.77 ms 197.49 ms 198.32 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  4 (4.00%) high mild
+  1 (1.00%) high severe
+
+--- guardrail-unsorted-small: process 701
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 guardrail-unsorted-small
+Benchmarking guardrail-unsorted-small
+Benchmarking guardrail-unsorted-small: Warming up for 3.0000 s
+Benchmarking guardrail-unsorted-small: Collecting 100 samples in estimated 5.1358 s (1300 iterations)
+Benchmarking guardrail-unsorted-small: Analyzing
+guardrail-unsorted-small
+                        time:   [3.9835 ms 4.0047 ms 4.0320 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high severe
+
+PVB_LOOP eval guardrail-unsorted-small
+Benchmarking eval/guardrail-unsorted-small
+Benchmarking eval/guardrail-unsorted-small: Warming up for 3.0000 s
+Benchmarking eval/guardrail-unsorted-small: Collecting 100 samples in estimated 5.2312 s (1500 iterations)
+Benchmarking eval/guardrail-unsorted-small: Analyzing
+eval/guardrail-unsorted-small
+                        time:   [3.5256 ms 3.5353 ms 3.5453 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+--- multisig-sm-01: process 712
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 multisig-sm-01
+Benchmarking multisig-sm-01
+Benchmarking multisig-sm-01: Warming up for 3.0000 s
+Benchmarking multisig-sm-01: Collecting 100 samples in estimated 5.2061 s (600 iterations)
+Benchmarking multisig-sm-01: Analyzing
+multisig-sm-01          time:   [8.6002 ms 8.6393 ms 8.6830 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  3 (3.00%) high mild
+  6 (6.00%) high severe
+
+PVB_LOOP eval multisig-sm-01
+Benchmarking eval/multisig-sm-01
+Benchmarking eval/multisig-sm-01: Warming up for 3.0000 s
+Benchmarking eval/multisig-sm-01: Collecting 100 samples in estimated 5.1330 s (900 iterations)
+Benchmarking eval/multisig-sm-01: Analyzing
+eval/multisig-sm-01     time:   [5.7333 ms 5.7473 ms 5.7629 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  3 (3.00%) high mild
+  2 (2.00%) high severe
+
+--- multisig-sm-02: process 723
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 multisig-sm-02
+Benchmarking multisig-sm-02
+Benchmarking multisig-sm-02: Warming up for 3.0000 s
+Benchmarking multisig-sm-02: Collecting 100 samples in estimated 5.1189 s (600 iterations)
+Benchmarking multisig-sm-02: Analyzing
+multisig-sm-02          time:   [8.5264 ms 8.5475 ms 8.5689 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+PVB_LOOP eval multisig-sm-02
+Benchmarking eval/multisig-sm-02
+Benchmarking eval/multisig-sm-02: Warming up for 3.0000 s
+Benchmarking eval/multisig-sm-02: Collecting 100 samples in estimated 5.1873 s (900 iterations)
+Benchmarking eval/multisig-sm-02: Analyzing
+eval/multisig-sm-02     time:   [5.7426 ms 5.7910 ms 5.8542 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high severe
+
+--- multisig-sm-03: process 734
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 multisig-sm-03
+Benchmarking multisig-sm-03
+Benchmarking multisig-sm-03: Warming up for 3.0000 s
+Benchmarking multisig-sm-03: Collecting 100 samples in estimated 5.1047 s (600 iterations)
+Benchmarking multisig-sm-03: Analyzing
+multisig-sm-03          time:   [8.4143 ms 8.4337 ms 8.4536 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) low mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval multisig-sm-03
+Benchmarking eval/multisig-sm-03
+Benchmarking eval/multisig-sm-03: Warming up for 3.0000 s
+Benchmarking eval/multisig-sm-03: Collecting 100 samples in estimated 5.0208 s (900 iterations)
+Benchmarking eval/multisig-sm-03: Analyzing
+eval/multisig-sm-03     time:   [5.5821 ms 5.6109 ms 5.6530 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) high mild
+  1 (1.00%) high severe
+
+--- multisig-sm-04: process 745
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 multisig-sm-04
+Benchmarking multisig-sm-04
+Benchmarking multisig-sm-04: Warming up for 3.0000 s
+Benchmarking multisig-sm-04: Collecting 100 samples in estimated 5.1344 s (600 iterations)
+Benchmarking multisig-sm-04: Analyzing
+multisig-sm-04          time:   [8.7197 ms 8.7517 ms 8.7848 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+PVB_LOOP eval multisig-sm-04
+Benchmarking eval/multisig-sm-04
+Benchmarking eval/multisig-sm-04: Warming up for 3.0000 s
+Benchmarking eval/multisig-sm-04: Collecting 100 samples in estimated 5.2142 s (900 iterations)
+Benchmarking eval/multisig-sm-04: Analyzing
+eval/multisig-sm-04     time:   [5.7877 ms 5.8160 ms 5.8468 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) high mild
+  2 (2.00%) high severe
+
+--- multisig-sm-05: process 756
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 multisig-sm-05
+Benchmarking multisig-sm-05
+Benchmarking multisig-sm-05: Warming up for 3.0000 s
+Benchmarking multisig-sm-05: Collecting 100 samples in estimated 5.7523 s (500 iterations)
+Benchmarking multisig-sm-05: Analyzing
+multisig-sm-05          time:   [11.410 ms 11.503 ms 11.630 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  4 (4.00%) high mild
+  3 (3.00%) high severe
+
+PVB_LOOP eval multisig-sm-05
+Benchmarking eval/multisig-sm-05
+Benchmarking eval/multisig-sm-05: Warming up for 3.0000 s
+Benchmarking eval/multisig-sm-05: Collecting 100 samples in estimated 5.2785 s (600 iterations)
+Benchmarking eval/multisig-sm-05: Analyzing
+eval/multisig-sm-05     time:   [8.8458 ms 8.8762 ms 8.9101 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+
+--- multisig-sm-06: process 767
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 multisig-sm-06
+Benchmarking multisig-sm-06
+Benchmarking multisig-sm-06: Warming up for 3.0000 s
+Benchmarking multisig-sm-06: Collecting 100 samples in estimated 5.1506 s (600 iterations)
+Benchmarking multisig-sm-06: Analyzing
+multisig-sm-06          time:   [8.7366 ms 8.7698 ms 8.8040 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  2 (2.00%) low mild
+  7 (7.00%) high mild
+
+PVB_LOOP eval multisig-sm-06
+Benchmarking eval/multisig-sm-06
+Benchmarking eval/multisig-sm-06: Warming up for 3.0000 s
+Benchmarking eval/multisig-sm-06: Collecting 100 samples in estimated 5.2950 s (900 iterations)
+Benchmarking eval/multisig-sm-06: Analyzing
+eval/multisig-sm-06     time:   [5.8576 ms 5.8708 ms 5.8839 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) low mild
+  1 (1.00%) high mild
+
+--- multisig-sm-07: process 778
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 multisig-sm-07
+Benchmarking multisig-sm-07
+Benchmarking multisig-sm-07: Warming up for 3.0000 s
+Benchmarking multisig-sm-07: Collecting 100 samples in estimated 5.1333 s (600 iterations)
+Benchmarking multisig-sm-07: Analyzing
+multisig-sm-07          time:   [8.4088 ms 8.4360 ms 8.4646 ms]
+Found 10 outliers among 100 measurements (10.00%)
+  3 (3.00%) low mild
+  5 (5.00%) high mild
+  2 (2.00%) high severe
+
+PVB_LOOP eval multisig-sm-07
+Benchmarking eval/multisig-sm-07
+Benchmarking eval/multisig-sm-07: Warming up for 3.0000 s
+Benchmarking eval/multisig-sm-07: Collecting 100 samples in estimated 5.0512 s (900 iterations)
+Benchmarking eval/multisig-sm-07: Analyzing
+eval/multisig-sm-07     time:   [5.6970 ms 5.7258 ms 5.7616 ms]
+Found 11 outliers among 100 measurements (11.00%)
+  8 (8.00%) low mild
+  1 (1.00%) high mild
+  2 (2.00%) high severe
+
+--- multisig-sm-08: process 789
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 multisig-sm-08
+Benchmarking multisig-sm-08
+Benchmarking multisig-sm-08: Warming up for 3.0000 s
+Benchmarking multisig-sm-08: Collecting 100 samples in estimated 5.0712 s (600 iterations)
+Benchmarking multisig-sm-08: Analyzing
+multisig-sm-08          time:   [8.5355 ms 8.5592 ms 8.5831 ms]
+
+PVB_LOOP eval multisig-sm-08
+Benchmarking eval/multisig-sm-08
+Benchmarking eval/multisig-sm-08: Warming up for 3.0000 s
+Benchmarking eval/multisig-sm-08: Collecting 100 samples in estimated 5.0473 s (900 iterations)
+Benchmarking eval/multisig-sm-08: Analyzing
+eval/multisig-sm-08     time:   [5.6304 ms 5.6478 ms 5.6655 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+--- multisig-sm-09: process 800
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 multisig-sm-09
+Benchmarking multisig-sm-09
+Benchmarking multisig-sm-09: Warming up for 3.0000 s
+Benchmarking multisig-sm-09: Collecting 100 samples in estimated 5.1624 s (600 iterations)
+Benchmarking multisig-sm-09: Analyzing
+multisig-sm-09          time:   [8.6156 ms 8.6487 ms 8.6843 ms]
+Found 10 outliers among 100 measurements (10.00%)
+  6 (6.00%) high mild
+  4 (4.00%) high severe
+
+PVB_LOOP eval multisig-sm-09
+Benchmarking eval/multisig-sm-09
+Benchmarking eval/multisig-sm-09: Warming up for 3.0000 s
+Benchmarking eval/multisig-sm-09: Collecting 100 samples in estimated 5.1381 s (900 iterations)
+Benchmarking eval/multisig-sm-09: Analyzing
+eval/multisig-sm-09     time:   [5.7074 ms 5.7174 ms 5.7270 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low mild
+
+--- multisig-sm-10: process 811
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 multisig-sm-10
+Benchmarking multisig-sm-10
+Benchmarking multisig-sm-10: Warming up for 3.0000 s
+Benchmarking multisig-sm-10: Collecting 100 samples in estimated 5.8431 s (500 iterations)
+Benchmarking multisig-sm-10: Analyzing
+multisig-sm-10          time:   [11.639 ms 11.683 ms 11.727 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low mild
+
+PVB_LOOP eval multisig-sm-10
+Benchmarking eval/multisig-sm-10
+Benchmarking eval/multisig-sm-10: Warming up for 3.0000 s
+Benchmarking eval/multisig-sm-10: Collecting 100 samples in estimated 5.2908 s (600 iterations)
+Benchmarking eval/multisig-sm-10: Analyzing
+eval/multisig-sm-10     time:   [8.8907 ms 8.9238 ms 8.9579 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
+
+--- ping-pong-1: process 822
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 ping-pong-1
+Benchmarking ping-pong-1
+Benchmarking ping-pong-1: Warming up for 3.0000 s
+Benchmarking ping-pong-1: Collecting 100 samples in estimated 5.1384 s (700 iterations)
+Benchmarking ping-pong-1: Analyzing
+ping-pong-1             time:   [7.2954 ms 7.3122 ms 7.3306 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high severe
+
+PVB_LOOP eval ping-pong-1
+Benchmarking eval/ping-pong-1
+Benchmarking eval/ping-pong-1: Warming up for 3.0000 s
+Benchmarking eval/ping-pong-1: Collecting 100 samples in estimated 5.4032 s (1100 iterations)
+Benchmarking eval/ping-pong-1: Analyzing
+eval/ping-pong-1        time:   [4.9221 ms 4.9305 ms 4.9392 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) low mild
+  2 (2.00%) high mild
+
+--- ping-pong-2: process 833
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 ping-pong-2
+Benchmarking ping-pong-2
+Benchmarking ping-pong-2: Warming up for 3.0000 s
+Benchmarking ping-pong-2: Collecting 100 samples in estimated 5.1633 s (700 iterations)
+Benchmarking ping-pong-2: Analyzing
+ping-pong-2             time:   [7.3380 ms 7.3534 ms 7.3694 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+PVB_LOOP eval ping-pong-2
+Benchmarking eval/ping-pong-2
+Benchmarking eval/ping-pong-2: Warming up for 3.0000 s
+Benchmarking eval/ping-pong-2: Collecting 100 samples in estimated 5.3391 s (1100 iterations)
+Benchmarking eval/ping-pong-2: Analyzing
+eval/ping-pong-2        time:   [4.8826 ms 4.8922 ms 4.9021 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  3 (3.00%) low mild
+  3 (3.00%) high mild
+  1 (1.00%) high severe
+
+--- ping-pong_2-1: process 844
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 ping-pong_2-1
+Benchmarking ping-pong_2-1
+Benchmarking ping-pong_2-1: Warming up for 3.0000 s
+Benchmarking ping-pong_2-1: Collecting 100 samples in estimated 5.2720 s (1000 iterations)
+Benchmarking ping-pong_2-1: Analyzing
+ping-pong_2-1           time:   [5.2666 ms 5.2742 ms 5.2816 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  1 (1.00%) low severe
+  2 (2.00%) low mild
+  2 (2.00%) high mild
+
+PVB_LOOP eval ping-pong_2-1
+Benchmarking eval/ping-pong_2-1
+Benchmarking eval/ping-pong_2-1: Warming up for 3.0000 s
+Benchmarking eval/ping-pong_2-1: Collecting 100 samples in estimated 5.2676 s (1900 iterations)
+Benchmarking eval/ping-pong_2-1: Analyzing
+eval/ping-pong_2-1      time:   [2.7339 ms 2.7420 ms 2.7511 ms]
+Found 13 outliers among 100 measurements (13.00%)
+  13 (13.00%) high severe
+
+--- prism-1: process 855
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 prism-1
+Benchmarking prism-1
+Benchmarking prism-1: Warming up for 3.0000 s
+Benchmarking prism-1: Collecting 100 samples in estimated 5.1151 s (1900 iterations)
+Benchmarking prism-1: Analyzing
+prism-1                 time:   [2.6926 ms 2.6990 ms 2.7050 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  1 (1.00%) low severe
+  4 (4.00%) low mild
+  1 (1.00%) high mild
+
+PVB_LOOP eval prism-1
+Benchmarking eval/prism-1
+Benchmarking eval/prism-1: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 9.4s, enable flat sampling, or reduce sample count to 50.
+Benchmarking eval/prism-1: Collecting 100 samples in estimated 9.3544 s (5050 iterations)
+Benchmarking eval/prism-1: Analyzing
+eval/prism-1            time:   [1.8491 ms 1.8670 ms 1.8924 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  1 (1.00%) low severe
+  2 (2.00%) low mild
+  5 (5.00%) high severe
+
+--- prism-2: process 866
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 prism-2
+Benchmarking prism-2
+Benchmarking prism-2: Warming up for 3.0000 s
+Benchmarking prism-2: Collecting 100 samples in estimated 5.1211 s (600 iterations)
+Benchmarking prism-2: Analyzing
+prism-2                 time:   [8.5380 ms 8.5567 ms 8.5768 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  1 (1.00%) low severe
+  1 (1.00%) low mild
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval prism-2
+Benchmarking eval/prism-2
+Benchmarking eval/prism-2: Warming up for 3.0000 s
+Benchmarking eval/prism-2: Collecting 100 samples in estimated 5.4302 s (900 iterations)
+Benchmarking eval/prism-2: Analyzing
+eval/prism-2            time:   [6.0371 ms 6.0582 ms 6.0802 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+
+--- prism-3: process 877
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 prism-3
+Benchmarking prism-3
+Benchmarking prism-3: Warming up for 3.0000 s
+Benchmarking prism-3: Collecting 100 samples in estimated 5.0140 s (800 iterations)
+Benchmarking prism-3: Analyzing
+prism-3                 time:   [6.2506 ms 6.2598 ms 6.2693 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) low mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval prism-3
+Benchmarking eval/prism-3
+Benchmarking eval/prism-3: Warming up for 3.0000 s
+Benchmarking eval/prism-3: Collecting 100 samples in estimated 5.0068 s (1000 iterations)
+Benchmarking eval/prism-3: Analyzing
+eval/prism-3            time:   [5.0032 ms 5.0292 ms 5.0641 ms]
+Found 16 outliers among 100 measurements (16.00%)
+  2 (2.00%) low mild
+  6 (6.00%) high mild
+  8 (8.00%) high severe
+
+--- pubkey-1: process 888
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 pubkey-1
+Benchmarking pubkey-1
+Benchmarking pubkey-1: Warming up for 3.0000 s
+Benchmarking pubkey-1: Collecting 100 samples in estimated 5.0364 s (2100 iterations)
+Benchmarking pubkey-1: Analyzing
+pubkey-1                time:   [2.3810 ms 2.3848 ms 2.3884 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) low mild
+  1 (1.00%) high mild
+
+PVB_LOOP eval pubkey-1
+Benchmarking eval/pubkey-1
+Benchmarking eval/pubkey-1: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.4s, enable flat sampling, or reduce sample count to 50.
+Benchmarking eval/pubkey-1: Collecting 100 samples in estimated 7.4396 s (5050 iterations)
+Benchmarking eval/pubkey-1: Analyzing
+eval/pubkey-1           time:   [1.4600 ms 1.4715 ms 1.4876 ms]
+Found 18 outliers among 100 measurements (18.00%)
+  6 (6.00%) low mild
+  10 (10.00%) high mild
+  2 (2.00%) high severe
+
+--- stablecoin_1-1: process 899
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 stablecoin_1-1
+Benchmarking stablecoin_1-1
+Benchmarking stablecoin_1-1: Warming up for 3.0000 s
+Benchmarking stablecoin_1-1: Collecting 100 samples in estimated 5.7020 s (300 iterations)
+Benchmarking stablecoin_1-1: Analyzing
+stablecoin_1-1          time:   [18.806 ms 18.896 ms 18.983 ms]
+
+PVB_LOOP eval stablecoin_1-1
+Benchmarking eval/stablecoin_1-1
+Benchmarking eval/stablecoin_1-1: Warming up for 3.0000 s
+Benchmarking eval/stablecoin_1-1: Collecting 100 samples in estimated 6.1431 s (400 iterations)
+Benchmarking eval/stablecoin_1-1: Analyzing
+eval/stablecoin_1-1     time:   [14.685 ms 14.770 ms 14.855 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+
+--- stablecoin_1-2: process 910
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 stablecoin_1-2
+Benchmarking stablecoin_1-2
+Benchmarking stablecoin_1-2: Warming up for 3.0000 s
+Benchmarking stablecoin_1-2: Collecting 100 samples in estimated 5.1311 s (1600 iterations)
+Benchmarking stablecoin_1-2: Analyzing
+stablecoin_1-2          time:   [3.1794 ms 3.1846 ms 3.1900 ms]
+Found 12 outliers among 100 measurements (12.00%)
+  1 (1.00%) low severe
+  4 (4.00%) low mild
+  6 (6.00%) high mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval stablecoin_1-2
+Benchmarking eval/stablecoin_1-2
+Benchmarking eval/stablecoin_1-2: Warming up for 3.0000 s
+Benchmarking eval/stablecoin_1-2: Collecting 100 samples in estimated 5.0994 s (2200 iterations)
+Benchmarking eval/stablecoin_1-2: Analyzing
+eval/stablecoin_1-2     time:   [2.3177 ms 2.3281 ms 2.3384 ms]
+
+--- stablecoin_1-3: process 921
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 stablecoin_1-3
+Benchmarking stablecoin_1-3
+Benchmarking stablecoin_1-3: Warming up for 3.0000 s
+Benchmarking stablecoin_1-3: Collecting 100 samples in estimated 6.4193 s (300 iterations)
+Benchmarking stablecoin_1-3: Analyzing
+stablecoin_1-3          time:   [21.154 ms 21.300 ms 21.458 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high severe
+
+PVB_LOOP eval stablecoin_1-3
+Benchmarking eval/stablecoin_1-3
+Benchmarking eval/stablecoin_1-3: Warming up for 3.0000 s
+Benchmarking eval/stablecoin_1-3: Collecting 100 samples in estimated 5.2096 s (300 iterations)
+Benchmarking eval/stablecoin_1-3: Analyzing
+eval/stablecoin_1-3     time:   [17.262 ms 17.329 ms 17.395 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) low mild
+
+--- stablecoin_1-4: process 932
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 stablecoin_1-4
+Benchmarking stablecoin_1-4
+Benchmarking stablecoin_1-4: Warming up for 3.0000 s
+Benchmarking stablecoin_1-4: Collecting 100 samples in estimated 5.2259 s (1600 iterations)
+Benchmarking stablecoin_1-4: Analyzing
+stablecoin_1-4          time:   [3.2507 ms 3.2589 ms 3.2670 ms]
+
+PVB_LOOP eval stablecoin_1-4
+Benchmarking eval/stablecoin_1-4
+Benchmarking eval/stablecoin_1-4: Warming up for 3.0000 s
+Benchmarking eval/stablecoin_1-4: Collecting 100 samples in estimated 5.2291 s (2200 iterations)
+Benchmarking eval/stablecoin_1-4: Analyzing
+eval/stablecoin_1-4     time:   [2.3571 ms 2.3666 ms 2.3768 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+
+--- stablecoin_1-5: process 943
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 stablecoin_1-5
+Benchmarking stablecoin_1-5
+Benchmarking stablecoin_1-5: Warming up for 3.0000 s
+Benchmarking stablecoin_1-5: Collecting 100 samples in estimated 5.0541 s (200 iterations)
+Benchmarking stablecoin_1-5: Analyzing
+stablecoin_1-5          time:   [25.203 ms 25.287 ms 25.371 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) low mild
+  2 (2.00%) high mild
+
+PVB_LOOP eval stablecoin_1-5
+Benchmarking eval/stablecoin_1-5
+Benchmarking eval/stablecoin_1-5: Warming up for 3.0000 s
+Benchmarking eval/stablecoin_1-5: Collecting 100 samples in estimated 6.3711 s (300 iterations)
+Benchmarking eval/stablecoin_1-5: Analyzing
+eval/stablecoin_1-5     time:   [21.265 ms 21.363 ms 21.463 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+--- stablecoin_1-6: process 954
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 stablecoin_1-6
+Benchmarking stablecoin_1-6
+Benchmarking stablecoin_1-6: Warming up for 3.0000 s
+Benchmarking stablecoin_1-6: Collecting 100 samples in estimated 5.3749 s (1400 iterations)
+Benchmarking stablecoin_1-6: Analyzing
+stablecoin_1-6          time:   [3.8392 ms 3.8482 ms 3.8576 ms]
+Found 11 outliers among 100 measurements (11.00%)
+  1 (1.00%) low severe
+  2 (2.00%) low mild
+  7 (7.00%) high mild
+  1 (1.00%) high severe
+
+PVB_LOOP eval stablecoin_1-6
+Benchmarking eval/stablecoin_1-6
+Benchmarking eval/stablecoin_1-6: Warming up for 3.0000 s
+Benchmarking eval/stablecoin_1-6: Collecting 100 samples in estimated 5.2516 s (1800 iterations)
+Benchmarking eval/stablecoin_1-6: Analyzing
+eval/stablecoin_1-6     time:   [2.9000 ms 2.9109 ms 2.9220 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  3 (3.00%) low mild
+  5 (5.00%) high mild
+
+--- stablecoin_2-1: process 965
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 stablecoin_2-1
+Benchmarking stablecoin_2-1
+Benchmarking stablecoin_2-1: Warming up for 3.0000 s
+Benchmarking stablecoin_2-1: Collecting 100 samples in estimated 5.4170 s (300 iterations)
+Benchmarking stablecoin_2-1: Analyzing
+stablecoin_2-1          time:   [18.095 ms 18.240 ms 18.419 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  2 (2.00%) high mild
+  4 (4.00%) high severe
+
+PVB_LOOP eval stablecoin_2-1
+Benchmarking eval/stablecoin_2-1
+Benchmarking eval/stablecoin_2-1: Warming up for 3.0000 s
+Benchmarking eval/stablecoin_2-1: Collecting 100 samples in estimated 5.7552 s (400 iterations)
+Benchmarking eval/stablecoin_2-1: Analyzing
+eval/stablecoin_2-1     time:   [14.470 ms 14.534 ms 14.617 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  1 (1.00%) high mild
+  3 (3.00%) high severe
+
+--- stablecoin_2-2: process 976
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 stablecoin_2-2
+Benchmarking stablecoin_2-2
+Benchmarking stablecoin_2-2: Warming up for 3.0000 s
+Benchmarking stablecoin_2-2: Collecting 100 samples in estimated 5.2550 s (1700 iterations)
+Benchmarking stablecoin_2-2: Analyzing
+stablecoin_2-2          time:   [3.0859 ms 3.0957 ms 3.1059 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
+
+PVB_LOOP eval stablecoin_2-2
+Benchmarking eval/stablecoin_2-2
+Benchmarking eval/stablecoin_2-2: Warming up for 3.0000 s
+Benchmarking eval/stablecoin_2-2: Collecting 100 samples in estimated 5.1097 s (2300 iterations)
+Benchmarking eval/stablecoin_2-2: Analyzing
+eval/stablecoin_2-2     time:   [2.2595 ms 2.2817 ms 2.3091 ms]
+Found 15 outliers among 100 measurements (15.00%)
+  11 (11.00%) high mild
+  4 (4.00%) high severe
+
+--- stablecoin_2-3: process 987
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 stablecoin_2-3
+Benchmarking stablecoin_2-3
+Benchmarking stablecoin_2-3: Warming up for 3.0000 s
+Benchmarking stablecoin_2-3: Collecting 100 samples in estimated 6.5949 s (300 iterations)
+Benchmarking stablecoin_2-3: Analyzing
+stablecoin_2-3          time:   [21.630 ms 21.719 ms 21.807 ms]
+
+PVB_LOOP eval stablecoin_2-3
+Benchmarking eval/stablecoin_2-3
+Benchmarking eval/stablecoin_2-3: Warming up for 3.0000 s
+Benchmarking eval/stablecoin_2-3: Collecting 100 samples in estimated 5.4607 s (300 iterations)
+Benchmarking eval/stablecoin_2-3: Analyzing
+eval/stablecoin_2-3     time:   [17.615 ms 17.700 ms 17.792 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+
+--- stablecoin_2-4: process 998
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 stablecoin_2-4
+Benchmarking stablecoin_2-4
+Benchmarking stablecoin_2-4: Warming up for 3.0000 s
+Benchmarking stablecoin_2-4: Collecting 100 samples in estimated 5.2354 s (1600 iterations)
+Benchmarking stablecoin_2-4: Analyzing
+stablecoin_2-4          time:   [3.2552 ms 3.2820 ms 3.3186 ms]
+Found 10 outliers among 100 measurements (10.00%)
+  1 (1.00%) low severe
+  4 (4.00%) low mild
+  1 (1.00%) high mild
+  4 (4.00%) high severe
+
+PVB_LOOP eval stablecoin_2-4
+Benchmarking eval/stablecoin_2-4
+Benchmarking eval/stablecoin_2-4: Warming up for 3.0000 s
+Benchmarking eval/stablecoin_2-4: Collecting 100 samples in estimated 5.0734 s (2200 iterations)
+Benchmarking eval/stablecoin_2-4: Analyzing
+eval/stablecoin_2-4     time:   [2.3761 ms 2.3978 ms 2.4270 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high severe
+
+--- token-account-1: process 1009
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 token-account-1
+Benchmarking token-account-1
+Benchmarking token-account-1: Warming up for 3.0000 s
+Benchmarking token-account-1: Collecting 100 samples in estimated 5.3220 s (1400 iterations)
+Benchmarking token-account-1: Analyzing
+token-account-1         time:   [3.7736 ms 3.7890 ms 3.8063 ms]
+Found 11 outliers among 100 measurements (11.00%)
+  1 (1.00%) low mild
+  2 (2.00%) high mild
+  8 (8.00%) high severe
+
+PVB_LOOP eval token-account-1
+Benchmarking eval/token-account-1
+Benchmarking eval/token-account-1: Warming up for 3.0000 s
+Benchmarking eval/token-account-1: Collecting 100 samples in estimated 5.1703 s (2000 iterations)
+Benchmarking eval/token-account-1: Analyzing
+eval/token-account-1    time:   [2.5678 ms 2.5739 ms 2.5800 ms]
+
+--- token-account-2: process 1020
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 token-account-2
+Benchmarking token-account-2
+Benchmarking token-account-2: Warming up for 3.0000 s
+Benchmarking token-account-2: Collecting 100 samples in estimated 5.0345 s (1100 iterations)
+Benchmarking token-account-2: Analyzing
+token-account-2         time:   [4.5895 ms 4.6008 ms 4.6137 ms]
+Found 12 outliers among 100 measurements (12.00%)
+  2 (2.00%) low severe
+  5 (5.00%) low mild
+  1 (1.00%) high mild
+  4 (4.00%) high severe
+
+PVB_LOOP eval token-account-2
+Benchmarking eval/token-account-2
+Benchmarking eval/token-account-2: Warming up for 3.0000 s
+Benchmarking eval/token-account-2: Collecting 100 samples in estimated 5.2487 s (1500 iterations)
+Benchmarking eval/token-account-2: Analyzing
+eval/token-account-2    time:   [3.4962 ms 3.5022 ms 3.5083 ms]
+Found 13 outliers among 100 measurements (13.00%)
+  2 (2.00%) low mild
+  10 (10.00%) high mild
+  1 (1.00%) high severe
+
+--- uniswap-1: process 1031
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 uniswap-1
+Benchmarking uniswap-1
+Benchmarking uniswap-1: Warming up for 3.0000 s
+Benchmarking uniswap-1: Collecting 100 samples in estimated 5.5295 s (900 iterations)
+Benchmarking uniswap-1: Analyzing
+uniswap-1               time:   [6.1356 ms 6.1468 ms 6.1582 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) low mild
+  1 (1.00%) high mild
+
+PVB_LOOP eval uniswap-1
+Benchmarking eval/uniswap-1
+Benchmarking eval/uniswap-1: Warming up for 3.0000 s
+Benchmarking eval/uniswap-1: Collecting 100 samples in estimated 5.4843 s (1100 iterations)
+Benchmarking eval/uniswap-1: Analyzing
+eval/uniswap-1          time:   [4.9523 ms 4.9583 ms 4.9640 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) low mild
+
+--- uniswap-2: process 1042
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 uniswap-2
+Benchmarking uniswap-2
+Benchmarking uniswap-2: Warming up for 3.0000 s
+Benchmarking uniswap-2: Collecting 100 samples in estimated 5.0199 s (1200 iterations)
+Benchmarking uniswap-2: Analyzing
+uniswap-2               time:   [4.1724 ms 4.1862 ms 4.2012 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  3 (3.00%) low mild
+  3 (3.00%) high severe
+
+PVB_LOOP eval uniswap-2
+Benchmarking eval/uniswap-2
+Benchmarking eval/uniswap-2: Warming up for 3.0000 s
+Benchmarking eval/uniswap-2: Collecting 100 samples in estimated 5.0466 s (1700 iterations)
+Benchmarking eval/uniswap-2: Analyzing
+eval/uniswap-2          time:   [3.0061 ms 3.0157 ms 3.0274 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  1 (1.00%) low severe
+  1 (1.00%) low mild
+  2 (2.00%) high mild
+  2 (2.00%) high severe
+
+--- uniswap-3: process 1053
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 uniswap-3
+Benchmarking uniswap-3
+Benchmarking uniswap-3: Warming up for 3.0000 s
+Benchmarking uniswap-3: Collecting 100 samples in estimated 7.3764 s (300 iterations)
+Benchmarking uniswap-3: Analyzing
+uniswap-3               time:   [24.503 ms 24.581 ms 24.678 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) high mild
+  2 (2.00%) high severe
+
+PVB_LOOP eval uniswap-3
+Benchmarking eval/uniswap-3
+Benchmarking eval/uniswap-3: Warming up for 3.0000 s
+Benchmarking eval/uniswap-3: Collecting 100 samples in estimated 6.4846 s (300 iterations)
+Benchmarking eval/uniswap-3: Analyzing
+eval/uniswap-3          time:   [21.275 ms 21.315 ms 21.354 ms]
+
+--- uniswap-4: process 1064
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 uniswap-4
+Benchmarking uniswap-4
+Benchmarking uniswap-4: Warming up for 3.0000 s
+Benchmarking uniswap-4: Collecting 100 samples in estimated 5.4202 s (1200 iterations)
+Benchmarking uniswap-4: Analyzing
+uniswap-4               time:   [4.5158 ms 4.5239 ms 4.5325 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high severe
+
+PVB_LOOP eval uniswap-4
+Benchmarking eval/uniswap-4
+Benchmarking eval/uniswap-4: Warming up for 3.0000 s
+Benchmarking eval/uniswap-4: Collecting 100 samples in estimated 5.0698 s (1400 iterations)
+Benchmarking eval/uniswap-4: Analyzing
+eval/uniswap-4          time:   [3.5986 ms 3.6045 ms 3.6103 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) low mild
+  1 (1.00%) high mild
+
+--- uniswap-5: process 1075
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 uniswap-5
+Benchmarking uniswap-5
+Benchmarking uniswap-5: Warming up for 3.0000 s
+Benchmarking uniswap-5: Collecting 100 samples in estimated 6.5670 s (400 iterations)
+Benchmarking uniswap-5: Analyzing
+uniswap-5               time:   [16.308 ms 16.324 ms 16.339 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) low mild
+  1 (1.00%) high mild
+
+PVB_LOOP eval uniswap-5
+Benchmarking eval/uniswap-5
+Benchmarking eval/uniswap-5: Warming up for 3.0000 s
+Benchmarking eval/uniswap-5: Collecting 100 samples in estimated 5.2483 s (400 iterations)
+Benchmarking eval/uniswap-5: Analyzing
+eval/uniswap-5          time:   [13.439 ms 13.494 ms 13.551 ms]
+
+--- uniswap-6: process 1086
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 uniswap-6
+Benchmarking uniswap-6
+Benchmarking uniswap-6: Warming up for 3.0000 s
+Benchmarking uniswap-6: Collecting 100 samples in estimated 5.2971 s (1200 iterations)
+Benchmarking uniswap-6: Analyzing
+uniswap-6               time:   [4.4322 ms 4.4671 ms 4.5159 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  4 (4.00%) low mild
+  2 (2.00%) high mild
+  3 (3.00%) high severe
+
+PVB_LOOP eval uniswap-6
+Benchmarking eval/uniswap-6
+Benchmarking eval/uniswap-6: Warming up for 3.0000 s
+Benchmarking eval/uniswap-6: Collecting 100 samples in estimated 5.2103 s (1500 iterations)
+Benchmarking eval/uniswap-6: Analyzing
+eval/uniswap-6          time:   [3.4832 ms 3.4960 ms 3.5085 ms]
+
+--- vesting-1: process 1097
+Gnuplot not found, using plotters backend
+PVB_LOOP d3 vesting-1
+Benchmarking vesting-1
+Benchmarking vesting-1: Warming up for 3.0000 s
+Benchmarking vesting-1: Collecting 100 samples in estimated 5.2253 s (900 iterations)
+Benchmarking vesting-1: Analyzing
+vesting-1               time:   [5.8370 ms 5.8480 ms 5.8593 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  5 (5.00%) high mild
+
+PVB_LOOP eval vesting-1
+Benchmarking eval/vesting-1
+Benchmarking eval/vesting-1: Warming up for 3.0000 s
+Benchmarking eval/vesting-1: Collecting 100 samples in estimated 5.0373 s (1200 iterations)
+Benchmarking eval/vesting-1: Analyzing
+eval/vesting-1          time:   [4.2232 ms 4.2313 ms 4.2396 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+

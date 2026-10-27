@@ -1,0 +1,2948 @@
+scalus: scalus_3-1.4.1.jar
+jvm: /opt/jdk-25/bin/java (Java(TM) SE Runtime Environment Oracle GraalVM 25.4.4.1.1+1.1 (build 25.0.4.1.1+1-LTS-jvmci-25.4-b23)), flags none: -Xss64m
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_1-1.flat)
+
+# Run progress: 0.00% complete, ETA 01:06:45
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 35.335 us/op
+Iteration   1: 28.647 us/op
+Iteration   2: 28.199 us/op
+Iteration   3: 28.817 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  28.554 ±(99.9%) 5.822 us/op [Average]
+  (min, avg, max) = (28.199, 28.554, 28.817), stdev = 0.319
+  CI (99.9%): [22.732, 34.376] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_1-2.flat)
+
+# Run progress: 1.12% complete, ETA 01:16:54
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 436.669 us/op
+Iteration   1: 188.453 us/op
+Iteration   2: 189.536 us/op
+Iteration   3: 184.338 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  187.442 ±(99.9%) 50.035 us/op [Average]
+  (min, avg, max) = (184.338, 187.442, 189.536), stdev = 2.743
+  CI (99.9%): [137.407, 237.477] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_1-3.flat)
+
+# Run progress: 2.25% complete, ETA 01:19:33
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 293.906 us/op
+Iteration   1: 171.450 us/op
+Iteration   2: 167.421 us/op
+Iteration   3: 165.616 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  168.162 ±(99.9%) 54.495 us/op [Average]
+  (min, avg, max) = (165.616, 168.162, 171.450), stdev = 2.987
+  CI (99.9%): [113.667, 222.657] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_1-4.flat)
+
+# Run progress: 3.37% complete, ETA 01:19:42
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 40.566 us/op
+Iteration   1: 32.971 us/op
+Iteration   2: 33.362 us/op
+Iteration   3: 33.666 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  33.333 ±(99.9%) 6.358 us/op [Average]
+  (min, avg, max) = (32.971, 33.333, 33.666), stdev = 0.349
+  CI (99.9%): [26.975, 39.691] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_2-1.flat)
+
+# Run progress: 4.49% complete, ETA 01:17:34
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 35.242 us/op
+Iteration   1: 28.554 us/op
+Iteration   2: 28.578 us/op
+Iteration   3: 28.035 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  28.389 ±(99.9%) 5.591 us/op [Average]
+  (min, avg, max) = (28.035, 28.389, 28.578), stdev = 0.306
+  CI (99.9%): [22.798, 33.980] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_2-2.flat)
+
+# Run progress: 5.62% complete, ETA 01:16:00
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 430.172 us/op
+Iteration   1: 184.355 us/op
+Iteration   2: 181.768 us/op
+Iteration   3: 182.734 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  182.952 ±(99.9%) 23.853 us/op [Average]
+  (min, avg, max) = (181.768, 182.952, 184.355), stdev = 1.307
+  CI (99.9%): [159.099, 206.805] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_2-3.flat)
+
+# Run progress: 6.74% complete, ETA 01:15:43
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 480.951 us/op
+Iteration   1: 234.613 us/op
+Iteration   2: 230.112 us/op
+Iteration   3: 229.886 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  231.537 ±(99.9%) 48.643 us/op [Average]
+  (min, avg, max) = (229.886, 231.537, 234.613), stdev = 2.666
+  CI (99.9%): [182.894, 280.180] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_2-4.flat)
+
+# Run progress: 7.87% complete, ETA 01:15:18
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 298.712 us/op
+Iteration   1: 169.607 us/op
+Iteration   2: 166.669 us/op
+Iteration   3: 163.321 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  166.532 ±(99.9%) 57.386 us/op [Average]
+  (min, avg, max) = (163.321, 166.532, 169.607), stdev = 3.145
+  CI (99.9%): [109.147, 223.918] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = auction_2-5.flat)
+
+# Run progress: 8.99% complete, ETA 01:14:43
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 40.164 us/op
+Iteration   1: 33.432 us/op
+Iteration   2: 32.967 us/op
+Iteration   3: 32.843 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  33.081 ±(99.9%) 5.664 us/op [Average]
+  (min, avg, max) = (32.843, 33.081, 33.432), stdev = 0.310
+  CI (99.9%): [27.417, 38.744] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-1.flat)
+
+# Run progress: 10.11% complete, ETA 01:13:19
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 36.710 us/op
+Iteration   1: 34.716 us/op
+Iteration   2: 34.982 us/op
+Iteration   3: 35.212 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  34.970 ±(99.9%) 4.522 us/op [Average]
+  (min, avg, max) = (34.716, 34.970, 35.212), stdev = 0.248
+  CI (99.9%): [30.448, 39.492] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-2.flat)
+
+# Run progress: 11.24% complete, ETA 01:11:47
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 156.193 us/op
+Iteration   1: 137.373 us/op
+Iteration   2: 136.886 us/op
+Iteration   3: 136.554 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  136.938 ±(99.9%) 7.512 us/op [Average]
+  (min, avg, max) = (136.554, 136.938, 137.373), stdev = 0.412
+  CI (99.9%): [129.426, 144.450] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-3.flat)
+
+# Run progress: 12.36% complete, ETA 01:10:32
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 610.865 us/op
+Iteration   1: 533.108 us/op
+Iteration   2: 540.355 us/op
+Iteration   3: 535.401 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  536.288 ±(99.9%) 67.576 us/op [Average]
+  (min, avg, max) = (533.108, 536.288, 540.355), stdev = 3.704
+  CI (99.9%): [468.712, 603.865] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-4.flat)
+
+# Run progress: 13.48% complete, ETA 01:09:22
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 249.526 us/op
+Iteration   1: 211.198 us/op
+Iteration   2: 208.105 us/op
+Iteration   3: 205.260 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  208.188 ±(99.9%) 54.178 us/op [Average]
+  (min, avg, max) = (205.260, 208.188, 211.198), stdev = 2.970
+  CI (99.9%): [154.010, 262.366] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-5.flat)
+
+# Run progress: 14.61% complete, ETA 01:08:16
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 84.291 us/op
+Iteration   1: 75.197 us/op
+Iteration   2: 73.297 us/op
+Iteration   3: 74.058 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  74.184 ±(99.9%) 17.448 us/op [Average]
+  (min, avg, max) = (73.297, 74.184, 75.197), stdev = 0.956
+  CI (99.9%): [56.736, 91.633] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-6.flat)
+
+# Run progress: 15.73% complete, ETA 01:07:13
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 134.480 us/op
+Iteration   1: 126.038 us/op
+Iteration   2: 125.798 us/op
+Iteration   3: 128.476 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  126.770 ±(99.9%) 27.034 us/op [Average]
+  (min, avg, max) = (125.798, 126.770, 128.476), stdev = 1.482
+  CI (99.9%): [99.736, 153.804] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = coop-7.flat)
+
+# Run progress: 16.85% complete, ETA 01:06:02
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 48.948 us/op
+Iteration   1: 46.977 us/op
+Iteration   2: 46.701 us/op
+Iteration   3: 47.294 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  46.991 ±(99.9%) 5.414 us/op [Average]
+  (min, avg, max) = (46.701, 46.991, 47.294), stdev = 0.297
+  CI (99.9%): [41.577, 52.404] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = crowdfunding-success-1.flat)
+
+# Run progress: 17.98% complete, ETA 01:04:54
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 41.207 us/op
+Iteration   1: 31.599 us/op
+Iteration   2: 32.023 us/op
+Iteration   3: 32.076 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  31.900 ±(99.9%) 4.766 us/op [Average]
+  (min, avg, max) = (31.599, 31.900, 32.076), stdev = 0.261
+  CI (99.9%): [27.134, 36.665] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = crowdfunding-success-2.flat)
+
+# Run progress: 19.10% complete, ETA 01:03:59
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 40.745 us/op
+Iteration   1: 32.769 us/op
+Iteration   2: 32.321 us/op
+Iteration   3: 32.715 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  32.602 ±(99.9%) 4.457 us/op [Average]
+  (min, avg, max) = (32.321, 32.602, 32.769), stdev = 0.244
+  CI (99.9%): [28.145, 37.059] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = crowdfunding-success-3.flat)
+
+# Run progress: 20.22% complete, ETA 01:03:04
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 40.917 us/op
+Iteration   1: 32.257 us/op
+Iteration   2: 31.507 us/op
+Iteration   3: 31.925 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  31.896 ±(99.9%) 6.856 us/op [Average]
+  (min, avg, max) = (31.507, 31.896, 32.257), stdev = 0.376
+  CI (99.9%): [25.040, 38.752] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = currency-1.flat)
+
+# Run progress: 21.35% complete, ETA 01:02:10
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 72.102 us/op
+Iteration   1: 54.417 us/op
+Iteration   2: 56.006 us/op
+Iteration   3: 55.590 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  55.338 ±(99.9%) 15.029 us/op [Average]
+  (min, avg, max) = (54.417, 55.338, 56.006), stdev = 0.824
+  CI (99.9%): [40.309, 70.367] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = escrow-redeem_1-1.flat)
+
+# Run progress: 22.47% complete, ETA 01:01:16
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 92.935 us/op
+Iteration   1: 69.434 us/op
+Iteration   2: 69.328 us/op
+Iteration   3: 69.482 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  69.415 ±(99.9%) 1.444 us/op [Average]
+  (min, avg, max) = (69.328, 69.415, 69.482), stdev = 0.079
+  CI (99.9%): [67.971, 70.859] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = escrow-redeem_1-2.flat)
+
+# Run progress: 23.60% complete, ETA 01:00:25
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 94.112 us/op
+Iteration   1: 69.199 us/op
+Iteration   2: 68.719 us/op
+Iteration   3: 67.243 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  68.387 ±(99.9%) 18.597 us/op [Average]
+  (min, avg, max) = (67.243, 68.387, 69.199), stdev = 1.019
+  CI (99.9%): [49.790, 86.984] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = escrow-redeem_2-1.flat)
+
+# Run progress: 24.72% complete, ETA 00:59:34
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 112.326 us/op
+Iteration   1: 83.163 us/op
+Iteration   2: 81.876 us/op
+Iteration   3: 82.919 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  82.653 ±(99.9%) 12.466 us/op [Average]
+  (min, avg, max) = (81.876, 82.653, 83.163), stdev = 0.683
+  CI (99.9%): [70.186, 95.119] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = escrow-redeem_2-2.flat)
+
+# Run progress: 25.84% complete, ETA 00:58:41
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 111.306 us/op
+Iteration   1: 82.961 us/op
+Iteration   2: 80.651 us/op
+Iteration   3: 81.159 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  81.590 ±(99.9%) 22.145 us/op [Average]
+  (min, avg, max) = (80.651, 81.590, 82.961), stdev = 1.214
+  CI (99.9%): [59.445, 103.735] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = escrow-redeem_2-3.flat)
+
+# Run progress: 26.97% complete, ETA 00:57:49
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 113.519 us/op
+Iteration   1: 82.941 us/op
+Iteration   2: 82.708 us/op
+Iteration   3: 82.642 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  82.764 ±(99.9%) 2.864 us/op [Average]
+  (min, avg, max) = (82.642, 82.764, 82.941), stdev = 0.157
+  CI (99.9%): [79.899, 85.628] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = escrow-refund-1.flat)
+
+# Run progress: 28.09% complete, ETA 00:56:57
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 31.789 us/op
+Iteration   1: 24.867 us/op
+Iteration   2: 25.130 us/op
+Iteration   3: 24.771 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  24.923 ±(99.9%) 3.396 us/op [Average]
+  (min, avg, max) = (24.771, 24.923, 25.130), stdev = 0.186
+  CI (99.9%): [21.527, 28.318] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-increase-margin-1.flat)
+
+# Run progress: 29.21% complete, ETA 00:56:05
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 72.870 us/op
+Iteration   1: 56.218 us/op
+Iteration   2: 56.074 us/op
+Iteration   3: 56.261 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  56.184 ±(99.9%) 1.784 us/op [Average]
+  (min, avg, max) = (56.074, 56.184, 56.261), stdev = 0.098
+  CI (99.9%): [54.400, 57.969] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-increase-margin-2.flat)
+
+# Run progress: 30.34% complete, ETA 00:55:11
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 154.454 us/op
+Iteration   1: 112.955 us/op
+Iteration   2: 111.176 us/op
+Iteration   3: 111.696 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  111.943 ±(99.9%) 16.685 us/op [Average]
+  (min, avg, max) = (111.176, 111.943, 112.955), stdev = 0.915
+  CI (99.9%): [95.258, 128.627] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-increase-margin-3.flat)
+
+# Run progress: 31.46% complete, ETA 00:54:18
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 159.234 us/op
+Iteration   1: 114.916 us/op
+Iteration   2: 113.453 us/op
+Iteration   3: 113.396 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  113.922 ±(99.9%) 15.725 us/op [Average]
+  (min, avg, max) = (113.396, 113.922, 114.916), stdev = 0.862
+  CI (99.9%): [98.197, 129.647] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-increase-margin-4.flat)
+
+# Run progress: 32.58% complete, ETA 00:53:25
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 291.154 us/op
+Iteration   1: 164.038 us/op
+Iteration   2: 163.322 us/op
+Iteration   3: 159.266 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  162.209 ±(99.9%) 46.948 us/op [Average]
+  (min, avg, max) = (159.266, 162.209, 164.038), stdev = 2.573
+  CI (99.9%): [115.261, 209.156] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-increase-margin-5.flat)
+
+# Run progress: 33.71% complete, ETA 00:52:42
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.scijava.nativelib.NativeLoader in an unnamed module (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scijava/native-lib-loader/2.5.0/native-lib-loader-2.5.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+780.901 us/op
+Iteration   1: 322.225 us/op
+Iteration   2: 315.681 us/op
+Iteration   3: 310.121 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  316.009 ±(99.9%) 110.537 us/op [Average]
+  (min, avg, max) = (310.121, 316.009, 322.225), stdev = 6.059
+  CI (99.9%): [205.472, 426.546] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-pay-out-1.flat)
+
+# Run progress: 34.83% complete, ETA 00:51:58
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 72.486 us/op
+Iteration   1: 54.346 us/op
+Iteration   2: 55.576 us/op
+Iteration   3: 54.426 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  54.783 ±(99.9%) 12.552 us/op [Average]
+  (min, avg, max) = (54.346, 54.783, 55.576), stdev = 0.688
+  CI (99.9%): [42.231, 67.334] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-pay-out-2.flat)
+
+# Run progress: 35.96% complete, ETA 00:51:03
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 154.715 us/op
+Iteration   1: 113.106 us/op
+Iteration   2: 111.426 us/op
+Iteration   3: 111.687 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  112.073 ±(99.9%) 16.498 us/op [Average]
+  (min, avg, max) = (111.426, 112.073, 113.106), stdev = 0.904
+  CI (99.9%): [95.575, 128.571] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-pay-out-3.flat)
+
+# Run progress: 37.08% complete, ETA 00:50:09
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 158.101 us/op
+Iteration   1: 113.554 us/op
+Iteration   2: 112.909 us/op
+Iteration   3: 112.598 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  113.020 ±(99.9%) 8.899 us/op [Average]
+  (min, avg, max) = (112.598, 113.020, 113.554), stdev = 0.488
+  CI (99.9%): [104.121, 121.919] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-pay-out-4.flat)
+
+# Run progress: 38.20% complete, ETA 00:49:16
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.scijava.nativelib.NativeLoader in an unnamed module (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scijava/native-lib-loader/2.5.0/native-lib-loader-2.5.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+859.644 us/op
+Iteration   1: 346.622 us/op
+Iteration   2: 301.861 us/op
+Iteration   3: 302.738 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  317.074 ±(99.9%) 466.922 us/op [Average]
+  (min, avg, max) = (301.861, 317.074, 346.622), stdev = 25.594
+  CI (99.9%): [≈ 0, 783.995] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-settle-early-1.flat)
+
+# Run progress: 39.33% complete, ETA 00:48:30
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 71.542 us/op
+Iteration   1: 55.398 us/op
+Iteration   2: 54.831 us/op
+Iteration   3: 54.646 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  54.958 ±(99.9%) 7.143 us/op [Average]
+  (min, avg, max) = (54.646, 54.958, 55.398), stdev = 0.392
+  CI (99.9%): [47.815, 62.101] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-settle-early-2.flat)
+
+# Run progress: 40.45% complete, ETA 00:47:34
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 156.943 us/op
+Iteration   1: 112.964 us/op
+Iteration   2: 113.339 us/op
+Iteration   3: 112.697 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  113.000 ±(99.9%) 5.888 us/op [Average]
+  (min, avg, max) = (112.697, 113.000, 113.339), stdev = 0.323
+  CI (99.9%): [107.112, 118.888] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-settle-early-3.flat)
+
+# Run progress: 41.57% complete, ETA 00:46:40
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 154.925 us/op
+Iteration   1: 113.305 us/op
+Iteration   2: 114.179 us/op
+Iteration   3: 114.284 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  113.923 ±(99.9%) 9.804 us/op [Average]
+  (min, avg, max) = (113.305, 113.923, 114.284), stdev = 0.537
+  CI (99.9%): [104.118, 123.727] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = future-settle-early-4.flat)
+
+# Run progress: 42.70% complete, ETA 00:45:46
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.scijava.nativelib.NativeLoader in an unnamed module (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scijava/native-lib-loader/2.5.0/native-lib-loader-2.5.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+615.486 us/op
+Iteration   1: 252.598 us/op
+Iteration   2: 254.728 us/op
+Iteration   3: 253.075 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  253.467 ±(99.9%) 20.390 us/op [Average]
+  (min, avg, max) = (252.598, 253.467, 254.728), stdev = 1.118
+  CI (99.9%): [233.076, 273.857] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_1-1.flat)
+
+# Run progress: 43.82% complete, ETA 00:44:58
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 177.927 us/op
+Iteration   1: 107.266 us/op
+Iteration   2: 104.732 us/op
+Iteration   3: 103.719 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  105.239 ±(99.9%) 33.329 us/op [Average]
+  (min, avg, max) = (103.719, 105.239, 107.266), stdev = 1.827
+  CI (99.9%): [71.910, 138.568] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_1-2.flat)
+
+# Run progress: 44.94% complete, ETA 00:44:08
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 35.267 us/op
+Iteration   1: 30.173 us/op
+Iteration   2: 29.503 us/op
+Iteration   3: 31.974 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  30.550 ±(99.9%) 23.315 us/op [Average]
+  (min, avg, max) = (29.503, 30.550, 31.974), stdev = 1.278
+  CI (99.9%): [7.235, 53.865] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_1-3.flat)
+
+# Run progress: 46.07% complete, ETA 00:43:11
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 335.391 us/op
+Iteration   1: 176.549 us/op
+Iteration   2: 174.176 us/op
+Iteration   3: 176.343 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  175.689 ±(99.9%) 23.989 us/op [Average]
+  (min, avg, max) = (174.176, 175.689, 176.549), stdev = 1.315
+  CI (99.9%): [151.700, 199.678] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_1-4.flat)
+
+# Run progress: 47.19% complete, ETA 00:42:21
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 40.881 us/op
+Iteration   1: 35.349 us/op
+Iteration   2: 34.944 us/op
+Iteration   3: 35.393 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  35.229 ±(99.9%) 4.515 us/op [Average]
+  (min, avg, max) = (34.944, 35.229, 35.393), stdev = 0.248
+  CI (99.9%): [30.713, 39.744] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_2-1.flat)
+
+# Run progress: 48.31% complete, ETA 00:41:24
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 168.273 us/op
+Iteration   1: 101.919 us/op
+Iteration   2: 102.089 us/op
+Iteration   3: 99.622 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  101.210 ±(99.9%) 25.136 us/op [Average]
+  (min, avg, max) = (99.622, 101.210, 102.089), stdev = 1.378
+  CI (99.9%): [76.075, 126.346] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_2-2.flat)
+
+# Run progress: 49.44% complete, ETA 00:40:34
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 35.859 us/op
+Iteration   1: 30.306 us/op
+Iteration   2: 29.683 us/op
+Iteration   3: 29.553 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  29.847 ±(99.9%) 7.341 us/op [Average]
+  (min, avg, max) = (29.553, 29.847, 30.306), stdev = 0.402
+  CI (99.9%): [22.506, 37.188] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_2-3.flat)
+
+# Run progress: 50.56% complete, ETA 00:39:37
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 304.595 us/op
+Iteration   1: 172.513 us/op
+Iteration   2: 173.005 us/op
+Iteration   3: 170.723 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  172.080 ±(99.9%) 21.907 us/op [Average]
+  (min, avg, max) = (170.723, 172.080, 173.005), stdev = 1.201
+  CI (99.9%): [150.173, 193.987] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_2-4.flat)
+
+# Run progress: 51.69% complete, ETA 00:38:46
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 41.558 us/op
+Iteration   1: 34.378 us/op
+Iteration   2: 34.225 us/op
+Iteration   3: 34.037 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  34.213 ±(99.9%) 3.119 us/op [Average]
+  (min, avg, max) = (34.037, 34.213, 34.378), stdev = 0.171
+  CI (99.9%): [31.094, 37.332] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_2-5.flat)
+
+# Run progress: 52.81% complete, ETA 00:37:50
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 321.215 us/op
+Iteration   1: 176.466 us/op
+Iteration   2: 169.658 us/op
+Iteration   3: 168.041 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  171.388 ±(99.9%) 81.567 us/op [Average]
+  (min, avg, max) = (168.041, 171.388, 176.466), stdev = 4.471
+  CI (99.9%): [89.821, 252.955] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = game-sm-success_2-6.flat)
+
+# Run progress: 53.93% complete, ETA 00:36:59
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 41.079 us/op
+Iteration   1: 34.525 us/op
+Iteration   2: 34.641 us/op
+Iteration   3: 34.672 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  34.613 ±(99.9%) 1.415 us/op [Average]
+  (min, avg, max) = (34.525, 34.613, 34.672), stdev = 0.078
+  CI (99.9%): [33.198, 36.027] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = guardrail-sorted-large.flat)
+
+# Run progress: 55.06% complete, ETA 00:36:02
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 196.454 us/op
+Iteration   1: 186.614 us/op
+Iteration   2: 186.468 us/op
+Iteration   3: 187.718 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  186.933 ±(99.9%) 12.472 us/op [Average]
+  (min, avg, max) = (186.468, 186.933, 187.718), stdev = 0.684
+  CI (99.9%): [174.462, 199.405] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = guardrail-sorted-small.flat)
+
+# Run progress: 56.18% complete, ETA 00:35:05
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 73.259 us/op
+Iteration   1: 71.866 us/op
+Iteration   2: 71.975 us/op
+Iteration   3: 71.633 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  71.825 ±(99.9%) 3.190 us/op [Average]
+  (min, avg, max) = (71.633, 71.825, 71.975), stdev = 0.175
+  CI (99.9%): [68.635, 75.015] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = guardrail-unsorted-large.flat)
+
+# Run progress: 57.30% complete, ETA 00:34:09
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 260.052 us/op
+Iteration   1: 254.499 us/op
+Iteration   2: 249.180 us/op
+Iteration   3: 246.303 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  249.994 ±(99.9%) 75.859 us/op [Average]
+  (min, avg, max) = (246.303, 249.994, 254.499), stdev = 4.158
+  CI (99.9%): [174.135, 325.853] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = guardrail-unsorted-small.flat)
+
+# Run progress: 58.43% complete, ETA 00:33:12
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 72.050 us/op
+Iteration   1: 70.743 us/op
+Iteration   2: 70.151 us/op
+Iteration   3: 69.778 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  70.224 ±(99.9%) 8.877 us/op [Average]
+  (min, avg, max) = (69.778, 70.224, 70.743), stdev = 0.487
+  CI (99.9%): [61.347, 79.101] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-01.flat)
+
+# Run progress: 59.55% complete, ETA 00:32:16
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 190.169 us/op
+Iteration   1: 113.652 us/op
+Iteration   2: 108.882 us/op
+Iteration   3: 110.333 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  110.956 ±(99.9%) 44.606 us/op [Average]
+  (min, avg, max) = (108.882, 110.956, 113.652), stdev = 2.445
+  CI (99.9%): [66.349, 155.562] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-02.flat)
+
+# Run progress: 60.67% complete, ETA 00:31:24
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 210.174 us/op
+Iteration   1: 119.293 us/op
+Iteration   2: 115.679 us/op
+Iteration   3: 114.050 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  116.340 ±(99.9%) 48.952 us/op [Average]
+  (min, avg, max) = (114.050, 116.340, 119.293), stdev = 2.683
+  CI (99.9%): [67.389, 165.292] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-03.flat)
+
+# Run progress: 61.80% complete, ETA 00:30:33
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 211.863 us/op
+Iteration   1: 119.975 us/op
+Iteration   2: 120.170 us/op
+Iteration   3: 116.558 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  118.901 ±(99.9%) 37.060 us/op [Average]
+  (min, avg, max) = (116.558, 118.901, 120.170), stdev = 2.031
+  CI (99.9%): [81.842, 155.961] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-04.flat)
+
+# Run progress: 62.92% complete, ETA 00:29:41
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 219.081 us/op
+Iteration   1: 124.768 us/op
+Iteration   2: 119.290 us/op
+Iteration   3: 119.165 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  121.075 ±(99.9%) 58.368 us/op [Average]
+  (min, avg, max) = (119.165, 121.075, 124.768), stdev = 3.199
+  CI (99.9%): [62.707, 179.442] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-05.flat)
+
+# Run progress: 64.04% complete, ETA 00:28:50
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 339.501 us/op
+Iteration   1: 168.001 us/op
+Iteration   2: 164.373 us/op
+Iteration   3: 161.832 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  164.735 ±(99.9%) 56.562 us/op [Average]
+  (min, avg, max) = (161.832, 164.735, 168.001), stdev = 3.100
+  CI (99.9%): [108.173, 221.298] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-06.flat)
+
+# Run progress: 65.17% complete, ETA 00:27:57
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 194.795 us/op
+Iteration   1: 115.086 us/op
+Iteration   2: 115.563 us/op
+Iteration   3: 114.004 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  114.884 ±(99.9%) 14.570 us/op [Average]
+  (min, avg, max) = (114.004, 114.884, 115.563), stdev = 0.799
+  CI (99.9%): [100.315, 129.454] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-07.flat)
+
+# Run progress: 66.29% complete, ETA 00:27:05
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 211.574 us/op
+Iteration   1: 117.824 us/op
+Iteration   2: 114.977 us/op
+Iteration   3: 114.674 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  115.825 ±(99.9%) 31.701 us/op [Average]
+  (min, avg, max) = (114.674, 115.825, 117.824), stdev = 1.738
+  CI (99.9%): [84.123, 147.526] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-08.flat)
+
+# Run progress: 67.42% complete, ETA 00:26:13
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 208.678 us/op
+Iteration   1: 116.495 us/op
+Iteration   2: 112.824 us/op
+Iteration   3: 110.168 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  113.162 ±(99.9%) 57.960 us/op [Average]
+  (min, avg, max) = (110.168, 113.162, 116.495), stdev = 3.177
+  CI (99.9%): [55.202, 171.122] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-09.flat)
+
+# Run progress: 68.54% complete, ETA 00:25:20
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 211.681 us/op
+Iteration   1: 116.681 us/op
+Iteration   2: 117.304 us/op
+Iteration   3: 116.353 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  116.779 ±(99.9%) 8.810 us/op [Average]
+  (min, avg, max) = (116.353, 116.779, 117.304), stdev = 0.483
+  CI (99.9%): [107.969, 125.590] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = multisig-sm-10.flat)
+
+# Run progress: 69.66% complete, ETA 00:24:27
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 366.592 us/op
+Iteration   1: 167.550 us/op
+Iteration   2: 164.156 us/op
+Iteration   3: 163.342 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  165.016 ±(99.9%) 40.712 us/op [Average]
+  (min, avg, max) = (163.342, 165.016, 167.550), stdev = 2.232
+  CI (99.9%): [124.304, 205.728] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = ping-pong-1.flat)
+
+# Run progress: 70.79% complete, ETA 00:23:34
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 129.894 us/op
+Iteration   1: 83.327 us/op
+Iteration   2: 78.818 us/op
+Iteration   3: 80.820 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  80.989 ±(99.9%) 41.220 us/op [Average]
+  (min, avg, max) = (78.818, 80.989, 83.327), stdev = 2.259
+  CI (99.9%): [39.768, 122.209] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = ping-pong-2.flat)
+
+# Run progress: 71.91% complete, ETA 00:22:41
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 130.326 us/op
+Iteration   1: 84.698 us/op
+Iteration   2: 80.352 us/op
+Iteration   3: 80.649 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  81.899 ±(99.9%) 44.297 us/op [Average]
+  (min, avg, max) = (80.352, 81.899, 84.698), stdev = 2.428
+  CI (99.9%): [37.603, 126.196] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = ping-pong_2-1.flat)
+
+# Run progress: 73.03% complete, ETA 00:21:47
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 64.996 us/op
+Iteration   1: 44.825 us/op
+Iteration   2: 44.125 us/op
+Iteration   3: 43.640 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  44.197 ±(99.9%) 10.862 us/op [Average]
+  (min, avg, max) = (43.640, 44.197, 44.825), stdev = 0.595
+  CI (99.9%): [33.335, 55.059] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = prism-1.flat)
+
+# Run progress: 74.16% complete, ETA 00:20:53
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 28.602 us/op
+Iteration   1: 24.330 us/op
+Iteration   2: 24.849 us/op
+Iteration   3: 24.446 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  24.542 ±(99.9%) 4.969 us/op [Average]
+  (min, avg, max) = (24.330, 24.542, 24.849), stdev = 0.272
+  CI (99.9%): [19.573, 29.511] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = prism-2.flat)
+
+# Run progress: 75.28% complete, ETA 00:19:58
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 170.894 us/op
+Iteration   1: 105.427 us/op
+Iteration   2: 102.909 us/op
+Iteration   3: 100.622 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  102.986 ±(99.9%) 43.844 us/op [Average]
+  (min, avg, max) = (100.622, 102.986, 105.427), stdev = 2.403
+  CI (99.9%): [59.142, 146.830] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = prism-3.flat)
+
+# Run progress: 76.40% complete, ETA 00:19:04
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 98.374 us/op
+Iteration   1: 75.264 us/op
+Iteration   2: 73.732 us/op
+Iteration   3: 73.984 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  74.327 ±(99.9%) 14.987 us/op [Average]
+  (min, avg, max) = (73.732, 74.327, 75.264), stdev = 0.822
+  CI (99.9%): [59.340, 89.314] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = pubkey-1.flat)
+
+# Run progress: 77.53% complete, ETA 00:18:09
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 24.614 us/op
+Iteration   1: 20.811 us/op
+Iteration   2: 20.853 us/op
+Iteration   3: 20.573 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  20.746 ±(99.9%) 2.755 us/op [Average]
+  (min, avg, max) = (20.573, 20.746, 20.853), stdev = 0.151
+  CI (99.9%): [17.991, 23.500] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_1-1.flat)
+
+# Run progress: 78.65% complete, ETA 00:17:14
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.scijava.nativelib.NativeLoader in an unnamed module (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scijava/native-lib-loader/2.5.0/native-lib-loader-2.5.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+3159.332 us/op
+Iteration   1: 1308.416 us/op
+Iteration   2: 891.022 us/op
+Iteration   3: 676.017 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  958.485 ±(99.9%) 5866.301 us/op [Average]
+  (min, avg, max) = (676.017, 958.485, 1308.416), stdev = 321.552
+  CI (99.9%): [≈ 0, 6824.785] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_1-2.flat)
+
+# Run progress: 79.78% complete, ETA 00:16:21
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 34.981 us/op
+Iteration   1: 29.318 us/op
+Iteration   2: 28.363 us/op
+Iteration   3: 29.477 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  29.052 ±(99.9%) 10.993 us/op [Average]
+  (min, avg, max) = (28.363, 29.052, 29.477), stdev = 0.603
+  CI (99.9%): [18.059, 40.045] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_1-3.flat)
+
+# Run progress: 80.90% complete, ETA 00:15:26
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.scijava.nativelib.NativeLoader in an unnamed module (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scijava/native-lib-loader/2.5.0/native-lib-loader-2.5.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+3185.570 us/op
+Iteration   1: 1369.605 us/op
+Iteration   2: 973.252 us/op
+Iteration   3: 747.596 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  1030.151 ±(99.9%) 5744.663 us/op [Average]
+  (min, avg, max) = (747.596, 1030.151, 1369.605), stdev = 314.884
+  CI (99.9%): [≈ 0, 6774.814] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_1-4.flat)
+
+# Run progress: 82.02% complete, ETA 00:14:33
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 38.508 us/op
+Iteration   1: 32.730 us/op
+Iteration   2: 31.923 us/op
+Iteration   3: 31.656 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  32.103 ±(99.9%) 10.196 us/op [Average]
+  (min, avg, max) = (31.656, 32.103, 32.730), stdev = 0.559
+  CI (99.9%): [21.907, 42.299] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_1-5.flat)
+
+# Run progress: 83.15% complete, ETA 00:13:38
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.scijava.nativelib.NativeLoader in an unnamed module (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scijava/native-lib-loader/2.5.0/native-lib-loader-2.5.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+3503.984 us/op
+Iteration   1: 1593.441 us/op
+Iteration   2: 1151.498 us/op
+Iteration   3: 872.197 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  1205.712 ±(99.9%) 6634.608 us/op [Average]
+  (min, avg, max) = (872.197, 1205.712, 1593.441), stdev = 363.665
+  CI (99.9%): [≈ 0, 7840.320] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_1-6.flat)
+
+# Run progress: 84.27% complete, ETA 00:12:44
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 44.919 us/op
+Iteration   1: 37.918 us/op
+Iteration   2: 38.015 us/op
+Iteration   3: 38.508 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  38.147 ±(99.9%) 5.774 us/op [Average]
+  (min, avg, max) = (37.918, 38.147, 38.508), stdev = 0.316
+  CI (99.9%): [32.374, 43.921] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_2-1.flat)
+
+# Run progress: 85.39% complete, ETA 00:11:49
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.scijava.nativelib.NativeLoader in an unnamed module (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scijava/native-lib-loader/2.5.0/native-lib-loader-2.5.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+4059.212 us/op
+Iteration   1: 2234.561 us/op
+Iteration   2: 1151.243 us/op
+Iteration   3: 778.900 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  1388.235 ±(99.9%) 13796.175 us/op [Average]
+  (min, avg, max) = (778.900, 1388.235, 2234.561), stdev = 756.215
+  CI (99.9%): [≈ 0, 15184.410] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_2-2.flat)
+
+# Run progress: 86.52% complete, ETA 00:10:56
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 35.965 us/op
+Iteration   1: 30.185 us/op
+Iteration   2: 29.725 us/op
+Iteration   3: 30.465 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  30.125 ±(99.9%) 6.812 us/op [Average]
+  (min, avg, max) = (29.725, 30.125, 30.465), stdev = 0.373
+  CI (99.9%): [23.313, 36.937] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_2-3.flat)
+
+# Run progress: 87.64% complete, ETA 00:10:01
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.scijava.nativelib.NativeLoader in an unnamed module (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scijava/native-lib-loader/2.5.0/native-lib-loader-2.5.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+3203.566 us/op
+Iteration   1: 1443.741 us/op
+Iteration   2: 1010.870 us/op
+Iteration   3: 794.319 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  1082.977 ±(99.9%) 6032.494 us/op [Average]
+  (min, avg, max) = (794.319, 1082.977, 1443.741), stdev = 330.661
+  CI (99.9%): [≈ 0, 7115.471] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = stablecoin_2-4.flat)
+
+# Run progress: 88.76% complete, ETA 00:09:07
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 38.319 us/op
+Iteration   1: 31.996 us/op
+Iteration   2: 31.742 us/op
+Iteration   3: 31.225 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  31.654 ±(99.9%) 7.164 us/op [Average]
+  (min, avg, max) = (31.225, 31.654, 31.996), stdev = 0.393
+  CI (99.9%): [24.490, 38.819] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = token-account-1.flat)
+
+# Run progress: 89.89% complete, ETA 00:08:12
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 52.362 us/op
+Iteration   1: 39.495 us/op
+Iteration   2: 39.919 us/op
+Iteration   3: 39.273 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  39.562 ±(99.9%) 5.986 us/op [Average]
+  (min, avg, max) = (39.273, 39.562, 39.919), stdev = 0.328
+  CI (99.9%): [33.576, 45.549] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = token-account-2.flat)
+
+# Run progress: 91.01% complete, ETA 00:07:17
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 83.779 us/op
+Iteration   1: 66.669 us/op
+Iteration   2: 66.135 us/op
+Iteration   3: 67.064 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  66.623 ±(99.9%) 8.510 us/op [Average]
+  (min, avg, max) = (66.135, 66.623, 67.064), stdev = 0.466
+  CI (99.9%): [58.113, 75.133] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = uniswap-1.flat)
+
+# Run progress: 92.13% complete, ETA 00:06:22
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 122.968 us/op
+Iteration   1: 99.529 us/op
+Iteration   2: 95.246 us/op
+Iteration   3: 95.604 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  96.793 ±(99.9%) 43.348 us/op [Average]
+  (min, avg, max) = (95.246, 96.793, 99.529), stdev = 2.376
+  CI (99.9%): [53.445, 140.141] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = uniswap-2.flat)
+
+# Run progress: 93.26% complete, ETA 00:05:27
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 56.327 us/op
+Iteration   1: 42.176 us/op
+Iteration   2: 42.195 us/op
+Iteration   3: 41.910 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  42.093 ±(99.9%) 2.903 us/op [Average]
+  (min, avg, max) = (41.910, 42.093, 42.195), stdev = 0.159
+  CI (99.9%): [39.190, 44.997] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = uniswap-3.flat)
+
+# Run progress: 94.38% complete, ETA 00:04:33
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 760.488 us/op
+Iteration   1: 451.616 us/op
+Iteration   2: 439.574 us/op
+Iteration   3: 439.274 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  443.488 ±(99.9%) 128.447 us/op [Average]
+  (min, avg, max) = (439.274, 443.488, 451.616), stdev = 7.041
+  CI (99.9%): [315.041, 571.935] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = uniswap-4.flat)
+
+# Run progress: 95.51% complete, ETA 00:03:38
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 59.469 us/op
+Iteration   1: 47.294 us/op
+Iteration   2: 48.476 us/op
+Iteration   3: 47.825 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  47.865 ±(99.9%) 10.801 us/op [Average]
+  (min, avg, max) = (47.294, 47.865, 48.476), stdev = 0.592
+  CI (99.9%): [37.064, 58.667] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = uniswap-5.flat)
+
+# Run progress: 96.63% complete, ETA 00:02:43
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 481.019 us/op
+Iteration   1: 270.752 us/op
+Iteration   2: 265.380 us/op
+Iteration   3: 270.417 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  268.850 ±(99.9%) 54.901 us/op [Average]
+  (min, avg, max) = (265.380, 268.850, 270.752), stdev = 3.009
+  CI (99.9%): [213.949, 323.750] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = uniswap-6.flat)
+
+# Run progress: 97.75% complete, ETA 00:01:49
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 59.977 us/op
+Iteration   1: 49.231 us/op
+Iteration   2: 48.330 us/op
+Iteration   3: 48.531 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  48.697 ±(99.9%) 8.623 us/op [Average]
+  (min, avg, max) = (48.330, 48.697, 49.231), stdev = 0.473
+  CI (99.9%): [40.075, 57.320] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 25.0.4.1.1, Java HotSpot(TM) 64-Bit Server VM, 25.0.4.1.1+1-LTS-jvmci-25.4-b23
+# VM invoker: /opt/jdk-25/bin/java
+# VM options: -XX:ThreadPriorityPolicy=1 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCIProduct -XX:+EnableJVMCI -XX:-UnlockExperimentalVMOptions -Xss64m -Xmx4g -Xss64m -XX:+AlwaysPreTouch -Xms4g
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 1 iterations, 30 s each
+# Measurement: 3 iterations, 5 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: pvb.scalus.JITBenchmark.benchJIT
+# Parameters: (file = vesting-1.flat)
+
+# Run progress: 98.88% complete, ETA 00:00:54
+# Fork: 1 of 1
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar)
+WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+# Warmup Iteration   1: 118.719 us/op
+Iteration   1: 82.955 us/op
+Iteration   2: 78.558 us/op
+Iteration   3: 78.646 us/op
+
+
+Result "pvb.scalus.JITBenchmark.benchJIT":
+  80.053 ±(99.9%) 45.864 us/op [Average]
+  (min, avg, max) = (78.558, 80.053, 82.955), stdev = 2.514
+  CI (99.9%): [34.190, 125.917] (assumes normal distribution)
+
+
+# Run complete. Total time: 01:21:01
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+NOTE: Current JVM experimentally supports Compiler Blackholes, and they are in use. Please exercise
+extra caution when trusting the results, look into the generated code to check the benchmark still
+works, and factor in a small probability of new VM bugs. Additionally, while comparisons between
+different JVMs are already problematic, the performance difference caused by different Blackhole
+modes can be very significant. Please make sure you use the consistent Blackhole mode for comparisons.
+
+Benchmark                                     (file)  Mode  Cnt     Score       Error  Units
+JITBenchmark.benchJIT               auction_1-1.flat  avgt    3    28.554 ±     5.822  us/op
+JITBenchmark.benchJIT               auction_1-2.flat  avgt    3   187.442 ±    50.035  us/op
+JITBenchmark.benchJIT               auction_1-3.flat  avgt    3   168.162 ±    54.495  us/op
+JITBenchmark.benchJIT               auction_1-4.flat  avgt    3    33.333 ±     6.358  us/op
+JITBenchmark.benchJIT               auction_2-1.flat  avgt    3    28.389 ±     5.591  us/op
+JITBenchmark.benchJIT               auction_2-2.flat  avgt    3   182.952 ±    23.853  us/op
+JITBenchmark.benchJIT               auction_2-3.flat  avgt    3   231.537 ±    48.643  us/op
+JITBenchmark.benchJIT               auction_2-4.flat  avgt    3   166.532 ±    57.386  us/op
+JITBenchmark.benchJIT               auction_2-5.flat  avgt    3    33.081 ±     5.664  us/op
+JITBenchmark.benchJIT                    coop-1.flat  avgt    3    34.970 ±     4.522  us/op
+JITBenchmark.benchJIT                    coop-2.flat  avgt    3   136.938 ±     7.512  us/op
+JITBenchmark.benchJIT                    coop-3.flat  avgt    3   536.288 ±    67.576  us/op
+JITBenchmark.benchJIT                    coop-4.flat  avgt    3   208.188 ±    54.178  us/op
+JITBenchmark.benchJIT                    coop-5.flat  avgt    3    74.184 ±    17.448  us/op
+JITBenchmark.benchJIT                    coop-6.flat  avgt    3   126.770 ±    27.034  us/op
+JITBenchmark.benchJIT                    coop-7.flat  avgt    3    46.991 ±     5.414  us/op
+JITBenchmark.benchJIT    crowdfunding-success-1.flat  avgt    3    31.900 ±     4.766  us/op
+JITBenchmark.benchJIT    crowdfunding-success-2.flat  avgt    3    32.602 ±     4.457  us/op
+JITBenchmark.benchJIT    crowdfunding-success-3.flat  avgt    3    31.896 ±     6.856  us/op
+JITBenchmark.benchJIT                currency-1.flat  avgt    3    55.338 ±    15.029  us/op
+JITBenchmark.benchJIT         escrow-redeem_1-1.flat  avgt    3    69.415 ±     1.444  us/op
+JITBenchmark.benchJIT         escrow-redeem_1-2.flat  avgt    3    68.387 ±    18.597  us/op
+JITBenchmark.benchJIT         escrow-redeem_2-1.flat  avgt    3    82.653 ±    12.466  us/op
+JITBenchmark.benchJIT         escrow-redeem_2-2.flat  avgt    3    81.590 ±    22.145  us/op
+JITBenchmark.benchJIT         escrow-redeem_2-3.flat  avgt    3    82.764 ±     2.864  us/op
+JITBenchmark.benchJIT           escrow-refund-1.flat  avgt    3    24.923 ±     3.396  us/op
+JITBenchmark.benchJIT  future-increase-margin-1.flat  avgt    3    56.184 ±     1.784  us/op
+JITBenchmark.benchJIT  future-increase-margin-2.flat  avgt    3   111.943 ±    16.685  us/op
+JITBenchmark.benchJIT  future-increase-margin-3.flat  avgt    3   113.922 ±    15.725  us/op
+JITBenchmark.benchJIT  future-increase-margin-4.flat  avgt    3   162.209 ±    46.948  us/op
+JITBenchmark.benchJIT  future-increase-margin-5.flat  avgt    3   316.009 ±   110.537  us/op
+JITBenchmark.benchJIT          future-pay-out-1.flat  avgt    3    54.783 ±    12.552  us/op
+JITBenchmark.benchJIT          future-pay-out-2.flat  avgt    3   112.073 ±    16.498  us/op
+JITBenchmark.benchJIT          future-pay-out-3.flat  avgt    3   113.020 ±     8.899  us/op
+JITBenchmark.benchJIT          future-pay-out-4.flat  avgt    3   317.074 ±   466.922  us/op
+JITBenchmark.benchJIT     future-settle-early-1.flat  avgt    3    54.958 ±     7.143  us/op
+JITBenchmark.benchJIT     future-settle-early-2.flat  avgt    3   113.000 ±     5.888  us/op
+JITBenchmark.benchJIT     future-settle-early-3.flat  avgt    3   113.923 ±     9.804  us/op
+JITBenchmark.benchJIT     future-settle-early-4.flat  avgt    3   253.467 ±    20.390  us/op
+JITBenchmark.benchJIT       game-sm-success_1-1.flat  avgt    3   105.239 ±    33.329  us/op
+JITBenchmark.benchJIT       game-sm-success_1-2.flat  avgt    3    30.550 ±    23.315  us/op
+JITBenchmark.benchJIT       game-sm-success_1-3.flat  avgt    3   175.689 ±    23.989  us/op
+JITBenchmark.benchJIT       game-sm-success_1-4.flat  avgt    3    35.229 ±     4.515  us/op
+JITBenchmark.benchJIT       game-sm-success_2-1.flat  avgt    3   101.210 ±    25.136  us/op
+JITBenchmark.benchJIT       game-sm-success_2-2.flat  avgt    3    29.847 ±     7.341  us/op
+JITBenchmark.benchJIT       game-sm-success_2-3.flat  avgt    3   172.080 ±    21.907  us/op
+JITBenchmark.benchJIT       game-sm-success_2-4.flat  avgt    3    34.213 ±     3.119  us/op
+JITBenchmark.benchJIT       game-sm-success_2-5.flat  avgt    3   171.388 ±    81.567  us/op
+JITBenchmark.benchJIT       game-sm-success_2-6.flat  avgt    3    34.613 ±     1.415  us/op
+JITBenchmark.benchJIT    guardrail-sorted-large.flat  avgt    3   186.933 ±    12.472  us/op
+JITBenchmark.benchJIT    guardrail-sorted-small.flat  avgt    3    71.825 ±     3.190  us/op
+JITBenchmark.benchJIT  guardrail-unsorted-large.flat  avgt    3   249.994 ±    75.859  us/op
+JITBenchmark.benchJIT  guardrail-unsorted-small.flat  avgt    3    70.224 ±     8.877  us/op
+JITBenchmark.benchJIT            multisig-sm-01.flat  avgt    3   110.956 ±    44.606  us/op
+JITBenchmark.benchJIT            multisig-sm-02.flat  avgt    3   116.340 ±    48.952  us/op
+JITBenchmark.benchJIT            multisig-sm-03.flat  avgt    3   118.901 ±    37.060  us/op
+JITBenchmark.benchJIT            multisig-sm-04.flat  avgt    3   121.075 ±    58.368  us/op
+JITBenchmark.benchJIT            multisig-sm-05.flat  avgt    3   164.735 ±    56.562  us/op
+JITBenchmark.benchJIT            multisig-sm-06.flat  avgt    3   114.884 ±    14.570  us/op
+JITBenchmark.benchJIT            multisig-sm-07.flat  avgt    3   115.825 ±    31.701  us/op
+JITBenchmark.benchJIT            multisig-sm-08.flat  avgt    3   113.162 ±    57.960  us/op
+JITBenchmark.benchJIT            multisig-sm-09.flat  avgt    3   116.779 ±     8.810  us/op
+JITBenchmark.benchJIT            multisig-sm-10.flat  avgt    3   165.016 ±    40.712  us/op
+JITBenchmark.benchJIT               ping-pong-1.flat  avgt    3    80.989 ±    41.220  us/op
+JITBenchmark.benchJIT               ping-pong-2.flat  avgt    3    81.899 ±    44.297  us/op
+JITBenchmark.benchJIT             ping-pong_2-1.flat  avgt    3    44.197 ±    10.862  us/op
+JITBenchmark.benchJIT                   prism-1.flat  avgt    3    24.542 ±     4.969  us/op
+JITBenchmark.benchJIT                   prism-2.flat  avgt    3   102.986 ±    43.844  us/op
+JITBenchmark.benchJIT                   prism-3.flat  avgt    3    74.327 ±    14.987  us/op
+JITBenchmark.benchJIT                  pubkey-1.flat  avgt    3    20.746 ±     2.755  us/op
+JITBenchmark.benchJIT            stablecoin_1-1.flat  avgt    3   958.485 ±  5866.301  us/op
+JITBenchmark.benchJIT            stablecoin_1-2.flat  avgt    3    29.052 ±    10.993  us/op
+JITBenchmark.benchJIT            stablecoin_1-3.flat  avgt    3  1030.151 ±  5744.663  us/op
+JITBenchmark.benchJIT            stablecoin_1-4.flat  avgt    3    32.103 ±    10.196  us/op
+JITBenchmark.benchJIT            stablecoin_1-5.flat  avgt    3  1205.712 ±  6634.608  us/op
+JITBenchmark.benchJIT            stablecoin_1-6.flat  avgt    3    38.147 ±     5.774  us/op
+JITBenchmark.benchJIT            stablecoin_2-1.flat  avgt    3  1388.235 ± 13796.175  us/op
+JITBenchmark.benchJIT            stablecoin_2-2.flat  avgt    3    30.125 ±     6.812  us/op
+JITBenchmark.benchJIT            stablecoin_2-3.flat  avgt    3  1082.977 ±  6032.494  us/op
+JITBenchmark.benchJIT            stablecoin_2-4.flat  avgt    3    31.654 ±     7.164  us/op
+JITBenchmark.benchJIT           token-account-1.flat  avgt    3    39.562 ±     5.986  us/op
+JITBenchmark.benchJIT           token-account-2.flat  avgt    3    66.623 ±     8.510  us/op
+JITBenchmark.benchJIT                 uniswap-1.flat  avgt    3    96.793 ±    43.348  us/op
+JITBenchmark.benchJIT                 uniswap-2.flat  avgt    3    42.093 ±     2.903  us/op
+JITBenchmark.benchJIT                 uniswap-3.flat  avgt    3   443.488 ±   128.447  us/op
+JITBenchmark.benchJIT                 uniswap-4.flat  avgt    3    47.865 ±    10.801  us/op
+JITBenchmark.benchJIT                 uniswap-5.flat  avgt    3   268.850 ±    54.901  us/op
+JITBenchmark.benchJIT                 uniswap-6.flat  avgt    3    48.697 ±     8.623  us/op
+JITBenchmark.benchJIT                 vesting-1.flat  avgt    3    80.053 ±    45.864  us/op
+
+Benchmark result is saved to /results/scalus-jit-jmh.json
+=== check
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by scala.runtime.LazyVals$ (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.8/scala3-library_3-3.3.8.jar)
+WARNING: Please consider reporting this to the maintainers of class scala.runtime.LazyVals$
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.scijava.nativelib.NativeLoader in an unnamed module (file:/root/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scijava/native-lib-loader/2.5.0/native-lib-loader-2.5.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
