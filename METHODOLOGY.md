@@ -83,8 +83,9 @@ line-up that miss rule 1 or rule 2. Each row shows its reason:
 | Reason | Meaning | Example |
 |---|---|---|
 | pre-release only | Only `-alpha` or `-preNN` versions; pinned to the newest pre-release tag | Chrysalis, Julc |
-| no release | No tag or release; pinned to a `main` commit | Plutuz |
+| no release | No tag or release; pinned to a `main` commit | Plutuz, amaru-uplc bytecode (fork) |
 | no downstream user | A release, but no released project outside its repo depends on it | Scalus JIT, blaze-plutus |
+| outdated | A built-in cost model from before protocol version 11 and no API for a cost model; badge "outdated cost model" (its ExUnits equal Haskell with that model) | llvm-uplc |
 
 An experimental row never gets a rank. It is never a competitor in the penalty rule, and it has no
 line in the history chart. The gate checks each of its scripts. A script that fails is marked

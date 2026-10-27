@@ -104,8 +104,9 @@ What changed:
 | `julc-java` | Julc Java CEK, [experimental](#experimental), not ranked | Java / GraalVM 25 | JMH | [bloxbean/julc](https://github.com/bloxbean/julc) | [v0.1.0-pre19](https://github.com/bloxbean/julc/releases/tag/v0.1.0-pre19) (pre-release) |
 | `plutuz` | Plutuz CEK, [experimental](#experimental), not ranked | Zig | own timing loop | [utxo-company/plutuz](https://github.com/utxo-company/plutuz) | `main` [33b812d](https://github.com/utxo-company/plutuz/commit/33b812dbcf88f6851286e54cb93a4a443353f94c) (no release) |
 | `uplc-turbo-bc` | amaru-uplc bytecode VM, [experimental](#experimental), not ranked | Rust | Criterion.rs | [jonathanlim222/uplc](https://github.com/jonathanlim222/uplc) (fork) | [069cef5](https://github.com/jonathanlim222/uplc/commit/069cef5684d57064d040ab498a5d2eac01e63275) (no release) |
+| `llvm-uplc-jit` | llvm-uplc (UPLC → native code JIT), [experimental](#experimental), not ranked | C++ / LLVM 22 | own timing loop (uplcbench) | [SeungheonOh/llvm-uplc](https://github.com/SeungheonOh/llvm-uplc) | `main` [6bcef67](https://github.com/SeungheonOh/llvm-uplc/commit/6bcef67ce1995d232327f13d9080fe2f0261a55c) (no release) |
 
-That is 14 VMs in 12 images: `scripts/images.sh list` prints them. The pins are in [`.env`](.env).
+That is 15 VMs in 13 images: `scripts/images.sh list` prints them. The pins are in [`.env`](.env).
 
 The `aiken-wasm` row times the published npm package `@lucid-evolution/uplc` 0.4.0 as is. The
 package is built from [colll78/aiken](https://github.com/colll78/aiken): aiken main after v1.1.24,
@@ -122,7 +123,7 @@ build contains both fixes. No Aiken release contains them yet.
 ### Experimental
 
 These rows are not ranked (spec D22). Each one is a VM of the original SAIB line-up that has no
-stable release or no downstream user. The page shows the reason next to each row. They never get a
+stable release, no downstream user, or an outdated cost model. The page shows the reason next to each row. They never get a
 rank, they are not competitors in the penalty rule, and they have no line in the history chart.
 The gate still checks every script: a script that fails is marked "failed check", and its time
 is left out. A row with no passing script is listed as "failed check".
@@ -135,6 +136,7 @@ is left out. A row with no passing script is listed as "failed check".
 | `julc-java` | Pre-release only (`0.1.0-preNN`). Pinned to the newest pre-release tag. |
 | `plutuz` | No release: no tags or releases on GitHub. Pinned to a `main` commit. |
 | `uplc-turbo-bc` | amaru-uplc bytecode mode. No release has it: the mode is only in the fork [jonathanlim222/uplc](https://github.com/jonathanlim222/uplc) (closed PR pragma-org/uplc#47). Pinned to a commit of the fork. |
+| `llvm-uplc-jit` | Outdated. Its built-in cost model is from before protocol version 11 (variant C; for example `divideInteger` c11 549, mainnet 960), and it has no API that takes a cost model, so its row has the badge "outdated cost model": its ExUnits equal Haskell with that model. No release; its last commit is from 2026-04-16. It compiles each script before timing, so its time is eval only ("decode and compile excluded"). |
 
 ## Not included
 
@@ -153,7 +155,6 @@ only: its decode runs outside the timed loop. A VM of the original SAIB line-up 
 
 | Project | Rule that fails |
 |---|---|
-| [llvm-uplc](https://github.com/SeungheonOh/llvm-uplc) | Outdated. Its built-in cost model is from before protocol version 11 (for example `divideInteger` c11 549, mainnet 960), it has no API that takes a cost model, and its last commit is from 2026-04-16. |
 | [OpShin uplc](https://github.com/OpShin/uplc) | Rule 3. Fails the correctness gate at its latest release 1.3.3. It has no `case` on builtin values, a protocol version 11 feature. |
 
 ### How a VM can join

@@ -762,8 +762,9 @@ const VM_META = {
   'chrysalis-aot':  { label: 'Chrysalis AOT',  lang: 'C#',          runtime: '.NET NativeAOT', engine: 'CEK interpreter',              color: 'var(--vm-chrysalis-aot, var(--vm-other))', compiler: '.NET 10 NativeAOT' },
   'plutuz':         { label: 'Plutuz',         lang: 'Zig',         runtime: 'native',         engine: 'CEK interpreter',              color: 'var(--vm-plutuz, var(--vm-other))', compiler: 'Zig 0.15.2' },
   'uplc-turbo-bc':  { label: 'amaru-uplc BC (fork)', lang: 'Rust',        runtime: 'bytecode VM',    engine: 'UPLC → bytecode VM',           color: 'var(--vm-uplc-turbo-bc, var(--vm-other))', compiler: 'rustc 1.94' },
+  'llvm-uplc-jit':  { label: 'llvm-uplc JIT',  lang: 'C / C++',     runtime: 'native',         engine: 'UPLC → native code JIT',       color: 'var(--vm-llvm-uplc-jit, var(--vm-other))', compiler: 'LLVM 22' },
 };
-const VM_ORDER = ['haskell','scalus-jit','scalus-cek','scalus-js','aiken','aiken-wasm','uplc-turbo','blaze-v8','blaze-jsc','plutigo','chrysalis','chrysalis-aot','julc-java','plutuz','uplc-turbo-bc'];
+const VM_ORDER = ['haskell','scalus-jit','scalus-cek','scalus-js','aiken','aiken-wasm','uplc-turbo','blaze-v8','blaze-jsc','plutigo','chrysalis','chrysalis-aot','julc-java','plutuz','llvm-uplc-jit','uplc-turbo-bc'];
 
 function parseCSV(csv) {
   const lines = csv.trim().split('\n'), header = lines[0].split(',');

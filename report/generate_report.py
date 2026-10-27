@@ -59,7 +59,7 @@ VM_ORDER = [
     "haskell", "scalus-jit", "scalus-cek", "scalus-js",
     "aiken", "aiken-wasm", "uplc-turbo",
     "plutigo", "blaze-jsc", "blaze-v8",
-    "chrysalis", "chrysalis-aot", "julc-java", "plutuz", "uplc-turbo-bc",
+    "chrysalis", "chrysalis-aot", "julc-java", "plutuz", "llvm-uplc-jit", "uplc-turbo-bc",
 ]
 
 # The header logo in report/template.html, a file in docs/.
@@ -113,6 +113,9 @@ EXPERIMENTAL = {
     "plutuz": "not ranked: no release (no tags or releases on GitHub), pinned to a main commit (spec D22)",
     "uplc-turbo-bc": "not ranked: no release has the bytecode mode; it is in the fork jonathanlim222/uplc "
                      "(closed PR pragma-org/uplc#47), pinned to a commit (spec D22)",
+    "llvm-uplc-jit": "not ranked: outdated. Its built-in cost model is variant C (before protocol "
+                     "version 11; divideInteger c11 549, mainnet 960), no API takes a cost model, and "
+                     "its last commit is from 2026-04-16. No release (spec D22)",
 }
 
 # The short visible reason of each EXPERIMENTAL VM (spec D22): next to its "experimental" badge,
@@ -126,6 +129,7 @@ EXPERIMENTAL_TAG = {
     "chrysalis-aot": "pre-release only",
     "plutuz": "no release",
     "uplc-turbo-bc": "no release",
+    "llvm-uplc-jit": "outdated",
 }
 
 
@@ -184,6 +188,7 @@ VM_LABELS = {
     "chrysalis-aot": "Chrysalis CEK (C# / .NET AOT)",
     "plutuz": "Plutuz CEK (Zig)",
     "uplc-turbo-bc": "amaru-uplc bytecode VM, fork jonathanlim222/uplc (Rust)",
+    "llvm-uplc-jit": "llvm-uplc UPLC→native JIT (C++ / LLVM)",
 }
 
 
@@ -205,6 +210,7 @@ VM_FACTS = {
     "chrysalis-aot": {"lang": "C#", "runtime": ".NET 10 (NativeAOT)", "model": "Interpreter (CEK)"},
     "plutuz": {"lang": "Zig", "runtime": "native", "model": "Interpreter (CEK)"},
     "uplc-turbo-bc": {"lang": "Rust", "runtime": "native", "model": "Bytecode VM (UPLC → bytecode)"},
+    "llvm-uplc-jit": {"lang": "C / C++", "runtime": "native (LLVM 22 LLJIT)", "model": "JIT compiler (UPLC → native code)"},
 }
 
 # Where each VM comes from. The pinned version is read from .env at the repo root (env: the .env
@@ -278,6 +284,10 @@ VM_SOURCES = {
         "repo": "https://github.com/jonathanlim222/uplc", "home": None,
         "env": "UPLC_TURBO_BC_SHA", "pattern": r"^([0-9a-f]{7})", "tag": "069cef5", "version": "fork {tag}",
         "release": "https://github.com/jonathanlim222/uplc/commit/{tag}"},
+    "llvm-uplc-jit": {
+        "repo": "https://github.com/SeungheonOh/llvm-uplc", "home": None,
+        "env": "LLVM_UPLC_SHA", "pattern": r"^([0-9a-f]{7})", "tag": "6bcef67", "version": "main {tag}",
+        "release": "https://github.com/SeungheonOh/llvm-uplc/commit/{tag}"},
 }
 
 # The downstream users of each VM (spec D17): released projects outside the VM's own repo that
