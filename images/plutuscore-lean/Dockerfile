@@ -33,8 +33,9 @@ RUN test "$(cat lean-toolchain)" = "$PLUTUSCORE_LEAN_VERSION" \
     && sed -i "s/@ \"beta-lambda-cache-optimization\"/@ \"${PLUTUSCORE_BLASTER_SHA}\"/" lakefile.lean \
     && grep -q "$PLUTUSCORE_BLASTER_SHA" lakefile.lean \
     && lake update \
-    && lake build bench_cek test_crypto_ffi \
-    && python3 scripts/test_crypto_ffi.py
+    && lake build bench_cek test_crypto_ffi test_flat_decode \
+    && python3 scripts/test_crypto_ffi.py \
+    && python3 scripts/test_flat_decode.py
 
 FROM debian:bookworm-slim
 RUN apt-get update \

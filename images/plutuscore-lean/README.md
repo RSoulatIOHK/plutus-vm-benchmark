@@ -13,8 +13,8 @@ There is no runtime cost-model loader. A mainnet model update may require an ups
 `BENCH_TIMING=quick`, and runs one process per script. The native executable emits CSV rows
 directly, so there is no framework-specific parser.
 
-- D3: raw-byte conversion to the library's byte-string representation, Flat decode and
-  costed CEK evaluation on every iteration. No decode cache.
+- D3: Flat decode directly from the raw bytes, then costed CEK evaluation on every iteration.
+  No decode cache or expansion of the entire input into a list of bits.
 - Eval: decode once before timing, then costed CEK evaluation on every iteration.
 - Check: one evaluation, reporting CEK status and total CPU/memory ExUnits, startup included.
   No arguments are applied, and the ledger unit-result rule is not imposed.
@@ -34,8 +34,14 @@ not been established. Before ranking, pin a stable release containing the runner
 the downstream dependency evidence. Admission to the experimental line-up needs maintainer
 review; this proposal does not relax the ranking rules.
 
-The development pin includes linear Flat bit conversion, diagnostic profiling, and native
-FFIs for all six hashes and Ed25519. SHA-256, Blake2b and Ed25519 use libsodium; SHA3, Keccak
+The development pin includes a direct byte-array Flat reader, a fused native CEK loop with
+eager costing and combined continuation frames, diagnostic profiling, and native FFIs for
+all six hashes and Ed25519. The CEK compiler replacements have kernel-checked equivalence
+proofs; the new Flat reader is checked against the independent list decoder by complete AST
+and rejection comparisons. The image runs 4,409 generated and malformed parser cases during
+the build, without evaluating fuzzed programs.
+
+SHA-256, Blake2b and Ed25519 use libsodium; SHA3, Keccak
 and RIPEMD use vendored crypton C. The image builds and runs the 343-case native/reference
 crypto conformity suite. libsodium is installed at runtime and the crypton license is included
 at `/usr/share/doc/plutuscore-lean/crypton-LICENSE`. Secp256k1 and BLS still use Lean.
