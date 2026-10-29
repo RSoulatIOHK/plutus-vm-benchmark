@@ -226,7 +226,7 @@ _BLAZE_REPO = "https://github.com/butaneprotocol/blaze-cardano"
 VM_SOURCES = {
     "plutuscore-lean": {
         "repo": "https://github.com/input-output-hk/PlutusCoreBlaster", "home": None,
-        "env": "PLUTUSCORE_LEAN_SHA", "pattern": r"^([0-9a-f]{7})", "tag": "4672890", "version": "development {tag}",
+        "env": "PLUTUSCORE_LEAN_SHA", "pattern": r"^([0-9a-f]{7})", "tag": "22f6109", "version": "development {tag}",
         "release": "https://github.com/input-output-hk/PlutusCoreBlaster/commit/{tag}"},
     "haskell": {
         "repo": "https://github.com/IntersectMBO/plutus", "home": "https://plutus.cardano.intersectmbo.org",

@@ -33,3 +33,9 @@ stable release tag yet, and a released downstream user satisfying the inclusion 
 not been established. Before ranking, pin a stable release containing the runner and provide
 the downstream dependency evidence. Admission to the experimental line-up needs maintainer
 review; this proposal does not relax the ranking rules.
+
+The development pin includes linear Flat bit conversion, diagnostic profiling, and native
+FFIs for all six hashes and Ed25519. SHA-256, Blake2b and Ed25519 use libsodium; SHA3, Keccak
+and RIPEMD use vendored crypton C. The image builds and runs the 343-case native/reference
+crypto conformity suite. libsodium is installed at runtime and the crypton license is included
+at `/usr/share/doc/plutuscore-lean/crypton-LICENSE`. Secp256k1 and BLS still use Lean.
